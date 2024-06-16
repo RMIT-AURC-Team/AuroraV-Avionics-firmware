@@ -15,7 +15,11 @@ This repository contains the project code implementing firmware to run on board 
 <!-- mtoc-end -->
 
 ## Requirements
-_Prerequisite requirements for installing and building the project/toolchain will be provided here._ (Content to be added)
+
+To successfully install and contribute to the project, ensure you have the following prerequisites installed:
+
+- Keil uVision IDE
+- Git
 
 ## Getting Started
 This document provides an introduction to using GitHub for development of Aurora V firmware libraries, as well as their coding standard and conventions. 
@@ -23,6 +27,7 @@ This document provides an introduction to using GitHub for development of Aurora
 ### Using GitHub
 _Detailed instructions on using GitHub for this project will be provided here._ (Content to be added)
 
+---
 ### Coding Standard
 The specification of this standard exists to document and define the organisation and naming convention of code to create a well structured and cohesive project. 
 
