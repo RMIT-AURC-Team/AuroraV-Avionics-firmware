@@ -349,6 +349,11 @@
               <FileType>1</FileType>
               <FilePath>..\Core\Src\CAN.c</FilePath>
             </File>
+            <File>
+              <FileName>init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\init.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -453,6 +458,11 @@
               <FileName>CAN.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Core\Inc\CAN.h</FilePath>
+            </File>
+            <File>
+              <FileName>init.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\Inc\init.h</FilePath>
             </File>
           </Files>
         </Group>
