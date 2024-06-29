@@ -1,3 +1,4 @@
+![HIVE Aurora V footer](./img/banner.png)
 # Aurora V Avionics Firmware
 This repository contains the project code implementing firmware to run on board the Aurora V avionics system. 
 
@@ -82,5 +83,5 @@ As mentioned, C does not support namespaces. Global variables can and will cause
 
 For an example see the [MemBuff](https://github.com/RMIT-AURC-Team/AuroraV-Avionics-lib/tree/master/membuff/src) implementation. An example skeleton of a library struct implementation can be found [here](https://github.com/RMIT-AURC-Team/AuroraV-Avionics-lib/tree/master/example/src); You may find it easier to copy the example directory entirely and simply rename the files and code elements to align with the library you are working on.
 
-
 ---
+![HIVE Aurora V footer](./img/footer.png)
