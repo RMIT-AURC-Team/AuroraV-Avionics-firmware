@@ -20,6 +20,7 @@ This repository contains the project code implementing firmware to run on board 
 To successfully install and contribute to the project, ensure you have the following prerequisites installed:
 
 - Keil uVision IDE
+- GCC for arm (arm-none-eabi-gcc)
 - Git
 
 ## Getting Started
