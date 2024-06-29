@@ -46,14 +46,16 @@ uint8_t CAN_transmit(uint8_t CAN, uint8_t data_length, unsigned int dataH, unsig
     CAN1->sTxMailBox[mailbox].TDTR = data_length;  // puts in the data length
     CAN1->sTxMailBox[mailbox].TIR = address << 21; // enters in the CAN identifer
     CAN1->sTxMailBox[mailbox].TIR |= (1 << 0);     // requested transmission
-    while (1)                                      // add timer in here for timeout
-    {
+    while (1) {                                    // add timer in here for timeout
+      // Return success
       if ((CAN1->TSR & (1 << (8 * mailbox + 1))))
-        return 0;                                  // successful
+        return 0;
+      // Return TX error
       else if ((CAN1->TSR & (1 << (8 * mailbox + 3))))
-        return 1;                                  // TX error
+        return 1;
     }
-    return 255;                                    // timeout error
+    // Timeout error
+    return 255;
   }
   if (CAN == 2) {
     CAN2->sTxMailBox[mailbox].TDHR = dataH;
@@ -61,17 +63,20 @@ uint8_t CAN_transmit(uint8_t CAN, uint8_t data_length, unsigned int dataH, unsig
     CAN2->sTxMailBox[mailbox].TDTR = data_length;
     CAN2->sTxMailBox[mailbox].TIR = address << 21;
     CAN2->sTxMailBox[mailbox].TIR |= (1 << 0); // requested transmission
-    while (1)                                  /// add timer in here for timeout
-    {
+    while (1) {                                // add timer in here for timeout
+      // Return successful
       if ((CAN2->TSR & (1 << (8 * mailbox + 1))))
-        return 0;                              // successful
+        return 0;
+      // TX error
       else if ((CAN2->TSR & (1 << (8 * mailbox + 3))))
-        return 1;                              // TX error
+        return 1;
     }
-    return 255;                                // timeout error
-  } else
-    return 100;
+    // timeout error
+    return 255;
+  }
+  return 100;
 }
+
 uint8_t CAN_findEmptyMailboxTX(uint8_t CAN) {
   volatile uint32_t *CAN_address = &CAN1->TSR;
   if (!((CAN == 1) || (CAN == 2)))
@@ -96,17 +101,21 @@ void CAN_configGPIO() {
   GPIOB->MODER &= (uint32_t)~0xF000000;
   GPIOA->MODER |= 0x2800000;
   GPIOB->MODER |= 0xA000000;
+
   // Configure the TX to be push-pull
   GPIOA->OTYPER &= (uint32_t)~0x1000;
   GPIOB->OTYPER &= (uint32_t)~0x2000;
+
   // Output speed
   GPIOA->OSPEEDR |= 0x3000000;
   GPIOB->OSPEEDR |= 0xC000000;
+
   // set the pull-ups
   GPIOA->PUPDR &= 0xC00000;
   GPIOB->PUPDR &= 0x3000000;
   GPIOB->PUPDR |= 0x1000000;
   GPIOA->PUPDR |= 0x400000;
+
   // Remap the AFIO
   GPIOA->AFR[1] &= (uint32_t) ~(0xFF000);
   GPIOA->AFR[1] |= (0x99000);
@@ -126,7 +135,9 @@ void CAN_configPeripheral() {
                                            // disables loop back and silent mode
   CAN1->BTR |= 0x22B000A;                  // enters the Bitrate
   CAN1->MCR &= (uint32_t) ~(1 << 0);       // places CAN into normal mode
+
   while ((CAN1->MCR & (1 << 0)));
+
   CAN1->FMR |= 0x1;                        // sets the filter initialisation to 'on'
   CAN1->FM1R &= (uint32_t) ~(0x1);         // sets to mask mode filter
   CAN1->FS1R |= 0x1;                       // sets to 32 bit mask, as the FR1/2 register is then for a single mask
