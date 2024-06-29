@@ -344,6 +344,11 @@
               <FileType>4</FileType>
               <FilePath>..\..\..\AuroraV-Avionics-lib\bin\libavionics.a</FilePath>
             </File>
+            <File>
+              <FileName>init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\init.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -443,6 +448,11 @@
               <FileName>portmacro.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F\portmacro.h</FilePath>
+            </File>
+            <File>
+              <FileName>init.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\Inc\init.h</FilePath>
             </File>
           </Files>
         </Group>
