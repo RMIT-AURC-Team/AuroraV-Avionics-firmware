@@ -13,8 +13,8 @@
 #include "gpioControl.h" 
 #include "FreeRTOS.h"
 #include "task.h"
-#include "cmsis_os.h"
 #include "kalmanfilter.h"
+#include "init.h"
 
 //--------------------------------
 
@@ -50,6 +50,10 @@ void _init(){}
 int main(void)
 {
 	// Inits ********************************************
+	configure_RCC_APB1();
+	configure_RCC_APB2();
+	configure_RCC_AHB1();
+	
 	SystemInit(); 
 	GPIO_Init();
 	//***************************************************	
