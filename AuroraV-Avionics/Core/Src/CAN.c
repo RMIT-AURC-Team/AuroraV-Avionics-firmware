@@ -1,9 +1,9 @@
 #include "CAN.h"
-#include "boardSupport.h"
-#include "main.h"
-#include "stm32f439xx.h"
-#include <stdint.h>
 
+// RETURNS
+//  0 nothing recived
+//  1 packet recieved,
+//  255 CAN_number not 2 or 1
 uint8_t CAN_receive(CAN *CAN) {
   if (CAN->CAN_number == 1) {
     if (CAN1->RF1R & 0x3) { // checks to see if there was a CAN message recieved
@@ -18,8 +18,8 @@ uint8_t CAN_receive(CAN *CAN) {
       CAN1->RF0R &= (unsigned int)~(1 << 4);
       return 1;
     } else
-      return 0;                      // returns 0 if nothing recieved
-  } else if (CAN->CAN_number == 2) { // samething but for CAN2
+      return 0;
+  } else if (CAN->CAN_number == 2) {
     if (CAN2->RF1R & 0x3) {
       CAN->address = (CAN2->sFIFOMailBox[1].RIR & 0xFFE00040) >> 21;
       CAN->dataL = CAN2->sFIFOMailBox[1].RDLR;
@@ -30,15 +30,22 @@ uint8_t CAN_receive(CAN *CAN) {
       CAN2->RF0R &= (unsigned int)~(1 << 4);
       return 1;
     } else
-      return 0; // returns 0 if nothing recieved
-  } else
-    return 255;
+      return 0;
+  }
+  return 255;
 }
 
+// RETURNS
+//  0 transmission good,
+//  1 transmission failed,
+//  255 transmission timeout,
+//  100 error in CAN selection,
+//  250 no mailboxes available
 uint8_t CAN_transmit(uint8_t CAN, uint8_t data_length, unsigned int dataH, unsigned int dataL, unsigned int address) {
 
   uint8_t mailbox = CAN_findEmptyMailboxTX(CAN);
   if (mailbox == 255)
+    // Mailboxes unavailable
     return 250;
   if (CAN == 1) {
     CAN1->sTxMailBox[mailbox].TDHR = dataH;        // stores the dataH into the Mailbox to transmit
@@ -47,10 +54,10 @@ uint8_t CAN_transmit(uint8_t CAN, uint8_t data_length, unsigned int dataH, unsig
     CAN1->sTxMailBox[mailbox].TIR = address << 21; // enters in the CAN identifer
     CAN1->sTxMailBox[mailbox].TIR |= (1 << 0);     // requested transmission
     while (1) {                                    // add timer in here for timeout
-      // Return success
+      // Success
       if ((CAN1->TSR & (1 << (8 * mailbox + 1))))
         return 0;
-      // Return TX error
+      // TX error
       else if ((CAN1->TSR & (1 << (8 * mailbox + 3))))
         return 1;
     }
@@ -64,7 +71,7 @@ uint8_t CAN_transmit(uint8_t CAN, uint8_t data_length, unsigned int dataH, unsig
     CAN2->sTxMailBox[mailbox].TIR = address << 21;
     CAN2->sTxMailBox[mailbox].TIR |= (1 << 0); // requested transmission
     while (1) {                                // add timer in here for timeout
-      // Return successful
+      // Success
       if ((CAN2->TSR & (1 << (8 * mailbox + 1))))
         return 0;
       // TX error
