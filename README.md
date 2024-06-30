@@ -6,6 +6,7 @@
 <!-- mtoc-start -->
 
 * [Requirements](#requirements)
+  * [Project Includes](#project-includes)
 * [Getting Started](#getting-started)
   * [Using GitHub](#using-github)
   * [Coding Standard](#coding-standard)
@@ -20,9 +21,47 @@
 
 To successfully install and contribute to the project, ensure you have the following prerequisites installed:
 
+- Git
 - Keil uVision IDE
 - GCC for arm (arm-none-eabi-gcc)
-- Git
+- Latest version of Aurora V Avionics libraries found [here](https://github.com/RMIT-AURC-Team/AuroraV-Avionics-lib/releases)
+
+<!-- TODO: add in lib submodule as dependancy -->
+
+##### Project Includes
+
+In order to build the project you must ensure the correct include paths are added for the compiler to recognise the headers. These are provided as follows:
+
+```shell
+/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc
+/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/include
+/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F
+/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS
+/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Drivers/CMSIS/Include
+/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Drivers/CMSIS/Device/ST/STM32F4xx/Include
+/path/to/AuroraV-Avionics-lib/inc
+/path/to/AuroraV-Avionics-lib/inc/DSP/Include
+/path/to/AuroraV-Avionics-lib/inc/DSP/PrivateInclude
+/path/to/AuroraV-Avionics-lib/inc/CORE/Include
+```
+
+For clangd LSP configuration you can use the following:
+
+```yaml
+CompileFlags:
+  Add: [
+    "-I/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc",
+    "-I/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/include",
+    "-I/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F",
+    "-I/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS",
+    "-I/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Drivers/CMSIS/Include",
+    "-I/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Drivers/CMSIS/Device/ST/STM32F4xx/Include",
+    "-I/path/to/AuroraV-Avionics-lib/inc",
+    "-I/path/to/AuroraV-Avionics-lib/inc/DSP/Include/",
+    "-I/path/to/AuroraV-Avionics-lib/inc/DSP/PrivateInclude",
+    "-I/path/to/AuroraV-Avionics-lib/inc/CORE/Include/"
+]
+```
 
 ## Getting Started
 This document provides an introduction to using GitHub for development of Aurora V firmware libraries, as well as their coding standard and conventions. 
@@ -37,7 +76,6 @@ The specification of this standard exists to document and define the organisatio
 
 These standards aren't to be strict and annoying, but to minimise points of failure and ensure a functional codebase with as little resistance as possible. Justification for these standards is provided to help understand their necessity.
 
-<!-- TODO: add in link URLs -->
 To get started as simply as possible, copy the files located in ```/src``` within any library inside the [lib]() repository and follow the conventions you see there.
 
 #### Formatting
