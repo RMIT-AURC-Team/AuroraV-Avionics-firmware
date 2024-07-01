@@ -29,14 +29,12 @@
 // Task Handles 
 TaskHandle_t highrestaskHandle = NULL;  
 TaskHandle_t lowrestaskHandle = NULL; 
-TaskHandle_t stateupdatetaskHandle; 
-TaskHandle_t iomontaskHandle;
-TaskHandle_t memflashtaskHandle; 
+TaskHandle_t stateupdatetaskHandle = NULL; 
+TaskHandle_t iomontaskHandle = NULL;
+TaskHandle_t memflashtaskHandle = NULL; 
 
 // Function Prototypes
 void GPIO_Init(void);
-void TIM1_Init(void);
-void TIM2_Init(void);
 void highrestask(void *pvParameters);
 void lowrestask(void *pvParameters);
 void stateupdatetask(void *pvParameters);
