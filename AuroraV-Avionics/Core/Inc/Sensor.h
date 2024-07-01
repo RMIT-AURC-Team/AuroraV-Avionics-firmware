@@ -38,8 +38,31 @@ void readAccel(int16_t *data);
 void readAccel(int16_t *x, int16_t *y, int16_t *z);
 
 /**************************************
- * Magnetometer
+ * LIS3MDL Magnetometer
  **************************************/
+
+//#define MAGNET ()  				// magnet Address
+
+#define M_CTRL_REG1  0x20
+#define M_CTRL_REG2  0x21
+#define M_CTRL_REG3  0x22
+#define M_CTRL_REG4  0x23
+#define M_CTRL_REG5  0x24
+#define M_OUT_X_L    0x28
+#define M_OUT_X_H    0x29
+#define M_OUT_Y_L    0x2A
+#define M_OUT_Y_H    0x2B
+#define M_OUT_Z_L    0x2C
+#define M_OUT_Z_H    0x2D
+#define M_TEMP_OUT_L 0x2E
+#define M_TEMP_OUT_H 0x2F
+#define M_INT_CFG    0x30
+#define M_INT_SRC    0x31
+#define M_INT_THS_L  0x32
+#define M_INT_THS_H  0x33
+
+#define M_TO_READ 6 				// 2 bytes for each axis (X, Y, Z)
+#define M_SENSITIVITY 
 
 void initMagnet();
 void readMagnet(int16_t *data);
@@ -47,7 +70,7 @@ void readMagnet(int16_t *x, int16_t *y, int16_t *z);
 
 
 /**************************************
- * Barometer
+ * BMP581 Barometer
  **************************************/
  
 
