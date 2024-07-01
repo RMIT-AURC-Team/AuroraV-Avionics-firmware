@@ -73,8 +73,12 @@ void readMagnet(int16_t *x, int16_t *y, int16_t *z);
  * BMP581 Barometer
  **************************************/
  
+ //#define BARO ()  					// baro Address
+#define ODR_CONFIG_REG 0x37
+#define PRESS_XLSB_REG 0x20
+#define TEMP_XLSB_REG  0x1D
 
-void initBarometer();
+void initBaro();
 void readBaro(int32_t *data);
 void readPressure(int32_t *pressure);
 void readTemp(int32_t *temp);

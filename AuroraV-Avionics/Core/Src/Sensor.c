@@ -19,7 +19,7 @@ void initGyro() {
  *      - All axes (X, Y, Z) enabled
  *************************************/
 		
-    // spiWrite(G_CTRL_REG1, 0xCF); 
+    spiWrite(GYRO, G_CTRL_REG1, 0xCF); 
 }
 
 
@@ -45,7 +45,7 @@ void readGyro(int16_t *x, int16_t *y, int16_t *z) {
 		uint8_t buff[G_TO_READ];
 
     // Read X, Y, Z data starting from OUT_X_L register
-    // spiRead(G_OUT_X_L | 0x80, buffer, G_TO_READ); 
+    spiRead(G_OUT_X_L | 0x80, buffer, G_TO_READ); 
 
     // Combine high and low bytes, convert to two's complement
     *x = (int16_t)((buff[1] << 8) | buff[0]) + g_offx;
@@ -78,8 +78,8 @@ void initAccel() {
     //spiWrite(ACCEL_CS_PIN, CNTL1, 0x00); 
 
     // Set CNTL1 and ODCNTL
-    spiWrite(ACCEL_CS_PIN, CNTL1, 0xD0);
-    spiWrite(ACCEL_CS_PIN, ODCNTL, 0xAA);
+    spiWrite(ACCEL, CNTL1, 0xD0);
+    spiWrite(ACCEL, ODCNTL, 0xAA);
 }
 
 
@@ -161,3 +161,59 @@ void readMagnet(int16_t *x, int16_t *y, int16_t *z) {
 /**************************************
  * BMP581 Barometer
  **************************************/
+
+void initBaro() {
+/**********************************************************************
+ * BMP581 Initialization
+ * No use of Interrupts or FIFO
+ * Configuration:
+ *  - ODR_CONFIG (0x37): 0x8F
+ *      - deep_dis: 1 (Deep standby disabled)
+ *      - odr: 1111 (50 Hz output data rate)
+ *      - pwr_mode: 01 (Normal Mode)
+ **********************************************************************/
+
+    spiWrite(BARO, ODR_CONFIG_REG, 0x8F); 
+	
+}
+
+void readBaro(int32_t *data) {
+    /*********************************************************
+     * BMP581 Registers:
+     *  - PRESS_XLSB_REG (0x20)
+     *  - PRESS_LSB_REG (0x21)
+     *  - PRESS_MSB_REG (0x22)
+     *  - TEMP_XLSB_REG (0x1D)
+     *  - TEMP_LSB_REG (0x1E)
+     *  - TEMP_MSB_REG (0x1F)
+     *********************************************************/
+
+    uint8_t temp_buff[3]; 
+    uint8_t press_buff[3];
+
+    // Read pressure data starting from PRESS_XLSB_REG (0x20)
+    spiRead(BARO, PRESS_XLSB_REG | 0x80, press_buff, 3); 
+
+    // Read temperature data starting from TEMP_XLSB_REG (0x1D)
+    spiRead(BARO, TEMP_XLSB_REG | 0x80, temp_buff, 3);
+
+    // Combine pressure data into a 24-bit raw value
+    data[0] = (int32_t)((press_buff[0] << 16) | (press_buff[1] << 8) | press_buff[2]); 
+
+    // Combine temperature data into a 24-bit raw value
+    data[1] = (int32_t)((temp_buff[0] << 16) | (temp_buff[1] << 8) | temp_buff[2]);  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
