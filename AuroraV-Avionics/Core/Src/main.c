@@ -110,8 +110,6 @@ void vDataAcquisitionH(void *argument) {
   const TickType_t xFrequency = pdMS_TO_TICKS(2);
 
   for (;;) {
-    GPIOB->ODR ^= 0x01 << 7; // Toggle PB7
-
     float roll;
     uint8_t r[] = {gyroX[index + 0], gyroX[index + 1], gyroX[index + 2], gyroX[index + 3]};
     memcpy(&roll, &r, sizeof(roll));
@@ -173,30 +171,4 @@ void vUARTDebug(void *argument) {
 }
 
 void vApplicationIdleHook(void) {
-}
-
-void GPIO_Init(void) {
-  // Enable GPIOB clock
-  RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
-
-  // Initialize GPIO pins for LD2 (PB7) and LD3 (PB14)
-  GPIO_Config gpioConfig;
-
-  // LD2 (PB7)
-  gpioConfig.port       = LD2_PORT;
-  gpioConfig.pin        = LD2_PIN;
-  gpioConfig.mode       = GPIO_Output;
-  gpioConfig.outputType = GPIO_Output_PushPull;
-  gpioConfig.speed      = GPIO_50MHz;
-  gpioConfig.pullUpDown = GPIO_No_Pull;
-  gpio_configureGPIO(&gpioConfig);
-
-  // LD3 (PB14)
-  gpioConfig.pin = LD3_PIN;
-  gpio_configureGPIO(&gpioConfig);
-
-  gpio_setGPIO(LD2_PORT, LD2_PIN);   // Turn on LD2 (PB7)
-  gpio_setGPIO(LD3_PORT, LD3_PIN);   // Turn on LD3 (PB14)
-  gpio_resetGPIO(LD2_PORT, LD2_PIN); // Turn off LD2 (PB7)
-  gpio_resetGPIO(LD3_PORT, LD3_PIN); // Turn off LD3 (PB14)
 }
