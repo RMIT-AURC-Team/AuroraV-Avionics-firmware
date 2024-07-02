@@ -52,6 +52,15 @@ void readGyro(int16_t *x, int16_t *y, int16_t *z) {
     *y = (int16_t)((buff[3] << 8) | buff[2]) + g_offy;
     *z = (int16_t)((buff[5] << 8) | buff[4]) + g_offz;
 }
+
+void calcGyro(int16_t *data) {
+
+    // Convert raw values to degrees per second (dps)
+    for (int i = 0; i < 3; i++) {
+        data[i] = (int16_t)((data[i] * G_SENSITIVITY) / 1000.0); 
+    }
+}
+
                      
 /**************************************
  * KX134-1211 Accelerometer
@@ -78,8 +87,8 @@ void initAccel() {
     //spiWrite(ACCEL_CS_PIN, CNTL1, 0x00); 
 
     // Set CNTL1 and ODCNTL
-    spiWrite(ACCEL, CNTL1, 0xD0);
-    spiWrite(ACCEL, ODCNTL, 0xAA);
+    spiWrite(ACCEL, A_CNTL1, 0xD0);
+    spiWrite(ACCEL, A_ODCNTL, 0xAA);
 }
 
 
@@ -106,6 +115,14 @@ void readAccel(int16_t *x, int16_t *y, int16_t *z) {
     *z = (int16_t)((buff[5] << 8) | buff[4]); // Z-axis
 }
 
+void calcAccel(int16_t* rawData, float* accelG) {
+ 
+    // Convert raw data to acceleration in g's
+    for (int i = 0; i < 3; i++) {
+        accelG[i] = (float)rawData[i] / A_SENSITIVITY;
+    }
+}
+
 
 /**************************************
  *  LIS3MDL Magnetometer
@@ -126,13 +143,12 @@ void initMagnet() {
  *      - FS1, FS0: 11 (+/- 16 gauss full scale)
  *  - CTRL_REG4: 0x0C
  *      - OMZ1, OMZ0: 11 (Ultra-high-performance mode for Z)
- *      - BLE: 0 (Big-endian data output)
  *********************************************************/    
 
     // Write configuration 
-    // spiWrite(MAGNET, M_CTRL_REG1, 0x7E);  // Enable temperature sensor, ultra-high-performance, 80 Hz ODR
-    // spiWrite(MAGNET, M_CTRL_REG2, 0x60);  // +/- 16 gauss full scale
-    // spiWrite(MAGNET, M_CTRL_REG4, 0x0C);  // Ultra-high-performance
+    spiWrite(MAGNET, M_CTRL_REG1, 0x7E);  // Enable temperature sensor, ultra-high-performance, 80 Hz ODR
+    spiWrite(MAGNET, M_CTRL_REG2, 0x60);  // +/- 16 gauss full scale
+    spiWrite(MAGNET, M_CTRL_REG4, 0x0C);  // Ultra-high-performance
 }
 
 void readMagnet(int16_t *data) {
@@ -150,12 +166,20 @@ void readMagnet(int16_t *x, int16_t *y, int16_t *z) {
     uint8_t buff[M_TO_READ]; 
 
     // SPI read 
-    // spiRead(MAGNET, M_OUT_X_L | 0x80, M_TO_READ, buff); 
+    spiRead(MAGNET, M_OUT_X_L | 0x80, M_TO_READ, buff); 
 
     // Combine high and low bytes and convert to two's complement
     *x = (int16_t)((buff[1] << 8) | buff[0]);
     *y = (int16_t)((buff[3] << 8) | buff[2]);
     *z = (int16_t)((buff[5] << 8) | buff[4]);
+}
+
+void calcMagnet(int16_t *rawData, float *magnetGauss) {
+	
+    // Convert raw data to magnetic field strength in gauss
+    for (int i = 0; i < 3; i++) {
+        magnetGauss[i] = (float)rawData[i] / M_SENSITIVITY;
+    }
 }
 
 /**************************************
@@ -173,7 +197,7 @@ void initBaro() {
  *      - pwr_mode: 01 (Normal Mode)
  **********************************************************************/
 
-    spiWrite(BARO, ODR_CONFIG_REG, 0x8F); 
+    spiWrite(BARO, B_ODR_CONFIG_REG, 0x8F); 
 	
 }
 
@@ -192,10 +216,10 @@ void readBaro(int32_t *data) {
     uint8_t press_buff[3];
 
     // Read pressure data starting from PRESS_XLSB_REG (0x20)
-    spiRead(BARO, PRESS_XLSB_REG | 0x80, press_buff, 3); 
+    spiRead(BARO, B_PRESS_XLSB_REG | 0x80, press_buff, 3); 
 
     // Read temperature data starting from TEMP_XLSB_REG (0x1D)
-    spiRead(BARO, TEMP_XLSB_REG | 0x80, temp_buff, 3);
+    spiRead(BARO, B_TEMP_XLSB_REG | 0x80, temp_buff, 3);
 
     // Combine pressure data into a 24-bit raw value
     data[0] = (int32_t)((press_buff[0] << 16) | (press_buff[1] << 8) | press_buff[2]); 
@@ -204,7 +228,15 @@ void readBaro(int32_t *data) {
     data[1] = (int32_t)((temp_buff[0] << 16) | (temp_buff[1] << 8) | temp_buff[2]);  
 }
 
+// Function to calculate temperature (in °C) from raw temperature data
+void calcTemp(int32_t raw_temp, float *temp) {
+    *temp = (float)raw_temp / B_TEMP_SCALE; // Convert raw temperature to °C
+}
 
+// Function to calculate pressure (in Pa) from raw pressure data
+void calcPress(int32_t raw_press, float *pressure) {
+    *pressure = (float)raw_press / B_PRESS_SCALE; // Convert raw pressure to Pa
+}
 
 
 

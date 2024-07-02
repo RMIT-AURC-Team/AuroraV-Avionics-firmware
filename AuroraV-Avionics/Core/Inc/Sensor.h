@@ -15,27 +15,30 @@
 void initGyro();
 void readGyro(int16_t *data);
 void readGyro(int16_t *x, int16_t *y, int16_t *z);
+void calcGyro(int16_t *data); 
 
 /**************************************
  * KX134-1211 Accelerometer
  **************************************/
  
 //#define ACCEL ()  				// Accel Address
-#define CNTL1 0x18
-#define CNTL2 0x19
-#define CNTL3 0x1D
-#define CNTL4 0x1E
-#define CNTL5 0x1F
-#define CNTL6 0x20
-#define ODCNTL 0x21
+#define A_CNTL1 0x18
+#define A_CNTL2 0x19
+#define A_CNTL3 0x1D
+#define A_CNTL4 0x1E
+#define A_CNTL5 0x1F
+#define A_CNTL6 0x20
+#define A_ODCNTL 0x21
 #define A_XOUT_L 0x08				// Output Register X Low Byte
   		
 #define A_TO_READ 6 				// 2 bytes for each axis (X, Y, Z)
-#define A_SENSITIVITY 1024  // We are using +-32g range, 
+#define A_SENSITIVITY 1024.0f  // We are using +-32g range, 
 
 void initAccel();
 void readAccel(int16_t *data);
 void readAccel(int16_t *x, int16_t *y, int16_t *z);
+void calcAccel(int16_t* rawData, float* accelG);
+
 
 /**************************************
  * LIS3MDL Magnetometer
@@ -62,25 +65,31 @@ void readAccel(int16_t *x, int16_t *y, int16_t *z);
 #define M_INT_THS_H  0x33
 
 #define M_TO_READ 6 				// 2 bytes for each axis (X, Y, Z)
-#define M_SENSITIVITY 
+#define M_SENSITIVITY 1711.0f // Mag sensitivity 
 
 void initMagnet();
 void readMagnet(int16_t *data);
 void readMagnet(int16_t *x, int16_t *y, int16_t *z);
-
+void calcMagnet(int16_t *rawData, float *magnetGauss);
 
 /**************************************
  * BMP581 Barometer
  **************************************/
  
  //#define BARO ()  					// baro Address
-#define ODR_CONFIG_REG 0x37
-#define PRESS_XLSB_REG 0x20
-#define TEMP_XLSB_REG  0x1D
+#define B_ODR_CONFIG_REG 0x37
+#define B_PRESS_XLSB_REG 0x20
+#define B_TEMP_XLSB_REG  0x1D
+
+#define B_PRESS_SCALE 64.0f 				// to convert from raw to usable (raw/2^6 for pressure)
+#define B_TEMP_SCALE 	16384.0f			// to convert from raw to usable (raw/2^16 for temp)
+
 
 void initBaro();
 void readBaro(int32_t *data);
 void readPressure(int32_t *pressure);
 void readTemp(int32_t *temp);
+void calcTemp(int32_t raw_temp, float *temp);
+void calcPress(int32_t raw_press, float *pressure);
 
 #endif
