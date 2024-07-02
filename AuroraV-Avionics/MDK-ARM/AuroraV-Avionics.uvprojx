@@ -17,8 +17,8 @@
         <TargetCommonOption>
           <Device>STM32F439IIHx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F4xx_DFP.2.16.0</PackID>
-          <PackURL>http://www.keil.com/pack/</PackURL>
+          <PackID>Keil.STM32F4xx_DFP.2.17.1</PackID>
+          <PackURL>https://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00030000) IRAM2(0x10000000,0x00010000) IROM(0x08000000,0x00200000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -171,6 +171,7 @@
             <RvdsVP>2</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <OnChipMemories>
@@ -346,32 +347,7 @@
             <File>
               <FileName>libavionics.a</FileName>
               <FileType>4</FileType>
-              <FilePath>..\..\AuroraV-Avionics-lib\bin\libavionics.a</FilePath>
-            </File>
-            <File>
-              <FileName>baro.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\baro.c</FilePath>
-            </File>
-            <File>
-              <FileName>accelX.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\accelX.c</FilePath>
-            </File>
-            <File>
-              <FileName>gyroX.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\gyroX.c</FilePath>
-            </File>
-            <File>
-              <FileName>gyroY.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\gyroY.c</FilePath>
-            </File>
-            <File>
-              <FileName>gyroZ.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\gyroZ.c</FilePath>
+              <FilePath>..\..\..\AuroraV-Avionics-lib\bin\libavionics.a</FilePath>
             </File>
           </Files>
         </Group>
@@ -477,6 +453,36 @@
               <FileName>init.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Core\Inc\init.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Data</GroupName>
+          <Files>
+            <File>
+              <FileName>accelX.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Data\accelX.c</FilePath>
+            </File>
+            <File>
+              <FileName>baro.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Data\baro.c</FilePath>
+            </File>
+            <File>
+              <FileName>gyroX.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Data\gyroX.c</FilePath>
+            </File>
+            <File>
+              <FileName>gyroY.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Data\gyroY.c</FilePath>
+            </File>
+            <File>
+              <FileName>gyroZ.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Data\gyroZ.c</FilePath>
             </File>
           </Files>
         </Group>
