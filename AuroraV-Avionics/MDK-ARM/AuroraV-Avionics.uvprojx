@@ -300,16 +300,6 @@
               <FilePath>../Core/Src/freertos.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f4xx_it.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/stm32f4xx_it.c</FilePath>
-            </File>
-            <File>
-              <FileName>boardSupport.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\boardSupport.c</FilePath>
-            </File>
-            <File>
               <FileName>gpioControl.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\gpioControl.c</FilePath>
@@ -333,11 +323,6 @@
               <FileName>memflashtask.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\memflashtask.c</FilePath>
-            </File>
-            <File>
-              <FileName>iomontask.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\iomontask.c</FilePath>
             </File>
             <File>
               <FileName>init.c</FileName>
@@ -403,56 +388,6 @@
               <FileName>port.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F\port.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Headers</GroupName>
-          <Files>
-            <File>
-              <FileName>boardSupport.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\boardSupport.h</FilePath>
-            </File>
-            <File>
-              <FileName>FreeRTOSConfig.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\FreeRTOSConfig.h</FilePath>
-            </File>
-            <File>
-              <FileName>gpioControl.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\gpioControl.h</FilePath>
-            </File>
-            <File>
-              <FileName>main.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\main.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_it.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\stm32f4xx_it.h</FilePath>
-            </File>
-            <File>
-              <FileName>ioMapping.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\ioMapping.h</FilePath>
-            </File>
-            <File>
-              <FileName>tasks.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\tasks.h</FilePath>
-            </File>
-            <File>
-              <FileName>portmacro.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F\portmacro.h</FilePath>
-            </File>
-            <File>
-              <FileName>init.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\init.h</FilePath>
             </File>
           </Files>
         </Group>
