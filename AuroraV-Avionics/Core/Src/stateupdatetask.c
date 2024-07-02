@@ -7,13 +7,15 @@
 
 // State Update and Event Logging Task Function
 void stateupdatetask(void const *argument) {
+	
+		TickType_t xLastWakeTime;
+		const TickType_t xFrequency = pdMS_TO_TICKS(250);
+		 
     for(;;) {
 		
 				// to execute in the same 500hz interval, but lower priority than high and low res tasks
 					
-				// 3. Wait for Timer Interrupt
-				//osSignalWait(0x01, osWaitForever); 
-					
+				vTaskDelayUntil(&xLastWakeTime, xFrequency);	
 			
     }
 }

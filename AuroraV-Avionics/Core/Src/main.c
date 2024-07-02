@@ -29,9 +29,9 @@
 // Task Handles 
 TaskHandle_t highrestaskHandle = NULL;  
 TaskHandle_t lowrestaskHandle = NULL; 
-TaskHandle_t stateupdatetaskHandle; 
-TaskHandle_t iomontaskHandle;
-TaskHandle_t memflashtaskHandle; 
+TaskHandle_t stateupdatetaskHandle = NULL; 
+TaskHandle_t iomontaskHandle = NULL;
+TaskHandle_t memflashtaskHandle = NULL; 
 
 // Function Prototypes
 void GPIO_Init(void);
@@ -46,6 +46,10 @@ void memflashtask(void *pvParameters);
 // Unsure of actual fix for linker error
 // temporary (lol) solution
 void _init(){}
+	
+// Init membuff 
+
+	
 
 int main(void)
 {
