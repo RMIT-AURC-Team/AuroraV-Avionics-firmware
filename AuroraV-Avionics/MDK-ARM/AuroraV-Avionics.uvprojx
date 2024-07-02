@@ -305,11 +305,6 @@
               <FilePath>..\Core\Src\gpioControl.c</FilePath>
             </File>
             <File>
-              <FileName>highrestask.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\highrestask.c</FilePath>
-            </File>
-            <File>
               <FileName>lowrestask.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\lowrestask.c</FilePath>
