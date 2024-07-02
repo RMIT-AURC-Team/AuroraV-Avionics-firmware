@@ -344,11 +344,6 @@
               <FilePath>..\Core\Src\init.c</FilePath>
             </File>
             <File>
-              <FileName>libavionics.a</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\..\AuroraV-Avionics-lib\bin\libavionics.a</FilePath>
-            </File>
-            <File>
               <FileName>baro.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\baro.c</FilePath>
@@ -372,6 +367,16 @@
               <FileName>gyroZ.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\gyroZ.c</FilePath>
+            </File>
+            <File>
+              <FileName>buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\buffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>libavionics.a</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\AuroraV-Avionics-lib\bin\libavionics.a</FilePath>
             </File>
           </Files>
         </Group>
@@ -477,6 +482,11 @@
               <FileName>init.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Core\Inc\init.h</FilePath>
+            </File>
+            <File>
+              <FileName>buffer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Core\Inc\buffer.h</FilePath>
             </File>
           </Files>
         </Group>

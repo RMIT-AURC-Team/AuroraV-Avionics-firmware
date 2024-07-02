@@ -15,12 +15,14 @@
 #include "task.h"
 #include "kalmanfilter.h"
 #include "init.h"
-
+#include "membuff.h"
+#include "Buffer.h"
 
 #include "accelX.h"
 #include "gyroX.h"
 #include "gyroY.h"
 #include "gyroZ.h"
+
 
 //--------------------------------
 
@@ -67,6 +69,7 @@ int main(void)
 	
 	SystemInit(); 
 	GPIO_Init();
+	initBuff();
 	//***************************************************	
 	
 
