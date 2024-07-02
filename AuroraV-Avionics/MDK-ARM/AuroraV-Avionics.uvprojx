@@ -345,9 +345,15 @@
               <FilePath>..\..\..\AuroraV-Avionics-lib\bin\libavionics.a</FilePath>
             </File>
             <File>
+<<<<<<< Updated upstream
               <FileName>init.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\init.c</FilePath>
+=======
+              <FileName>flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\flash.c</FilePath>
+>>>>>>> Stashed changes
             </File>
           </Files>
         </Group>
