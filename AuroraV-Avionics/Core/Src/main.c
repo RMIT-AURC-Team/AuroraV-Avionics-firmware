@@ -16,6 +16,12 @@
 #include "kalmanfilter.h"
 #include "init.h"
 
+
+#include "accelX.h"
+#include "gyroX.h"
+#include "gyroY.h"
+#include "gyroZ.h"
+
 //--------------------------------
 
 // LD2 is on PB7
@@ -52,7 +58,8 @@ void _init(){}
 	
 
 int main(void)
-{
+{		
+	
 	// Inits ********************************************
 	configure_RCC_APB1();
 	configure_RCC_APB2();
@@ -61,7 +68,10 @@ int main(void)
 	SystemInit(); 
 	GPIO_Init();
 	//***************************************************	
+	
 
+	
+	
 	// Create Tasks *************************************
 
 	// Create High-Resolution Task
