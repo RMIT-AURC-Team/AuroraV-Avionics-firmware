@@ -35,6 +35,7 @@ extern "C" {
 #include "task.h"
 
 #include "kalmanfilter.h"
+#include "membuff.h"
 #include "quaternion.h"
 
 #include "accelX.h"
@@ -46,23 +47,23 @@ void GPIO_Init(void);
 void vDataAcquisitionH(void *pvParameters);
 void vUARTDebug(void *pvParameters);
 
-/* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
-/* USER CODE BEGIN EFP */
+// Dataframe header definitions
+#define HEADER_ID_Pos     0x06
+#define HEADER_LENGTH_Pos 0x00
 
-/* USER CODE END EFP */
+#define HEADER_HIGHRES_ID     0x01
+#define HEADER_HIGHRES_LENGTH 0x01
+#define HEADER_HIGHRES        (HEADER_HIGHRES_ID << HEADER_ID_Pos) | HEADER_HIGHRES_LENGTH
+#define HEADER_LOWRES_ID      0x02
+#define HEADER_LOWRES_LENGTH  0x0A
+#define HEADER_LOWRES         (HEADER_LOWRES_ID << HEADER_ID_Pos) | HEADER_LOWRES_LENGTH
 
-/* Private defines -----------------------------------------------------------*/
 #define LD2_PORT GPIOB
 #define LD2_PIN  Pin7
-
 #define LD3_PORT GPIOB
 #define LD3_PIN  Pin14
-
-/* USER CODE BEGIN Private defines */
-
-/* USER CODE END Private defines */
 
 #ifdef __cplusplus
 }

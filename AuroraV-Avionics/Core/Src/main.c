@@ -1,5 +1,4 @@
 #include "main.h"
-#include "quaternion.h"
 
 /* Initialise UART */
 void initUART() {
@@ -71,8 +70,16 @@ TaskHandle_t xUARTDebugHandle         = NULL;
 // temporary (lol) solution
 void _init() {}
 
-Quaternion qRot; // Global attitude quaternion
-Quaternion qInit;
+Quaternion qRot;                // Global attitude quaternion
+float vAttitude[3] = {0, 0, 1}; // Attitude vector
+float zUnit[3]     = {0, 0, 1}; // Z unit vector
+float cosine       = 0;         // Tilt angle cosine
+float tilt         = 0;         // Tilt angle
+
+#define BUFF_SIZE 32000
+#define PAGE_SIZE 256
+MemBuff mem;
+uint8_t buff[BUFF_SIZE];
 
 int main(void) {
   //  configure_RCC_APB1();
@@ -82,12 +89,8 @@ int main(void) {
   SystemInit();
   initUART();
 
+  MemBuff_init(&mem, buff, BUFF_SIZE, PAGE_SIZE);
   Quaternion_init(&qRot);
-  Quaternion_init(&qInit);
-  qInit.w = 0;
-  qInit.x = 0;
-  qInit.y = 0;
-  qInit.z = 1;
 
   // Create task handles
   xTaskCreate(vDataAcquisitionH, "DataHighRes", 128, NULL, configMAX_PRIORITIES - 1, &xDataAqcquisitionHHandle);
@@ -110,6 +113,11 @@ void vDataAcquisitionH(void *argument) {
   const TickType_t xFrequency = pdMS_TO_TICKS(2);
 
   for (;;) {
+
+    /* ========================================
+     *             Read sensor data
+     * ======================================== */
+
     float roll;
     uint8_t r[] = {gyroX[index + 0], gyroX[index + 1], gyroX[index + 2], gyroX[index + 3]};
     memcpy(&roll, &r, sizeof(roll));
@@ -121,6 +129,32 @@ void vDataAcquisitionH(void *argument) {
     float yaw;
     uint8_t y[] = {gyroZ[index + 0], gyroZ[index + 1], gyroZ[index + 2], gyroZ[index + 3]};
     memcpy(&yaw, &y, sizeof(yaw));
+
+    /* ========================================
+     *            Append to dataframe
+     * ======================================== */
+
+    // Add sensor data and quaternion to dataframe
+    mem.append(&mem, HEADER_HIGHRES);
+    // TODO: Add sync
+    //
+    // mem.append(&mem, accel[0]); // Accel X high byte
+    // mem.append(&mem, accel[1]); // Accel X low byte
+    // mem.append(&mem, accel[2]); // Accel Y high byte
+    // mem.append(&mem, accel[3]); // Accel Y low byte
+    // mem.append(&mem, accel[4]); // Accel Z high byte
+    // mem.append(&mem, accel[5]); // Accel Z low byte
+    //
+    // mem.append(&mem, gyro[0]); // Gyro X high byte
+    // mem.append(&mem, gyro[1]); // Gyro X low byte
+    // mem.append(&mem, gyro[2]); // Gyro Y high byte
+    // mem.append(&mem, gyro[3]); // Gyro Y low byte
+    // mem.append(&mem, gyro[4]); // Gyro Z high byte
+    // mem.append(&mem, gyro[5]); // Gyro Z low byte
+
+    /* ========================================
+     *            Calculate attitude
+     * ======================================== */
 
     // Integrate attitude quaternion from rotations
     Quaternion qDot;
@@ -135,15 +169,12 @@ void vDataAcquisitionH(void *argument) {
     qRot.normalise(&qRot); // New attitude quaternion
 
     // Apply rotation to z-axis unit vector
-    // TODO: Add support in quaternion lib for vector rotation
-    Quaternion qConj;
-    Quaternion_init(&qConj);
-    qConj.w         = qRot.w;
-    qConj.x         = -qRot.x;
-    qConj.y         = -qRot.y;
-    qConj.z         = -qRot.z;
-    Quaternion temp = Quaternion_mul(&qRot, &qInit); // temp = RP
-    Quaternion q    = Quaternion_mul(&temp, &qConj); // q = temp * R'
+    qRot.fRotateVector3D(&qRot, zUnit, vAttitude);
+
+    // Calculate tilt angle
+    // tilt = cos^-1(attitude · initial)
+    cosine = zUnit[0] * vAttitude[0] + zUnit[1] * vAttitude[1] + zUnit[2] * vAttitude[2];
+    tilt   = acos(cosine) * 180 / M_PI;
 
     index += 4;
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
