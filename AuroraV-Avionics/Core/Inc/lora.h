@@ -4,7 +4,10 @@
 #include "stm32f439xx.h"
 
 void configure_SPI3_LoRa();
+void Load_And_Send_To_LoRa(char *pointerdata);
 void configure_LoRa_module();
+void write_lora_packet(uint8_t address, uint8_t payload);
+uint8_t receive_lora_data(uint8_t address);
 
 // =========================================================
 //               SPI DATA PINS (SCLK, SDI, SDO)
@@ -106,6 +109,6 @@ struct LoRa_Registers {
   uint8_t RegDioMapping1;
   uint8_t RegDioMapping2;
 };
-const struct LoRa_Registers LoRa_Registers = {0, 1, 0xd, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x28, 0x29, 0x2A, 0x2C, 0x31, 0x33, 0x37, 0x39, 0x3B, 0x3D, 0x40, 0x41};
+extern const struct LoRa_Registers LoRa_Registers;
 
 #endif
