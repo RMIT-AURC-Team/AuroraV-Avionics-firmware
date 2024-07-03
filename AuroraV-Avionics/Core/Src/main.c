@@ -9,6 +9,9 @@
 // Task Handles
 TaskHandle_t xDataAqcquisitionHHandle = NULL;
 TaskHandle_t xDataAqcquisitionLHandle = NULL;
+TaskHandle_t xFlashBufferHandle       = NULL;
+
+EventGroupHandle_t xStatus;
 
 // Unsure of actual fix for linker error
 // temporary (lol) solution
@@ -28,8 +31,12 @@ float accel    = 0;
 #define PAGE_SIZE 256
 MemBuff mem;
 uint8_t buff[BUFF_SIZE];
+uint8_t outBuff[PAGE_SIZE];
+
+uint8_t buffCount = 0;
 
 void vApplicationStackOverflowHook(xTaskHandle xTask, char *pcTaskName);
+void initHeartbeat();
 
 int main(void) {
   //  configure_RCC_APB1();
@@ -37,13 +44,18 @@ int main(void) {
   //  configure_RCC_AHB1();
 
   SystemInit();
+  initUART();
+  initHeartbeat();
 
   MemBuff_init(&mem, buff, BUFF_SIZE, PAGE_SIZE);
   Quaternion_init(&qRot);
 
+  xStatus = xEventGroupCreate();
+
   // Create task handles
-  xTaskCreate(vDataAcquisitionH, "DataHighRes", 128, NULL, configMAX_PRIORITIES - 1, &xDataAqcquisitionHHandle);
-  xTaskCreate(vDataAcquisitionL, "DataLowRes", 256, NULL, configMAX_PRIORITIES - 2, &xDataAqcquisitionLHandle);
+  xTaskCreate(vDataAcquisitionH, "DataHighRes", 256, NULL, configMAX_PRIORITIES - 2, &xDataAqcquisitionHHandle);
+  xTaskCreate(vDataAcquisitionL, "DataLowRes", 512, NULL, configMAX_PRIORITIES - 3, &xDataAqcquisitionLHandle);
+  xTaskCreate(vFlashBuffer, "FlashData", 128, NULL, configMAX_PRIORITIES - 1, &xFlashBufferHandle);
 
   vTaskStartScheduler();
 
@@ -52,16 +64,29 @@ int main(void) {
   }
 }
 
+void vApplicationIdleHook(void) {
+  // Write to flash if a page is available in the buffer
+  if (mem.pageReady)
+    xEventGroupSetBits(xStatus, 0x01);
+}
+
+void vFlashBuffer(void *argument) {
+  const TickType_t timeout = pdMS_TO_TICKS(100);
+  for (;;) {
+    // Wait for write flag to be ready, clear flag on exit
+    xEventGroupWaitBits(xStatus, 0x01, pdTRUE, pdFALSE, timeout);
+    _Bool success = mem.readPage(&mem, outBuff); // Flush data to output buffer
+  }
+}
+
 // High-Resolution Task Function
 void vDataAcquisitionH(void *argument) {
-
   unsigned int index = 0;
   float dt           = 0.002;
-  TickType_t xLastWakeTime;
-  const TickType_t xFrequency = pdMS_TO_TICKS(2);
-
   float roll, pitch, yaw;
 
+  TickType_t xLastWakeTime;
+  const TickType_t xFrequency = pdMS_TO_TICKS(2);
   for (;;) {
 
     /* ========================================
@@ -79,21 +104,24 @@ void vDataAcquisitionH(void *argument) {
 
     // Add sensor data and quaternion to dataframe
     mem.append(&mem, HEADER_HIGHRES);
-    // TODO: Add sync
-    //
-    // mem.append(&mem, accel[0]); // Accel X high byte
-    // mem.append(&mem, accel[1]); // Accel X low byte
-    // mem.append(&mem, accel[2]); // Accel Y high byte
-    // mem.append(&mem, accel[3]); // Accel Y low byte
-    // mem.append(&mem, accel[4]); // Accel Z high byte
-    // mem.append(&mem, accel[5]); // Accel Z low byte
-    //
-    // mem.append(&mem, gyro[0]); // Gyro X high byte
-    // mem.append(&mem, gyro[1]); // Gyro X low byte
-    // mem.append(&mem, gyro[2]); // Gyro Y high byte
-    // mem.append(&mem, gyro[3]); // Gyro Y low byte
-    // mem.append(&mem, gyro[4]); // Gyro Z high byte
-    // mem.append(&mem, gyro[5]); // Gyro Z low byte
+    mem.append(&mem, buffCount++); // Accel X high byte
+    mem.append(&mem, buffCount++); // Accel X low byte
+    mem.append(&mem, buffCount++); // Accel Y high byte
+    mem.append(&mem, buffCount++); // Accel Y low byte
+    mem.append(&mem, buffCount++); // Accel Z high byte
+    mem.append(&mem, buffCount++); // Accel Z low byte
+    mem.append(&mem, buffCount++); // Gyro X high byte
+    mem.append(&mem, buffCount++); // Gyro X low byte
+    mem.append(&mem, buffCount++); // Gyro Y high byte
+    mem.append(&mem, buffCount++); // Gyro Y low byte
+    mem.append(&mem, buffCount++); // Gyro Z high byte
+    mem.append(&mem, buffCount++); // Gyro Z low byte
+    mem.append(&mem, buffCount++); // Magnet X high byte
+    mem.append(&mem, buffCount++); // Magnet X low byte
+    mem.append(&mem, buffCount++); // Magnet Y high byte
+    mem.append(&mem, buffCount++); // Magnet Y low byte
+    mem.append(&mem, buffCount++); // Magnet Z high byte
+    mem.append(&mem, buffCount++); // Magnet Z low byte
 
     /* ========================================
      *            Calculate attitude
@@ -120,17 +148,18 @@ void vDataAcquisitionH(void *argument) {
     tilt   = acos(cosine) * 180 / M_PI;
 
     index += 4;
+    // Heartbeat
+    if (index % 160 == 0)
+      GPIOB->ODR ^= GPIO_ODR_OD14;
+
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
   }
 }
 
 // High-Resolution Task Function
 void vDataAcquisitionL(void *argument) {
-
   unsigned int index = 0;
   float dt           = 0.020;
-  TickType_t xLastWakeTime;
-  const TickType_t xFrequency = pdMS_TO_TICKS(20);
 
   /* ========================================
    *       Initialise filter parameters
@@ -171,6 +200,8 @@ void vDataAcquisitionL(void *argument) {
   float zData[2] = {0.0, 0.0};
   arm_mat_init_f32(&z, 2, 1, zData);
 
+  TickType_t xLastWakeTime;
+  const TickType_t xFrequency = pdMS_TO_TICKS(20);
   for (;;) {
 
     /* ========================================
@@ -185,12 +216,14 @@ void vDataAcquisitionL(void *argument) {
 
     // Add sensor data and quaternion to dataframe
     mem.append(&mem, HEADER_LOWRES);
-    // TODO: Add sync
-    //
-    // mem.append(&mem, baro[0]);
-    // mem.append(&mem, baro[1]);
-    // mem.append(&mem, baro[2]);
-    // mem.append(&mem, baro[3]);
+    mem.append(&mem, buffCount++);
+    mem.append(&mem, buffCount++);
+    mem.append(&mem, buffCount++);
+    mem.append(&mem, buffCount++);
+    mem.append(&mem, buffCount++);
+    mem.append(&mem, buffCount++);
+    mem.append(&mem, buffCount++);
+    mem.append(&mem, buffCount++);
 
     /* ========================================
      *              Calculate state
@@ -200,16 +233,37 @@ void vDataAcquisitionL(void *argument) {
     z.pData[1] = (cosine * 9.81 * accel - 9.81); // Acceleration measured in m/s^2
     kf.update(&kf, &z);
 
+    union {
+      float f;
+      uint8_t a[4];
+    } u;
+    u.f = kf.x.pData[1];
+
     index += 4;
+    // Heartbeat
+    if (index % 16 == 0)
+      GPIOB->ODR ^= GPIO_ODR_OD7;
+
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
   }
 }
 
-void vApplicationStackOverflowHook(xTaskHandle xTask, char *pcTaskName) {
-  xTaskHandle bad_task_handle = xTask;      // this seems to give me the crashed task handle
-  char *bad_task_name         = pcTaskName; // this seems to give me a pointer to the name of the crashed task
-  while (1);
-}
+void initHeartbeat() {
+  RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+  __ASM("NOP");
+  __ASM("NOP");
 
-void vApplicationIdleHook(void) {
+  GPIOB->MODER   &= (~(GPIO_MODER_MODE7_Msk));
+  GPIOB->MODER   |= ((0x1 << GPIO_MODER_MODE7_Pos));
+  GPIOB->OTYPER  &= (uint16_t)(~(GPIO_OTYPER_OT7));
+  GPIOB->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED7_Msk));
+  GPIOB->OSPEEDR |= ((0x2 << GPIO_OSPEEDR_OSPEED7_Pos));
+  GPIOB->ODR     &= ~GPIO_ODR_OD7;
+
+  GPIOB->MODER   &= (~(GPIO_MODER_MODE14_Msk));
+  GPIOB->MODER   |= ((0x1 << GPIO_MODER_MODE14_Pos));
+  GPIOB->OTYPER  &= (uint16_t)(~(GPIO_OTYPER_OT14));
+  GPIOB->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED14_Msk));
+  GPIOB->OSPEEDR |= ((0x2 << GPIO_OSPEEDR_OSPEED14_Pos));
+  GPIOB->ODR     &= ~GPIO_ODR_OD14;
 }

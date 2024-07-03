@@ -27,7 +27,7 @@ extern "C" {
 #endif
 
 #include "FreeRTOS.h"
-#include "gpioControl.h"
+#include "event_groups.h"
 #include "init.h"
 #include "main.h"
 #include "stdint.h"
@@ -37,8 +37,10 @@ extern "C" {
 #include "kalmanfilter.h"
 #include "membuff.h"
 #include "quaternion.h"
+#include "uart.h"
 
 void GPIO_Init(void);
+void vFlashBuffer(void *pvParameters);
 void vDataAcquisitionH(void *pvParameters);
 void vDataAcquisitionL(void *pvParameters);
 void vUARTDebug(void *pvParameters);
@@ -50,7 +52,7 @@ void Error_Handler(void);
 #define HEADER_LENGTH_Pos 0x00
 
 #define HEADER_HIGHRES_ID     0x01
-#define HEADER_HIGHRES_LENGTH 0x01
+#define HEADER_HIGHRES_LENGTH 0x14
 #define HEADER_HIGHRES        (HEADER_HIGHRES_ID << HEADER_ID_Pos) | HEADER_HIGHRES_LENGTH
 #define HEADER_LOWRES_ID      0x02
 #define HEADER_LOWRES_LENGTH  0x0A

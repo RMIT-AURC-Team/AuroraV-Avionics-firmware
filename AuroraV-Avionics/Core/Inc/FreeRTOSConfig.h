@@ -66,10 +66,11 @@
 #define configMINIMAL_STACK_SIZE                 ((uint16_t)128)
 #define configTOTAL_HEAP_SIZE                    ((size_t)15360)
 #define configMAX_TASK_NAME_LEN                  ( 16 )
-#define configUSE_16_BIT_TICKS                   0
+#define configUSE_16_BIT_TICKS                   1
 #define configUSE_MUTEXES                        1
 #define configQUEUE_REGISTRY_SIZE                8
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION  1
+#define configCHECK_FOR_STACK_OVERFLOW  				 0 
 /* USER CODE BEGIN MESSAGE_BUFFER_LENGTH_TYPE */
 /* Defaults to size_t for backward compatibility, but can be changed
    if lengths will always be less than the number of bytes in a size_t. */
@@ -90,6 +91,7 @@ to exclude the API function. */
 #define INCLUDE_vTaskDelayUntil              1
 #define INCLUDE_vTaskDelay                   1
 #define INCLUDE_xTaskGetSchedulerState       1
+#define INCLUDE_uxTaskGetStackHighWaterMark  0
 
 /* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS
