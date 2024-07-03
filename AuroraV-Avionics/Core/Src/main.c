@@ -7,7 +7,6 @@
 ********************************************/
 
 #include <stdint.h>
-#include "boardSupport.h"
 #include "main.h"
 #include "stm32f4xx.h"
 #include "gpioControl.h" 
@@ -15,6 +14,7 @@
 #include "task.h"
 #include "kalmanfilter.h"
 #include "init.h"
+#include "lora.h"
 
 //--------------------------------
 
@@ -56,26 +56,8 @@ int main(void)
 	
 	SystemInit(); 
 	GPIO_Init();
-	//***************************************************	
-
-	// Create Tasks *************************************
-
-	// Create High-Resolution Task
-	xTaskCreate(highrestask, "highrestask", 128, NULL, configMAX_PRIORITIES - 1, &highrestaskHandle);
-
-	// Create Low-Resolution Task
-	xTaskCreate(lowrestask, "lowrestask", 128, NULL, configMAX_PRIORITIES - 1, &lowrestaskHandle);
 	
-	// Create State Update and Event log Task 
-	//xTaskCreate(stateupdatetask, "stateupdatetask", 128, NULL, configMAX_PRIORITIES - 3, &stateupdatetaskHandle);
-	
-	// Create I/O Monitor Task 
-	//xTaskCreate(iomontask, "iomontask", 128, NULL, configMAX_PRIORITIES - 4, &iomontaskHandle);
-
-	// Create Memory Flash Task
-	//xTaskCreate(memflashtask, "memflashtask", 128, NULL, configMAX_PRIORITIES - 5, &memflashtaskHandle);
-	
-	//***************************************************
+	uint8_t adr = LoRa_Registers.RegDioMapping1;
 	
     // Start FreeRTOS scheduler
     vTaskStartScheduler();
