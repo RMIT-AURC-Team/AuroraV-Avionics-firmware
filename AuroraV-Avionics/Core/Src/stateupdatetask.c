@@ -3,6 +3,7 @@
 #include "gpioControl.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include <stdbool.h> 
 
 bool isAccelerationAbove5Gs(void);
 void sendVelocityAndAltitude(void);
@@ -81,7 +82,7 @@ void stateupdatetask(void const *argument) {
         }
 				
 				// Execute at 500Hz interval, but with lower priority than high and low res tasks
-        vTaskDelay(pdMS_TO_TICKS(2))
+        vTaskDelay(pdMS_TO_TICKS(2)); 
     }
 }
 

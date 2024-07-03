@@ -8,7 +8,7 @@
 void highrestask(void const *argument) {
 
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = pdMS_TO_TICKS(250);
+	const TickType_t xFrequency = pdMS_TO_TICKS(2);
 
 	for(;;) {
 		GPIOB->ODR ^= 0x01 << 7; 	// Toggle PB7

@@ -304,16 +304,6 @@
               <FilePath>../Core/Src/stm32f4xx_it.c</FilePath>
             </File>
             <File>
-              <FileName>boardSupport.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\boardSupport.c</FilePath>
-            </File>
-            <File>
-              <FileName>gpioControl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\gpioControl.c</FilePath>
-            </File>
-            <File>
               <FileName>highrestask.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\highrestask.c</FilePath>
@@ -332,11 +322,6 @@
               <FileName>memflashtask.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\memflashtask.c</FilePath>
-            </File>
-            <File>
-              <FileName>iomontask.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\iomontask.c</FilePath>
             </File>
             <File>
               <FileName>init.c</FileName>
@@ -409,19 +394,9 @@
           <GroupName>Headers</GroupName>
           <Files>
             <File>
-              <FileName>boardSupport.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\boardSupport.h</FilePath>
-            </File>
-            <File>
               <FileName>FreeRTOSConfig.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\Core\Inc\FreeRTOSConfig.h</FilePath>
-            </File>
-            <File>
-              <FileName>gpioControl.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\gpioControl.h</FilePath>
             </File>
             <File>
               <FileName>main.h</FileName>
