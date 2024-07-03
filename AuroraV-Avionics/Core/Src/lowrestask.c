@@ -8,7 +8,7 @@
 void lowrestask(void const *argument) {
 
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = pdMS_TO_TICKS(20);
+	const TickType_t xFrequency = pdMS_TO_TICKS(20); // 50hz timer
 
 	for(;;) {
 		GPIOB->ODR ^= 0x01 << 14; 	// Toggle PB14

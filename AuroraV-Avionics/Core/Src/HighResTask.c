@@ -8,10 +8,13 @@
 void highrestask(void const *argument) {
 
 	TickType_t xLastWakeTime;
-	const TickType_t xFrequency = pdMS_TO_TICKS(2);
+	const TickType_t xFrequency = pdMS_TO_TICKS(2); // 500hz timer
 
 	for(;;) {
 		GPIOB->ODR ^= 0x01 << 7; 	// Toggle PB7
+		
+		
+		
 		vTaskDelayUntil(&xLastWakeTime, xFrequency); 	
 	}
 }

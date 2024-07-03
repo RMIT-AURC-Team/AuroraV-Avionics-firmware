@@ -39,7 +39,7 @@ void TIM2_Init(void);
 void highrestask(void *pvParameters);
 void lowrestask(void *pvParameters);
 void stateupdatetask(void *pvParameters);
-void memflashtask(void *pvParameters);
+//void memflashtask(void *pvParameters);
 
 // Unsure of actual fix for linker error
 // temporary (lol) solution
@@ -53,6 +53,7 @@ int main(void)
 	configure_RCC_AHB1();
 	
 	SystemInit(); 
+	GPIO_Init();
 	//***************************************************	
 
 	// Create Tasks *************************************
@@ -61,13 +62,13 @@ int main(void)
 	xTaskCreate(highrestask, "highrestask", 128, NULL, configMAX_PRIORITIES - 1, &highrestaskHandle);
 
 	// Create Low-Resolution Task
-	xTaskCreate(lowrestask, "lowrestask", 128, NULL, configMAX_PRIORITIES - 1, &lowrestaskHandle);
+	xTaskCreate(lowrestask, "lowrestask", 128, NULL, configMAX_PRIORITIES - 2, &lowrestaskHandle);
 	
 	// Create State Update and Event log Task 
 	//xTaskCreate(stateupdatetask, "stateupdatetask", 128, NULL, configMAX_PRIORITIES - 3, &stateupdatetaskHandle);
 
 	// Create Memory Flash Task
-	//xTaskCreate(memflashtask, "memflashtask", 128, NULL, configMAX_PRIORITIES - 4, &memflashtaskHandle);
+	//xTaskCreate(memflashtask, "memflashtask", 128, NULL, configMAX_PRIORITIES - 3, &memflashtaskHandle);
 	
 	//***************************************************
 	
@@ -79,12 +80,38 @@ int main(void)
 }
 
 // Not sure if we need an Idle hook to execute anything? 
-void vApplicationIdleHook(void)
-{
-	// use for flash? 
+//void vApplicationIdleHook(void)
+//{
+//	// use for flash? 
+//}
+
+
+void GPIO_Init(void)	{
+	// Enable GPIOB clock
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+
+    // Initialize GPIO pins for LD2 (PB7) and LD3 (PB14)
+    GPIO_Config gpioConfig;
+    
+    // LD2 (PB7)
+    gpioConfig.port = LD2_PORT;
+    gpioConfig.pin = LD2_PIN;
+    gpioConfig.mode = GPIO_Output;
+    gpioConfig.outputType = GPIO_Output_PushPull;
+    gpioConfig.speed = GPIO_50MHz;
+    gpioConfig.pullUpDown = GPIO_No_Pull;
+    gpio_configureGPIO(&gpioConfig);
+    
+    // LD3 (PB14)
+    gpioConfig.pin = LD3_PIN;
+    gpio_configureGPIO(&gpioConfig);
+	
+		  // Flash LD2 (PB7) and LD3 (PB14) once
+    gpio_setGPIO(LD2_PORT, LD2_PIN);    // Turn on LD2 (PB7)
+    gpio_setGPIO(LD3_PORT, LD3_PIN);    // Turn on LD3 (PB14)
+    gpio_resetGPIO(LD2_PORT, LD2_PIN);  // Turn off LD2 (PB7)
+    gpio_resetGPIO(LD3_PORT, LD3_PIN);  // Turn off LD3 (PB14)
 }
-
-
 
 
 
