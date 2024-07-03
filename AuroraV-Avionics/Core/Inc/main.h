@@ -38,13 +38,9 @@ extern "C" {
 #include "membuff.h"
 #include "quaternion.h"
 
-#include "accelX.h"
-#include "gyroX.h"
-#include "gyroY.h"
-#include "gyroZ.h"
-
 void GPIO_Init(void);
 void vDataAcquisitionH(void *pvParameters);
+void vDataAcquisitionL(void *pvParameters);
 void vUARTDebug(void *pvParameters);
 
 void Error_Handler(void);

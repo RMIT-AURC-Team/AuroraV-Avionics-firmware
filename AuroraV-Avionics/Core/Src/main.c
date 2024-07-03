@@ -1,70 +1,14 @@
 #include "main.h"
 
-/* Initialise UART */
-void initUART() {
-  RCC->APB1ENR  |= RCC_APB1ENR_USART3EN;
-  RCC->APB1RSTR ^= RCC_APB1RSTR_USART3RST;
-  __asm("NOP");
-  __asm("NOP");
-  RCC->APB1RSTR ^= RCC_APB1RSTR_USART3RST;
-  __asm("NOP");
-  __asm("NOP");
-
-  RCC->AHB1ENR  |= RCC_AHB1ENR_GPIOBEN;
-  RCC->AHB1RSTR ^= RCC_AHB1RSTR_GPIOBRST;
-  __asm("NOP");
-  __asm("NOP");
-  RCC->AHB1RSTR ^= RCC_AHB1RSTR_GPIOBRST;
-  __asm("NOP");
-  __asm("NOP");
-
-  /* Configure alternate GPIO pin function */
-  GPIOB->MODER  &= ~(GPIO_MODER_MODE11_Msk | GPIO_MODER_MODE10_Msk); // Clear bits to configure in MODER
-  GPIOB->AFR[1] &= ~(GPIO_AFRH_AFSEL11_Msk | GPIO_AFRH_AFSEL10_Msk); // Clear bits to configure in AHR
-
-  /* Set GPIO pins to alternate function */
-  GPIOB->MODER |= (0x02 << GPIO_MODER_MODE11_Pos)
-                | (0x02 << GPIO_MODER_MODE10_Pos);
-
-  /* Enable alternate function of pins */
-  GPIOB->AFR[1] |= (0x07 << GPIO_AFRH_AFSEL11_Pos)
-                 | (0x07 << GPIO_AFRH_AFSEL10_Pos);
-
-  /* Clear UART registers */
-  USART3->BRR &= 0xFFFF0000;                         // Clear lower bits of BRR
-  USART3->CR1 &= ~(USART_CR1_M);                     // Set number of bits per transfer to 8
-  USART3->CR1 &= ~(USART_CR1_PCE);                   // Disable parity
-  USART3->CR1 &= ~(USART_CR1_OVER8);                 // Set to 16 bit over sampling
-  USART3->CR2 &= ~(USART_CR2_STOP_Msk);              // Clear bits to configure stop
-
-  USART3->CR2 &= ~(USART_CR3_CTSE | USART_CR3_RTSE); // Disable hardware flow control
-  USART3->CR2 &= ~(USART_CR2_CLKEN | USART_CR2_CPHA  // Select asynch mode
-                   | USART_CR2_CPOL);
-
-  /* Set required configuration bits */
-  USART3->CR2 |= (0x00 << USART_CR2_STOP_Pos);         // Set number of stop bits
-  USART3->BRR |= (0x111 << USART_BRR_DIV_Mantissa_Pos) // Mantissa = 22d
-               | (0x07 << USART_BRR_DIV_Fraction_Pos); // Fraction = 13d
-
-  /* Enable UART */
-  USART3->CR1 |= (USART_CR1_UE | USART_CR1_RE | USART_CR1_TE);
-}
-
-void transmitByte(uint8_t c) {
-  while ((USART3->SR & USART_SR_TXE) == 0);
-  USART3->DR = c;
-  while ((USART3->SR & USART_SR_TC) == 0);
-}
-
-void transmitBytes(uint8_t *c, int count) {
-  for (int i = 0; i < count; i++) {
-    transmitByte(c[i]);
-  }
-}
+#include "baccel.h"
+#include "baro.h"
+#include "gyroX.h"
+#include "gyroY.h"
+#include "gyroZ.h"
 
 // Task Handles
 TaskHandle_t xDataAqcquisitionHHandle = NULL;
-TaskHandle_t xUARTDebugHandle         = NULL;
+TaskHandle_t xDataAqcquisitionLHandle = NULL;
 
 // Unsure of actual fix for linker error
 // temporary (lol) solution
@@ -76,10 +20,16 @@ float zUnit[3]     = {0, 0, 1}; // Z unit vector
 float cosine       = 0;         // Tilt angle cosine
 float tilt         = 0;         // Tilt angle
 
+float altitude = 0;
+float velocity = 0;
+float accel    = 0;
+
 #define BUFF_SIZE 32000
 #define PAGE_SIZE 256
 MemBuff mem;
 uint8_t buff[BUFF_SIZE];
+
+void vApplicationStackOverflowHook(xTaskHandle xTask, char *pcTaskName);
 
 int main(void) {
   //  configure_RCC_APB1();
@@ -87,14 +37,13 @@ int main(void) {
   //  configure_RCC_AHB1();
 
   SystemInit();
-  initUART();
 
   MemBuff_init(&mem, buff, BUFF_SIZE, PAGE_SIZE);
   Quaternion_init(&qRot);
 
   // Create task handles
   xTaskCreate(vDataAcquisitionH, "DataHighRes", 128, NULL, configMAX_PRIORITIES - 1, &xDataAqcquisitionHHandle);
-  // xTaskCreate(vUARTDebug, "DebugComms", 128, NULL, 0, &xUARTDebugHandle);
+  xTaskCreate(vDataAcquisitionL, "DataLowRes", 256, NULL, configMAX_PRIORITIES - 2, &xDataAqcquisitionLHandle);
 
   vTaskStartScheduler();
 
@@ -108,9 +57,10 @@ void vDataAcquisitionH(void *argument) {
 
   unsigned int index = 0;
   float dt           = 0.002;
-
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(2);
+
+  float roll, pitch, yaw;
 
   for (;;) {
 
@@ -118,17 +68,10 @@ void vDataAcquisitionH(void *argument) {
      *             Read sensor data
      * ======================================== */
 
-    float roll;
-    uint8_t r[] = {gyroX[index + 0], gyroX[index + 1], gyroX[index + 2], gyroX[index + 3]};
-    memcpy(&roll, &r, sizeof(roll));
-
-    float pitch;
-    uint8_t p[] = {gyroY[index + 0], gyroY[index + 1], gyroY[index + 2], gyroY[index + 3]};
-    memcpy(&pitch, &p, sizeof(pitch));
-
-    float yaw;
-    uint8_t y[] = {gyroZ[index + 0], gyroZ[index + 1], gyroZ[index + 2], gyroZ[index + 3]};
-    memcpy(&yaw, &y, sizeof(yaw));
+    memcpy(&accel, baccel + index, sizeof(accel));
+    memcpy(&roll, gyroX + index, sizeof(roll));
+    memcpy(&pitch, gyroY + index, sizeof(pitch));
+    memcpy(&yaw, gyroZ + index, sizeof(yaw));
 
     /* ========================================
      *            Append to dataframe
@@ -182,23 +125,90 @@ void vDataAcquisitionH(void *argument) {
 }
 
 // High-Resolution Task Function
-void vUARTDebug(void *argument) {
+void vDataAcquisitionL(void *argument) {
 
-  float dt = 0.002;
-
+  unsigned int index = 0;
+  float dt           = 0.020;
   TickType_t xLastWakeTime;
-  const TickType_t xFrequency = pdMS_TO_TICKS(dt * 1000);
+  const TickType_t xFrequency = pdMS_TO_TICKS(20);
 
-  union {
-    float fData;
-    uint8_t bData[sizeof(float)];
-  } u;
+  /* ========================================
+   *       Initialise filter parameters
+   * ======================================== */
+
+  KalmanFilter kf;
+  KalmanFilter_init(&kf);
+
+  float A[9] = {
+      1.0, dt, 0.5 * (dt * dt),
+      0.0, 1.0, dt,
+      0.0, 0.0, 1.0
+  };
+  kf.A.pData = A;
+
+  float Q[9] = {
+      99.52, 0.0, 0.0,
+      0.0, 1.42, 0.0,
+      0.0, 0.0, 6.27
+  };
+  kf.Q.pData = Q;
+
+  float R[4] = {
+      97.92, 0.0,
+      0.0, 0.61
+  };
+  kf.R.pData = R;
+
+  float P[9] = {
+      1, 0.0, 0.0,
+      0.0, 0.1, 0.0,
+      0.0, 0.0, 100.0
+  };
+  kf.P.pData = P;
+
+  // Initialise measurement matrix
+  arm_matrix_instance_f32 z;
+  float zData[2] = {0.0, 0.0};
+  arm_mat_init_f32(&z, 2, 1, zData);
 
   for (;;) {
-    u.fData = qRot.w;
-    transmitBytes(u.bData, sizeof(float));
+
+    /* ========================================
+     *             Read sensor data
+     * ======================================== */
+
+    memcpy(&altitude, baro + index, sizeof(altitude));
+
+    /* ========================================
+     *            Append to dataframe
+     * ======================================== */
+
+    // Add sensor data and quaternion to dataframe
+    mem.append(&mem, HEADER_LOWRES);
+    // TODO: Add sync
+    //
+    // mem.append(&mem, baro[0]);
+    // mem.append(&mem, baro[1]);
+    // mem.append(&mem, baro[2]);
+    // mem.append(&mem, baro[3]);
+
+    /* ========================================
+     *              Calculate state
+     * ======================================== */
+
+    z.pData[0] = altitude;
+    z.pData[1] = (cosine * 9.81 * accel - 9.81); // Acceleration measured in m/s^2
+    kf.update(&kf, &z);
+
+    index += 4;
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
   }
+}
+
+void vApplicationStackOverflowHook(xTaskHandle xTask, char *pcTaskName) {
+  xTaskHandle bad_task_handle = xTask;      // this seems to give me the crashed task handle
+  char *bad_task_name         = pcTaskName; // this seems to give me a pointer to the name of the crashed task
+  while (1);
 }
 
 void vApplicationIdleHook(void) {
