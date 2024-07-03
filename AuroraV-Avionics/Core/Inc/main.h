@@ -22,10 +22,6 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "FreeRTOS.h"
 #include "event_groups.h"
 #include "init.h"
@@ -37,13 +33,19 @@ extern "C" {
 #include "kalmanfilter.h"
 #include "membuff.h"
 #include "quaternion.h"
+#include "state.h"
 #include "uart.h"
 
-void GPIO_Init(void);
+#include "baccel.h"
+#include "baro.h"
+#include "gyroX.h"
+#include "gyroY.h"
+#include "gyroZ.h"
+
 void vFlashBuffer(void *pvParameters);
 void vDataAcquisitionH(void *pvParameters);
 void vDataAcquisitionL(void *pvParameters);
-void vUARTDebug(void *pvParameters);
+void vStateUpdate(void *pvParameters);
 
 void Error_Handler(void);
 
@@ -63,8 +65,4 @@ void Error_Handler(void);
 #define LD3_PORT GPIOB
 #define LD3_PIN  Pin14
 
-#ifdef __cplusplus
-}
 #endif
-
-#endif /* __MAIN_H */
