@@ -27,8 +27,7 @@ uint8_t outBuff[PAGE_SIZE];
 uint8_t buffCount = 0;               // Test variable for reading output buffer
 
 enum State currentState = PRELAUNCH; // Boot in prelaunch
-
-void vApplicationStackOverflowHook(xTaskHandle xTask, char *pcTaskName);
+void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName);
 void initHeartbeat();
 
 int main(void) {
@@ -46,10 +45,10 @@ int main(void) {
   xEventGroupClearBits(xTaskEnableGroup, 0xFF);
 
   // Create task handles
-  xTaskCreate(vDataAcquisitionH, "DataHighRes", 256, NULL, configMAX_PRIORITIES - 2, &xDataAqcquisitionHHandle);
-  xTaskCreate(vDataAcquisitionL, "DataLowRes", 512, NULL, configMAX_PRIORITIES - 3, &xDataAqcquisitionLHandle);
-  xTaskCreate(vStateUpdate, "StateUpdate", 128, NULL, configMAX_PRIORITIES - 4, &xStateUpdateHandle);
-  xTaskCreate(vFlashBuffer, "FlashData", 128, NULL, configMAX_PRIORITIES - 1, &xFlashBufferHandle);
+  xTaskCreate(vDataAcquisitionH, "HDataAcq", 256, NULL, configMAX_PRIORITIES - 2, &xDataAqcquisitionHHandle);
+  xTaskCreate(vDataAcquisitionL, "LDataAcq", 256, NULL, configMAX_PRIORITIES - 3, &xDataAqcquisitionLHandle);
+  xTaskCreate(vStateUpdate, "StateUpdate", 256, NULL, configMAX_PRIORITIES - 4, &xStateUpdateHandle);
+  xTaskCreate(vFlashBuffer, "FlashData", 256, NULL, configMAX_PRIORITIES - 1, &xFlashBufferHandle);
 
   vTaskStartScheduler();
 
@@ -145,7 +144,7 @@ void vDataAcquisitionH(void *argument) {
   float roll, pitch, yaw;
 
   TickType_t xLastWakeTime;
-  const TickType_t xFrequency = pdMS_TO_TICKS(2); // 50Hz
+  const TickType_t xFrequency = pdMS_TO_TICKS(2); // 500Hz
   const TickType_t timeout    = pdMS_TO_TICKS(2); // Shouldn't block longer than period
   for (;;) {
     // Read sensor data
@@ -199,7 +198,7 @@ void vDataAcquisitionH(void *argument) {
       tilt   = acos(cosine) * 180 / M_PI;
     }
 
-    index += 4;
+    index = (index + 4) % accel_length; // Handle buffer overflow;
     // Heartbeat
     if (index % 160 == 0)
       GPIOB->ODR ^= GPIO_ODR_OD14;
@@ -282,7 +281,7 @@ void vDataAcquisitionL(void *argument) {
       u.f = kf.x.pData[1];
     }
 
-    index += 4;
+    index = (index + 4) % baro_length; // Handle buffer overflow;
     // Heartbeat
     if (index % 16 == 0)
       GPIOB->ODR ^= GPIO_ODR_OD7;
@@ -309,6 +308,12 @@ void initHeartbeat() {
   GPIOB->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED14_Msk));
   GPIOB->OSPEEDR |= ((0x2 << GPIO_OSPEEDR_OSPEED14_Pos));
   GPIOB->ODR     &= ~GPIO_ODR_OD14;
+}
+
+void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName) {
+  xTaskHandle *bad_task_handle = pxTask;
+  signed char *bad_task_name   = pcTaskName;
+  for (;;);
 }
 
 // Unsure of actual fix for linker error
