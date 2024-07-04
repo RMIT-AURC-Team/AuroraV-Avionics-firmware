@@ -29,6 +29,7 @@ uint8_t buffCount = 0;               // Test variable for reading output buffer
 enum State currentState = PRELAUNCH; // Boot in prelaunch
 void vApplicationStackOverflowHook(xTaskHandle *pxTask, signed char *pcTaskName);
 void initHeartbeat();
+int interval2ms = 0;
 
 int main(void) {
   //  configure_RCC_APB1();
@@ -87,8 +88,15 @@ void vStateUpdate(void *argument) {
   int periods = 0;
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(20); // 50Hz
-  //
   for (;;) {
+    vTaskDelayUntil(&xLastWakeTime, xFrequency);
+    if (interval2ms % 500 == 0)
+      GPIOB->ODR ^= GPIO_ODR_OD0;                  // Green
+
+    // Increment flight timer period post-launch
+    // if (currentState != PRELAUNCH)
+    periods++;
+
     switch (currentState) {
     case PRELAUNCH:
       // if (periods >= 100 || isAccelerationAbove5Gs()) { // Using periods to simulate >2s timing
@@ -128,9 +136,6 @@ void vStateUpdate(void *argument) {
       // Handle unexpected state
       break;
     }
-
-    periods++;
-    vTaskDelayUntil(&xLastWakeTime, xFrequency);
   }
 }
 
@@ -145,8 +150,14 @@ void vDataAcquisitionH(void *argument) {
 
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(2); // 500Hz
-  const TickType_t timeout    = pdMS_TO_TICKS(2); // Shouldn't block longer than period
+  const TickType_t blockTime  = pdMS_TO_TICKS(0); // Don't need to block
   for (;;) {
+    vTaskDelayUntil(&xLastWakeTime, xFrequency);
+    // Heartbeat
+    if (interval2ms % 50 == 0)
+      GPIOB->ODR ^= GPIO_ODR_OD14; // Red
+    interval2ms++;
+
     // Read sensor data
     memcpy(&accel, baccel + index, sizeof(accel));
     memcpy(&roll, gyroX + index, sizeof(roll));
@@ -175,7 +186,7 @@ void vDataAcquisitionH(void *argument) {
     mem.append(&mem, buffCount++); // Magnet Z low byte
 
     // Only run calculations when enabled
-    EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x02, pdFALSE, pdFALSE, timeout);
+    EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x02, pdFALSE, pdFALSE, blockTime);
     if ((uxBits & 0x02) == 0x02) {
       // Integrate attitude quaternion from rotations
       Quaternion qDot;
@@ -199,11 +210,6 @@ void vDataAcquisitionH(void *argument) {
     }
 
     index = (index + 4) % accel_length; // Handle buffer overflow;
-    // Heartbeat
-    if (index % 160 == 0)
-      GPIOB->ODR ^= GPIO_ODR_OD14;
-
-    vTaskDelayUntil(&xLastWakeTime, xFrequency);
   }
 }
 
@@ -250,8 +256,13 @@ void vDataAcquisitionL(void *argument) {
 
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(20); // 50Hz
-  const TickType_t timeout    = pdMS_TO_TICKS(20); // Shouldn't block longer than period
+  const TickType_t blockTime  = pdMS_TO_TICKS(0);  // Don't need to block
   for (;;) {
+    vTaskDelayUntil(&xLastWakeTime, xFrequency);
+    // Heartbeat
+    if (interval2ms % 500 == 0)
+      GPIOB->ODR ^= GPIO_ODR_OD7; // Blue
+    //
     // Read sensor data
     memcpy(&altitude, baro + index, sizeof(altitude));
 
@@ -267,7 +278,7 @@ void vDataAcquisitionL(void *argument) {
     mem.append(&mem, buffCount++);
 
     // Only run calculations when enabled
-    EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x04, pdFALSE, pdFALSE, timeout);
+    EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x04, pdFALSE, pdFALSE, blockTime);
     if ((uxBits & 0x04) == 0x04) {
       // Calculate state
       z.pData[0] = altitude;
@@ -282,11 +293,6 @@ void vDataAcquisitionL(void *argument) {
     }
 
     index = (index + 4) % baro_length; // Handle buffer overflow;
-    // Heartbeat
-    if (index % 16 == 0)
-      GPIOB->ODR ^= GPIO_ODR_OD7;
-
-    vTaskDelayUntil(&xLastWakeTime, xFrequency);
   }
 }
 
@@ -294,6 +300,12 @@ void initHeartbeat() {
   RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
   __ASM("NOP");
   __ASM("NOP");
+  GPIOB->MODER   &= (~(GPIO_MODER_MODE0_Msk));
+  GPIOB->MODER   |= ((0x1 << GPIO_MODER_MODE0_Pos));
+  GPIOB->OTYPER  &= (uint16_t)(~(GPIO_OTYPER_OT0));
+  GPIOB->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED0_Msk));
+  GPIOB->OSPEEDR |= ((0x2 << GPIO_OSPEEDR_OSPEED0_Pos));
+  GPIOB->ODR     &= ~GPIO_ODR_OD0;
 
   GPIOB->MODER   &= (~(GPIO_MODER_MODE7_Msk));
   GPIOB->MODER   |= ((0x1 << GPIO_MODER_MODE7_Pos));
