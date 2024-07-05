@@ -61,11 +61,8 @@ int main(void) {
 
   // Configure peripherals
   CANGPIO_config();
-	CAN_Peripheral_config();
+  CAN_Peripheral_config();
   configure_LoRa_module();
-	
-	//buzzer();
-	//buzzer();
 
   // Configure accelerometer
   write_ACCELL_1(ACCEL_CNTL1, 0x50);                                     // Accel select, 32g sensitivity
@@ -75,7 +72,9 @@ int main(void) {
 
   // Configure gyroscope
   write_GYRO(GYRO_CTRL_REG1, GYRO_CTRL_REG1_ODR_800Hz | GYRO_CTRL_REG1_AXIS_ENABLE | GYRO_CTRL_REG1_PD_ENABLE);
-
+	//write_GYRO(GYRO_CTRL_REG1, 0xCF);
+	
+	
   // Configure magnetometer
   write_MAG(MAGNET_CTRL_REG1, MAGNET_CTRL_REG1_FAST);
   write_MAG(MAGNET_CTRL_REG2, MAGNET_CTRL_REG2_FS16);
@@ -175,6 +174,8 @@ void vStateUpdate(void *argument) {
       // if (periods >= 100 || isAccelerationAbove5Gs()) { // Using periods to simulate >2s timing
 			CAN_TX(1, 8, 0x0, 0x0, 0x602);
       if (isAccelerationAbove5Gs()) {
+				// load and send to lora 
+				
         xEventGroupSetBits(xTaskEnableGroup, 0x80); // Enable flash
         xEventGroupSetBits(xTaskEnableGroup, 0x06); // Enable data acquisition
         currentState = LAUNCH;

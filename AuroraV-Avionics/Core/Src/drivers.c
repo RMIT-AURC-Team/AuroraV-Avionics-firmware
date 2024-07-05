@@ -205,19 +205,19 @@ uint8_t read_GYRO(uint8_t address) {
 }
 
 void write_GYRO(uint8_t address, uint8_t payload) {
-  uint16_t return_value;
-  uint16_t payload_to_send  = 0;
-  payload_to_send          &= (~(0X4000));           // clear  multiple transfer bit
-  payload_to_send          &= (~(0x8000));           // set 15th bit to 0 for write
-  payload_to_send          |= (address << 0x8);      // load address into top 7 bits
-  payload_to_send          |= (payload);             // mask in data
-  GPIOA->ODR               &= (~(GPIO_MODER_MODE2)); // lower gyro chip select
-  while ((SPI1->SR & SPI_SR_TXE) == 0);              // wait for transmission to be empty
-  SPI1->DR = payload_to_send;
-  while ((SPI1->SR & SPI_SR_RXNE) == 0);             // wait for received data
-  return_value = (uint16_t)(SPI1->DR);
-  while ((SPI1->SR & SPI_SR_BSY) == 1);
-  GPIOD->ODR |= (GPIO_MODER_MODE2);
+			uint16_t return_value;
+			uint16_t payload_to_send = 0;
+			payload_to_send &= (~(0X4000)); // clear  multiple transfer bit
+			payload_to_send &= (~(0x8000));// set 15th bit to 0 for write
+			payload_to_send |= (address << 0x8);// load address into top 7 bits
+			payload_to_send |= (payload);// mask in data
+			GPIOA->ODR &= (~(GPIO_ODR_OD2));// lower gyro chip select
+			while((SPI1->SR & SPI_SR_TXE)== 0);// wait for transmission to be empty
+			SPI1->DR = payload_to_send;
+			while((SPI1->SR & SPI_SR_RXNE)==0);// wait for received data
+			return_value = (uint16_t)(SPI1->DR);
+			while((SPI1->SR & SPI_SR_BSY)== 1);
+			GPIOA->ODR |= (GPIO_ODR_OD2);
 }
 
 void write_MAG(uint8_t address, uint8_t payload) {
@@ -650,6 +650,79 @@ void TIM7init(void) {
   TIM7->ARR &= (~(TIM_ARR_ARR_Msk));
   TIM7->ARR |= 60000; // 1s delay
 }
+
+
+// ===============================================================
+//                          FLASH
+// ===============================================================
+
+ uint8_t read_FLASH_status(uint8_t address)
+	{
+			uint8_t return_value;
+			while((SPI2->SR & SPI_SR_TXE)== 0);
+			GPIOE->ODR &= (~(GPIO_ODR_OD11));
+			SPI2->DR = address;
+			while((SPI2->SR & SPI_SR_RXNE)==0);// wait for received data
+			GPIOE->ODR |= (GPIO_ODR_OD11);
+			return_value = (uint8_t)(SPI2->DR);
+			return (uint8_t)return_value;
+	}
+	
+			void write_FLASH_status(uint8_t address,uint8_t data)
+	{
+			//uint8_t return_value;
+			while((SPI2->SR & SPI_SR_TXE)== 0);
+			GPIOE->ODR &= (~(GPIO_ODR_OD11));
+			SPI2->DR = address;
+			while((SPI2->SR & SPI_SR_BSY));
+			SPI2->DR = data;
+			while((SPI2->SR & SPI_SR_BSY));
+			GPIOE->ODR |= (GPIO_ODR_OD11);
+			//eturn_value = (uint8_t)(SPI2->DR);
+	}
+	void Flash_Page_Program(unsigned int address, uint8_t * pointer, uint8_t number_of_bytes)// exact same as gyro
+	{
+		uint8_t byte2,byte3,byte4;
+		unsigned int temp = (address & 0xFFFFFF)>>16;
+		byte2 = (uint8_t)temp; 
+		temp = (address & 0xFFFF)>>8;
+		byte3 = (uint8_t)temp;
+		temp = (address & 0xFF);
+		byte4 = (uint8_t)temp;
+		Flash_Write_Enable();
+			GPIOE->ODR &= (~(GPIO_ODR_OD11));// lower gyro chip select
+			while((SPI2->SR & SPI_SR_TXE)== 0);// wait for transmission to be empty
+			SPI2->DR = 0x02;
+			while((SPI2->SR & SPI_SR_BSY));
+			SPI2->DR = byte2;
+			while((SPI2->SR & SPI_SR_BSY));
+			SPI2->DR = byte3;
+			while((SPI2->SR & SPI_SR_BSY));
+			SPI2->DR = byte4;
+			while((SPI2->SR & SPI_SR_BSY));
+		for (uint8_t x = 0; x<number_of_bytes;x++){
+			SPI2->DR = pointer[x];
+			while((SPI2->SR & SPI_SR_BSY));
+		}
+		GPIOE->ODR |= (GPIO_ODR_OD11);
+
+	}
+		void Flash_Chip_Erase(){
+			GPIOE->ODR &= (~(GPIO_ODR_OD11));// lower gyro chip select
+			while((SPI2->SR & SPI_SR_TXE)== 0);// wait for transmission to be empty
+			SPI2->DR = 0x60;	
+			while((SPI2->SR & SPI_SR_BSY));
+			GPIOE->ODR |= (GPIO_ODR_OD11);	
+	}
+			void Flash_Write_Enable(){
+			GPIOE->ODR &= (~(GPIO_ODR_OD11));// lower gyro chip select
+			while((SPI2->SR & SPI_SR_TXE)== 0);// wait for transmission to be empty
+			SPI2->DR = 6;	
+			while((SPI2->SR & SPI_SR_BSY));
+			GPIOE->ODR |= (GPIO_ODR_OD11);	
+	}
+
+
 
 // ===============================================================
 //                           MISC
