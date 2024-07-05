@@ -5,6 +5,7 @@ TaskHandle_t xDataAqcquisitionHHandle = NULL;
 TaskHandle_t xDataAqcquisitionLHandle = NULL;
 TaskHandle_t xFlashBufferHandle       = NULL;
 TaskHandle_t xStateUpdateHandle       = NULL;
+TaskHandle_t xLoRaCommunicateHandle	  = NULL;
 EventGroupHandle_t xTaskEnableGroup; // 0: FLASH,  1: HIGHRES, 2: LOWRES, 7: IDLE
 
 // Calculated attitude variables
@@ -22,7 +23,11 @@ float yaw   = 0;
 // Flight dynamics state variables
 float altitude = 0;     // Current altitude
 float velocity = 0;     // Current vertical velocity
-float accel    = 0;     // Current body-axis acceleration
+float accelZ   = 0;     // Current body-axis acceleration
+
+uint8_t accel[6] = {0, 0, 0, 0, 0, 0};
+uint8_t gyro[6];
+uint8_t magnet[6];
 
 #define BUFF_SIZE 21000 // 2s worth of data in buffer
 #define PAGE_SIZE 256
@@ -56,7 +61,11 @@ int main(void) {
 
   // Configure peripherals
   CANGPIO_config();
-  configure_LoRa_module(&LoRa_Regs);
+	CAN_Peripheral_config();
+  configure_LoRa_module();
+	
+	//buzzer();
+	//buzzer();
 
   // Configure accelerometer
   write_ACCELL_1(ACCEL_CNTL1, 0x50);                                     // Accel select, 32g sensitivity
@@ -87,6 +96,7 @@ int main(void) {
   xTaskCreate(vDataAcquisitionL, "LDataAcq", 256, NULL, configMAX_PRIORITIES - 3, &xDataAqcquisitionLHandle);
   xTaskCreate(vStateUpdate, "StateUpdate", 256, NULL, configMAX_PRIORITIES - 4, &xStateUpdateHandle);
   xTaskCreate(vFlashBuffer, "FlashData", 256, NULL, configMAX_PRIORITIES - 1, &xFlashBufferHandle);
+  //xTaskCreate(vLoRaCommunicate, "LoRa", 256, NULL, configMAX_PRIORITIES - 1, &xLoRaCommunicateHandle);
 
   vTaskStartScheduler();
 
@@ -118,25 +128,52 @@ void vFlashBuffer(void *argument) {
 }
 
 /* =====================================================================
+ *                             LORA HANDLING
+ * ===================================================================== */
+
+void vLoRaCommunicate(void *argument) {
+    TickType_t xLastWakeTime;
+    const TickType_t xFrequency = pdMS_TO_TICKS(500); // 2Hz
+    for (;;) {
+        char payload[16] = {
+            LORA_HEADER_AVD1, 
+            accel[0], accel[1], accel[2],
+            accel[3], accel[4], accel[5],
+            magnet[0], magnet[1],
+            ':', ')'
+        };
+        Load_And_Send_To_LoRa(payload, &LoRa_Regs);
+        // Block until transmit enable task group bit is set
+        //  this is managed within an ISR triggered by the LoRa module
+        // ...
+        // Repeat 2 more times to delivery all payloads
+        vTaskDelayUntil(&xLastWakeTime, xFrequency);
+    }
+}
+
+/* =====================================================================
  *                            STATE MANAGEMENT
  * ===================================================================== */
 
 void vStateUpdate(void *argument) {
-  // int periods = 0;
+  int ms = 0;
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(20); // 50Hz
+
+  float prevAccel = 0;
 
   for (;;) {
     // Block until 20ms interval
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
     // Increment flight timer period post-launch
-    // if (currentState != PRELAUNCH)
-    //   periods++;
+    if (currentState != PRELAUNCH)
+      ms += 20; // 
 
     switch (currentState) {
     case PRELAUNCH:
       // if (periods >= 100 || isAccelerationAbove5Gs()) { // Using periods to simulate >2s timing
+			CAN_TX(1, 8, 0x0, 0x0, 0x602);
       if (isAccelerationAbove5Gs()) {
         xEventGroupSetBits(xTaskEnableGroup, 0x80); // Enable flash
         xEventGroupSetBits(xTaskEnableGroup, 0x06); // Enable data acquisition
@@ -153,7 +190,7 @@ void vStateUpdate(void *argument) {
       }
       break;
     case MOTOR_BURNOUT:
-      if (isAltitudeDropping() && isTiltAngleAbove90() && isNegativeVelocity()) {
+      if (isAltitudeDropping && isTiltAngleAbove90() && isNegativeVelocity()) {
         currentState = APOGEE;
         // Add apogee event dataframe to buffer
         // Send transmission to trigger apogee E-matches
@@ -173,6 +210,7 @@ void vStateUpdate(void *argument) {
       // Handle unexpected state
       break;
     }
+    prevAccel = accelZ;
   }
 }
 
@@ -192,54 +230,55 @@ void vDataAcquisitionH(void *argument) {
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
     // Read and process accelerometer
-    uint8_t lAccelX = read_ACCELL_1(0x08); // Accel X low
-    uint8_t hAccelX = read_ACCELL_1(0x09); // Accel X high
-    uint8_t lAccelY = read_ACCELL_1(0x0A); // Accel Y low
-    uint8_t hAccelY = read_ACCELL_1(0x0B); // Accel Y high
-    uint8_t lAccelZ = read_ACCELL_1(0x0C); // Accel Z low
-    uint8_t hAccelZ = read_ACCELL_1(0x0D); // Accel Z high
+    accel[0] = read_ACCELL_1(0x09); // Accel X high
+    accel[1] = read_ACCELL_1(0x08); // Accel X low
+    accel[2] = read_ACCELL_1(0x0B); // Accel Y high
+    accel[3] = read_ACCELL_1(0x0A); // Accel Y low
+    accel[4] = read_ACCELL_1(0x0D); // Accel Z high
+    accel[5] = read_ACCELL_1(0x0C); // Accel Z low
     // Need to adjust this to actual axis
-    accel = ACCEL_SENSITIVITY_32G * (int16_t)(((uint16_t)hAccelZ << 8) | lAccelZ);
+    accelZ = ACCEL_SENSITIVITY_32G * (int16_t)(((uint16_t)accel[4] << 8) | accel[5]);
 
     // Read and process gyroscope
-    uint8_t lGyroX = read_GYRO(0x28); // Gyro X low
-    uint8_t hGyroX = read_GYRO(0x29); // Gyro X high
-    uint8_t lGyroY = read_GYRO(0x2A); // Gyro Y low
-    uint8_t hGyroY = read_GYRO(0x2B); // Gyro Y high
-    uint8_t lGyroZ = read_GYRO(0x2C); // Gyro Z low
-    uint8_t hGyroZ = read_GYRO(0x2D); // Gyro Z high
+    gyro[0] = read_GYRO(0x29); // Gyro X high
+    gyro[1] = read_GYRO(0x28); // Gyro X low
+    gyro[2] = read_GYRO(0x2B); // Gyro Y high
+    gyro[3] = read_GYRO(0x2A); // Gyro Y low
+    gyro[4] = read_GYRO(0x2D); // Gyro Z high
+    gyro[5] = read_GYRO(0x2C); // Gyro Z low
     // Need to adjust this to actual axis
-    roll  = GYRO_SENSITIVITY * (int16_t)(((uint16_t)hGyroX << 8) | lGyroX);
-    pitch = GYRO_SENSITIVITY * (int16_t)(((uint16_t)hGyroY << 8) | lGyroY);
-    yaw   = GYRO_SENSITIVITY * (int16_t)(((uint16_t)hGyroZ << 8) | lGyroZ);
+    roll  = GYRO_SENSITIVITY * (int16_t)(((uint16_t)gyro[0] << 8) | gyro[1]);
+    pitch = GYRO_SENSITIVITY * (int16_t)(((uint16_t)gyro[2] << 8) | gyro[3]);
+    yaw   = GYRO_SENSITIVITY * (int16_t)(((uint16_t)gyro[4] << 8) | gyro[5]);
 
-    uint8_t lMagnetX = read_MAG(0x28); // Mag X low
-    uint8_t hMagnetX = read_MAG(0x29); // Mag X high
-    uint8_t lMagnetY = read_MAG(0x2A); // Mag Y low
-    uint8_t hMagnetY = read_MAG(0x2B); // Mag Y high
-    uint8_t lMagnetZ = read_MAG(0x2C); // Mag Z low
-    uint8_t hMagnetZ = read_MAG(0x2D); // Mag Z high
+    // Fuck this device
+    magnet[0] = read_MAG(0x29); // Mag X high
+    magnet[1] = read_MAG(0x28); // Mag X low
+    magnet[2] = read_MAG(0x2B); // Mag Y high
+    magnet[3] = read_MAG(0x2A); // Mag Y low
+    magnet[4] = read_MAG(0x2D); // Mag Z high
+    magnet[5] = read_MAG(0x2C); // Mag Z low
 
     // Add sensor data and quaternion to dataframe
     mem.append(&mem, HEADER_HIGHRES);
-    mem.append(&mem, hAccelX);  // Accel X high byte
-    mem.append(&mem, lAccelX);  // Accel X low byte
-    mem.append(&mem, hAccelY);  // Accel Y high byte
-    mem.append(&mem, lAccelY);  // Accel Y low byte
-    mem.append(&mem, hAccelZ);  // Accel Z high byte
-    mem.append(&mem, lAccelZ);  // Accel Z low byte
-    mem.append(&mem, hGyroX);   // Gyro X high byte
-    mem.append(&mem, lGyroX);   // Gyro X low byte
-    mem.append(&mem, hGyroY);   // Gyro Y high byte
-    mem.append(&mem, lGyroY);   // Gyro Y low byte
-    mem.append(&mem, hGyroZ);   // Gyro Z high byte
-    mem.append(&mem, lGyroZ);   // Gyro Z low byte
-    mem.append(&mem, hMagnetX); // Magnet X high byte
-    mem.append(&mem, lMagnetX); // Magnet X low byte
-    mem.append(&mem, hMagnetY); // Magnet Y high byte
-    mem.append(&mem, lMagnetY); // Magnet Y low byte
-    mem.append(&mem, hMagnetZ); // Magnet Z high byte
-    mem.append(&mem, lMagnetZ); // Magnet Z low byte
+    mem.append(&mem, accel[0]);  // Accel X high byte
+    mem.append(&mem, accel[1]);  // Accel X low byte
+    mem.append(&mem, accel[2]);  // Accel Y high byte
+    mem.append(&mem, accel[3]);  // Accel Y low byte
+    mem.append(&mem, accel[4]);  // Accel Z high byte
+    mem.append(&mem, accel[5]);  // Accel Z low byte
+    mem.append(&mem, gyro[0]);   // Gyro X high byte
+    mem.append(&mem, gyro[1]);   // Gyro X low byte
+    mem.append(&mem, gyro[2]);   // Gyro Y high byte
+    mem.append(&mem, gyro[3]);   // Gyro Y low byte
+    mem.append(&mem, gyro[4]);   // Gyro Z high byte
+    mem.append(&mem, gyro[5]);   // Gyro Z low byte
+    mem.append(&mem, magnet[0]); // Magnet X high byte
+    mem.append(&mem, magnet[1]); // Magnet X low byte
+    mem.append(&mem, magnet[2]); // Magnet Y high byte
+    mem.append(&mem, magnet[3]); // Magnet Y low byte
+    mem.append(&mem, magnet[4]); // Magnet Z high byte
+    mem.append(&mem, magnet[5]); // Magnet Z low byte
 
     // Only run calculations when enabled
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x02, pdFALSE, pdFALSE, blockTime);
@@ -341,7 +380,7 @@ void vDataAcquisitionL(void *argument) {
     if ((uxBits & 0x04) == 0x04) {
       // Calculate state
       z.pData[0] = altitude;
-      z.pData[1] = (cosine * 9.81 * accel - 9.81); // Acceleration measured in m/s^2
+      z.pData[1] = (cosine * 9.81 * accelZ - 9.81); // Acceleration measured in m/s^2
       kf.update(&kf, &z);
 
       union {

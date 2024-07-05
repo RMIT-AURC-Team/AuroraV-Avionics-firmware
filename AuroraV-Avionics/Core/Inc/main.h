@@ -39,8 +39,13 @@ void vFlashBuffer(void *pvParameters);
 void vDataAcquisitionH(void *pvParameters);
 void vDataAcquisitionL(void *pvParameters);
 void vStateUpdate(void *pvParameters);
+void vLoRaCommunicate(void *pvParameters);
 
 void Error_Handler(void);
+
+#define LORA_HEADER_AVD1 0x04
+#define LORA_HEADER_AVD2 0x05
+#define LORA_HEADER_AVD3 0x06
 
 #define GYRO_SENSITIVITY           (0.00875f)
 #define GYRO_CTRL_REG1             0x20
