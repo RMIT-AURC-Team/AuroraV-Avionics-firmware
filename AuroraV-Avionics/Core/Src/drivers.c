@@ -202,19 +202,19 @@ uint8_t read_GYRO(uint8_t address) {
 }
 
 void write_GYRO(uint8_t address, uint8_t payload) {
-  uint16_t return_value;
-  uint16_t payload_to_send  = 0;
-  payload_to_send          &= (~(0X4000));           // clear  multiple transfer bit
-  payload_to_send          &= (~(0x8000));           // set 15th bit to 0 for write
-  payload_to_send          |= (address << 0x8);      // load address into top 7 bits
-  payload_to_send          |= (payload);             // mask in data
-  GPIOA->ODR               &= (~(GPIO_MODER_MODE2)); // lower gyro chip select
-  while ((SPI1->SR & SPI_SR_TXE) == 0);              // wait for transmission to be empty
-  SPI1->DR = payload_to_send;
-  while ((SPI1->SR & SPI_SR_RXNE) == 0);             // wait for received data
-  return_value = (uint16_t)(SPI1->DR);
-  while ((SPI1->SR & SPI_SR_BSY) == 1);
-  GPIOD->ODR |= (GPIO_MODER_MODE2);
+			uint16_t return_value;
+			uint16_t payload_to_send = 0;
+			payload_to_send &= (~(0X4000)); // clear  multiple transfer bit
+			payload_to_send &= (~(0x8000));// set 15th bit to 0 for write
+			payload_to_send |= (address << 0x8);// load address into top 7 bits
+			payload_to_send |= (payload);// mask in data
+			GPIOA->ODR &= (~(GPIO_ODR_OD2));// lower gyro chip select
+			while((SPI1->SR & SPI_SR_TXE)== 0);// wait for transmission to be empty
+			SPI1->DR = payload_to_send;
+			while((SPI1->SR & SPI_SR_RXNE)==0);// wait for received data
+			return_value = (uint16_t)(SPI1->DR);
+			while((SPI1->SR & SPI_SR_BSY)== 1);
+			GPIOA->ODR |= (GPIO_ODR_OD2);
 }
 
 void write_MAG(uint8_t address, uint8_t payload) {

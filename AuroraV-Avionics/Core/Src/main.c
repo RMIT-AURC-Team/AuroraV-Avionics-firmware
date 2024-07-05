@@ -66,7 +66,9 @@ int main(void) {
 
   // Configure gyroscope
   write_GYRO(GYRO_CTRL_REG1, GYRO_CTRL_REG1_ODR_800Hz | GYRO_CTRL_REG1_AXIS_ENABLE | GYRO_CTRL_REG1_PD_ENABLE);
-
+	//write_GYRO(GYRO_CTRL_REG1, 0xCF);
+	
+	
   // Configure magnetometer
   write_MAG(MAGNET_CTRL_REG1, MAGNET_CTRL_REG1_FAST);
   write_MAG(MAGNET_CTRL_REG2, MAGNET_CTRL_REG2_FS16);
