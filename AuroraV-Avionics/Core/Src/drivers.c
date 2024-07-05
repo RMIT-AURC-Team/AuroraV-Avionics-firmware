@@ -644,6 +644,79 @@ void TIM7init(void) {
   TIM7->ARR |= 60000; // 1s delay
 }
 
+
+// ===============================================================
+//                          FLASH
+// ===============================================================
+
+ uint8_t read_FLASH_status(uint8_t address)
+	{
+			uint8_t return_value;
+			while((SPI2->SR & SPI_SR_TXE)== 0);
+			GPIOE->ODR &= (~(GPIO_ODR_OD11));
+			SPI2->DR = address;
+			while((SPI2->SR & SPI_SR_RXNE)==0);// wait for received data
+			GPIOE->ODR |= (GPIO_ODR_OD11);
+			return_value = (uint8_t)(SPI2->DR);
+			return (uint8_t)return_value;
+	}
+	
+			void write_FLASH_status(uint8_t address,uint8_t data)
+	{
+			//uint8_t return_value;
+			while((SPI2->SR & SPI_SR_TXE)== 0);
+			GPIOE->ODR &= (~(GPIO_ODR_OD11));
+			SPI2->DR = address;
+			while((SPI2->SR & SPI_SR_BSY));
+			SPI2->DR = data;
+			while((SPI2->SR & SPI_SR_BSY));
+			GPIOE->ODR |= (GPIO_ODR_OD11);
+			//eturn_value = (uint8_t)(SPI2->DR);
+	}
+	void Flash_Page_Program(unsigned int address, uint8_t * pointer, uint8_t number_of_bytes)// exact same as gyro
+	{
+		uint8_t byte2,byte3,byte4;
+		unsigned int temp = (address & 0xFFFFFF)>>16;
+		byte2 = (uint8_t)temp; 
+		temp = (address & 0xFFFF)>>8;
+		byte3 = (uint8_t)temp;
+		temp = (address & 0xFF);
+		byte4 = (uint8_t)temp;
+		Flash_Write_Enable();
+			GPIOE->ODR &= (~(GPIO_ODR_OD11));// lower gyro chip select
+			while((SPI2->SR & SPI_SR_TXE)== 0);// wait for transmission to be empty
+			SPI2->DR = 0x02;
+			while((SPI2->SR & SPI_SR_BSY));
+			SPI2->DR = byte2;
+			while((SPI2->SR & SPI_SR_BSY));
+			SPI2->DR = byte3;
+			while((SPI2->SR & SPI_SR_BSY));
+			SPI2->DR = byte4;
+			while((SPI2->SR & SPI_SR_BSY));
+		for (uint8_t x = 0; x<number_of_bytes;x++){
+			SPI2->DR = pointer[x];
+			while((SPI2->SR & SPI_SR_BSY));
+		}
+		GPIOE->ODR |= (GPIO_ODR_OD11);
+
+	}
+		void Flash_Chip_Erase(){
+			GPIOE->ODR &= (~(GPIO_ODR_OD11));// lower gyro chip select
+			while((SPI2->SR & SPI_SR_TXE)== 0);// wait for transmission to be empty
+			SPI2->DR = 0x60;	
+			while((SPI2->SR & SPI_SR_BSY));
+			GPIOE->ODR |= (GPIO_ODR_OD11);	
+	}
+			void Flash_Write_Enable(){
+			GPIOE->ODR &= (~(GPIO_ODR_OD11));// lower gyro chip select
+			while((SPI2->SR & SPI_SR_TXE)== 0);// wait for transmission to be empty
+			SPI2->DR = 6;	
+			while((SPI2->SR & SPI_SR_BSY));
+			GPIOE->ODR |= (GPIO_ODR_OD11);	
+	}
+
+
+
 // ===============================================================
 //                           MISC
 // ===============================================================

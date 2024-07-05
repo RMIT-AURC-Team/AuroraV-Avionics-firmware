@@ -119,4 +119,8 @@ void GPS_test(void);
 void Load_And_Send_To_LoRa(char *pointerdata, const struct LoRa_Registers *LoRa_Registers);
 void configure_LoRa_module(const struct LoRa_Registers *LoRa_Regs);
 
+void Flash_Write_Enable(void);
+
+
+
 #endif

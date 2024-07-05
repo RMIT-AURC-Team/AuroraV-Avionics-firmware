@@ -22,7 +22,9 @@ float yaw   = 0;
 // Flight dynamics state variables
 float altitude = 0;     // Current altitude
 float velocity = 0;     // Current vertical velocity
-float accel    = 0;     // Current body-axis acceleration
+float accelz    = 0;    // Current body-axis acceleration
+float accelx    = 0;
+float accely    = 0;
 
 #define BUFF_SIZE 21000 // 2s worth of data in buffer
 #define PAGE_SIZE 256
@@ -140,6 +142,8 @@ void vStateUpdate(void *argument) {
     case PRELAUNCH:
       // if (periods >= 100 || isAccelerationAbove5Gs()) { // Using periods to simulate >2s timing
       if (isAccelerationAbove5Gs()) {
+				// load and send to lora 
+				
         xEventGroupSetBits(xTaskEnableGroup, 0x80); // Enable flash
         xEventGroupSetBits(xTaskEnableGroup, 0x06); // Enable data acquisition
         currentState = LAUNCH;
