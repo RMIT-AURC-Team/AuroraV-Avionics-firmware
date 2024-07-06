@@ -28,13 +28,14 @@ float accelZ   = 0;     // Current body-axis acceleration
 uint8_t accel[6] = {0, 0, 0, 0, 0, 0};
 uint8_t gyro[6];
 uint8_t magnet[6];
+float pressGround = 0;
 
 #define BUFF_SIZE 21000 // 2s worth of data in buffer
 #define PAGE_SIZE 256
 MemBuff mem;
 uint8_t buff[BUFF_SIZE];
 uint8_t outBuff[PAGE_SIZE];
-uint8_t buffCount = 0;               // Test variable for reading output buffer
+uint8_t buffCount = 0; 	// Test variable for reading output buffer
 
 enum State currentState = PRELAUNCH; // Boot in prelaunch
 int interval2ms         = 0;
@@ -42,8 +43,6 @@ int interval2ms         = 0;
 const struct LoRa_Registers LoRa_Regs = {0, 1, 0xd, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0X1C, 0X1D, 0X1E, 0X1F, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X28, 0X29, 0X2A, 0X2C, 0X31, 0X33, 0X37, 0X39, 0X3B, 0X3D, 0X40, 0X41};
 
 int main(void) {
-  SystemInit();
-
   // Bring up RCC
   configure_RCC_APB1();
   configure_RCC_APB2();
@@ -63,32 +62,19 @@ int main(void) {
   CANGPIO_config();
   CAN_Peripheral_config();
   configure_LoRa_module();
-
-  // Configure accelerometer
-  write_ACCELL_1(ACCEL_CNTL1, 0x50);                                     // Accel select, 32g sensitivity
-  uint8_t ODCNTL = read_ACCELL_1(ACCEL_ODCNTL);                          // Read from register for reserve mask
-  write_ACCELL_1(ACCEL_ODCNTL, (ACCEL_ODCNTL_RESERVED & ODCNTL) | 0x2A); // No filter, fast startup, 800Hz
-  write_ACCELL_1(ACCEL_CNTL1, 0xD0);                                     // Enable PC1
-
-  // Configure gyroscope
-  write_GYRO(GYRO_CTRL_REG1, GYRO_CTRL_REG1_ODR_800Hz | GYRO_CTRL_REG1_AXIS_ENABLE | GYRO_CTRL_REG1_PD_ENABLE);
-	//write_GYRO(GYRO_CTRL_REG1, 0xCF);
-	
-	
-  // Configure magnetometer
-  write_MAG(MAGNET_CTRL_REG1, MAGNET_CTRL_REG1_FAST);
-  write_MAG(MAGNET_CTRL_REG2, MAGNET_CTRL_REG2_FS16);
-
-  // Configure barometer
-  write_BARO(BARO_ODR_CFG, BARO_ODR_CFG_PWR | BARO_ODR_CFG_DEEP_DIS);
-  uint8_t OSRCFG = read_BARO(BARO_OSR_CFG);
-  write_BARO(BARO_OSR_CFG, (BARO_OSR_CFG_RESERVED * OSRCFG) | BARO_OSR_CFG_PRESS_EN);
+	configure_Sensors();
 
   MemBuff_init(&mem, buff, BUFF_SIZE, PAGE_SIZE);
   Quaternion_init(&qRot);
 
   xTaskEnableGroup = xEventGroupCreate();
   xEventGroupClearBits(xTaskEnableGroup, 0xFF);
+	
+	// Calculate ground pressure
+	uint8_t hPress = read_BARO(0x22);
+  uint8_t lPress = read_BARO(0x21);
+  uint8_t xPress = read_BARO(0x20);
+  pressGround		 = BARO_PRESS_SENSITIVITY * (((int32_t)hPress << 16) | ((int32_t)lPress << 8) | xPress);
 
   // Create task handles
   xTaskCreate(vDataAcquisitionH, "HDataAcq", 256, NULL, configMAX_PRIORITIES - 2, &xDataAqcquisitionHHandle);
@@ -159,7 +145,9 @@ void vStateUpdate(void *argument) {
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(20); // 50Hz
 
-  float prevAccel = 0;
+	unsigned int CANHigh = 0;
+	unsigned int CANLow  = 0;
+	unsigned int id 		 = 0;
 
   for (;;) {
     // Block until 20ms interval
@@ -168,29 +156,42 @@ void vStateUpdate(void *argument) {
     // Increment flight timer period post-launch
     if (currentState != PRELAUNCH)
       ms += 20; // 
-
+		
+		while (1) {
+			CAN_TX(1, 8, 0x00000000, (unsigned int) altitude, 0x602);
+		}
+	
     switch (currentState) {
     case PRELAUNCH:
-      // if (periods >= 100 || isAccelerationAbove5Gs()) { // Using periods to simulate >2s timing
-			CAN_TX(1, 8, 0x0, 0x0, 0x602);
-      if (isAccelerationAbove5Gs()) {
+			xEventGroupSetBits(xTaskEnableGroup, 0x06); // Enable data acquisition
+      if (accelZ >= 5.0f) {
 				// load and send to lora 
-				
         xEventGroupSetBits(xTaskEnableGroup, 0x80); // Enable flash
-        xEventGroupSetBits(xTaskEnableGroup, 0x06); // Enable data acquisition
+				xEventGroupSetBits(xTaskEnableGroup, 0x06); // Enable data acquisition
         currentState = LAUNCH;
         // Add launch event dataframe to buffer
       }
       break;
     case LAUNCH:
-      // Send velocity and altitude to aerobrakes via CAN
-      sendVelocityAndAltitude();
+      // Send altitude to aerobrakes via CAN
+			CANHigh = 0x00000000;
+			CANLow  = (unsigned int) altitude;
+			id 		  = 0x601;
+			CAN_TX(1, 8, CANHigh, CANLow, id);
+			// Transition to motor burnout state on velocity decrease
       if (isVelocityDecreasing()) {
         currentState = MOTOR_BURNOUT;
         // Add motor burnout event dataframe to buffer
       }
       break;
     case MOTOR_BURNOUT:
+			// Send altitude to aerobrakes via CAN
+			CANHigh = 0x00000000;
+			CANLow  = (unsigned int) altitude;
+			id 		  = 0x601;
+			CAN_TX(1, 8, CANHigh, CANLow, id);
+			// Transition to apogee state on three way vote of altitude, velocity, and tilt
+			// apogee is determined as two of three conditions evaluating true
       if (isAltitudeDropping && isTiltAngleAbove90() && isNegativeVelocity()) {
         currentState = APOGEE;
         // Add apogee event dataframe to buffer
@@ -211,7 +212,15 @@ void vStateUpdate(void *argument) {
       // Handle unexpected state
       break;
     }
-    prevAccel = accelZ;
+		
+		// Emergency aerobrakes for excessive tilt
+		if(tilt >= 30.0f) {
+			// CAN payload for aerobrakes retract
+			CANHigh = 0x00000000;
+			CANLow  = 0x00000000;
+			id 		  = 0x602;
+			CAN_TX(1, 8, CANHigh, CANLow, id);
+		}
   }
 }
 
@@ -222,7 +231,10 @@ void vStateUpdate(void *argument) {
 void vDataAcquisitionH(void *argument) {
   float dt = 0.002;
   float roll, pitch, yaw;
-
+	float sensitivity;
+	uint8_t (*read_ACCEL)(uint8_t);
+	uint8_t axisBase = 0;
+	
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(2); // 500Hz
   const TickType_t blockTime  = pdMS_TO_TICKS(0); // Don't need to block
@@ -230,15 +242,21 @@ void vDataAcquisitionH(void *argument) {
     // Block until 2ms interval
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
-    // Read and process accelerometer
-    accel[0] = read_ACCELL_1(0x09); // Accel X high
-    accel[1] = read_ACCELL_1(0x08); // Accel X low
-    accel[2] = read_ACCELL_1(0x0B); // Accel Y high
-    accel[3] = read_ACCELL_1(0x0A); // Accel Y low
-    accel[4] = read_ACCELL_1(0x0D); // Accel Z high
-    accel[5] = read_ACCELL_1(0x0C); // Accel Z low
+		read_ACCEL = &read_ACCEL_1;
+		sensitivity = ACCEL_SENSITIVITY_32G;
+		axisBase = 2; 	// Y axis on the vertical
+		accelZ = -sensitivity * (int16_t)(((uint16_t)accel[axisBase] << 8) | accel[axisBase+1]); // Negative to compensate for inverted axis
+		
+		// Read and process accelerometer
+    accel[0] = (*read_ACCEL)(0x09); // Accel X high
+    accel[1] = (*read_ACCEL)(0x08); // Accel X low
+    accel[2] = (*read_ACCEL)(0x0B); // Accel Y high
+    accel[3] = (*read_ACCEL)(0x0A); // Accel Y low
+    accel[4] = (*read_ACCEL)(0x0D); // Accel Z high
+    accel[5] = (*read_ACCEL)(0x0C); // Accel Z low
     // Need to adjust this to actual axis
-    accelZ = ACCEL_SENSITIVITY_32G * (int16_t)(((uint16_t)accel[4] << 8) | accel[5]);
+    accelZ = -sensitivity * (int16_t)(((uint16_t)accel[axisBase] << 8) | accel[axisBase+1]); // Negative to compensate for inverted axis
+
 
     // Read and process gyroscope
     gyro[0] = read_GYRO(0x29); // Gyro X high
@@ -249,8 +267,8 @@ void vDataAcquisitionH(void *argument) {
     gyro[5] = read_GYRO(0x2C); // Gyro Z low
     // Need to adjust this to actual axis
     roll  = GYRO_SENSITIVITY * (int16_t)(((uint16_t)gyro[0] << 8) | gyro[1]);
-    pitch = GYRO_SENSITIVITY * (int16_t)(((uint16_t)gyro[2] << 8) | gyro[3]);
-    yaw   = GYRO_SENSITIVITY * (int16_t)(((uint16_t)gyro[4] << 8) | gyro[5]);
+    pitch = GYRO_SENSITIVITY * (int16_t)(((uint16_t)gyro[4] << 8) | gyro[5]);
+    yaw   = GYRO_SENSITIVITY * (int16_t)(((uint16_t)gyro[2] << 8) | gyro[3]);
 
     // Fuck this device
     magnet[0] = read_MAG(0x29); // Mag X high
@@ -364,6 +382,8 @@ void vDataAcquisitionL(void *argument) {
     uint8_t lPress = read_BARO(0x21);
     uint8_t xPress = read_BARO(0x20);
     float press    = BARO_PRESS_SENSITIVITY * (((int32_t)hPress << 16) | ((int32_t)lPress << 8) | xPress);
+		
+		altitude = 44330 * (1.0 - pow(press / pressGround, 0.1903));
 
     // Add sensor data and quaternion to dataframe
     mem.append(&mem, HEADER_LOWRES);

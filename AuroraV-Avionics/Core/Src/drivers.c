@@ -159,7 +159,7 @@ void configure_SPI1_Sensor_Suite(void) {
 //                          SENSORS
 // ===============================================================
 
-uint8_t read_ACCELL_1(uint8_t address) {
+uint8_t read_ACCEL_1(uint8_t address) {
   uint16_t return_value;
   uint16_t payload_to_send  = 0;
   payload_to_send          |= 0x8000;
@@ -173,7 +173,7 @@ uint8_t read_ACCELL_1(uint8_t address) {
   return (uint8_t)return_value;
 }
 
-void write_ACCELL_1(uint8_t address, uint8_t payload) {
+void write_ACCEL_1(uint8_t address, uint8_t payload) {
   uint16_t return_value;
   uint16_t payload_to_send  = 0;
   payload_to_send          &= (~(0x8000));      // 0 write, dont need this lne really
@@ -187,6 +187,37 @@ void write_ACCELL_1(uint8_t address, uint8_t payload) {
   while ((SPI1->SR & SPI_SR_BSY) == 1);
   GPIOA->ODR |= (GPIO_ODR_OD1);
 }
+
+uint8_t read_ACCEL_2(uint8_t address) {
+		uint16_t return_value = 0;
+		uint16_t payload_to_send = 0;
+		payload_to_send |= 0x8000;
+		payload_to_send |= (address << 0x8);// load address into top 7 bits
+		while((SPI1->SR & SPI_SR_TXE)== 0);
+		GPIOB->ODR &= (~(GPIO_ODR_OD0));
+		SPI1->DR = payload_to_send;
+		while((SPI1->SR & SPI_SR_RXNE)==0);// wait for received data
+		GPIOB->ODR |= (GPIO_ODR_OD0);
+		return_value = (uint16_t)(SPI1->DR);
+		return (uint8_t)return_value;
+}
+	
+	
+void write_ACCEL_2(uint8_t address, uint8_t payload) {
+	uint16_t return_value;
+	uint16_t payload_to_send = 0;
+	payload_to_send &= (~(0x8000));// 0 write, dont need this lne really
+	payload_to_send |= (address << 0x8);// load address into top 7 bits
+	payload_to_send |= payload;// load data in to write
+	GPIOB->ODR &= (~(GPIO_ODR_OD0));// lower gyro chip select
+	while((SPI1->SR & SPI_SR_TXE)== 0);// wait for transmission to be empty
+	SPI1->DR = payload_to_send;  
+	while((SPI1->SR & SPI_SR_RXNE)==0);// wait for received data
+	return_value = (uint16_t)(SPI1->DR);
+	while((SPI1->SR & SPI_SR_BSY)== 1);
+	GPIOB->ODR |= (GPIO_ODR_OD0);
+}
+
 
 uint8_t read_GYRO(uint8_t address) {
   uint16_t return_value;
@@ -482,7 +513,7 @@ void CAN_Peripheral_config() {
   CAN1->MCR |= 0x1;
   while (!(CAN1->MSR & 1));                // change
   CAN1->BTR &= (uint32_t) ~(0xC37F03FF);   // clears all bit timing bits and disables loop back and silent mode
-  CAN1->BTR |= 0x22B0007;                  // enters the Bitrate as 125kb/s
+  CAN1->BTR |= 0x22B0014;                  // enters the Bitrate as 125kb/s
   CAN1->MCR &= ~(CAN_MCR_SLEEP);           // Clear sleep bit
   CAN1->MCR &= (uint32_t) ~(1 << 0);       // places CAN into normal mode
   while ((CAN1->MSR & (1 << 0)));          // change for MSR
