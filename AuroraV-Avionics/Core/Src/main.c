@@ -20,11 +20,13 @@ float pitch = 0;
 float yaw   = 0;
 
 // Flight dynamics state variables
-float altitude = 0;     // Current altitude
-float velocity = 0;     // Current vertical velocity
-float accelz    = 0;    // Current body-axis acceleration
-float accelx    = 0;
-float accely    = 0;
+float altitude 	= 0;     // Current altitude
+float velocity 	= 0;     // Current vertical velocity
+float accelZ    = 0;    // Current body-axis acceleration
+float previousvelocity = 0; 
+uint8_t velocitydecreasecount = 0; 
+float previousaltitude = 0; 
+uint8_t altitudedecreasecount = 0; 
 
 #define BUFF_SIZE 21000 // 2s worth of data in buffer
 #define PAGE_SIZE 256
@@ -32,6 +34,16 @@ MemBuff mem;
 uint8_t buff[BUFF_SIZE];
 uint8_t outBuff[PAGE_SIZE];
 uint8_t buffCount = 0;               // Test variable for reading output buffer
+
+uint32_t pageAddr = 0;
+
+MemBuff Altitudemem; 
+uint8_t AltitudeBuff[15];
+uint8_t Altitudeoutbuff[15];
+
+MemBuff Velocitymem; 
+uint8_t VelocityBuff[10];
+uint8_t VelocityoutBuff[10]; 
 
 enum State currentState = PRELAUNCH; // Boot in prelaunch
 int interval2ms         = 0;
@@ -59,6 +71,21 @@ int main(void) {
   // Configure peripherals
   CANGPIO_config();
   configure_LoRa_module(&LoRa_Regs);
+	
+	// ****CLEAR FLASH**** // 
+	Flash_Chip_Erase(); 
+	
+		//test flash 
+		
+	  uint8_t writeData = 0xBB; // Data to write
+    uint8_t readData = 0;  
+    uint32_t pageAddr = 0;
+
+		//read_FLASH_status(0x9F);
+		//readData = read_FLASH_status(0x05); 
+		
+    Flash_Page_Program(pageAddr, &writeData, 1);
+		readData = read_FLASH(pageAddr);
 
   // Configure accelerometer
   write_ACCELL_1(ACCEL_CNTL1, 0x50);                                     // Accel select, 32g sensitivity
@@ -82,6 +109,9 @@ int main(void) {
 
   MemBuff_init(&mem, buff, BUFF_SIZE, PAGE_SIZE);
   Quaternion_init(&qRot);
+	
+	MemBuff_init(&Altitudemem, AltitudeBuff, 10, 10); 
+	MemBuff_init(&Velocitymem, VelocityBuff, 5, 5); 
 
   xTaskEnableGroup = xEventGroupCreate();
   xEventGroupClearBits(xTaskEnableGroup, 0xFF);
@@ -117,6 +147,15 @@ void vFlashBuffer(void *argument) {
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x01, pdTRUE, pdFALSE, timeout);
     if ((uxBits & 0x01) == 0x01) {
       _Bool success = mem.readPage(&mem, outBuff); // Flush data to output buffer
+			
+				if (success) {
+           // Write data to flash memory
+           //Flash_Page_Program(flashAddress, outBuff, sizeof(outBuff));
+					
+					pageAddr += 0x100;
+				}
+			
+			
     }
   }
 }
@@ -141,7 +180,7 @@ void vStateUpdate(void *argument) {
     switch (currentState) {
     case PRELAUNCH:
       // if (periods >= 100 || isAccelerationAbove5Gs()) { // Using periods to simulate >2s timing
-      if (isAccelerationAbove5Gs()) {
+      if (isAccelerationAbove5Gs(accelZ)) {
 				// load and send to lora 
 				
         xEventGroupSetBits(xTaskEnableGroup, 0x80); // Enable flash
@@ -153,20 +192,20 @@ void vStateUpdate(void *argument) {
     case LAUNCH:
       // Send velocity and altitude to aerobrakes via CAN
       sendVelocityAndAltitude();
-      if (isVelocityDecreasing()) {
+      if (isVelocityDecreasing(velocity, previousvelocity, velocitydecreasecount)) {
         currentState = MOTOR_BURNOUT;
         // Add motor burnout event dataframe to buffer
       }
       break;
     case MOTOR_BURNOUT:
-      if (isAltitudeDropping() && isTiltAngleAbove90() && isNegativeVelocity()) {
+      if (isAltitudeDropping(altitude, previousaltitude, altitudedecreasecount) + isTiltAngleAbove90(tilt) + isNegativeVelocity(velocity) >= 2) {
         currentState = APOGEE;
         // Add apogee event dataframe to buffer
         // Send transmission to trigger apogee E-matches
       }
       break;
     case APOGEE:
-      if (isAltitude1300ft()) {
+      if (isAltitude1300ft(altitude)) {
         currentState = DESCENT;
         // Enable descent state
         // Add descent event dataframe to buffer
@@ -205,7 +244,7 @@ void vDataAcquisitionH(void *argument) {
     uint8_t lAccelZ = read_ACCELL_1(0x0C); // Accel Z low
     uint8_t hAccelZ = read_ACCELL_1(0x0D); // Accel Z high
     // Need to adjust this to actual axis
-    accel = ACCEL_SENSITIVITY_32G * (int16_t)(((uint16_t)hAccelZ << 8) | lAccelZ);
+    accelZ = ACCEL_SENSITIVITY_32G * (int16_t)(((uint16_t)hAccelZ << 8) | lAccelZ);
 
     // Read and process gyroscope
     uint8_t lGyroX = read_GYRO(0x28); // Gyro X low
@@ -246,6 +285,10 @@ void vDataAcquisitionH(void *argument) {
     mem.append(&mem, lMagnetY); // Magnet Y low byte
     mem.append(&mem, hMagnetZ); // Magnet Z high byte
     mem.append(&mem, lMagnetZ); // Magnet Z low byte
+		
+		// append accel z to velocity buffer 
+		mem.append(&Velocitymem, hAccelZ);  // Accel Z high byte
+    mem.append(&Velocitymem, lAccelZ);  // Accel Z low byte
 
     // Only run calculations when enabled
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x02, pdFALSE, pdFALSE, blockTime);
@@ -347,7 +390,7 @@ void vDataAcquisitionL(void *argument) {
     if ((uxBits & 0x04) == 0x04) {
       // Calculate state
       z.pData[0] = altitude;
-      z.pData[1] = (cosine * 9.81 * accel - 9.81); // Acceleration measured in m/s^2
+      z.pData[1] = (cosine * 9.81 * accelZ - 9.81); // Acceleration measured in m/s^2
       kf.update(&kf, &z);
 
       union {
