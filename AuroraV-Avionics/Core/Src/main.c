@@ -1,4 +1,14 @@
 #include "main.h"
+#include "stm32f4xx_hal_conf.h" 
+
+#include "spi_driver.h"
+#include "gpio_struct.h"
+#include "data_read_spi.h"
+#include "data_output_spi.h"
+#include "data_management.h"
+
+
+SPI_HandleTypeDef hspi4;
 
 // Task Handles
 TaskHandle_t xDataAqcquisitionHHandle = NULL;
@@ -21,13 +31,19 @@ float pitch = 0;
 float yaw   = 0;
 
 // Flight dynamics state variables
-float altitude = 0;     // Current altitude
-float velocity = 0;     // Current vertical velocity
-float accelZ   = 0;     // Current body-axis acceleration
+float altitude 	= 0;     // Current altitude
+float velocity 	= 0;     // Current vertical velocity
+float accelZ    = 0;    // Current body-axis acceleration
+float previousvelocity = 0; 
+uint8_t velocitydecreasecount = 0; 
+float previousaltitude = 0; 
+uint8_t altitudedecreasecount = 0; 
 
 uint8_t accel[6] = {0, 0, 0, 0, 0, 0};
 uint8_t gyro[6];
 uint8_t magnet[6];
+uint8_t pressure[6];
+uint8_t temperature[6];
 float pressGround = 0;
 
 #define BUFF_SIZE 21000 // 2s worth of data in buffer
@@ -35,13 +51,23 @@ float pressGround = 0;
 MemBuff mem;
 uint8_t buff[BUFF_SIZE];
 uint8_t outBuff[PAGE_SIZE];
-uint8_t buffCount = 0; 	// Test variable for reading output buffer
+
+MemBuff Altitudemem; 
+uint8_t AltitudeBuff[15];
+uint8_t Altitudeoutbuff[15];
+
+MemBuff Velocitymem; 
+uint8_t VelocityBuff[10];
+uint8_t VelocityoutBuff[10]; 
 
 enum State currentState = PRELAUNCH; // Boot in prelaunch
 int interval2ms         = 0;
 
-const struct LoRa_Registers LoRa_Regs = {0, 1, 0xd, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0X1C, 0X1D, 0X1E, 0X1F, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X28, 0X29, 0X2A, 0X2C, 0X31, 0X33, 0X37, 0X39, 0X3B, 0X3D, 0X40, 0X41};
+GPIO_Config spi4_cs;
 
+const struct LoRa_Registers LoRa_Regs = {0, 1, 0xd, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0X1C, 0X1D, 0X1E, 0X1F, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X28, 0X29, 0X2A, 0X2C, 0X31, 0X33, 0X37, 0X39, 0X3B, 0X3D, 0X40, 0X41};
+static void MX_SPI4_Init(void);
+	
 int main(void) {
   // Bring up RCC
   configure_RCC_APB1();
@@ -64,8 +90,46 @@ int main(void) {
   configure_LoRa_module();
 	configure_Sensors();
 
+  configure_LoRa_module();
+	
+	MX_SPI4_Init();
+	spi4_cs = create_GPIO_Config(GPIOE, GPIO_PIN_11);
+
+	HAL_GPIO_WritePin(spi4_cs.GPIOx, spi4_cs.GPIO_Pin, GPIO_PIN_RESET);
+	//erase_chip_spi(&hspi4, spi4_cs);
+	//while(1);
+//	uint8_t readBuff[256];
+//	read_page_spi(readBuff, &hspi4, 0x00, spi4_cs);
+
+  // Configure accelerometer
+  write_ACCEL_1(ACCEL_CNTL1, 0x50);                                    // Accel select, 32g sensitivity
+  uint8_t ODCNTL = read_ACCEL_1(ACCEL_ODCNTL);                         // Read from register for reserve mask
+  write_ACCEL_1(ACCEL_ODCNTL, (ACCEL_ODCNTL_RESERVED & ODCNTL) | 0x2A); // No filter, fast startup, 800Hz
+  write_ACCEL_1(ACCEL_CNTL1, 0xD0);                                     // Enable PC1
+
+  // Configure gyroscope
+  write_GYRO(GYRO_CTRL_REG1, GYRO_CTRL_REG1_ODR_800Hz | GYRO_CTRL_REG1_AXIS_ENABLE | GYRO_CTRL_REG1_PD_ENABLE);
+	//write_GYRO(GYRO_CTRL_REG1, 0xCF);
+	
+  // Configure magnetometer
+  write_MAG(MAGNET_CTRL_REG1, MAGNET_CTRL_REG1_FAST);
+  write_MAG(MAGNET_CTRL_REG2, MAGNET_CTRL_REG2_FS16);
+
+  // Configure barometer
+  write_BARO(BARO_ODR_CFG, BARO_ODR_CFG_PWR | BARO_ODR_CFG_DEEP_DIS);
+  uint8_t OSRCFG = read_BARO(BARO_OSR_CFG);
+  write_BARO(BARO_OSR_CFG, (BARO_OSR_CFG_RESERVED * OSRCFG) | BARO_OSR_CFG_PRESS_EN);
+
+	unsigned int CANHigh = 0;
+	unsigned int CANLow  = 0;
+	unsigned int id 		 = 0x603;
+	CAN_TX(1, 8, CANHigh, CANLow, id);
+
   MemBuff_init(&mem, buff, BUFF_SIZE, PAGE_SIZE);
   Quaternion_init(&qRot);
+	
+	MemBuff_init(&Altitudemem, AltitudeBuff, 10, 10); 
+	MemBuff_init(&Velocitymem, VelocityBuff, 5, 5); 
 
   xTaskEnableGroup = xEventGroupCreate();
   xEventGroupClearBits(xTaskEnableGroup, 0xFF);
@@ -103,12 +167,44 @@ void vApplicationIdleHook(void) {
 
 void vFlashBuffer(void *argument) {
   const TickType_t timeout = pdMS_TO_TICKS(1);
+	uint32_t pageAddr = 0;
   for (;;) {
     // Wait for write flag to be ready, clear flag on exit
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x01, pdTRUE, pdFALSE, timeout);
     if ((uxBits & 0x01) == 0x01) {
       _Bool success = mem.readPage(&mem, outBuff); // Flush data to output buffer
+			if (success) {
+          // Write data to flash memory
+          //Flash_Page_Program(flashAddress, outBuff, sizeof(outBuff));	
+					write_data_spi(outBuff, &hspi4, pageAddr, spi4_cs);
+					pageAddr += 0x100;
+				}
     }
+  }
+}
+
+static void MX_SPI4_Init(void) {
+  /* SPI4 parameter configuration*/
+	RCC->APB2ENR |= RCC_APB2ENR_SPI4EN;
+	RCC->APB2RSTR |= RCC_APB2RSTR_SPI4RST;
+	__ASM("NOP");
+	__ASM("NOP");
+	RCC->APB2RSTR &= ~RCC_APB2RSTR_SPI4RST;
+  hspi4.Instance = SPI4;
+  hspi4.Init.Mode = SPI_MODE_MASTER;
+  hspi4.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi4.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi4.Init.CLKPolarity = SPI_POLARITY_LOW;
+  hspi4.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi4.Init.NSS = SPI_NSS_SOFT;
+  hspi4.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi4.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi4.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi4.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi4.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi4) != HAL_OK)
+  {
+    //Error_Handler();
   }
 }
 
@@ -141,7 +237,11 @@ void vLoRaCommunicate(void *argument) {
  * ===================================================================== */
 
 void vStateUpdate(void *argument) {
-  int ms = 0;
+  unsigned int ms = 0;
+	union {
+		unsigned int i;
+		uint8_t a[4];
+	} u;
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(20); // 50Hz
 
@@ -152,25 +252,30 @@ void vStateUpdate(void *argument) {
   for (;;) {
     // Block until 20ms interval
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
-
-    // Increment flight timer period post-launch
-    if (currentState != PRELAUNCH)
-      ms += 20; // 
-		
-		while (1) {
-			CAN_TX(1, 8, 0x00000000, (unsigned int) altitude, 0x602);
+		// Emergency aerobrakes for excessive tilt
+		if(tilt >= 30.0f) {
+			// CAN payload for aerobrakes retract
+			CANHigh = 0x00000000;
+			CANLow  = 0x00000000;
+			id 		  = 0x602;
+			CAN_TX(1, 8, CANHigh, CANLow, id);
 		}
-	
+
     switch (currentState) {
     case PRELAUNCH:
-			xEventGroupSetBits(xTaskEnableGroup, 0x06); // Enable data acquisition
-      if (accelZ >= 5.0f) {
-				// load and send to lora 
-        xEventGroupSetBits(xTaskEnableGroup, 0x80); // Enable flash
+			if (isAccelerationAbove5Gs(accelZ)) {
+				// load and send to lora 	
+				xEventGroupSetBits(xTaskEnableGroup, 0x80); // Enable flash
 				xEventGroupSetBits(xTaskEnableGroup, 0x06); // Enable data acquisition
-        currentState = LAUNCH;
-        // Add launch event dataframe to buffer
-      }
+				currentState = LAUNCH;
+				// Add launch event dataframe to buffer
+				mem.append(&mem, HEADER_EVENT_LAUNCH);
+				// Append timestamp
+				mem.append(&mem, u.a[0]);
+				mem.append(&mem, u.a[1]);
+				mem.append(&mem, u.a[2]);
+				mem.append(&mem, u.a[3]);
+			}
       break;
     case LAUNCH:
       // Send altitude to aerobrakes via CAN
@@ -179,9 +284,15 @@ void vStateUpdate(void *argument) {
 			id 		  = 0x601;
 			CAN_TX(1, 8, CANHigh, CANLow, id);
 			// Transition to motor burnout state on velocity decrease
-      if (isVelocityDecreasing()) {
+      if (isVelocityDecreasing(velocity, previousvelocity, velocitydecreasecount)) {
         currentState = MOTOR_BURNOUT;
         // Add motor burnout event dataframe to buffer
+				mem.append(&mem, HEADER_EVENT_MOTOR);
+				// Append timestamp
+				mem.append(&mem, u.a[0]);
+				mem.append(&mem, u.a[1]);
+				mem.append(&mem, u.a[2]);
+				mem.append(&mem, u.a[3]);
       }
       break;
     case MOTOR_BURNOUT:
@@ -192,16 +303,28 @@ void vStateUpdate(void *argument) {
 			CAN_TX(1, 8, CANHigh, CANLow, id);
 			// Transition to apogee state on three way vote of altitude, velocity, and tilt
 			// apogee is determined as two of three conditions evaluating true
-      if (isAltitudeDropping && isTiltAngleAbove90() && isNegativeVelocity()) {
+      if (isAltitudeDropping(altitude, previousaltitude, altitudedecreasecount) + isTiltAngleAbove90(tilt) + isNegativeVelocity(velocity) >= 2) {
         currentState = APOGEE;
         // Add apogee event dataframe to buffer
+				mem.append(&mem, HEADER_EVENT_APOGEE);
+				// Append timestamp
+				mem.append(&mem, u.a[0]);
+				mem.append(&mem, u.a[1]);
+				mem.append(&mem, u.a[2]);
+				mem.append(&mem, u.a[3]);
         // Send transmission to trigger apogee E-matches
       }
       break;
     case APOGEE:
-      if (isAltitude1300ft()) {
+      if (isAltitude1300ft(altitude)) {
         currentState = DESCENT;
         // Enable descent state
+				mem.append(&mem, HEADER_EVENT_DESCENT);
+				// Append timestamp
+				mem.append(&mem, u.a[0]);
+				mem.append(&mem, u.a[1]);
+				mem.append(&mem, u.a[2]);
+				mem.append(&mem, u.a[3]);
         // Add descent event dataframe to buffer
       }
       break;
@@ -212,15 +335,8 @@ void vStateUpdate(void *argument) {
       // Handle unexpected state
       break;
     }
-		
-		// Emergency aerobrakes for excessive tilt
-		if(tilt >= 30.0f) {
-			// CAN payload for aerobrakes retract
-			CANHigh = 0x00000000;
-			CANLow  = 0x00000000;
-			id 		  = 0x602;
-			CAN_TX(1, 8, CANHigh, CANLow, id);
-		}
+		ms += 2;
+		u.i = ms;
   }
 }
 
@@ -256,7 +372,6 @@ void vDataAcquisitionH(void *argument) {
     accel[5] = (*read_ACCEL)(0x0C); // Accel Z low
     // Need to adjust this to actual axis
     accelZ = -sensitivity * (int16_t)(((uint16_t)accel[axisBase] << 8) | accel[axisBase+1]); // Negative to compensate for inverted axis
-
 
     // Read and process gyroscope
     gyro[0] = read_GYRO(0x29); // Gyro X high
@@ -373,28 +488,26 @@ void vDataAcquisitionL(void *argument) {
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
     // Read baro data
-    uint8_t hTemp = read_BARO(0x1F);
-    uint8_t lTemp = read_BARO(0x1E);
-    uint8_t xTemp = read_BARO(0x1D);
-    float temp    = BARO_TEMP_SENSITIVITY * (((int32_t)hTemp << 16) | ((int32_t)lTemp << 8) | xTemp);
+    temperature[0] = read_BARO(0x1F);
+    temperature[1] = read_BARO(0x1E);
+    temperature[2] = read_BARO(0x1D);
+    float temp     = BARO_TEMP_SENSITIVITY * (((int32_t)temperature[0] << 16) | ((int32_t)temperature[1] << 8) | temperature[2]);
 
-    uint8_t hPress = read_BARO(0x22);
-    uint8_t lPress = read_BARO(0x21);
-    uint8_t xPress = read_BARO(0x20);
-    float press    = BARO_PRESS_SENSITIVITY * (((int32_t)hPress << 16) | ((int32_t)lPress << 8) | xPress);
+    pressure[0]    = read_BARO(0x22);
+    pressure[1]    = read_BARO(0x21);
+    pressure[2]    = read_BARO(0x20);
+    float press    = BARO_PRESS_SENSITIVITY * (((int32_t)pressure[0] << 16) | ((int32_t)pressure[1]<< 8) | pressure[2]);
 		
 		altitude = 44330 * (1.0 - pow(press / pressGround, 0.1903));
 
-    // Add sensor data and quaternion to dataframe
+    // Add sensor data and barometer data to dataframe
     mem.append(&mem, HEADER_LOWRES);
-    mem.append(&mem, buffCount++);
-    mem.append(&mem, buffCount++);
-    mem.append(&mem, buffCount++);
-    mem.append(&mem, buffCount++);
-    mem.append(&mem, buffCount++);
-    mem.append(&mem, buffCount++);
-    mem.append(&mem, buffCount++);
-    mem.append(&mem, buffCount++);
+    mem.append(&mem, temperature[0]);
+    mem.append(&mem, temperature[1]);
+    mem.append(&mem, temperature[2]);
+    mem.append(&mem, pressure[0]);
+    mem.append(&mem, pressure[1]);
+    mem.append(&mem, pressure[2]);
 
     // Only run calculations when enabled
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x04, pdFALSE, pdFALSE, blockTime);
