@@ -75,43 +75,43 @@ void configure_SPI2_Flash(void) {
   SPI2->CR1 |= (0x1 << SPI_CR1_SPE_Pos);
 }
 
-	void configure_SPI3_LoRa(void) {
-		GPIOC->MODER &= (~(GPIO_MODER_MODE10_Msk | GPIO_MODER_MODE11_Msk | GPIO_MODER_MODE12_Msk));
-		GPIOC->MODER |= ((0x2 << GPIO_MODER_MODE10_Pos) | (0x2 << GPIO_MODER_MODE11_Pos) |(0x2 << GPIO_MODER_MODE12_Pos));
-		GPIOC->PUPDR &=(~(GPIO_PUPDR_PUPD10_Msk|GPIO_PUPDR_PUPD11_Msk|GPIO_PUPDR_PUPD12_Msk));
-		GPIOC->PUPDR |= ((0X1<< GPIO_PUPDR_PUPD10_Pos)|(0X1<< GPIO_PUPDR_PUPD11_Pos)|(0X1<< GPIO_PUPDR_PUPD12_Pos));
-		GPIOD->PUPDR |= (0X1<<GPIO_PUPDR_PUPD1_Pos);
-		GPIOD->MODER &= (~(GPIO_MODER_MODE0_Msk)|(GPIO_MODER_MODE7_Msk)|(GPIO_MODER_MODE1_Msk));
-		GPIOD->MODER |= (0X01<<GPIO_MODER_MODE0_Pos)|(0X01<<GPIO_MODER_MODE7_Pos); // chip select stuff
-		TIM6->ARR &=(~(TIM_ARR_ARR_Msk));
-		TIM6->PSC &=(~(TIM_PSC_PSC_Msk));
-		TIM6->ARR |= 20000;
-		TIM6->PSC |= 251;  
+void configure_SPI3_LoRa(void) {
+  GPIOC->MODER &= (~(GPIO_MODER_MODE10_Msk | GPIO_MODER_MODE11_Msk | GPIO_MODER_MODE12_Msk));
+  GPIOC->MODER |= ((0x2 << GPIO_MODER_MODE10_Pos) | (0x2 << GPIO_MODER_MODE11_Pos) | (0x2 << GPIO_MODER_MODE12_Pos));
+  GPIOC->PUPDR &= (~(GPIO_PUPDR_PUPD10_Msk | GPIO_PUPDR_PUPD11_Msk | GPIO_PUPDR_PUPD12_Msk));
+  GPIOC->PUPDR |= ((0X1 << GPIO_PUPDR_PUPD10_Pos) | (0X1 << GPIO_PUPDR_PUPD11_Pos) | (0X1 << GPIO_PUPDR_PUPD12_Pos));
+  GPIOD->PUPDR |= (0X1 << GPIO_PUPDR_PUPD1_Pos);
+  GPIOD->MODER &= (~(GPIO_MODER_MODE0_Msk) | (GPIO_MODER_MODE7_Msk) | (GPIO_MODER_MODE1_Msk));
+  GPIOD->MODER |= (0X01 << GPIO_MODER_MODE0_Pos) | (0X01 << GPIO_MODER_MODE7_Pos); // chip select stuff
+  TIM6->ARR    &= (~(TIM_ARR_ARR_Msk));
+  TIM6->PSC    &= (~(TIM_PSC_PSC_Msk));
+  TIM6->ARR    |= 20000;
+  TIM6->PSC    |= 251;
 
-		GPIOD->ODR |= (GPIO_ODR_OD7);
-		TIM6->CR1 |= TIM_CR1_CEN;
-		while((TIM6->SR & TIM_SR_UIF)==0);// 60 ms delay
-		GPIOD->ODR &= (~(GPIO_ODR_OD7));
-		TIM6->SR &= ~(TIM_SR_UIF);// clears UIF
- 
-		GPIOC->OTYPER &= (~(GPIO_OTYPER_OT10|GPIO_OTYPER_OT11|GPIO_OTYPER_OT12));
-		GPIOC->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED10_Msk|GPIO_OSPEEDR_OSPEED11_Msk|GPIO_OSPEEDR_OSPEED12_Msk));
-		GPIOC->OSPEEDR |= (0x2<< GPIO_OSPEEDR_OSPEED10_Pos|0x2<< GPIO_OSPEEDR_OSPEED11_Pos|0x2<< GPIO_OSPEEDR_OSPEED12_Pos);
-		GPIOD->ODR |= GPIO_ODR_OD0;// raise chip select
-		GPIOC->AFR[1] &= (uint32_t)(~(0x000FFF00));// clears AFRH 10, 11 and 12
-		GPIOC->AFR[1] |= (0x00066600);// sets AFRH 10, 11 and 12 to AF6 for lora SPI
+  GPIOD->ODR |= (GPIO_ODR_OD7);
+  TIM6->CR1  |= TIM_CR1_CEN;
+  while ((TIM6->SR & TIM_SR_UIF) == 0); // 60 ms delay
+  GPIOD->ODR &= (~(GPIO_ODR_OD7));
+  TIM6->SR   &= ~(TIM_SR_UIF);          // clears UIF
 
-		SPI3->CR1 &= (~(SPI_CR1_BR_Msk));
-		SPI3->CR1 |= (0x2 << SPI_CR1_BR_Pos);// set board rate too fclck / 16 = 42/8 = 5.25 (10 MHz max for LoRa)
-		SPI3->CR1 &= (~(SPI_CR1_CPHA_Msk)|(SPI_CR1_CPOL_Msk));// sets CPOL and CPHA to zero as specified in LoRa datasheet
-		// needs bit DIO and Reset configured to idk what
-		SPI3->CR1 |= SPI_CR1_MSTR;// micro is master
-		SPI3->CR1 |= SPI_CR1_SSM|SPI_CR1_SSI;// Software management
-		SPI3->CR1 &= (~(SPI_CR1_LSBFIRST_Msk));// MSB FIRST
-		SPI3->CR1 |= SPI_CR1_DFF;
-		SPI3->CR1 &= ~(SPI_CR1_BIDIMODE|SPI_CR1_RXONLY);
-		SPI3->CR1 |= (0x1<< SPI_CR1_SPE_Pos);
-	}
+  GPIOC->OTYPER  &= (~(GPIO_OTYPER_OT10 | GPIO_OTYPER_OT11 | GPIO_OTYPER_OT12));
+  GPIOC->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED10_Msk | GPIO_OSPEEDR_OSPEED11_Msk | GPIO_OSPEEDR_OSPEED12_Msk));
+  GPIOC->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED10_Pos | 0x2 << GPIO_OSPEEDR_OSPEED11_Pos | 0x2 << GPIO_OSPEEDR_OSPEED12_Pos);
+  GPIOD->ODR     |= GPIO_ODR_OD0;                          // raise chip select
+  GPIOC->AFR[1]  &= (uint32_t)(~(0x000FFF00));             // clears AFRH 10, 11 and 12
+  GPIOC->AFR[1]  |= (0x00066600);                          // sets AFRH 10, 11 and 12 to AF6 for lora SPI
+
+  SPI3->CR1 &= (~(SPI_CR1_BR_Msk));
+  SPI3->CR1 |= (0x2 << SPI_CR1_BR_Pos);                    // set board rate too fclck / 16 = 42/8 = 5.25 (10 MHz max for LoRa)
+  SPI3->CR1 &= (~(SPI_CR1_CPHA_Msk) | (SPI_CR1_CPOL_Msk)); // sets CPOL and CPHA to zero as specified in LoRa datasheet
+  // needs bit DIO and Reset configured to idk what
+  SPI3->CR1 |= SPI_CR1_MSTR;              // micro is master
+  SPI3->CR1 |= SPI_CR1_SSM | SPI_CR1_SSI; // Software management
+  SPI3->CR1 &= (~(SPI_CR1_LSBFIRST_Msk)); // MSB FIRST
+  SPI3->CR1 |= SPI_CR1_DFF;
+  SPI3->CR1 &= ~(SPI_CR1_BIDIMODE | SPI_CR1_RXONLY);
+  SPI3->CR1 |= (0x1 << SPI_CR1_SPE_Pos);
+}
 
 void configure_SPI1_Sensor_Suite(void) {
   GPIOA->MODER  &= (~(GPIO_MODER_MODE5_Msk | GPIO_MODER_MODE6_Msk | GPIO_MODER_MODE7_Msk));
@@ -153,165 +153,6 @@ void configure_SPI1_Sensor_Suite(void) {
   // PB0 Accel 1 Chip Select - set to high for default
   GPIOB->ODR |= (GPIO_ODR_OD0);
   SPI1->CR1  |= SPI_CR1_SPE;
-}
-
-// ===============================================================
-//                          SENSORS
-// ===============================================================
-
-uint8_t read_ACCEL_1(uint8_t address) {
-  uint16_t return_value;
-  uint16_t payload_to_send  = 0;
-  payload_to_send          |= 0x8000;
-  payload_to_send          |= (address << 0x8); // load address into top 7 bits
-  while ((SPI1->SR & SPI_SR_TXE) == 0);
-  GPIOA->ODR &= (~(GPIO_ODR_OD1));
-  SPI1->DR    = payload_to_send;
-  while ((SPI1->SR & SPI_SR_RXNE) == 0);        // wait for received data
-  GPIOA->ODR   |= (GPIO_ODR_OD1);
-  return_value  = (uint8_t)(SPI1->DR);
-  return (uint8_t)return_value;
-}
-
-void write_ACCEL_1(uint8_t address, uint8_t payload) {
-  uint16_t return_value;
-  uint16_t payload_to_send  = 0;
-  payload_to_send          &= (~(0x8000));      // 0 write, dont need this lne really
-  payload_to_send          |= (address << 0x8); // load address into top 7 bits
-  payload_to_send          |= payload;          // load data in to write
-  while ((SPI1->SR & SPI_SR_TXE) == 0);         // wait for transmission to be empty
-  GPIOA->ODR &= (~(GPIO_ODR_OD1));              // lower gyro chip select
-  SPI1->DR    = payload_to_send;
-  while ((SPI1->SR & SPI_SR_RXNE) == 0);        // wait for received data
-  return_value = (uint16_t)(SPI1->DR);
-  while ((SPI1->SR & SPI_SR_BSY) == 1);
-  GPIOA->ODR |= (GPIO_ODR_OD1);
-}
-
-uint8_t read_ACCEL_2(uint8_t address) {
-		uint16_t return_value = 0;
-		uint16_t payload_to_send = 0;
-		payload_to_send |= 0x8000;
-		payload_to_send |= (address << 0x8);// load address into top 7 bits
-		while((SPI1->SR & SPI_SR_TXE)== 0);
-		GPIOB->ODR &= (~(GPIO_ODR_OD0));
-		SPI1->DR = payload_to_send;
-		while((SPI1->SR & SPI_SR_RXNE)==0);// wait for received data
-		GPIOB->ODR |= (GPIO_ODR_OD0);
-		return_value = (uint16_t)(SPI1->DR);
-		return (uint8_t)return_value;
-}
-	
-	
-void write_ACCEL_2(uint8_t address, uint8_t payload) {
-	uint16_t return_value;
-	uint16_t payload_to_send = 0;
-	payload_to_send &= (~(0x8000));// 0 write, dont need this lne really
-	payload_to_send |= (address << 0x8);// load address into top 7 bits
-	payload_to_send |= payload;// load data in to write
-	GPIOB->ODR &= (~(GPIO_ODR_OD0));// lower gyro chip select
-	while((SPI1->SR & SPI_SR_TXE)== 0);// wait for transmission to be empty
-	SPI1->DR = payload_to_send;  
-	while((SPI1->SR & SPI_SR_RXNE)==0);// wait for received data
-	return_value = (uint16_t)(SPI1->DR);
-	while((SPI1->SR & SPI_SR_BSY)== 1);
-	GPIOB->ODR |= (GPIO_ODR_OD0);
-}
-
-
-uint8_t read_GYRO(uint8_t address) {
-  uint16_t return_value;
-  uint16_t payload_to_send  = 0;
-  payload_to_send          &= (~(0x4000));      // clear  multiple transfer bit
-  payload_to_send          |= 0x8000;
-  payload_to_send          |= (address << 0x8); // load address into top 7 bits
-  while ((SPI1->SR & SPI_SR_TXE) == 0);
-  GPIOA->ODR &= (~(GPIO_ODR_OD2));
-  SPI1->DR    = payload_to_send;
-  while ((SPI1->SR & SPI_SR_RXNE) == 0);        // wait for received data
-  GPIOA->ODR   |= (GPIO_ODR_OD2);
-  return_value  = (uint16_t)(SPI1->DR);
-
-  return (uint8_t)return_value;
-}
-
-void write_GYRO(uint8_t address, uint8_t payload) {
-			uint16_t return_value;
-			uint16_t payload_to_send = 0;
-			payload_to_send &= (~(0X4000)); // clear  multiple transfer bit
-			payload_to_send &= (~(0x8000));// set 15th bit to 0 for write
-			payload_to_send |= (address << 0x8);// load address into top 7 bits
-			payload_to_send |= (payload);// mask in data
-			GPIOA->ODR &= (~(GPIO_ODR_OD2));// lower gyro chip select
-			while((SPI1->SR & SPI_SR_TXE)== 0);// wait for transmission to be empty
-			SPI1->DR = payload_to_send;
-			while((SPI1->SR & SPI_SR_RXNE)==0);// wait for received data
-			return_value = (uint16_t)(SPI1->DR);
-			while((SPI1->SR & SPI_SR_BSY)== 1);
-			GPIOA->ODR |= (GPIO_ODR_OD2);
-}
-
-void write_MAG(uint8_t address, uint8_t payload) {
-  uint16_t return_value     = 0;
-  uint16_t payload_to_send  = 0;
-  payload_to_send          &= (~(0X4000));       // clear  multiple transfer bit
-  payload_to_send          &= (~(0x8000));       // set 15th bit to 0 for write
-  payload_to_send          |= (address << 0x8);  // load address into top 7 bits
-  payload_to_send          |= (payload);         // mask in data
-  GPIOA->ODR               &= (~(GPIO_ODR_OD4)); // lower gyro chip select
-  while ((SPI1->SR & SPI_SR_TXE) == 0);          // wait for transmission to be empty
-  SPI1->DR = payload_to_send;
-  while ((SPI1->SR & SPI_SR_RXNE) == 0);         // wait for received data
-  return_value = (uint16_t)(SPI1->DR);
-  while ((SPI1->SR & SPI_SR_BSY) == 1);
-  GPIOA->ODR |= (GPIO_ODR_OD4);
-}
-
-uint8_t read_MAG(uint8_t address) {
-  uint16_t return_value     = 0;
-  uint16_t payload_to_send  = 0;
-  payload_to_send          &= (~(0X4000));      // clear  multiple transfer bit
-  payload_to_send          |= 0x8000;
-  payload_to_send          |= (address << 0x8); // load address into top 7 bits
-  // payload_to_send |= (payload<<0X8);// mask in data
-  GPIOA->ODR &= (~(GPIO_MODER_MODE2));   // lower gyro chip select
-  while ((SPI1->SR & SPI_SR_TXE) == 0);
-  GPIOA->ODR &= (~(GPIO_ODR_OD4));
-  SPI1->DR    = payload_to_send;
-  while ((SPI1->SR & SPI_SR_RXNE) == 0); // wait for received data
-  GPIOA->ODR   |= (GPIO_ODR_OD4);
-  return_value  = (uint16_t)(SPI1->DR);
-  return (uint8_t)return_value;
-}
-
-void write_BARO(uint8_t address, uint8_t payload) {
-  uint16_t return_value     = 0;
-  uint16_t payload_to_send  = 0;
-  payload_to_send          &= (~(0x8000));       // 0 write, dont need this lne really
-  payload_to_send          |= (address << 0x8);  // load address into top 7 bits
-  payload_to_send          |= payload;           // load data in to write
-  GPIOA->ODR               &= (~(GPIO_ODR_OD3)); // lower gyro chip select
-  while ((SPI1->SR & SPI_SR_TXE) == 0);          // wait for transmission to be empty
-  SPI1->DR = payload_to_send;
-  while ((SPI1->SR & SPI_SR_RXNE) == 0);         // wait for received data
-  return_value = (uint16_t)(SPI1->DR);
-  while ((SPI1->SR & SPI_SR_BSY) == 1);
-  GPIOA->ODR |= (GPIO_ODR_OD3);
-}
-
-uint8_t read_BARO(uint8_t address) {
-  uint16_t return_value;
-  uint16_t payload_to_send  = 0;
-  payload_to_send          |= 0x8000;            // 1 read
-  payload_to_send          |= (address << 0x8);  // load address into top 7 bits
-  GPIOA->ODR               &= (~(GPIO_ODR_OD3)); // lower gyro chip select
-  while ((SPI1->SR & SPI_SR_TXE) == 0);          // wait for transmission to be empty
-  SPI1->DR = payload_to_send;
-  while ((SPI1->SR & SPI_SR_RXNE) == 0);         // wait for received data
-  return_value = (uint16_t)(SPI1->DR);
-  while ((SPI1->SR & SPI_SR_BSY) == 1);
-  GPIOA->ODR |= (GPIO_ODR_OD3);
-  return return_value;
 }
 
 // ===============================================================
@@ -565,74 +406,73 @@ void CAN_Peripheral_config() {
 // ===============================================================
 
 void Load_And_Send_To_LoRa(char *pointerdata, const struct LoRa_Registers *LoRa_Registers) {
-	write_lora_packet(LoRa_Registers->RegIrqFlags, 0X08);         // clears the status flags
-  write_lora_packet(LoRa_Registers->RegFifoAddrPtr, 0X80);   // set pointer adddress to TX
+  write_lora_packet(LoRa_Registers->RegIrqFlags, 0X08);    // clears the status flags
+  write_lora_packet(LoRa_Registers->RegFifoAddrPtr, 0X80); // set pointer adddress to TX
   for (int x = 0; x < 16; x++) {
-    write_lora_packet(0x00, pointerdata[x]); // load fifo
+    write_lora_packet(0x00, pointerdata[x]);               // load fifo
   }
   uint8_t regopmode  = 0;
-  regopmode          = receive_lora_data(0X1);                  // read in current status
-  regopmode         &= (unsigned int)(~(0x7));                  // clear status bits
-  regopmode         |= 0x3;                                     // or bits in
-  write_lora_packet(0x1, regopmode);      // set to transmit
-	
-//  while (!(GPIOD->IDR & 0X2));                                  // wait for transmit complete
-  write_lora_packet(LoRa_Registers->RegIrqFlags, 0X08);         // clears the status flags
-	write_lora_packet(0x12, 0X00);
+  regopmode          = receive_lora_data(0X1);             // read in current status
+  regopmode         &= (unsigned int)(~(0x7));             // clear status bits
+  regopmode         |= 0x3;                                // or bits in
+  write_lora_packet(0x1, regopmode);                       // set to transmit
+
+                                                           //  while (!(GPIOD->IDR & 0X2));                                  // wait for transmit complete
+  write_lora_packet(LoRa_Registers->RegIrqFlags, 0X08); // clears the status flags
+  write_lora_packet(0x12, 0X00);
 }
 
 void write_lora_packet(uint8_t address, uint8_t payload) {
 
-  uint16_t return_value     = 0;                                // clear varibles
+  uint16_t return_value     = 0;                 // clear varibles
   uint16_t payload_to_send  = 0;
-  payload_to_send          &= (~(0XFFFF));                      // clear variable
-  payload_to_send          |= (address << 0x8);                 // load address into top 7 bits
-  payload_to_send          |= (1 << 0xF);                       // set rw bit to write
-  payload_to_send          |= payload;                          // mask in data
-  GPIOD->ODR               &= (~(GPIO_ODR_OD0));            // lower chip select
-  while ((SPI3->SR & SPI_SR_TXE) == 0);                         // wait for transmission to be empty
-  SPI3->DR = payload_to_send;                                   // load data reg
-  while ((SPI3->SR & SPI_SR_RXNE) == 0);                        // wait for received data
-  return_value = (uint16_t)(SPI3->DR);                          // see if it returns anything
-  while ((SPI3->SR & SPI_SR_BSY) == 1);                         // wait for line to be clear
-  GPIOD->ODR |= (GPIO_ODR_OD0);                             // raise chip select
+  payload_to_send          &= (~(0XFFFF));       // clear variable
+  payload_to_send          |= (address << 0x8);  // load address into top 7 bits
+  payload_to_send          |= (1 << 0xF);        // set rw bit to write
+  payload_to_send          |= payload;           // mask in data
+  GPIOD->ODR               &= (~(GPIO_ODR_OD0)); // lower chip select
+  while ((SPI3->SR & SPI_SR_TXE) == 0);          // wait for transmission to be empty
+  SPI3->DR = payload_to_send;                    // load data reg
+  while ((SPI3->SR & SPI_SR_RXNE) == 0);         // wait for received data
+  return_value = (uint16_t)(SPI3->DR);           // see if it returns anything
+  while ((SPI3->SR & SPI_SR_BSY) == 1);          // wait for line to be clear
+  GPIOD->ODR |= (GPIO_ODR_OD0);                  // raise chip select
 }
 
- void configure_LoRa_module(void)
-	{
-		//send_lora_packet( address,  payload)
-		// first read the RegOpMode to see what mode its i
-		uint8_t regopmode;
-		uint8_t TXPOINTER_ADDRESS;
-		uint8_t FIFOPOINTER_ADDRESS;
-/////////////////////////////////////////////////
-		write_lora_packet(0x40,0x40);//cant remember what this does
-		regopmode = receive_lora_data(0X1);// read in modem statues
-		regopmode = 0;// set status to sleep
-		write_lora_packet(0x1,regopmode);// put in sleep mode
-		regopmode = receive_lora_data(0X1);// read back status
-		regopmode |= 0X80;// set relevent buts
-		write_lora_packet(0x1,regopmode);// set into LoRa mode
-		regopmode = receive_lora_data(0X1);//
-		write_lora_packet(0x1D, 0x52);// REG MODEM CONFIG 1// not sure what configuration we want to actually use for 0x1D
-	////////////////////////////////////////////////////////// below is the config we intend on using for flight
-		write_lora_packet(0x1E, 0x94);// REG MODEM CONFIG 2
-		write_lora_packet(0x22, 0x10); // REG PAYLOAD LENGTH
-		write_lora_packet(0x23, 0x10); // REG PAYLOAD LENGTH
-		//////////////////////////////////////////////////////////////////////// test config for johns lora
-		write_lora_packet(0x1D, 0X4A);// cant rememember what this is for
-///////////////////////////////////////// set to standby
-		regopmode = receive_lora_data(0X1);
-		regopmode &= (~(0x7));
-		regopmode |= 0x1;
-		write_lora_packet(0x1,regopmode);
-		regopmode = receive_lora_data(0X1);// SHOULD GET 0X81
-	/////////////////////////////////////////////////////////	
-		TXPOINTER_ADDRESS = receive_lora_data(0xE);// should be 80
-		write_lora_packet(0XD, 0X80);//set pointer adddress to TX
+void configure_LoRa_module(void) {
+  // send_lora_packet( address,  payload)
+  //  first read the RegOpMode to see what mode its i
+  uint8_t regopmode;
+  uint8_t TXPOINTER_ADDRESS;
+  uint8_t FIFOPOINTER_ADDRESS;
+  /////////////////////////////////////////////////
+  write_lora_packet(0x40, 0x40);       // cant remember what this does
+  regopmode = receive_lora_data(0X1);  // read in modem statues
+  regopmode = 0;                       // set status to sleep
+  write_lora_packet(0x1, regopmode);   // put in sleep mode
+  regopmode  = receive_lora_data(0X1); // read back status
+  regopmode |= 0X80;                   // set relevent buts
+  write_lora_packet(0x1, regopmode);   // set into LoRa mode
+  regopmode = receive_lora_data(0X1);  //
+  write_lora_packet(0x1D, 0x52);       // REG MODEM CONFIG 1// not sure what configuration we want to actually use for 0x1D
+                                       ////////////////////////////////////////////////////////// below is the config we intend on using for flight
+  write_lora_packet(0x1E, 0x94);       // REG MODEM CONFIG 2
+  write_lora_packet(0x22, 0x10);       // REG PAYLOAD LENGTH
+  write_lora_packet(0x23, 0x10);       // REG PAYLOAD LENGTH
+  //////////////////////////////////////////////////////////////////////// test config for johns lora
+  write_lora_packet(0x1D, 0X4A); // cant rememember what this is for
+                                 ///////////////////////////////////////// set to standby
+  regopmode  = receive_lora_data(0X1);
+  regopmode &= (~(0x7));
+  regopmode |= 0x1;
+  write_lora_packet(0x1, regopmode);
+  regopmode = receive_lora_data(0X1);         // SHOULD GET 0X81
+                                              /////////////////////////////////////////////////////////
+  TXPOINTER_ADDRESS = receive_lora_data(0xE); // should be 80
+  write_lora_packet(0XD, 0X80);               // set pointer adddress to TX
 
-		return;
-	}
+  return;
+}
 
 uint8_t receive_lora_data(uint8_t address) {
 
@@ -682,98 +522,90 @@ void TIM7init(void) {
   TIM7->ARR |= 60000; // 1s delay
 }
 
-
-// ===============================================================
+                      // ===============================================================
 //                          FLASH
 // ===============================================================
 
- uint8_t read_FLASH_status(uint8_t address)
-	{
-			uint8_t return_value;
-			while((SPI2->SR & SPI_SR_TXE)== 0);
-			GPIOE->ODR &= (~(GPIO_ODR_OD11));
-			SPI2->DR = address;
-			while((SPI2->SR & SPI_SR_RXNE)==0);// wait for received data
-			GPIOE->ODR |= (GPIO_ODR_OD11);
-			return_value = (uint8_t)(SPI2->DR);
-			return (uint8_t)return_value;
-	}
-	
-			void write_FLASH_status(uint8_t address,uint8_t data)
-	{
-			//uint8_t return_value;
-			while((SPI2->SR & SPI_SR_TXE)== 0);
-			GPIOE->ODR &= (~(GPIO_ODR_OD11));
-			SPI2->DR = address;
-			while((SPI2->SR & SPI_SR_BSY));
-			SPI2->DR = data;
-			while((SPI2->SR & SPI_SR_BSY));
-			GPIOE->ODR |= (GPIO_ODR_OD11);
-			//eturn_value = (uint8_t)(SPI2->DR);
-	}
-	void Flash_Page_Program(unsigned int address, uint8_t * pointer, uint8_t number_of_bytes)// exact same as gyro
-	{
-		uint8_t byte2,byte3,byte4;
-		unsigned int temp = (address & 0xFFFFFF)>>16;
-		byte2 = (uint8_t)temp; 
-		temp = (address & 0xFFFF)>>8;
-		byte3 = (uint8_t)temp;
-		temp = (address & 0xFF);
-		byte4 = (uint8_t)temp;
-		Flash_Write_Enable();
-			GPIOE->ODR &= (~(GPIO_ODR_OD11));// lower gyro chip select
-			while((SPI2->SR & SPI_SR_TXE)== 0);// wait for transmission to be empty
-			SPI2->DR = 0x02;
-			while((SPI2->SR & SPI_SR_BSY));
-			SPI2->DR = byte2;
-			while((SPI2->SR & SPI_SR_BSY));
-			SPI2->DR = byte3;
-			while((SPI2->SR & SPI_SR_BSY));
-			SPI2->DR = byte4;
-			while((SPI2->SR & SPI_SR_BSY));
-		for (uint8_t x = 0; x<number_of_bytes;x++){
-			SPI2->DR = pointer[x];
-			while((SPI2->SR & SPI_SR_BSY));
-		}
-		GPIOE->ODR |= (GPIO_ODR_OD11);
+uint8_t read_FLASH_status(uint8_t address) {
+  uint8_t return_value;
+  while ((SPI2->SR & SPI_SR_TXE) == 0);
+  GPIOE->ODR &= (~(GPIO_ODR_OD11));
+  SPI2->DR    = address;
+  while ((SPI2->SR & SPI_SR_RXNE) == 0); // wait for received data
+  GPIOE->ODR   |= (GPIO_ODR_OD11);
+  return_value  = (uint8_t)(SPI2->DR);
+  return (uint8_t)return_value;
+}
 
-	}
-		void Flash_Chip_Erase(){
-			GPIOE->ODR &= (~(GPIO_ODR_OD11));// lower gyro chip select
-			while((SPI2->SR & SPI_SR_TXE)== 0);// wait for transmission to be empty
-			SPI2->DR = 0x60;	
-			while((SPI2->SR & SPI_SR_BSY));
-			GPIOE->ODR |= (GPIO_ODR_OD11);	
-	}
-			void Flash_Write_Enable(){
-			GPIOE->ODR &= (~(GPIO_ODR_OD11));// lower gyro chip select
-			while((SPI2->SR & SPI_SR_TXE)== 0);// wait for transmission to be empty
-			SPI2->DR = 6;	
-			while((SPI2->SR & SPI_SR_BSY));
-			GPIOE->ODR |= (GPIO_ODR_OD11);	
-	}
-
-
+void write_FLASH_status(uint8_t address, uint8_t data) {
+  // uint8_t return_value;
+  while ((SPI2->SR & SPI_SR_TXE) == 0);
+  GPIOE->ODR &= (~(GPIO_ODR_OD11));
+  SPI2->DR    = address;
+  while ((SPI2->SR & SPI_SR_BSY));
+  SPI2->DR = data;
+  while ((SPI2->SR & SPI_SR_BSY));
+  GPIOE->ODR |= (GPIO_ODR_OD11);
+  // eturn_value = (uint8_t)(SPI2->DR);
+}
+void Flash_Page_Program(unsigned int address, uint8_t *pointer, uint8_t number_of_bytes) // exact same as gyro
+{
+  uint8_t byte2, byte3, byte4;
+  unsigned int temp = (address & 0xFFFFFF) >> 16;
+  byte2             = (uint8_t)temp;
+  temp              = (address & 0xFFFF) >> 8;
+  byte3             = (uint8_t)temp;
+  temp              = (address & 0xFF);
+  byte4             = (uint8_t)temp;
+  Flash_Write_Enable();
+  GPIOE->ODR &= (~(GPIO_ODR_OD11));     // lower gyro chip select
+  while ((SPI2->SR & SPI_SR_TXE) == 0); // wait for transmission to be empty
+  SPI2->DR = 0x02;
+  while ((SPI2->SR & SPI_SR_BSY));
+  SPI2->DR = byte2;
+  while ((SPI2->SR & SPI_SR_BSY));
+  SPI2->DR = byte3;
+  while ((SPI2->SR & SPI_SR_BSY));
+  SPI2->DR = byte4;
+  while ((SPI2->SR & SPI_SR_BSY));
+  for (uint8_t x = 0; x < number_of_bytes; x++) {
+    SPI2->DR = pointer[x];
+    while ((SPI2->SR & SPI_SR_BSY));
+  }
+  GPIOE->ODR |= (GPIO_ODR_OD11);
+}
+void Flash_Chip_Erase() {
+  GPIOE->ODR &= (~(GPIO_ODR_OD11));     // lower gyro chip select
+  while ((SPI2->SR & SPI_SR_TXE) == 0); // wait for transmission to be empty
+  SPI2->DR = 0x60;
+  while ((SPI2->SR & SPI_SR_BSY));
+  GPIOE->ODR |= (GPIO_ODR_OD11);
+}
+void Flash_Write_Enable() {
+  GPIOE->ODR &= (~(GPIO_ODR_OD11));     // lower gyro chip select
+  while ((SPI2->SR & SPI_SR_TXE) == 0); // wait for transmission to be empty
+  SPI2->DR = 6;
+  while ((SPI2->SR & SPI_SR_BSY));
+  GPIOE->ODR |= (GPIO_ODR_OD11);
+}
 
 // ===============================================================
 //                           MISC
 // ===============================================================
 
-	void buzzer(void) {
-		TIM6->ARR &=(~(TIM_ARR_ARR_Msk));
-		TIM6->PSC &=(~(TIM_PSC_PSC_Msk));
-		TIM6->ARR |= 80;
-		TIM6->PSC |= 128;  
-		TIM7->CR1 |= TIM_CR1_CEN;
-		TIM6->CR1 |= TIM_CR1_CEN;//ensures timer is enabled
-		while((TIM7->SR & TIM_SR_UIF)==0)
-		{			
-			GPIOB->ODR ^= 0X8000;
-			while ((TIM6->SR & TIM_SR_UIF) == 0);
-			TIM6->SR &= ~(TIM_SR_UIF);// clears UIF
-			TIM6->ARR |= 80;
-			TIM6->CR1 |= TIM_CR1_CEN;// Enables counter
-		}
-			TIM7->SR &= ~(TIM_SR_UIF);
-
-	}
+void buzzer(void) {
+  TIM6->ARR &= (~(TIM_ARR_ARR_Msk));
+  TIM6->PSC &= (~(TIM_PSC_PSC_Msk));
+  TIM6->ARR |= 80;
+  TIM6->PSC |= 128;
+  TIM7->CR1 |= TIM_CR1_CEN;
+  TIM6->CR1 |= TIM_CR1_CEN;     // ensures timer is enabled
+  while ((TIM7->SR & TIM_SR_UIF) == 0) {
+    GPIOB->ODR ^= 0X8000;
+    while ((TIM6->SR & TIM_SR_UIF) == 0);
+    TIM6->SR  &= ~(TIM_SR_UIF); // clears UIF
+    TIM6->ARR |= 80;
+    TIM6->CR1 |= TIM_CR1_CEN;   // Enables counter
+  }
+  TIM7->SR &= ~(TIM_SR_UIF);
+}

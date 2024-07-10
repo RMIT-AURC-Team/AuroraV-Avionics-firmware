@@ -91,21 +91,6 @@ uint8_t CAN_RX(struct CAN_RX_data *CAN);
 void write_lora_packet(uint8_t address, uint8_t payload);
 uint8_t receive_lora_data(uint8_t address);
 
-void write_GYRO(uint8_t address, uint8_t payload);
-uint8_t read_GYRO(uint8_t address);
-void test_gyro_drivers(void);
-
-uint8_t read_BARO(uint8_t address);
-void write_BARO(uint8_t address, uint8_t payload);
-
-void write_MAG(uint8_t address, uint8_t payload);
-uint8_t read_MAG(uint8_t address);
-
-void write_ACCEL_1(uint8_t address, uint8_t payload);
-uint8_t read_ACCEL_1(uint8_t address);
-void write_ACCEL_2(uint8_t address, uint8_t payload);
-uint8_t read_ACCEL_2(uint8_t address);
-
 uint8_t read_FLASH(uint8_t address);
 
 void TIM6init(void);

@@ -453,7 +453,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\libavionics.a</PathWithFileName>
+      <PathWithFileName>..\Lib\bin\libavionics.a</PathWithFileName>
       <FilenameWithoutPath>libavionics.a</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
