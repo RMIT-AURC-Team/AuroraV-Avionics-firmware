@@ -17,8 +17,8 @@
         <TargetCommonOption>
           <Device>STM32F439IIHx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F4xx_DFP.2.16.0</PackID>
-          <PackURL>http://www.keil.com/pack/</PackURL>
+          <PackID>Keil.STM32F4xx_DFP.2.17.1</PackID>
+          <PackURL>https://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00030000) IRAM2(0x10000000,0x00010000) IROM(0x08000000,0x00200000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
@@ -171,6 +171,7 @@
             <RvdsVP>2</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <OnChipMemories>
@@ -245,7 +246,7 @@
               <MiscControls>-mfloat-abi=hard -ffast-math -mfpu=fpv4-sp-d16</MiscControls>
               <Define>__TARGET_FPU_VFP</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core\Inc;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\..\..\AuroraV-Avionics-lib\inc;..\..\..\AuroraV-Avionics-lib\lib\libcmsis\src\CMSIS_5\CMSIS\Core\Include;..\..\..\AuroraV-Avionics-lib\lib\libcmsis\src\CMSIS-DSP\Include;..\..\..\AuroraV-Avionics-lib\lib\libcmsis\src\CMSIS-DSP\PrivateInclude;..\..\AuroraV-Avionics-lib\inc;..\..\AuroraV-Avionics-lib\lib\libcmsis\src\CMSIS_5\CMSIS\Core\Include;..\..\AuroraV-Avionics-lib\lib\libcmsis\src\CMSIS-DSP\Include;..\..\AuroraV-Avionics-lib\lib\libcmsis\src\CMSIS-DSP\PrivateInclude</IncludePath>
+              <IncludePath>..\Core\Inc;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\..\..\AuroraV-Avionics-lib\lib\libcmsis\src\CMSIS_5\CMSIS\Core\Include;..\..\..\AuroraV-Avionics-lib\lib\libcmsis\src\CMSIS-DSP\Include;..\..\..\AuroraV-Avionics-lib\lib\libcmsis\src\CMSIS-DSP\PrivateInclude;..\..\..\AuroraV-Avionics-lib\kalmanfilter\src;..\..\..\AuroraV-Avionics-lib\membuff\src;..\..\..\AuroraV-Avionics-lib\quaternion\src;..\Drivers\STM32F4xx_HAL_Driver\Inc</IncludePath>
             </VariousControls>
           </Carm>
           <Aarm>
@@ -299,44 +300,49 @@
               <FilePath>../Core/Src/freertos.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f4xx_it.c</FileName>
+              <FileName>drivers.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Core/Src/stm32f4xx_it.c</FilePath>
+              <FilePath>..\Core\Src\drivers.c</FilePath>
             </File>
             <File>
-              <FileName>highrestask.c</FileName>
+              <FileName>state.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Src\highrestask.c</FilePath>
+              <FilePath>..\Core\Src\state.c</FilePath>
             </File>
             <File>
-              <FileName>lowrestask.c</FileName>
+              <FileName>sensors.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Src\lowrestask.c</FilePath>
+              <FilePath>..\Core\Src\sensors.c</FilePath>
             </File>
             <File>
-              <FileName>stateupdatetask.c</FileName>
+              <FileName>data_management.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Src\stateupdatetask.c</FilePath>
+              <FilePath>..\Core\Src\data_management.c</FilePath>
             </File>
             <File>
-              <FileName>memflashtask.c</FileName>
+              <FileName>data_output_spi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Src\memflashtask.c</FilePath>
+              <FilePath>..\Core\Src\data_output_spi.c</FilePath>
             </File>
             <File>
-              <FileName>init.c</FileName>
+              <FileName>data_read_spi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Src\init.c</FilePath>
+              <FilePath>..\Core\Src\data_read_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>gpio_struct.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\gpio_struct.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\spi_driver.c</FilePath>
             </File>
             <File>
               <FileName>libavionics.a</FileName>
               <FileType>4</FileType>
-              <FilePath>..\..\AuroraV-Avionics-lib\bin\libavionics.a</FilePath>
-            </File>
-            <File>
-              <FileName>gpioControl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\gpioControl.c</FilePath>
+              <FilePath>..\libavionics.a</FilePath>
             </File>
           </Files>
         </Group>
@@ -347,6 +353,71 @@
               <FileName>system_stm32f4xx.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/system_stm32f4xx.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Drivers/HAL</GroupName>
+          <Files>
+            <File>
+              <FileName>stm32f4xx_hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_dma_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_dma2d.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma2d.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_flash_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_flash_ramfunc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_flash_ramfunc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_tim_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_tim_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_cortex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_cortex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_gpio.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -393,50 +464,42 @@
               <FileType>1</FileType>
               <FilePath>..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F\port.c</FilePath>
             </File>
+            <File>
+              <FileName>event_groups.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\FreeRTOS\Source\event_groups.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>Headers</GroupName>
+          <GroupName>Data</GroupName>
           <Files>
             <File>
-              <FileName>FreeRTOSConfig.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\FreeRTOSConfig.h</FilePath>
+              <FileName>accelX.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Data\accelX.c</FilePath>
             </File>
             <File>
-              <FileName>main.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\main.h</FilePath>
+              <FileName>baro.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Data\baro.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f4xx_it.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\stm32f4xx_it.h</FilePath>
+              <FileName>gyroX.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Data\gyroX.c</FilePath>
             </File>
             <File>
-              <FileName>ioMapping.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\ioMapping.h</FilePath>
+              <FileName>gyroY.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Data\gyroY.c</FilePath>
             </File>
             <File>
-              <FileName>tasks.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\tasks.h</FilePath>
-            </File>
-            <File>
-              <FileName>portmacro.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F\portmacro.h</FilePath>
-            </File>
-            <File>
-              <FileName>init.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Core\Inc\init.h</FilePath>
+              <FileName>gyroZ.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Data\gyroZ.c</FilePath>
             </File>
           </Files>
-        </Group>
-        <Group>
-          <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>
     </Target>
@@ -444,15 +507,21 @@
 
   <RTE>
     <apis/>
-    <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="6.1.0" condition="ARMv6_7_8-M Device">
-        <package name="CMSIS" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="6.1.0"/>
-        <targetInfos>
-          <targetInfo name="AuroraV-Avionics"/>
-        </targetInfos>
-      </component>
-    </components>
-    <files/>
+    <components/>
+    <files>
+      <file attr="config" category="header" name="CMSIS\Driver\Config\RTE_Device.h" version="2.4.5">
+        <instance index="0" removed="1">RTE\Device\STM32F439IIHx\RTE_Device.h</instance>
+        <component Capiversion="1.0.0" Cclass="Device" Cgroup="STM32Cube Framework" Csub="Classic" Cvendor="Keil" Cversion="1.8.1" condition="STM32F4 Framework Classic"/>
+        <package name="STM32F4xx_DFP" schemaVersion="1.7.2" url="https://www.keil.com/pack/" vendor="Keil" version="2.17.1"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="header" name="MDK\Templates\Inc\stm32f4xx_hal_conf.h" version="1.8.1">
+        <instance index="0" removed="1">RTE\Device\STM32F439IIHx\stm32f4xx_hal_conf.h</instance>
+        <component Capiversion="1.0.0" Cclass="Device" Cgroup="STM32Cube Framework" Csub="Classic" Cvendor="Keil" Cversion="1.8.1" condition="STM32F4 Framework Classic"/>
+        <package name="STM32F4xx_DFP" schemaVersion="1.7.2" url="https://www.keil.com/pack/" vendor="Keil" version="2.17.1"/>
+        <targetInfos/>
+      </file>
+    </files>
   </RTE>
 
   <LayerInfo>
