@@ -27,25 +27,9 @@ void configure_RCC_AHB1(void);
 void configure_MISC_GPIO(void);
 void configure_UART3_GPS(void);
 void configure_UART6_Serial_2_mini_USB(void);
-void configure_SPI1_Sensor_Suite(void);
 void configure_SPI2_Flash(void);
 void configure_external_interrupts(void);
 void EXTI1_IRQHandler(void);
-
-void write_GYRO(uint8_t address, uint8_t payload);
-uint8_t read_GYRO(uint8_t address);
-void test_gyro_drivers(void);
-
-uint8_t read_BARO(uint8_t address);
-void write_BARO(uint8_t address, uint8_t payload);
-
-void write_MAG(uint8_t address, uint8_t payload);
-uint8_t read_MAG(uint8_t address);
-
-void write_ACCEL_1(uint8_t address, uint8_t payload);
-uint8_t read_ACCEL_1(uint8_t address);
-void write_ACCEL_2(uint8_t address, uint8_t payload);
-uint8_t read_ACCEL_2(uint8_t address);
 
 uint8_t read_FLASH(uint8_t address);
 

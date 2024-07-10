@@ -34,7 +34,6 @@
 #include "sensors.h"
 #include "state.h"
 
-
 #include "kalmanfilter.h"
 #include "membuff.h"
 #include "quaternion.h"

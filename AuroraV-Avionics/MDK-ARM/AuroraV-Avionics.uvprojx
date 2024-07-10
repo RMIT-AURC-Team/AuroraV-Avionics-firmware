@@ -343,6 +343,8 @@
               <FileName>can.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\can.c</FilePath>
+            </File>
+            <File>
               <FileName>lora.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\lora.c</FilePath>

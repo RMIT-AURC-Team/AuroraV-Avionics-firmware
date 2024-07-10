@@ -77,6 +77,7 @@ uint8_t CAN_TX(uint8_t CAN, uint8_t data_length, unsigned int dataH, unsigned in
   } else
     return 100;
 }
+
 uint8_t find_empty_CAN_TX_mailbox(uint8_t CAN) {
   return 0; // it is simply going to reload to the single mailbox and send
   volatile uint32_t *CAN_address = &CAN1->TSR;
