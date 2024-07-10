@@ -3,13 +3,6 @@
 
 #include "stm32f439xx.h"
 
-struct CAN_RX_data {
-  unsigned int dataL;   // data high register
-  unsigned int dataH;   // data low register
-  unsigned int address; // CAN identifer
-  uint8_t CAN_number;   // either CAN2 or CAN1
-};
-
 struct GPSData {
   char time[15];
   uint8_t hour;
@@ -81,12 +74,6 @@ void configure_SPI3_LoRa(void);
 void configure_SPI2_Flash(void);
 void configure_external_interrupts(void);
 void EXTI1_IRQHandler(void);
-
-void CANGPIO_config(void);
-void CAN_Peripheral_config(void);
-uint8_t find_empty_CAN_TX_mailbox(uint8_t CAN);
-uint8_t CAN_TX(uint8_t CAN, uint8_t datalength, unsigned int dataH, unsigned int dataL, unsigned int address);
-uint8_t CAN_RX(struct CAN_RX_data *CAN);
 
 void write_lora_packet(uint8_t address, uint8_t payload);
 uint8_t receive_lora_data(uint8_t address);
