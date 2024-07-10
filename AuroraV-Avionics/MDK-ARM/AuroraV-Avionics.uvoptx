@@ -331,6 +331,8 @@
       <bDave2>0</bDave2>
       <PathWithFileName>..\Core\Src\can.c</PathWithFileName>
       <FilenameWithoutPath>can.c</FilenameWithoutPath>
+      <PathWithFileName>..\Core\Src\lora.c</PathWithFileName>
+      <FilenameWithoutPath>lora.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

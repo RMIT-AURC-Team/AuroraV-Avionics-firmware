@@ -1,10 +1,6 @@
 #include "main.h"
-#include "data_management.h"
 #include "data_output_spi.h"
-#include "data_read_spi.h"
 #include "gpio_struct.h"
-#include "spi_driver.h"
-#include "stm32f4xx_hal_conf.h"
 
 SPI_HandleTypeDef hspi4;
 

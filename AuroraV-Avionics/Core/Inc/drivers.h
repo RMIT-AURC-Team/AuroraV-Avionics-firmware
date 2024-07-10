@@ -21,48 +21,6 @@ struct GPSData {
   uint8_t lock; // 0 = no lock, 1 = lock
 };
 
-struct LoRa_Registers {
-  uint8_t RegFifo;
-  uint8_t RegOpMode;
-  uint8_t RegFifoAddrPtr;
-  uint8_t RegFifoTxBaseAddr;
-  uint8_t RegFifoRxBaseAddr;
-  uint8_t RegFifoRxCurrentAddr;
-  uint8_t RegIrqFlagsMask;
-  uint8_t RegIrqFlags;
-  uint8_t RegRxNbBytes;
-  uint8_t RegRxHeaderCntValueMsb;
-  uint8_t RegRxHeaderCntValueLsb;
-  uint8_t RegRxPacketCntValueMsb;
-  uint8_t RegRxPacketCntValueLsb;
-  uint8_t RegModemStat;
-  uint8_t RegPktSnrValue;
-  uint8_t RegPktRssiValue;
-  uint8_t RegRssiValue;
-  uint8_t RegHopChannel;
-  uint8_t RegModemConfig1;
-  uint8_t RegModemConfig2;
-  uint8_t RegSymbTimeoutLsb;
-  uint8_t RegPreambleMsb;
-  uint8_t RegPreambleLsb;
-  uint8_t RegPayloadLength;
-  uint8_t RegMaxPayloadLength;
-  uint8_t RegHopPeriod;
-  uint8_t RegFifoRxByteAddr;
-  uint8_t RegFeiMsb;
-  uint8_t RegFeiMid;
-  uint8_t RegFeiLsb;
-  uint8_t RegRssiWideband;
-  uint8_t RegDetectOptimize;
-  uint8_t RegInvertIQ;
-  uint8_t RegDetectionThreshold;
-  uint8_t RegSyncWord;
-  uint8_t RegInvertQ2;
-  uint8_t RegChirpFilter;
-  uint8_t RegDioMapping1;
-  uint8_t RegDioMapping2;
-};
-
 void configure_RCC_APB1(void);
 void configure_RCC_APB2(void);
 void configure_RCC_AHB1(void);
@@ -70,13 +28,9 @@ void configure_MISC_GPIO(void);
 void configure_UART3_GPS(void);
 void configure_UART6_Serial_2_mini_USB(void);
 void configure_SPI1_Sensor_Suite(void);
-void configure_SPI3_LoRa(void);
 void configure_SPI2_Flash(void);
 void configure_external_interrupts(void);
 void EXTI1_IRQHandler(void);
-
-void write_lora_packet(uint8_t address, uint8_t payload);
-uint8_t receive_lora_data(uint8_t address);
 
 void write_GYRO(uint8_t address, uint8_t payload);
 uint8_t read_GYRO(uint8_t address);
@@ -103,7 +57,5 @@ void send_GPS_messege(char *pointerdata);
 void DecodeGPS(char *GPS, struct GPSData *data);
 void GPS_test(void);
 
-void Load_And_Send_To_LoRa(char *pointerdata, const struct LoRa_Registers *LoRa_Registers);
-void configure_LoRa_module(void);
 void Flash_Write_Enable(void);
 #endif
