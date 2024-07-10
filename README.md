@@ -28,7 +28,7 @@ To successfully install and contribute to the project, ensure you have the follo
 
 <!-- TODO: add in lib submodule as dependancy -->
 
-##### Project Includes
+#### Project Includes
 
 In order to build the project you must ensure the correct include paths are added for the compiler to recognise the headers. These are provided as follows:
 

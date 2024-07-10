@@ -26,12 +26,12 @@
     | RCC_AHB1##reg##R_GPIOE##reg \
 )
 
-void configure_RCC_APB1();
-void configure_RCC_APB2();
-void configure_RCC_AHB1();
-void configure_MISC_GPIO();
-
-void configure_external_interrupts();
-void EXTI1_IRQHandler();
+// void configure_RCC_APB1();
+// void configure_RCC_APB2();
+// void configure_RCC_AHB1();
+// void configure_MISC_GPIO();
+//
+// void configure_external_interrupts();
+// void EXTI1_IRQHandler();
 
 #endif
