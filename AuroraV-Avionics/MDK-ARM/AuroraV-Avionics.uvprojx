@@ -246,7 +246,7 @@
               <MiscControls>-mfloat-abi=hard -ffast-math -mfpu=fpv4-sp-d16</MiscControls>
               <Define>__TARGET_FPU_VFP</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core\Inc;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\..\..\AuroraV-Avionics-lib\lib\libcmsis\src\CMSIS_5\CMSIS\Core\Include;..\..\..\AuroraV-Avionics-lib\lib\libcmsis\src\CMSIS-DSP\Include;..\..\..\AuroraV-Avionics-lib\lib\libcmsis\src\CMSIS-DSP\PrivateInclude;..\..\..\AuroraV-Avionics-lib\kalmanfilter\src;..\..\..\AuroraV-Avionics-lib\membuff\src;..\..\..\AuroraV-Avionics-lib\quaternion\src;..\Drivers\STM32F4xx_HAL_Driver\Inc</IncludePath>
+              <IncludePath>..\Core\Inc;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Lib\inc;..\Lib\inc\CORE\Include;..\Lib\inc\DSP\Include;..\Lib\inc\DSP\PrivateInclude;..\Lib\inc\DSP</IncludePath>
             </VariousControls>
           </Carm>
           <Aarm>
@@ -340,9 +340,14 @@
               <FilePath>..\Core\Src\spi_driver.c</FilePath>
             </File>
             <File>
+              <FileName>lora.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\lora.c</FilePath>
+            </File>
+            <File>
               <FileName>libavionics.a</FileName>
               <FileType>4</FileType>
-              <FilePath>..\libavionics.a</FilePath>
+              <FilePath>..\Lib\bin\libavionics.a</FilePath>
             </File>
           </Files>
         </Group>
