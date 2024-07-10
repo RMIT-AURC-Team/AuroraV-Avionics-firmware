@@ -46,14 +46,20 @@
 
 
 #include "stm32f4xx.h"
+#include "config.h"
+
+// Function prototypes
+void SystemCoreClockUpdate(void);							// Update the variables relating to the system clock.
+static void SetSysClock(void);								// Set the system clock.
 
 #if !defined  (HSE_VALUE) 
-  #define HSE_VALUE    ((uint32_t)25000000) /*!< Default value of the External oscillator in Hz */
+  #define HSE_VALUE    ((uint32_t)12000000) /*!< Default value of the External oscillator in Hz */
 #endif /* HSE_VALUE */
 
 #if !defined  (HSI_VALUE)
   #define HSI_VALUE    ((uint32_t)16000000) /*!< Value of the Internal oscillator in Hz*/
 #endif /* HSI_VALUE */
+
 
 /**
   * @}
@@ -134,7 +140,8 @@
                is no need to call the 2 first functions listed above, since SystemCoreClock
                variable is updated automatically.
   */
-uint32_t SystemCoreClock = 16000000;
+
+uint32_t SystemCoreClock = 16800000;
 const uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
 const uint8_t APBPrescTable[8]  = {0, 0, 0, 0, 1, 2, 3, 4};
 /**
@@ -171,14 +178,225 @@ void SystemInit(void)
     SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
   #endif
 
-#if defined (DATA_IN_ExtSRAM) || defined (DATA_IN_ExtSDRAM)
-  SystemInit_ExtMemCtl(); 
-#endif /* DATA_IN_ExtSRAM || DATA_IN_ExtSDRAM */
+	#if defined (DATA_IN_ExtSRAM) || defined (DATA_IN_ExtSDRAM)
+		SystemInit_ExtMemCtl(); 
+	#endif /* DATA_IN_ExtSRAM || DATA_IN_ExtSDRAM */
 
-  /* Configure the Vector Table location -------------------------------------*/
-#if defined(USER_VECT_TAB_ADDRESS)
-  SCB->VTOR = VECT_TAB_BASE_ADDRESS | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM */
-#endif /* USER_VECT_TAB_ADDRESS */
+	/* Configure the Vector Table location -------------------------------------*/
+	#if defined(USER_VECT_TAB_ADDRESS)
+		SCB->VTOR = VECT_TAB_BASE_ADDRESS | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM */
+	#endif /* USER_VECT_TAB_ADDRESS */
+	
+	  /* Reset the RCC clock configuration to the default reset state ------------*/
+  /* Set HSION bit */
+  RCC->CR |= (uint32_t)0x00000001;
+
+  /* Reset CFGR register */
+  RCC->CFGR = 0x00000000;
+
+  /* Reset HSEON, CSSON and PLLON bits */
+  RCC->CR &= (uint32_t)0xFEF6FFFF;
+
+  /* Reset PLLCFGR register, HSI used by default */
+  RCC->PLLCFGR = 0x24003010;
+
+  /* Reset HSEBYP bit */
+  RCC->CR &= (uint32_t)0xFFFBFFFF;
+
+  /* Disable all interrupts */
+  RCC->CIR = 0x00000000;
+
+  // Set the custom configuration for the system clock.
+  // The HAL variables are updated at the end of this function.
+  SetSysClock();
+}
+
+//******************************************************************************//
+// Function: SetSysClock()
+// Input : None
+// Return : None
+// Description : Configure the system clocks
+// *****************************************************************************//
+static void SetSysClock(void)
+{
+	// By default the High Speed External Osciallator (HSE) is used as the
+	// PLL clock source.
+	// For the STM32F4 Discovery, the external crystal oscillator is 8MHz
+	// For the Emcraft SOM, the external crystal oscillator is 12MHz
+	volatile unsigned int StartUpCounter = 0;
+
+
+	//volatile unsigned int tmp = 0x00;
+	#if HSE_USED
+		// Enable the High Speed Oscillator
+		RCC->CR |= RCC_CR_HSEON;
+
+		// Wait until the High Speed Oscillator is ready, or a timeout reached.
+		
+		while(((RCC->CR & RCC_CR_HSERDY) == 0) && StartUpCounter!= HSE_STARTUP_TIMEOUT)
+		{
+			StartUpCounter++;
+		}
+
+		// Check to see that the High Speed Oscillator started successfully.
+		if((RCC->CR & RCC_CR_HSERDY) == RCC_CR_HSERDY)
+		{
+			// The oscillator started successfully
+
+			// Enable the power control (PWR) clock
+			RCC->APB1ENR |= RCC_APB1ENR_PWREN;
+
+			/* Select regulator voltage output Scale 1 mode, System frequency up to 168 MHz */
+			PWR->CR |= PWR_CR_VOS;
+
+			// Set the HCLK to the same speed as the system clock (AHB Bus (STM32F407 = 168MHz))
+			RCC->CFGR &= ~(RCC_CFGR_HPRE | RCC_CFGR_PPRE2 | RCC_CFGR_PPRE1);			// This should clear the bits.
+
+			// Set the PCLK2 to the HCLK divided by 2. (APB2 Bus (High Speed) (STM32F407 = 84MHz))
+			RCC->CFGR |= (0x04 << RCC_CFGR_PPRE2_Pos);
+
+			// Set the PCLK1 to the HCLK divided by 4. (APB1 Bus (Low Speed) (STM32F407 = 42MHz))
+			RCC->CFGR |= (0x05 << RCC_CFGR_PPRE1_Pos);
+
+			// Set the PLL configuration register. The PLL_VCO frequency is given by:
+			// PLL_VCO = (HSE_VALUE / PLL_M) * PLL_N
+			// SYS_CLK = PLL_VCO / PLL_P (168MHz)
+			// USB OTG FS, SDIO and RNG Clock = PLL_VCO / PLLQ (48MHz)
+			// For the STM32F407, this equates to a PLL_VCO of
+			// For the Emcraft board, this equates to a PLL_VCO of 336MHz (Sysclock = 168MHz)
+
+			// Configure the main PLL
+			RCC->PLLCFGR = PLL_M | (PLL_N << 6) | (((PLL_P >> 1) -1) << 16) | (1 << 22) | (PLL_Q << 24);
+
+			// Now that the main configuration is complete, enable the PLL
+			RCC->CR |= RCC_CR_PLLON;
+
+			// Wait until the main PLL has started
+			while((RCC->CR & RCC_CR_PLLRDY) == 0);
+
+			// Configure Flash prefetch, Instruction cache, Data cache and wait state
+			FLASH->ACR &= ~(FLASH_ACR_PRFTEN | FLASH_ACR_ICEN | FLASH_ACR_DCEN | (FLASH_ACR_LATENCY));
+			FLASH->ACR |= (FLASH_ACR_PRFTEN | FLASH_ACR_ICEN | FLASH_ACR_DCEN | (0x05 << FLASH_ACR_LATENCY_Pos));
+
+			// FLASH->ACR.b.prften = 1; 					// Flash prefetch enable
+			// FLASH->ACR.b.icen = 1;						// Instruction cache enable
+			// FLASH->ACR.b.dcen = 1;						// Data cache enable
+			// FLASH->ACR.b.latency = 0x05;			// 5 wait states.
+
+			// Select the main PLL as system clock source
+			RCC->CFGR &= ~(RCC_CFGR_SW_0 | RCC_CFGR_SW_1);
+			RCC->CFGR |= RCC_CFGR_SW_1;
+			// RCC->CFGR.b.sw0 = 0x00;
+			// RCC->CFGR.b.sw1 = 0x01;
+
+			// Wait until the main PLL is used as the system clock source
+			while((RCC->CR & RCC_CR_PLLON) != RCC_CR_PLLON);
+		}
+		else
+		{
+			// Oscillator failed to start.
+		//	HSEStatus = 0x00;
+
+			/* If HSE fails to start-up, the application will have wrong clock
+			 configuration. User can add here some code to deal with this error */
+		}
+
+	#elif !HSE_USED
+		// Adjust the frequency of the internal oscillator
+		// First clear the adjustment values (HSICAL and HSITRIM), before setting them
+		//RCC->CR &= ~( 0xF << RCC_CR_HSITRIM_Pos);
+		//RCC->CR &= ~( 0xFF << RCC_CR_HSICAL_Pos);
+		//RCC->CR |= ( (HSITRIM & 0xF) << RCC_CR_HSITRIM_Pos);
+		//RCC->CR |= ( (HSICAL & 0xFF) << RCC_CR_HSICAL_Pos);
+
+		if((RCC->CR & RCC_CR_HSIRDY) == RCC_CR_HSIRDY)
+		{
+			// The oscillator started successfully
+
+			// Enable the power control (PWR) clock
+			RCC->APB1ENR |= RCC_APB1ENR_PWREN;
+
+			/* Select regulator voltage output Scale 1 mode, System frequency up to 168 MHz */
+			PWR->CR |= PWR_CR_VOS;
+
+			// Set the HCLK to the same speed as the system clock (AHB Bus (STM32F407 = 168MHz))
+			RCC->CFGR &= ~(RCC_CFGR_HPRE | RCC_CFGR_PPRE2 | RCC_CFGR_PPRE1);			// This should clear the bits.
+
+			// Set the PCLK2 to the HCLK divided by 2. (APB2 Bus (High Speed) (STM32F407 = 84MHz))
+			RCC->CFGR |= (0x04 << RCC_CFGR_PPRE2_Pos);
+
+			// Set the PCLK1 to the HCLK divided by 4. (APB1 Bus (Low Speed) (STM32F407 = 42MHz))
+			RCC->CFGR |= (0x05 << RCC_CFGR_PPRE1_Pos);
+
+			// Set the PLL configuration register. The PLL_VCO frequency is given by:
+			// PLL_VCO = (HSE_VALUE / PLL_M) * PLL_N
+			// SYS_CLK = PLL_VCO / PLL_P (168MHz)
+			// USB OTG FS, SDIO and RNG Clock = PLL_VCO / PLLQ (48MHz)
+			// For the STM32F407, this equates to a PLL_VCO of
+			// For the Emcraft board, this equates to a PLL_VCO of 336MHz (Sysclock = 168MHz)
+
+			// Configure the main PLL
+			RCC->PLLCFGR = HSIPLL_M | (HSIPLL_N << 6) | (((HSIPLL_P >> 1) -1) << 16) | (HSIPLL_Q << 24);
+
+			// Now that the main configuration is complete, enable the PLL
+			RCC->CR |= RCC_CR_PLLON;
+
+			// Wait until the main PLL has started
+			while((RCC->CR & RCC_CR_PLLRDY) == 0);
+
+			// Configure Flash prefetch, Instruction cache, Data cache and wait state
+			FLASH->ACR &= ~(FLASH_ACR_PRFTEN | FLASH_ACR_ICEN | FLASH_ACR_DCEN | (FLASH_ACR_LATENCY));
+			FLASH->ACR |= (FLASH_ACR_PRFTEN | FLASH_ACR_ICEN | FLASH_ACR_DCEN | (0x05 << FLASH_ACR_LATENCY_Pos));
+
+			// FLASH->ACR.b.prften = 1; 					// Flash prefetch enable
+			// FLASH->ACR.b.icen = 1;						// Instruction cache enable
+			// FLASH->ACR.b.dcen = 1;						// Data cache enable
+			// FLASH->ACR.b.latency = 0x05;			// 5 wait states.
+
+			// Select the main PLL as system clock source
+			RCC->CFGR &= ~(RCC_CFGR_SW_0 | RCC_CFGR_SW_1);
+			RCC->CFGR |= RCC_CFGR_SW_1;
+			// RCC->CFGR.b.sw0 = 0x00;
+			// RCC->CFGR.b.sw1 = 0x01;
+
+			// Wait until the main PLL is used as the system clock source
+			while((RCC->CR & RCC_CR_PLLON) != RCC_CR_PLLON);
+		}
+		{
+			// HSI Oscillator failed to start!
+		}
+	#endif
+
+	#if defined (RTC_ENABLE)
+		volatile unsigned int BackupResetCounter = 0;
+
+		// Enable access to the real time clock (use external low-speed oscillator).
+		PWR->CR |= PWR_CR_DBP;
+
+		// Reset the backup domain interface and delay.
+		RCC->BDCR |= RCC_BDCR_BDRST;
+		for(BackupResetCounter = 0; BackupResetCounter <= 5; BackupResetCounter++);
+		RCC->BDCR &= ~(RCC_BDCR_BDRST);
+		for(BackupResetCounter = 0; BackupResetCounter <= 5; BackupResetCounter++);
+
+		// Clear out the individual bits for the backup domain clocks (including wait states)
+		RCC->BDCR &= ~(RCC_BDCR_RTCEN | RCC_BDCR_RTCSEL | RCC_BDCR_LSEON);
+
+		// Now set the bits of interest.
+		// Enable the real-time clock peripheral.
+		// External LSE as the clock source.
+		// Enable the external oscillator.
+		RCC->BDCR |= RCC_BDCR_RTCEN | (0x01 << RCC_BDCR_RTCSEL_Pos) | RCC_BDCR_LSEON;
+
+		// Wait for the LSE to become ready.
+		while((RCC->BDCR & RCC_BDCR_LSERDY_Msk) != 0x02)
+
+		// Disable access to the backup domain.
+		PWR->CR &= ~(PWR_CR_DBP);
+	#endif
+
+	// Set the variables relating to the system clock speed.
+	SystemCoreClockUpdate();
 }
 
 /**
