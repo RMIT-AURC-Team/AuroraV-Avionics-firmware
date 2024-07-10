@@ -30,9 +30,11 @@
 
 #include "can.h"
 #include "drivers.h"
+#include "flash.h"
 #include "lora.h"
 #include "sensors.h"
 #include "state.h"
+
 
 #include "kalmanfilter.h"
 #include "membuff.h"

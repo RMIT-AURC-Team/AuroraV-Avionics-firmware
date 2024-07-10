@@ -3,8 +3,9 @@
 
 #include "stm32f439xx.h"
 
-uint8_t read_FLASH(uint8_t address);
-void configure_SPI2_Flash(void);
+uint8_t read_FLASH(uint8_t);
+void configure_SPI2_Flash();
+void Flash_Write_Enable();
 
 // =========================================================
 //               SPI DATA PINS (SCLK, SDI, SDO)
