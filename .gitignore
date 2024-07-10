@@ -1,0 +1,7 @@
+*.d
+*.o
+*.uvguix*
+*.elf
+*.lnp
+*.dep
+*.htm
