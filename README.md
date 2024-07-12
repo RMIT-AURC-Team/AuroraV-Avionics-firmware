@@ -23,7 +23,7 @@ To successfully install and contribute to the project, ensure you have the follo
 
 - Git
 - Keil uVision IDE
-- GCC for arm (arm-none-eabi-gcc)
+- [GCC for arm (arm-none-eabi-gcc)](https://developer.arm.com/downloads/-/gnu-rm)
 - Latest version of Aurora V Avionics libraries found [here](https://github.com/RMIT-AURC-Team/AuroraV-Avionics-lib/releases)
 
 <!-- TODO: add in lib submodule as dependancy -->
