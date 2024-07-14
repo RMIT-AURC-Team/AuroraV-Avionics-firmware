@@ -86,7 +86,6 @@ int main(void) {
   CAN_Peripheral_config();
   configure_LoRa_module();
 
-  configure_Sensors();
   Accel_init(&lAccel_s, ACCEL_CS_1, ACCEL_SCALE_LOW);
   Accel_init(&hAccel_s, ACCEL_CS_2, ACCEL_SCALE_HIGH);
   Gyro_init(&gyro_s, GYRO_CS, GYRO_SENSITIVITY);
@@ -339,8 +338,12 @@ void vDataAcquisitionH(void *argument) {
     // Block until 2ms interval
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
+    // TODO: Add back in functionality for swapping to high/low scale accelerometer
+    // with appropriate change to axis base
     acc      = lAccel_s;
-    axisBase = 2;                    // Y axis on the vertical
+    axisBase = 2; // Y axis on the vertical
+
+    // Read and process accelerometer
     accel[0] = acc.read(&acc, 0x09); // Accel X high
     accel[1] = acc.read(&acc, 0x08); // Accel X low
     accel[2] = acc.read(&acc, 0x0B); // Accel Y high
@@ -356,12 +359,11 @@ void vDataAcquisitionH(void *argument) {
     gyro[3] = gyro_s.read(&gyro_s, 0x2A); // Gyro Y low
     gyro[4] = gyro_s.read(&gyro_s, 0x2D); // Gyro Z high
     gyro[5] = gyro_s.read(&gyro_s, 0x2C); // Gyro Z low
-    // Need to adjust this to actual axis
-    roll  = gyro_s.sensitivity * (int16_t)(((uint16_t)gyro[0] << 8) | gyro[1]);
-    pitch = gyro_s.sensitivity * (int16_t)(((uint16_t)gyro[4] << 8) | gyro[5]);
-    yaw   = gyro_s.sensitivity * (int16_t)(((uint16_t)gyro[2] << 8) | gyro[3]);
+    roll    = gyro_s.sensitivity * (int16_t)(((uint16_t)gyro[0] << 8) | gyro[1]);
+    pitch   = gyro_s.sensitivity * (int16_t)(((uint16_t)gyro[4] << 8) | gyro[5]);
+    yaw     = gyro_s.sensitivity * (int16_t)(((uint16_t)gyro[2] << 8) | gyro[3]);
 
-    // Add sensor data and quaternion to dataframe
+    // Add sensor data to dataframe
     mem.append(&mem, HEADER_HIGHRES);
     mem.append(&mem, accel[0]); // Accel X high byte
     mem.append(&mem, accel[1]); // Accel X low byte
