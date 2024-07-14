@@ -4,6 +4,8 @@
 #include "sensors.h"
 #include "stm32f439xx.h"
 
+#define ACCEL_SCALE_HIGH         32
+#define ACCEL_SCALE_LOW          16
 #define ACCEL_SENSITIVITY_32G    (1.0f / 1024.0f)
 #define ACCEL_SENSITIVITY_16G    (1.0f / 2048.0f)
 #define ACCEL_SENSITIVITY(scale) ACCEL_SENSITIVITY_##scale##G

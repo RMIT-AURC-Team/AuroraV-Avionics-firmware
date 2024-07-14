@@ -87,8 +87,8 @@ int main(void) {
   configure_LoRa_module();
 
   configure_Sensors();
-  Accel_init(&lAccel_s, ACCEL_CS_1, 16);
-  Accel_init(&hAccel_s, ACCEL_CS_2, 32);
+  Accel_init(&lAccel_s, ACCEL_CS_1, ACCEL_SCALE_LOW);
+  Accel_init(&hAccel_s, ACCEL_CS_2, ACCEL_SCALE_HIGH);
   Gyro_init(&gyro_s, GYRO_CS, GYRO_SENSITIVITY);
   Baro_init(&baro_s, BARO_CS, BARO_SENSITIVITY_COUNT, BARO_TEMP_SENSITIVITY, BARO_PRESS_SENSITIVITY);
 
