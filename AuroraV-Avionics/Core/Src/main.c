@@ -33,9 +33,8 @@ uint8_t velocitydecreasecount = 0;
 float previousaltitude        = 0;
 uint8_t altitudedecreasecount = 0;
 
-uint8_t accel[6] = {0, 0, 0, 0, 0, 0};
+uint8_t accel[6]              = {0, 0, 0, 0, 0, 0};
 uint8_t gyro[6];
-uint8_t magnet[6];
 uint8_t pressure[6];
 uint8_t temperature[6];
 float pressGround = 0;
@@ -58,6 +57,10 @@ enum State currentState = PRELAUNCH; // Boot in prelaunch
 int interval2ms         = 0;
 
 GPIO_Config spi4_cs;
+Sensor lAccel_s;
+Sensor hAccel_s;
+Sensor gyro_s;
+Sensor_multi baro_s;
 
 const struct LoRa_Registers LoRa_Regs = {0, 1, 0xd, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0X1C, 0X1D, 0X1E, 0X1F, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X28, 0X29, 0X2A, 0X2C, 0X31, 0X33, 0X37, 0X39, 0X3B, 0X3D, 0X40, 0X41};
 static void MX_SPI4_Init(void);
@@ -82,7 +85,12 @@ int main(void) {
   CANGPIO_config();
   CAN_Peripheral_config();
   configure_LoRa_module();
+
   configure_Sensors();
+  Accel_init(&lAccel_s, ACCEL_CS_1, 16);
+  Accel_init(&hAccel_s, ACCEL_CS_2, 32);
+  Gyro_init(&gyro_s, GYRO_CS, GYRO_SENSITIVITY);
+  Baro_init(&baro_s, BARO_CS, BARO_SENSITIVITY_COUNT, BARO_TEMP_SENSITIVITY, BARO_PRESS_SENSITIVITY);
 
   configure_LoRa_module();
 
@@ -94,25 +102,6 @@ int main(void) {
   // while(1);
   //	uint8_t readBuff[256];
   //	read_page_spi(readBuff, &hspi4, 0x00, spi4_cs);
-
-  // Configure accelerometer
-  write_ACCEL_1(ACCEL_CNTL1, 0x50);                                     // Accel select, 32g sensitivity
-  uint8_t ODCNTL = read_ACCEL_1(ACCEL_ODCNTL);                          // Read from register for reserve mask
-  write_ACCEL_1(ACCEL_ODCNTL, (ACCEL_ODCNTL_RESERVED & ODCNTL) | 0x2A); // No filter, fast startup, 800Hz
-  write_ACCEL_1(ACCEL_CNTL1, 0xD0);                                     // Enable PC1
-
-  // Configure gyroscope
-  write_GYRO(GYRO_CTRL_REG1, GYRO_CTRL_REG1_ODR_800Hz | GYRO_CTRL_REG1_AXIS_ENABLE | GYRO_CTRL_REG1_PD_ENABLE);
-  // write_GYRO(GYRO_CTRL_REG1, 0xCF);
-
-  // Configure magnetometer
-  write_MAG(MAGNET_CTRL_REG1, MAGNET_CTRL_REG1_FAST);
-  write_MAG(MAGNET_CTRL_REG2, MAGNET_CTRL_REG2_FS16);
-
-  // Configure barometer
-  write_BARO(BARO_ODR_CFG, BARO_ODR_CFG_PWR | BARO_ODR_CFG_DEEP_DIS);
-  uint8_t OSRCFG = read_BARO(BARO_OSR_CFG);
-  write_BARO(BARO_OSR_CFG, (BARO_OSR_CFG_RESERVED * OSRCFG) | BARO_OSR_CFG_PRESS_EN);
 
   unsigned int CANHigh = 0;
   unsigned int CANLow  = 0;
@@ -129,10 +118,10 @@ int main(void) {
   xEventGroupClearBits(xTaskEnableGroup, 0xFF);
 
   // Calculate ground pressure
-  uint8_t hPress = read_BARO(0x22);
-  uint8_t lPress = read_BARO(0x21);
-  uint8_t xPress = read_BARO(0x20);
-  pressGround    = BARO_PRESS_SENSITIVITY * (((int32_t)hPress << 16) | ((int32_t)lPress << 8) | xPress);
+  uint8_t hPress = baro_s.read(&baro_s, 0x22);
+  uint8_t lPress = baro_s.read(&baro_s, 0x21);
+  uint8_t xPress = baro_s.read(&baro_s, 0x20);
+  pressGround    = baro_s.sensitivities[1] * (((int32_t)hPress << 16) | ((int32_t)lPress << 8) | xPress);
 
   // Create task handles
   xTaskCreate(vDataAcquisitionH, "HDataAcq", 256, NULL, configMAX_PRIORITIES - 2, &xDataAqcquisitionHHandle);
@@ -179,23 +168,23 @@ void vFlashBuffer(void *argument) {
 
 static void MX_SPI4_Init(void) {
   /* SPI4 parameter configuration*/
-  RCC->APB2ENR  |= RCC_APB2ENR_SPI4EN;
+  RCC->APB2ENR |= RCC_APB2ENR_SPI4EN;
   RCC->APB2RSTR |= RCC_APB2RSTR_SPI4RST;
   __ASM("NOP");
   __ASM("NOP");
-  RCC->APB2RSTR                &= ~RCC_APB2RSTR_SPI4RST;
-  hspi4.Instance                = SPI4;
-  hspi4.Init.Mode               = SPI_MODE_MASTER;
-  hspi4.Init.Direction          = SPI_DIRECTION_2LINES;
-  hspi4.Init.DataSize           = SPI_DATASIZE_8BIT;
-  hspi4.Init.CLKPolarity        = SPI_POLARITY_LOW;
-  hspi4.Init.CLKPhase           = SPI_PHASE_1EDGE;
-  hspi4.Init.NSS                = SPI_NSS_SOFT;
-  hspi4.Init.BaudRatePrescaler  = SPI_BAUDRATEPRESCALER_2;
-  hspi4.Init.FirstBit           = SPI_FIRSTBIT_MSB;
-  hspi4.Init.TIMode             = SPI_TIMODE_DISABLE;
-  hspi4.Init.CRCCalculation     = SPI_CRCCALCULATION_DISABLE;
-  hspi4.Init.CRCPolynomial      = 10;
+  RCC->APB2RSTR &= ~RCC_APB2RSTR_SPI4RST;
+  hspi4.Instance               = SPI4;
+  hspi4.Init.Mode              = SPI_MODE_MASTER;
+  hspi4.Init.Direction         = SPI_DIRECTION_2LINES;
+  hspi4.Init.DataSize          = SPI_DATASIZE_8BIT;
+  hspi4.Init.CLKPolarity       = SPI_POLARITY_LOW;
+  hspi4.Init.CLKPhase          = SPI_PHASE_1EDGE;
+  hspi4.Init.NSS               = SPI_NSS_SOFT;
+  hspi4.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+  hspi4.Init.FirstBit          = SPI_FIRSTBIT_MSB;
+  hspi4.Init.TIMode            = SPI_TIMODE_DISABLE;
+  hspi4.Init.CRCCalculation    = SPI_CRCCALCULATION_DISABLE;
+  hspi4.Init.CRCPolynomial     = 10;
   if (HAL_SPI_Init(&hspi4) != HAL_OK) {
     // Error_Handler();
   }
@@ -213,7 +202,7 @@ void vLoRaCommunicate(void *argument) {
         LORA_HEADER_AVD1,
         accel[0], accel[1], accel[2],
         accel[3], accel[4], accel[5],
-        magnet[0], magnet[1],
+        ':', '/',
         ':', ')'
     };
     Load_And_Send_To_LoRa(payload, &LoRa_Regs);
@@ -238,9 +227,9 @@ void vStateUpdate(void *argument) {
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(20); // 50Hz
 
-  unsigned int CANHigh = 0;
-  unsigned int CANLow  = 0;
-  unsigned int id      = 0;
+  unsigned int CANHigh        = 0;
+  unsigned int CANLow         = 0;
+  unsigned int id             = 0;
 
   for (;;) {
     // Block until 20ms interval
@@ -328,8 +317,8 @@ void vStateUpdate(void *argument) {
       // Handle unexpected state
       break;
     }
-    ms  += 2;
-    u.i  = ms;
+    ms += 2;
+    u.i = ms;
   }
 }
 
@@ -340,8 +329,7 @@ void vStateUpdate(void *argument) {
 void vDataAcquisitionH(void *argument) {
   float dt = 0.002;
   float roll, pitch, yaw;
-  float sensitivity;
-  uint8_t (*read_ACCEL)(uint8_t);
+  Sensor acc;
   uint8_t axisBase = 0;
 
   TickType_t xLastWakeTime;
@@ -351,61 +339,42 @@ void vDataAcquisitionH(void *argument) {
     // Block until 2ms interval
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
-    read_ACCEL  = &read_ACCEL_1;
-    sensitivity = ACCEL_SENSITIVITY_32G;
-    axisBase    = 2;                                                                                // Y axis on the vertical
-    accelZ      = -sensitivity * (int16_t)(((uint16_t)accel[axisBase] << 8) | accel[axisBase + 1]); // Negative to compensate for inverted axis
-
-                                                                                                    // Read and process accelerometer
-    accel[0] = (*read_ACCEL)(0x09); // Accel X high
-    accel[1] = (*read_ACCEL)(0x08); // Accel X low
-    accel[2] = (*read_ACCEL)(0x0B); // Accel Y high
-    accel[3] = (*read_ACCEL)(0x0A); // Accel Y low
-    accel[4] = (*read_ACCEL)(0x0D); // Accel Z high
-    accel[5] = (*read_ACCEL)(0x0C); // Accel Z low
-    // Need to adjust this to actual axis
-    accelZ = -sensitivity * (int16_t)(((uint16_t)accel[axisBase] << 8) | accel[axisBase + 1]); // Negative to compensate for inverted axis
+    acc      = lAccel_s;
+    axisBase = 2;                    // Y axis on the vertical
+    accel[0] = acc.read(&acc, 0x09); // Accel X high
+    accel[1] = acc.read(&acc, 0x08); // Accel X low
+    accel[2] = acc.read(&acc, 0x0B); // Accel Y high
+    accel[3] = acc.read(&acc, 0x0A); // Accel Y low
+    accel[4] = acc.read(&acc, 0x0D); // Accel Z high
+    accel[5] = acc.read(&acc, 0x0C); // Accel Z low
+    accelZ   = -acc.sensitivity * (int16_t)(((uint16_t)accel[axisBase] << 8) | accel[axisBase + 1]);
 
     // Read and process gyroscope
-    gyro[0] = read_GYRO(0x29); // Gyro X high
-    gyro[1] = read_GYRO(0x28); // Gyro X low
-    gyro[2] = read_GYRO(0x2B); // Gyro Y high
-    gyro[3] = read_GYRO(0x2A); // Gyro Y low
-    gyro[4] = read_GYRO(0x2D); // Gyro Z high
-    gyro[5] = read_GYRO(0x2C); // Gyro Z low
+    gyro[0] = gyro_s.read(&gyro_s, 0x29); // Gyro X high
+    gyro[1] = gyro_s.read(&gyro_s, 0x28); // Gyro X low
+    gyro[2] = gyro_s.read(&gyro_s, 0x2B); // Gyro Y high
+    gyro[3] = gyro_s.read(&gyro_s, 0x2A); // Gyro Y low
+    gyro[4] = gyro_s.read(&gyro_s, 0x2D); // Gyro Z high
+    gyro[5] = gyro_s.read(&gyro_s, 0x2C); // Gyro Z low
     // Need to adjust this to actual axis
-    roll  = GYRO_SENSITIVITY * (int16_t)(((uint16_t)gyro[0] << 8) | gyro[1]);
-    pitch = GYRO_SENSITIVITY * (int16_t)(((uint16_t)gyro[4] << 8) | gyro[5]);
-    yaw   = GYRO_SENSITIVITY * (int16_t)(((uint16_t)gyro[2] << 8) | gyro[3]);
-
-    // Fuck this device
-    magnet[0] = read_MAG(0x29); // Mag X high
-    magnet[1] = read_MAG(0x28); // Mag X low
-    magnet[2] = read_MAG(0x2B); // Mag Y high
-    magnet[3] = read_MAG(0x2A); // Mag Y low
-    magnet[4] = read_MAG(0x2D); // Mag Z high
-    magnet[5] = read_MAG(0x2C); // Mag Z low
+    roll  = gyro_s.sensitivity * (int16_t)(((uint16_t)gyro[0] << 8) | gyro[1]);
+    pitch = gyro_s.sensitivity * (int16_t)(((uint16_t)gyro[4] << 8) | gyro[5]);
+    yaw   = gyro_s.sensitivity * (int16_t)(((uint16_t)gyro[2] << 8) | gyro[3]);
 
     // Add sensor data and quaternion to dataframe
     mem.append(&mem, HEADER_HIGHRES);
-    mem.append(&mem, accel[0]);  // Accel X high byte
-    mem.append(&mem, accel[1]);  // Accel X low byte
-    mem.append(&mem, accel[2]);  // Accel Y high byte
-    mem.append(&mem, accel[3]);  // Accel Y low byte
-    mem.append(&mem, accel[4]);  // Accel Z high byte
-    mem.append(&mem, accel[5]);  // Accel Z low byte
-    mem.append(&mem, gyro[0]);   // Gyro X high byte
-    mem.append(&mem, gyro[1]);   // Gyro X low byte
-    mem.append(&mem, gyro[2]);   // Gyro Y high byte
-    mem.append(&mem, gyro[3]);   // Gyro Y low byte
-    mem.append(&mem, gyro[4]);   // Gyro Z high byte
-    mem.append(&mem, gyro[5]);   // Gyro Z low byte
-    mem.append(&mem, magnet[0]); // Magnet X high byte
-    mem.append(&mem, magnet[1]); // Magnet X low byte
-    mem.append(&mem, magnet[2]); // Magnet Y high byte
-    mem.append(&mem, magnet[3]); // Magnet Y low byte
-    mem.append(&mem, magnet[4]); // Magnet Z high byte
-    mem.append(&mem, magnet[5]); // Magnet Z low byte
+    mem.append(&mem, accel[0]); // Accel X high byte
+    mem.append(&mem, accel[1]); // Accel X low byte
+    mem.append(&mem, accel[2]); // Accel Y high byte
+    mem.append(&mem, accel[3]); // Accel Y low byte
+    mem.append(&mem, accel[4]); // Accel Z high byte
+    mem.append(&mem, accel[5]); // Accel Z low byte
+    mem.append(&mem, gyro[0]);  // Gyro X high byte
+    mem.append(&mem, gyro[1]);  // Gyro X low byte
+    mem.append(&mem, gyro[2]);  // Gyro Y high byte
+    mem.append(&mem, gyro[3]);  // Gyro Y low byte
+    mem.append(&mem, gyro[4]);  // Gyro Z high byte
+    mem.append(&mem, gyro[5]);  // Gyro Z low byte
 
     // Only run calculations when enabled
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x02, pdFALSE, pdFALSE, blockTime);
@@ -481,17 +450,17 @@ void vDataAcquisitionL(void *argument) {
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
     // Read baro data
-    temperature[0] = read_BARO(0x1F);
-    temperature[1] = read_BARO(0x1E);
-    temperature[2] = read_BARO(0x1D);
-    float temp     = BARO_TEMP_SENSITIVITY * (((int32_t)temperature[0] << 16) | ((int32_t)temperature[1] << 8) | temperature[2]);
+    temperature[0] = baro_s.read(&baro_s, 0x1F);
+    temperature[1] = baro_s.read(&baro_s, 0x1E);
+    temperature[2] = baro_s.read(&baro_s, 0x1D);
+    float temp     = baro_s.sensitivities[0] * (((int32_t)temperature[0] << 16) | ((int32_t)temperature[1] << 8) | temperature[2]);
 
-    pressure[0] = read_BARO(0x22);
-    pressure[1] = read_BARO(0x21);
-    pressure[2] = read_BARO(0x20);
-    float press = BARO_PRESS_SENSITIVITY * (((int32_t)pressure[0] << 16) | ((int32_t)pressure[1] << 8) | pressure[2]);
+    pressure[0]    = baro_s.read(&baro_s, 0x22);
+    pressure[1]    = baro_s.read(&baro_s, 0x21);
+    pressure[2]    = baro_s.read(&baro_s, 0x20);
+    float press    = baro_s.sensitivities[1] * (((int32_t)pressure[0] << 16) | ((int32_t)pressure[1] << 8) | pressure[2]);
 
-    altitude = 44330 * (1.0 - pow(press / pressGround, 0.1903));
+    altitude       = 44330 * (1.0 - pow(press / pressGround, 0.1903));
 
     // Add sensor data and barometer data to dataframe
     mem.append(&mem, HEADER_LOWRES);

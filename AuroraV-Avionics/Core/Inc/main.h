@@ -28,13 +28,15 @@
 #include "stm32f4xx.h"
 #include "task.h"
 
+#include "accel.h"
+#include "baro.h"
 #include "can.h"
 #include "drivers.h"
 #include "flash.h"
+#include "gyro.h"
 #include "lora.h"
 #include "sensors.h"
 #include "state.h"
-
 
 #include "kalmanfilter.h"
 #include "membuff.h"

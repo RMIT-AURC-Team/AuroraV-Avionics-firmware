@@ -246,7 +246,7 @@
               <MiscControls>-mfloat-abi=hard -ffast-math -mfpu=fpv4-sp-d16</MiscControls>
               <Define>__TARGET_FPU_VFP</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core\Inc;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Lib\inc;..\Lib\inc\CORE\Include;..\Lib\inc\DSP\Include;..\Lib\inc\DSP\PrivateInclude;..\Lib\inc\DSP</IncludePath>
+              <IncludePath>..\Core\Inc;..\Core\Inc\SPI\sensors;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Lib\inc;..\Lib\inc\CORE\Include;..\Lib\inc\DSP\Include;..\Lib\inc\DSP\PrivateInclude;..\Lib\inc\DSP</IncludePath>
             </VariousControls>
           </Carm>
           <Aarm>
@@ -310,11 +310,6 @@
               <FilePath>..\Core\Src\state.c</FilePath>
             </File>
             <File>
-              <FileName>sensors.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\sensors.c</FilePath>
-            </File>
-            <File>
               <FileName>data_management.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\data_management.c</FilePath>
@@ -358,6 +353,31 @@
               <FileName>libavionics.a</FileName>
               <FileType>4</FileType>
               <FilePath>..\Lib\bin\libavionics.a</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Source/SPI/sensors</GroupName>
+          <Files>
+            <File>
+              <FileName>sensors.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\SPI\sensors\sensors.c</FilePath>
+            </File>
+            <File>
+              <FileName>accel.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\SPI\sensors\accel.c</FilePath>
+            </File>
+            <File>
+              <FileName>gyro.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\SPI\sensors\gyro.c</FilePath>
+            </File>
+            <File>
+              <FileName>baro.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\SPI\sensors\baro.c</FilePath>
             </File>
           </Files>
         </Group>
