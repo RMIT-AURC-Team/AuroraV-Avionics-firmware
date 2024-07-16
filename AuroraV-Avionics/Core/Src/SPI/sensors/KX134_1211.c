@@ -1,6 +1,7 @@
 #include "KX134_1211.h"
 
 void KX134_1211_init(KX134_1211 *accel, unsigned long cs, int scale) {
+  accel->base.device        = SENSOR_ACCEL;
   accel->base.cs            = cs;
   accel->base.writeRegister = KX134_1211_writeRegister;
   accel->base.readRegister  = KX134_1211_readRegister;
