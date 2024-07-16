@@ -7,6 +7,11 @@
 // Can easily be changed, maximum number of sensitivities supported by multi
 #define SENSOR_MULTI_SENSITIVITIES_MAXN 3
 
+#define KX134_1211_SCALE_HIGH 32
+#define KX134_1211_SCALE_LOW  16
+#define KX134_1211_CS_1       GPIO_ODR_OD1
+#define KX134_1211_CS_2       GPIO_ODR_OD0
+
 typedef struct Sensor {
   unsigned long cs;
   float sensitivity;

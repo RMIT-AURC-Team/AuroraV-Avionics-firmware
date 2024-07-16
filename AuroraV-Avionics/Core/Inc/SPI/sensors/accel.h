@@ -1,6 +1,7 @@
 #ifndef _ACCEL_H
 #define _ACCEL_H
 
+#include "SPI/spi.h"
 #include "sensors.h"
 #include "stm32f439xx.h"
 
