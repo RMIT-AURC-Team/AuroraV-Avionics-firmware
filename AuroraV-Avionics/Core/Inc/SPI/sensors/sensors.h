@@ -4,13 +4,21 @@
 #include "stdarg.h"
 #include "stm32f439xx.h"
 
-// Can easily be changed, maximum number of sensitivities supported by multi
-#define SENSOR_MULTI_SENSITIVITIES_MAXN 3
+#define XINDEX 					 0
+#define YINDEX 					 1
+#define ZINDEX 					 2
 
-#define KX134_1211_SCALE_HIGH 32
-#define KX134_1211_SCALE_LOW  16
-#define KX134_1211_CS_1       GPIO_ODR_OD1
-#define KX134_1211_CS_2       GPIO_ODR_OD0
+#define ACCEL_SCALE_HIGH 32
+#define ACCEL_SCALE_LOW  16
+#define ACCEL_PORT_1     GPIOA
+#define ACCEL_CS_1       GPIO_ODR_OD1
+#define ACCEL_PORT_2     GPIOB
+#define ACCEL_CS_2       GPIO_ODR_OD0
+extern const uint8_t ACCEL_AXES_1[3];
+extern const uint8_t ACCEL_AXES_2[3];
+
+// TODO: Get rid of all this
+#define SENSOR_MULTI_SENSITIVITIES_MAXN 3
 
 typedef struct Sensor {
   unsigned long cs;

@@ -28,6 +28,7 @@
 #include "stm32f4xx.h"
 #include "task.h"
 
+#include "KX134_1211.h"
 #include "accel.h"
 #include "baro.h"
 #include "can.h"

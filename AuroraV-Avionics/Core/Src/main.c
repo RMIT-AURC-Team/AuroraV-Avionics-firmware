@@ -27,14 +27,25 @@ float yaw   = 0;
 // Flight dynamics state variables
 float altitude                = 0; // Current altitude
 float velocity                = 0; // Current vertical velocity
-float accelZ                  = 0; // Current body-axis acceleration
 float previousvelocity        = 0;
 uint8_t velocitydecreasecount = 0;
 float previousaltitude        = 0;
 uint8_t altitudedecreasecount = 0;
 
-uint8_t accel[6]              = {0, 0, 0, 0, 0, 0};
-uint8_t gyro[6];
+// Accelerometer
+KX134_1211 lAccel_s;
+KX134_1211 hAccel_s;
+KX134_1211 *accel_s = &lAccel_s;
+uint8_t accelRaw[6];
+float accel[3];
+
+// Gyroscope
+Sensor gyro_s;
+uint8_t gyroRaw[6];
+float gyro[3];
+
+// Barometer
+Sensor_multi baro_s;
 uint8_t pressure[6];
 uint8_t temperature[6];
 float pressGround = 0;
@@ -45,22 +56,10 @@ MemBuff mem;
 uint8_t buff[BUFF_SIZE];
 uint8_t outBuff[PAGE_SIZE];
 
-MemBuff Altitudemem;
-uint8_t AltitudeBuff[15];
-uint8_t Altitudeoutbuff[15];
-
-MemBuff Velocitymem;
-uint8_t VelocityBuff[10];
-uint8_t VelocityoutBuff[10];
-
 enum State currentState = PRELAUNCH; // Boot in prelaunch
 int interval2ms         = 0;
 
 GPIO_Config spi4_cs;
-Sensor lAccel_s;
-Sensor hAccel_s;
-Sensor gyro_s;
-Sensor_multi baro_s;
 
 const struct LoRa_Registers LoRa_Regs = {0, 1, 0xd, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0X1C, 0X1D, 0X1E, 0X1F, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X28, 0X29, 0X2A, 0X2C, 0X31, 0X33, 0X37, 0X39, 0X3B, 0X3D, 0X40, 0X41};
 static void MX_SPI4_Init(void);
@@ -86,8 +85,8 @@ int main(void) {
   CAN_Peripheral_config();
   configure_LoRa_module();
 
-  Accel_init(&lAccel_s, ACCEL_CS_1, ACCEL_SCALE_LOW);
-  Accel_init(&hAccel_s, ACCEL_CS_2, ACCEL_SCALE_HIGH);
+  KX134_1211_init(&lAccel_s, ACCEL_PORT_1, ACCEL_CS_1, ACCEL_SCALE_LOW, ACCEL_AXES_1);
+  KX134_1211_init(&hAccel_s, ACCEL_PORT_2, ACCEL_CS_2, ACCEL_SCALE_HIGH, ACCEL_AXES_2);
   Gyro_init(&gyro_s, GYRO_CS, GYRO_SENSITIVITY);
   Baro_init(&baro_s, BARO_CS, BARO_SENSITIVITY_COUNT, BARO_TEMP_SENSITIVITY, BARO_PRESS_SENSITIVITY);
 
@@ -109,9 +108,6 @@ int main(void) {
 
   MemBuff_init(&mem, buff, BUFF_SIZE, PAGE_SIZE);
   Quaternion_init(&qRot);
-
-  MemBuff_init(&Altitudemem, AltitudeBuff, 10, 10);
-  MemBuff_init(&Velocitymem, VelocityBuff, 5, 5);
 
   xTaskEnableGroup = xEventGroupCreate();
   xEventGroupClearBits(xTaskEnableGroup, 0xFF);
@@ -199,8 +195,8 @@ void vLoRaCommunicate(void *argument) {
   for (;;) {
     char payload[16] = {
         LORA_HEADER_AVD1,
-        accel[0], accel[1], accel[2],
-        accel[3], accel[4], accel[5],
+        accelRaw[0], accelRaw[1], accelRaw[2],
+        accelRaw[3], accelRaw[4], accelRaw[5],
         ':', '/',
         ':', ')'
     };
@@ -244,7 +240,7 @@ void vStateUpdate(void *argument) {
 
     switch (currentState) {
     case PRELAUNCH:
-      if (isAccelerationAbove5Gs(accelZ)) {
+      if (isAccelerationAbove5Gs(accel[accel_s->axes[ZINDEX]])) {
         // load and send to lora
         xEventGroupSetBits(xTaskEnableGroup, 0x80); // Enable flash
         xEventGroupSetBits(xTaskEnableGroup, 0x06); // Enable data acquisition
@@ -328,8 +324,6 @@ void vStateUpdate(void *argument) {
 void vDataAcquisitionH(void *argument) {
   float dt = 0.002;
   float roll, pitch, yaw;
-  Sensor acc;
-  uint8_t axisBase = 0;
 
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(2); // 500Hz
@@ -338,45 +332,38 @@ void vDataAcquisitionH(void *argument) {
     // Block until 2ms interval
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
-    // TODO: Add back in functionality for swapping to high/low scale accelerometer
-    // with appropriate change to axis base
-    acc      = lAccel_s;
-    axisBase = 2; // Y axis on the vertical
+    // Select accelerometer to read from
+    accel_s = (accel[accel_s->axes[ZINDEX]] >= 15) ? &hAccel_s : &lAccel_s;
 
     // Read and process accelerometer
-    accel[0] = acc.read(&acc, 0x09); // Accel X high
-    accel[1] = acc.read(&acc, 0x08); // Accel X low
-    accel[2] = acc.read(&acc, 0x0B); // Accel Y high
-    accel[3] = acc.read(&acc, 0x0A); // Accel Y low
-    accel[4] = acc.read(&acc, 0x0D); // Accel Z high
-    accel[5] = acc.read(&acc, 0x0C); // Accel Z low
-    accelZ   = -acc.sensitivity * (int16_t)(((uint16_t)accel[axisBase] << 8) | accel[axisBase + 1]);
+    accel_s->readRawBytes(accel_s, accelRaw);
+    accel_s->processRawBytes(accel_s, accelRaw, accel);
 
     // Read and process gyroscope
-    gyro[0] = gyro_s.read(&gyro_s, 0x29); // Gyro X high
-    gyro[1] = gyro_s.read(&gyro_s, 0x28); // Gyro X low
-    gyro[2] = gyro_s.read(&gyro_s, 0x2B); // Gyro Y high
-    gyro[3] = gyro_s.read(&gyro_s, 0x2A); // Gyro Y low
-    gyro[4] = gyro_s.read(&gyro_s, 0x2D); // Gyro Z high
-    gyro[5] = gyro_s.read(&gyro_s, 0x2C); // Gyro Z low
-    roll    = gyro_s.sensitivity * (int16_t)(((uint16_t)gyro[0] << 8) | gyro[1]);
-    pitch   = gyro_s.sensitivity * (int16_t)(((uint16_t)gyro[4] << 8) | gyro[5]);
-    yaw     = gyro_s.sensitivity * (int16_t)(((uint16_t)gyro[2] << 8) | gyro[3]);
+    gyroRaw[0] = gyro_s.read(&gyro_s, 0x29); // Gyro X high
+    gyroRaw[1] = gyro_s.read(&gyro_s, 0x28); // Gyro X low
+    gyroRaw[2] = gyro_s.read(&gyro_s, 0x2B); // Gyro Y high
+    gyroRaw[3] = gyro_s.read(&gyro_s, 0x2A); // Gyro Y low
+    gyroRaw[4] = gyro_s.read(&gyro_s, 0x2D); // Gyro Z high
+    gyroRaw[5] = gyro_s.read(&gyro_s, 0x2C); // Gyro Z low
+    roll       = gyro_s.sensitivity * (int16_t)(((uint16_t)gyroRaw[0] << 8) | gyroRaw[1]);
+    pitch      = gyro_s.sensitivity * (int16_t)(((uint16_t)gyroRaw[4] << 8) | gyroRaw[5]);
+    yaw        = gyro_s.sensitivity * (int16_t)(((uint16_t)gyroRaw[2] << 8) | gyroRaw[3]);
 
     // Add sensor data to dataframe
     mem.append(&mem, HEADER_HIGHRES);
-    mem.append(&mem, accel[0]); // Accel X high byte
-    mem.append(&mem, accel[1]); // Accel X low byte
-    mem.append(&mem, accel[2]); // Accel Y high byte
-    mem.append(&mem, accel[3]); // Accel Y low byte
-    mem.append(&mem, accel[4]); // Accel Z high byte
-    mem.append(&mem, accel[5]); // Accel Z low byte
-    mem.append(&mem, gyro[0]);  // Gyro X high byte
-    mem.append(&mem, gyro[1]);  // Gyro X low byte
-    mem.append(&mem, gyro[2]);  // Gyro Y high byte
-    mem.append(&mem, gyro[3]);  // Gyro Y low byte
-    mem.append(&mem, gyro[4]);  // Gyro Z high byte
-    mem.append(&mem, gyro[5]);  // Gyro Z low byte
+    mem.append(&mem, accelRaw[0]); // Accel X high byte
+    mem.append(&mem, accelRaw[1]); // Accel X low byte
+    mem.append(&mem, accelRaw[2]); // Accel Y high byte
+    mem.append(&mem, accelRaw[3]); // Accel Y low byte
+    mem.append(&mem, accelRaw[4]); // Accel Z high byte
+    mem.append(&mem, accelRaw[5]); // Accel Z low byte
+    mem.append(&mem, gyroRaw[0]);  // Gyro X high byte
+    mem.append(&mem, gyroRaw[1]);  // Gyro X low byte
+    mem.append(&mem, gyroRaw[2]);  // Gyro Y high byte
+    mem.append(&mem, gyroRaw[3]);  // Gyro Y low byte
+    mem.append(&mem, gyroRaw[4]);  // Gyro Z high byte
+    mem.append(&mem, gyroRaw[5]);  // Gyro Z low byte
 
     // Only run calculations when enabled
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x02, pdFALSE, pdFALSE, blockTime);
@@ -455,13 +442,11 @@ void vDataAcquisitionL(void *argument) {
     temperature[0] = baro_s.read(&baro_s, 0x1F);
     temperature[1] = baro_s.read(&baro_s, 0x1E);
     temperature[2] = baro_s.read(&baro_s, 0x1D);
-    float temp     = baro_s.sensitivities[0] * (((int32_t)temperature[0] << 16) | ((int32_t)temperature[1] << 8) | temperature[2]);
-
     pressure[0]    = baro_s.read(&baro_s, 0x22);
     pressure[1]    = baro_s.read(&baro_s, 0x21);
     pressure[2]    = baro_s.read(&baro_s, 0x20);
-    float press    = baro_s.sensitivities[1] * (((int32_t)pressure[0] << 16) | ((int32_t)pressure[1] << 8) | pressure[2]);
-
+    
+		float press    = baro_s.sensitivities[1] * (((int32_t)pressure[0] << 16) | ((int32_t)pressure[1] << 8) | pressure[2]);
     altitude       = 44330 * (1.0 - pow(press / pressGround, 0.1903));
 
     // Add sensor data and barometer data to dataframe
@@ -478,14 +463,8 @@ void vDataAcquisitionL(void *argument) {
     if ((uxBits & 0x04) == 0x04) {
       // Calculate state
       z.pData[0] = altitude;
-      z.pData[1] = (cosine * 9.81 * accelZ - 9.81); // Acceleration measured in m/s^2
+      z.pData[1] = (cosine * 9.81 * accel[accel_s->axes[ZINDEX]] - 9.81); // Acceleration measured in m/s^2
       kf.update(&kf, &z);
-
-      union {
-        float f;
-        uint8_t a[4];
-      } u;
-      u.f = kf.x.pData[1];
     }
   }
 }

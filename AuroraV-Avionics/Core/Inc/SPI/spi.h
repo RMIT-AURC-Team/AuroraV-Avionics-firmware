@@ -2,6 +2,7 @@
 #define _SPI_H
 
 #include <stdint.h>
+#include "stm32f439xx.h"
 
 typedef enum {
   SENSOR_ACCEL,
@@ -11,7 +12,9 @@ typedef enum {
 
 typedef struct SPI {
   DeviceType device;
-  unsigned long cs;                                // Device CS address
+	GPIO_TypeDef *port;
+  unsigned long cs; // Device CS address
+  // TODO: Change from [read/write]Register to [read/write]Data
   uint8_t (*readRegister)(void *, uint8_t);        // Read from 8-bit register
   void (*writeRegister)(void *, uint8_t, uint8_t); // Write to 8-bit register
 } SPI;

@@ -12,8 +12,8 @@
 #define KX134_1211_CNTL1_RES          0x40
 #define KX134_1211_CNTL1_GSEL_32G     0x10
 #define KX134_1211_CNTL1_GSEL_16G     0x08
-#define KX134_1211_CNTL1_GSEL(scale)  KX134_1211_CNTL1_GSEL_##scale##G
 #define KX134_1211_CNTL1_GSEL_8G      0x00
+#define KX134_1211_CNTL1_GSEL(scale)  KX134_1211_CNTL1_GSEL_##scale##G
 #define KX134_1211_ODCNTL             0x21
 #define KX134_1211_ODCNTL_RESERVED    0x90
 #define KX134_1211_XOUT_L             0x08
@@ -30,12 +30,13 @@
 typedef struct KX134_1211 {
   SPI base;
   float sensitivity;
+	const uint8_t *axes;
   void (*readAccel)(struct KX134_1211 *, float *);
   void (*readRawBytes)(struct KX134_1211 *, uint8_t *);
   void (*processRawBytes)(struct KX134_1211 *, uint8_t *, float *);
 } KX134_1211;
 
-void KX134_1211_init(KX134_1211 *, unsigned long, int);
+void KX134_1211_init(KX134_1211 *, GPIO_TypeDef *, unsigned long, const uint8_t, const uint8_t *);
 void KX134_1211_readAccel(KX134_1211 *, float *);
 void KX134_1211_readRawBytes(KX134_1211 *, uint8_t *);
 void KX134_1211_processRawBytes(KX134_1211 *, uint8_t *, float *);

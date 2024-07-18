@@ -1,5 +1,8 @@
 #include "sensors.h"
 
+const uint8_t ACCEL_AXES_1[3] = {0, 1, 2};
+const uint8_t ACCEL_AXES_2[3] = {0, 1, 2};
+
 void configure_SPI1_Sensor_Suite(void) {
   GPIOA->MODER &= (~(GPIO_MODER_MODE5_Msk | GPIO_MODER_MODE6_Msk | GPIO_MODER_MODE7_Msk));
   GPIOA->MODER |= ((0x2 << GPIO_MODER_MODE5_Pos) | (0x2 << GPIO_MODER_MODE6_Pos) | (0x2 << GPIO_MODER_MODE7_Pos));

@@ -1,10 +1,12 @@
 #include "KX134_1211.h"
 
-void KX134_1211_init(KX134_1211 *accel, unsigned long cs, int scale) {
+void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, uint8_t scale, const uint8_t *axes) {
   accel->base.device        = SENSOR_ACCEL;
+	accel->base.port 					= port;
   accel->base.cs            = cs;
   accel->base.writeRegister = KX134_1211_writeRegister;
   accel->base.readRegister  = KX134_1211_readRegister;
+	accel->axes 							= axes;
   accel->readAccel          = KX134_1211_readAccel;
   accel->readRawBytes       = KX134_1211_readRawBytes;
   accel->processRawBytes    = KX134_1211_processRawBytes;
@@ -20,10 +22,10 @@ void KX134_1211_init(KX134_1211 *accel, unsigned long cs, int scale) {
   }
 
   // Configure accelerometer registers
-  accel->base.writeRegister((SPI *)accel, KX134_1211_CNTL1, KX134_1211_CNTL1_RES | GSEL);                   // Accel select, selected sensitivity
-  uint8_t ODCNTL = accel->base.readRegister((SPI *)accel, KX134_1211_ODCNTL);                               // Read from register for reserve mask
-  accel->base.writeRegister((SPI *)accel, KX134_1211_ODCNTL, (KX134_1211_ODCNTL_RESERVED & ODCNTL) | 0x2A); // No filter, fast startup, 800Hz
-  accel->base.writeRegister((SPI *)accel, KX134_1211_CNTL1, 0xD0);                                          // Enable PC1
+  accel->base.writeRegister(accel, KX134_1211_CNTL1, KX134_1211_CNTL1_RES | GSEL);                  		 	// Accel select, selected sensitivity
+  uint8_t ODCNTL = accel->base.readRegister(accel, KX134_1211_ODCNTL);                               			// Read from register for reserve mask
+  accel->base.writeRegister(accel, KX134_1211_ODCNTL, (KX134_1211_ODCNTL_RESERVED & ODCNTL) | 0x2A); 			// No filter, fast startup, 800Hz
+  accel->base.writeRegister(accel, KX134_1211_CNTL1, KX134_1211_CNTL1_PC1 | KX134_1211_CNTL1_RES | GSEL); // Enable PC1
 }
 
 /******************************** DEVICE METHODS ********************************/
@@ -80,12 +82,12 @@ void KX134_1211_writeRegister(void *sensor, uint8_t address, uint8_t payload) {
   payload_to_send |= (address << 0x8);   // load address into top 7 bits
   payload_to_send |= payload;            // load data in to write
   while ((SPI1->SR & SPI_SR_TXE) == 0);  // wait for transmission to be empty
-  GPIOA->ODR &= ~((SPI *)sensor)->cs;    // lower chip select
+  ((SPI*)sensor)->port->ODR &= ~((SPI *)sensor)->cs;    // lower chip select
   SPI1->DR = payload_to_send;
   while ((SPI1->SR & SPI_SR_RXNE) == 0); // wait for received data
   return_value = (uint16_t)(SPI1->DR);
   while ((SPI1->SR & SPI_SR_BSY) == 1);
-  GPIOA->ODR |= ((SPI *)sensor)->cs;
+  ((SPI*)sensor)->port->ODR |= ((SPI *)sensor)->cs;
 }
 
 uint8_t KX134_1211_readRegister(void *sensor, uint8_t address) {
@@ -94,10 +96,10 @@ uint8_t KX134_1211_readRegister(void *sensor, uint8_t address) {
   payload_to_send |= 0x8000;
   payload_to_send |= (address << 0x8);   // load address into top 7 bits
   while ((SPI1->SR & SPI_SR_TXE) == 0);
-  GPIOB->ODR &= ~((SPI *)sensor)->cs;
+  ((SPI*)sensor)->port->ODR &= ~((SPI *)sensor)->cs;
   SPI1->DR = payload_to_send;
   while ((SPI1->SR & SPI_SR_RXNE) == 0); // wait for received data
-  GPIOB->ODR |= ((SPI *)sensor)->cs;
+  ((SPI*)sensor)->port->ODR |= ((SPI *)sensor)->cs;
   return_value = (uint16_t)(SPI1->DR);
   return (uint8_t)return_value;
 }
