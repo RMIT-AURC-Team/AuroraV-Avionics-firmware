@@ -29,8 +29,8 @@
 #include "task.h"
 
 #include "A3G4250D.h"
+#include "BMP581.h"
 #include "KX134_1211.h"
-#include "baro.h"
 #include "can.h"
 #include "drivers.h"
 #include "flash.h"
@@ -77,11 +77,6 @@ void Error_Handler(void);
 #define HEADER_EVENT_MOTOR   (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_MOTOR_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
 #define HEADER_EVENT_APOGEE  (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_APOGEE_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
 #define HEADER_EVENT_DESCENT (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_DESCENT_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
-
-#define LD2_PORT GPIOB
-#define LD2_PIN  Pin7
-#define LD3_PORT GPIOB
-#define LD3_PIN  Pin14
 
 #define ACCEL_LAUNCH 5
 

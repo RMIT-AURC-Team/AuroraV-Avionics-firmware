@@ -246,7 +246,7 @@
               <MiscControls>-mfloat-abi=hard -ffast-math -mfpu=fpv4-sp-d16</MiscControls>
               <Define>__TARGET_FPU_VFP</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Core/Inc/SPI;../Core/Inc/SPI/sensors;../Core/Inc/SPI/sensors/accel;../Core/Inc/SPI/sensors/gyro;../Lib/inc;../Lib/inc/CORE;../Lib/inc/CORE/Include;../Lib/inc/DSP;../Lib/inc/DSP/Include;../Lib/inc/DSP/Include/dsp;../Lib/inc/DSP/PrivateInclude;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Drivers/STM32F4xx_HAL_Driver/Inc</IncludePath>
+              <IncludePath>../Core/Inc;../Core/Inc/SPI;../Core/Inc/SPI/sensors;../Core/Inc/SPI/sensors/accel;../Core/Inc/SPI/sensors/baro;../Core/Inc/SPI/sensors/gyro;../Lib/inc;../Lib/inc/CORE;../Lib/inc/CORE/Include;../Lib/inc/DSP;../Lib/inc/DSP/Include;../Lib/inc/DSP/Include/dsp;../Lib/inc/DSP/PrivateInclude;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Drivers/STM32F4xx_HAL_Driver/Inc</IncludePath>
             </VariousControls>
           </Carm>
           <Aarm>
@@ -365,16 +365,6 @@
               <FilePath>..\Core\Src\SPI\sensors\sensors.c</FilePath>
             </File>
             <File>
-              <FileName>gyro.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\SPI\sensors\gyro.c</FilePath>
-            </File>
-            <File>
-              <FileName>baro.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\SPI\sensors\baro.c</FilePath>
-            </File>
-            <File>
               <FileName>KX134_1211.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\SPI\sensors\accel\KX134_1211.c</FilePath>
@@ -383,6 +373,11 @@
               <FileName>A3G4250D.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\SPI\sensors\gyro\A3G4250D.c</FilePath>
+            </File>
+            <File>
+              <FileName>BMP581.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\SPI\sensors\baro\BMP581.c</FilePath>
             </File>
           </Files>
         </Group>

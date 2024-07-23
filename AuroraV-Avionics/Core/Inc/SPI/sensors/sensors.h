@@ -22,6 +22,9 @@
 #define GYRO_PORT GPIOA
 #define GYRO_CS   GPIO_ODR_OD2
 
+#define BARO_PORT GPIOA
+#define BARO_CS   GPIO_ODR_OD3
+
 extern const uint8_t ACCEL_AXES_1[3];
 extern const uint8_t ACCEL_AXES_2[3];
 extern const uint8_t GYRO_AXES[3];

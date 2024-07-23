@@ -2,8 +2,6 @@
 #include "data_output_spi.h"
 #include "gpio_struct.h"
 
-SPI_HandleTypeDef hspi4;
-
 // Task Handles
 TaskHandle_t xDataAqcquisitionHHandle = NULL;
 TaskHandle_t xDataAqcquisitionLHandle = NULL;
@@ -25,10 +23,12 @@ uint8_t gyroRaw[6];
 float gyro[3];
 
 // Barometer
-Sensor_multi baro_s;
-uint8_t pressure[6];
-uint8_t temperature[6];
+BMP581 baro_s;
+uint8_t pressRaw[3];
 float pressGround = 0;
+float press;
+uint8_t tempRaw[3];
+float temp;
 
 // Calculated attitude variables
 Quaternion qRot;                // Global attitude quaternion
@@ -50,10 +50,11 @@ uint8_t outBuff[PAGE_SIZE];
 enum State currentState = PRELAUNCH; // Boot in prelaunch
 int interval2ms         = 0;
 
+SPI_HandleTypeDef hspi4;
 GPIO_Config spi4_cs;
+static void MX_SPI4_Init(void);
 
 const struct LoRa_Registers LoRa_Regs = {0, 1, 0xd, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0X1C, 0X1D, 0X1E, 0X1F, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X28, 0X29, 0X2A, 0X2C, 0X31, 0X33, 0X37, 0X39, 0X3B, 0X3D, 0X40, 0X41};
-static void MX_SPI4_Init(void);
 
 int main(void) {
   // Bring up RCC
@@ -76,23 +77,18 @@ int main(void) {
   CAN_Peripheral_config();
   configure_LoRa_module();
 
+  BMP581_init(&baro_s, BARO_PORT, BARO_CS, BMP581_TEMP_SENSITIVITY, BMP581_PRESS_SENSITIVITY);
+  A3G4250D_init(&gyro_s, GYRO_PORT, GYRO_CS, A3G4250D_SENSITIVITY, GYRO_AXES);
   KX134_1211_init(&lAccel_s, ACCEL_PORT_1, ACCEL_CS_1, ACCEL_SCALE_LOW, ACCEL_AXES_1);
   KX134_1211_init(&hAccel_s, ACCEL_PORT_2, ACCEL_CS_2, ACCEL_SCALE_HIGH, ACCEL_AXES_2);
-  A3G4250D_init(&gyro_s, GYRO_PORT, GYRO_CS, A3G4250D_SENSITIVITY, GYRO_AXES);
-
   accel_s = lAccel_s;
-  Baro_init(&baro_s, BARO_CS, BARO_SENSITIVITY_COUNT, BARO_TEMP_SENSITIVITY, BARO_PRESS_SENSITIVITY);
 
-  configure_LoRa_module();
+  // Calculate ground pressure
+  baro_s.readPress(&baro_s, &pressGround);
 
   MX_SPI4_Init();
   spi4_cs = create_GPIO_Config(GPIOE, GPIO_PIN_11);
-
   HAL_GPIO_WritePin(spi4_cs.GPIOx, spi4_cs.GPIO_Pin, GPIO_PIN_RESET);
-  // erase_chip_spi(&hspi4, spi4_cs);
-  // while(1);
-  //	uint8_t readBuff[256];
-  //	read_page_spi(readBuff, &hspi4, 0x00, spi4_cs);
 
   unsigned int CANHigh = 0;
   unsigned int CANLow  = 0;
@@ -104,12 +100,6 @@ int main(void) {
 
   xTaskEnableGroup = xEventGroupCreate();
   xEventGroupClearBits(xTaskEnableGroup, 0xFF);
-
-  // Calculate ground pressure
-  uint8_t hPress = baro_s.read(&baro_s, 0x22);
-  uint8_t lPress = baro_s.read(&baro_s, 0x21);
-  uint8_t xPress = baro_s.read(&baro_s, 0x20);
-  pressGround    = baro_s.sensitivities[1] * (((int32_t)hPress << 16) | ((int32_t)lPress << 8) | xPress);
 
   // Create task handles
   xTaskCreate(vDataAcquisitionH, "HDataAcq", 256, NULL, configMAX_PRIORITIES - 2, &xDataAqcquisitionHHandle);
@@ -422,24 +412,22 @@ void vDataAcquisitionL(void *argument) {
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
     // Read baro data
-    temperature[0] = baro_s.read(&baro_s, 0x1F);
-    temperature[1] = baro_s.read(&baro_s, 0x1E);
-    temperature[2] = baro_s.read(&baro_s, 0x1D);
-    pressure[0]    = baro_s.read(&baro_s, 0x22);
-    pressure[1]    = baro_s.read(&baro_s, 0x21);
-    pressure[2]    = baro_s.read(&baro_s, 0x20);
+    baro_s.readRawTemp(&baro_s, tempRaw);
+    baro_s.readRawPress(&baro_s, pressRaw);
+    baro_s.processRawTemp(&baro_s, tempRaw, &temp);
+    baro_s.processRawPress(&baro_s, pressRaw, &press);
 
-    float press    = baro_s.sensitivities[1] * (((int32_t)pressure[0] << 16) | ((int32_t)pressure[1] << 8) | pressure[2]);
-    altitude       = 44330 * (1.0 - pow(press / pressGround, 0.1903));
+    // Calculate altitude
+    altitude = 44330 * (1.0 - pow(press / pressGround, 0.1903));
 
     // Add sensor data and barometer data to dataframe
     mem.append(&mem, HEADER_LOWRES);
-    mem.append(&mem, temperature[0]);
-    mem.append(&mem, temperature[1]);
-    mem.append(&mem, temperature[2]);
-    mem.append(&mem, pressure[0]);
-    mem.append(&mem, pressure[1]);
-    mem.append(&mem, pressure[2]);
+    mem.append(&mem, tempRaw[0]);
+    mem.append(&mem, tempRaw[1]);
+    mem.append(&mem, tempRaw[2]);
+    mem.append(&mem, pressRaw[0]);
+    mem.append(&mem, pressRaw[1]);
+    mem.append(&mem, pressRaw[2]);
 
     // Only run calculations when enabled
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x04, pdFALSE, pdFALSE, blockTime);
