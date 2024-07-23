@@ -1,0 +1,17 @@
+CompileFlags:
+  Add: [
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI/sensors",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI/sensors/accel",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI/sensors/gyro",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/include",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Drivers/CMSIS/Include",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Drivers/CMSIS/Device/ST/STM32F4xx/Include",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Lib/inc",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Lib/inc/DSP/Include/",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Lib/inc/DSP/PrivateInclude",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Lib/inc/CORE/Include/"
+]

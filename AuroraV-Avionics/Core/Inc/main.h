@@ -28,13 +28,12 @@
 #include "stm32f4xx.h"
 #include "task.h"
 
+#include "A3G4250D.h"
 #include "KX134_1211.h"
-#include "accel.h"
 #include "baro.h"
 #include "can.h"
 #include "drivers.h"
 #include "flash.h"
-#include "gyro.h"
 #include "lora.h"
 #include "sensors.h"
 #include "state.h"
@@ -83,5 +82,7 @@ void Error_Handler(void);
 #define LD2_PIN  Pin7
 #define LD3_PORT GPIOB
 #define LD3_PIN  Pin14
+
+#define ACCEL_LAUNCH 5
 
 #endif

@@ -12,35 +12,15 @@ TaskHandle_t xStateUpdateHandle       = NULL;
 TaskHandle_t xLoRaCommunicateHandle   = NULL;
 EventGroupHandle_t xTaskEnableGroup; // 0: FLASH,  1: HIGHRES, 2: LOWRES, 7: IDLE
 
-// Calculated attitude variables
-Quaternion qRot;                // Global attitude quaternion
-float vAttitude[3] = {0, 0, 1}; // Attitude vector
-float zUnit[3]     = {0, 0, 1}; // Z unit vector
-float cosine       = 0;         // Tilt angle cosine
-float tilt         = 0;         // Tilt angle
-
-// Angular rotations
-float roll  = 0;
-float pitch = 0;
-float yaw   = 0;
-
-// Flight dynamics state variables
-float altitude                = 0; // Current altitude
-float velocity                = 0; // Current vertical velocity
-float previousvelocity        = 0;
-uint8_t velocitydecreasecount = 0;
-float previousaltitude        = 0;
-uint8_t altitudedecreasecount = 0;
-
 // Accelerometer
 KX134_1211 lAccel_s;
 KX134_1211 hAccel_s;
-KX134_1211 *accel_s = &lAccel_s;
+KX134_1211 accel_s;
 uint8_t accelRaw[6];
 float accel[3];
 
 // Gyroscope
-Sensor gyro_s;
+A3G4250D gyro_s;
 uint8_t gyroRaw[6];
 float gyro[3];
 
@@ -49,6 +29,17 @@ Sensor_multi baro_s;
 uint8_t pressure[6];
 uint8_t temperature[6];
 float pressGround = 0;
+
+// Calculated attitude variables
+Quaternion qRot;                // Global attitude quaternion
+float vAttitude[3] = {0, 0, 1}; // Attitude vector
+float zUnit[3]     = {0, 0, 1}; // Z unit vector
+float cosine       = 0;         // Tilt angle cosine
+float tilt         = 0;         // Tilt angle
+
+// Flight dynamics state variables
+float altitude = 0;     // Current altitude
+float velocity = 0;     // Current vertical velocity
 
 #define BUFF_SIZE 21000 // 2s worth of data in buffer
 #define PAGE_SIZE 256
@@ -87,7 +78,9 @@ int main(void) {
 
   KX134_1211_init(&lAccel_s, ACCEL_PORT_1, ACCEL_CS_1, ACCEL_SCALE_LOW, ACCEL_AXES_1);
   KX134_1211_init(&hAccel_s, ACCEL_PORT_2, ACCEL_CS_2, ACCEL_SCALE_HIGH, ACCEL_AXES_2);
-  Gyro_init(&gyro_s, GYRO_CS, GYRO_SENSITIVITY);
+  A3G4250D_init(&gyro_s, GYRO_PORT, GYRO_CS, A3G4250D_SENSITIVITY, GYRO_AXES);
+
+  accel_s = lAccel_s;
   Baro_init(&baro_s, BARO_CS, BARO_SENSITIVITY_COUNT, BARO_TEMP_SENSITIVITY, BARO_PRESS_SENSITIVITY);
 
   configure_LoRa_module();
@@ -132,8 +125,8 @@ int main(void) {
   }
 }
 
-/* =====================================================================
- *                            FLASH HANDLING
+/* ===================================================================== *
+ *                            FLASH HANDLING                             *
  * ===================================================================== */
 
 // Use idle time to write flash
@@ -185,8 +178,8 @@ static void MX_SPI4_Init(void) {
   }
 }
 
-/* =====================================================================
- *                             LORA HANDLING
+/* ===================================================================== *
+ *                             LORA HANDLING                             *
  * ===================================================================== */
 
 void vLoRaCommunicate(void *argument) {
@@ -209,8 +202,8 @@ void vLoRaCommunicate(void *argument) {
   }
 }
 
-/* =====================================================================
- *                            STATE MANAGEMENT
+/* ===================================================================== *
+ *                            STATE MANAGEMENT                           *
  * ===================================================================== */
 
 void vStateUpdate(void *argument) {
@@ -240,7 +233,7 @@ void vStateUpdate(void *argument) {
 
     switch (currentState) {
     case PRELAUNCH:
-      if (isAccelerationAbove5Gs(accel[accel_s->axes[ZINDEX]])) {
+      if (accel[accel_s.axes[ZINDEX]] >= ACCEL_LAUNCH) {
         // load and send to lora
         xEventGroupSetBits(xTaskEnableGroup, 0x80); // Enable flash
         xEventGroupSetBits(xTaskEnableGroup, 0x06); // Enable data acquisition
@@ -261,7 +254,7 @@ void vStateUpdate(void *argument) {
       id      = 0x601;
       CAN_TX(1, 8, CANHigh, CANLow, id);
       // Transition to motor burnout state on velocity decrease
-      if (isVelocityDecreasing(velocity, previousvelocity, velocitydecreasecount)) {
+      if (true) { // TODO: Change to decreasing velocity
         currentState = MOTOR_BURNOUT;
         // Add motor burnout event dataframe to buffer
         mem.append(&mem, HEADER_EVENT_MOTOR);
@@ -280,7 +273,7 @@ void vStateUpdate(void *argument) {
       CAN_TX(1, 8, CANHigh, CANLow, id);
       // Transition to apogee state on three way vote of altitude, velocity, and tilt
       // apogee is determined as two of three conditions evaluating true
-      if (isAltitudeDropping(altitude, previousaltitude, altitudedecreasecount) + isTiltAngleAbove90(tilt) + isNegativeVelocity(velocity) >= 2) {
+      if (((true) + (tilt >= 90) + (velocity < 0.0f)) >= 2) { // TODO: change first condition to decreasing altitude
         currentState = APOGEE;
         // Add apogee event dataframe to buffer
         mem.append(&mem, HEADER_EVENT_APOGEE);
@@ -317,53 +310,43 @@ void vStateUpdate(void *argument) {
   }
 }
 
-/* =====================================================================
- *                  HIGH RESOLUTION DATA ACQUISITION
+/* ===================================================================== *
+ *                  HIGH RESOLUTION DATA ACQUISITION                     *
  * ===================================================================== */
 
 void vDataAcquisitionH(void *argument) {
   float dt = 0.002;
-  float roll, pitch, yaw;
 
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(2); // 500Hz
-  const TickType_t blockTime  = pdMS_TO_TICKS(0); // Don't need to block
+  const TickType_t blockTime  = pdMS_TO_TICKS(0); // Don't need to block calculations
   for (;;) {
     // Block until 2ms interval
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
-    // Select accelerometer to read from
-    accel_s = (accel[accel_s->axes[ZINDEX]] >= 15) ? &hAccel_s : &lAccel_s;
-
     // Read and process accelerometer
-    accel_s->readRawBytes(accel_s, accelRaw);
-    accel_s->processRawBytes(accel_s, accelRaw, accel);
+    accel_s = (accel[accel_s.axes[ZINDEX]] < 15) ? lAccel_s : hAccel_s; // Select which accelerometer to use
+    accel_s.readRawBytes(&accel_s, accelRaw);                           // Read in raw data
+    accel_s.processRawBytes(&accel_s, accelRaw, accel);                 // Process to per-axis accelerations
 
     // Read and process gyroscope
-    gyroRaw[0] = gyro_s.read(&gyro_s, 0x29); // Gyro X high
-    gyroRaw[1] = gyro_s.read(&gyro_s, 0x28); // Gyro X low
-    gyroRaw[2] = gyro_s.read(&gyro_s, 0x2B); // Gyro Y high
-    gyroRaw[3] = gyro_s.read(&gyro_s, 0x2A); // Gyro Y low
-    gyroRaw[4] = gyro_s.read(&gyro_s, 0x2D); // Gyro Z high
-    gyroRaw[5] = gyro_s.read(&gyro_s, 0x2C); // Gyro Z low
-    roll       = gyro_s.sensitivity * (int16_t)(((uint16_t)gyroRaw[0] << 8) | gyroRaw[1]);
-    pitch      = gyro_s.sensitivity * (int16_t)(((uint16_t)gyroRaw[4] << 8) | gyroRaw[5]);
-    yaw        = gyro_s.sensitivity * (int16_t)(((uint16_t)gyroRaw[2] << 8) | gyroRaw[3]);
+    gyro_s.readRawBytes(&gyro_s, gyroRaw);          // Read in raw data
+    gyro_s.processRawBytes(&gyro_s, gyroRaw, gyro); // Process to per-axis rates
 
     // Add sensor data to dataframe
     mem.append(&mem, HEADER_HIGHRES);
-    mem.append(&mem, accelRaw[0]); // Accel X high byte
-    mem.append(&mem, accelRaw[1]); // Accel X low byte
-    mem.append(&mem, accelRaw[2]); // Accel Y high byte
-    mem.append(&mem, accelRaw[3]); // Accel Y low byte
-    mem.append(&mem, accelRaw[4]); // Accel Z high byte
-    mem.append(&mem, accelRaw[5]); // Accel Z low byte
-    mem.append(&mem, gyroRaw[0]);  // Gyro X high byte
-    mem.append(&mem, gyroRaw[1]);  // Gyro X low byte
-    mem.append(&mem, gyroRaw[2]);  // Gyro Y high byte
-    mem.append(&mem, gyroRaw[3]);  // Gyro Y low byte
-    mem.append(&mem, gyroRaw[4]);  // Gyro Z high byte
-    mem.append(&mem, gyroRaw[5]);  // Gyro Z low byte
+    mem.append(&mem, accelRaw[0]); // Accel X high
+    mem.append(&mem, accelRaw[1]); // Accel X low
+    mem.append(&mem, accelRaw[2]); // Accel Y high
+    mem.append(&mem, accelRaw[3]); // Accel Y low
+    mem.append(&mem, accelRaw[4]); // Accel Z high
+    mem.append(&mem, accelRaw[5]); // Accel Z low
+    mem.append(&mem, gyroRaw[0]);  // Gyro X high
+    mem.append(&mem, gyroRaw[1]);  // Gyro X low
+    mem.append(&mem, gyroRaw[2]);  // Gyro Y high
+    mem.append(&mem, gyroRaw[3]);  // Gyro Y low
+    mem.append(&mem, gyroRaw[4]);  // Gyro Z high
+    mem.append(&mem, gyroRaw[5]);  // Gyro Z low
 
     // Only run calculations when enabled
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x02, pdFALSE, pdFALSE, blockTime);
@@ -373,9 +356,9 @@ void vDataAcquisitionH(void *argument) {
       Quaternion_init(&qDot);
       qDot.fromEuler(
           &qDot,
-          (float)(dt * roll),
-          (float)(dt * pitch),
-          (float)(dt * yaw)
+          (float)(dt * gyro[ROLL_INDEX]),
+          (float)(dt * gyro[PITCH_INDEX]),
+          (float)(dt * gyro[YAW_INDEX])
       );
       qRot = Quaternion_mul(&qRot, &qDot);
       qRot.normalise(&qRot); // New attitude quaternion
@@ -391,8 +374,8 @@ void vDataAcquisitionH(void *argument) {
   }
 }
 
-/* =====================================================================
- *                    LOW RESOLUTION DATA ACQUISITION
+/* ===================================================================== *
+ *                    LOW RESOLUTION DATA ACQUISITION                    *
  * ===================================================================== */
 
 void vDataAcquisitionL(void *argument) {
@@ -445,8 +428,8 @@ void vDataAcquisitionL(void *argument) {
     pressure[0]    = baro_s.read(&baro_s, 0x22);
     pressure[1]    = baro_s.read(&baro_s, 0x21);
     pressure[2]    = baro_s.read(&baro_s, 0x20);
-    
-		float press    = baro_s.sensitivities[1] * (((int32_t)pressure[0] << 16) | ((int32_t)pressure[1] << 8) | pressure[2]);
+
+    float press    = baro_s.sensitivities[1] * (((int32_t)pressure[0] << 16) | ((int32_t)pressure[1] << 8) | pressure[2]);
     altitude       = 44330 * (1.0 - pow(press / pressGround, 0.1903));
 
     // Add sensor data and barometer data to dataframe
@@ -463,7 +446,7 @@ void vDataAcquisitionL(void *argument) {
     if ((uxBits & 0x04) == 0x04) {
       // Calculate state
       z.pData[0] = altitude;
-      z.pData[1] = (cosine * 9.81 * accel[accel_s->axes[ZINDEX]] - 9.81); // Acceleration measured in m/s^2
+      z.pData[1] = (cosine * 9.81 * accel[accel_s.axes[ZINDEX]] - 9.81); // Acceleration measured in m/s^2
       kf.update(&kf, &z);
     }
   }
