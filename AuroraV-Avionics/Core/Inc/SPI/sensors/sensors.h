@@ -14,16 +14,6 @@
 
 #define ACCEL_SCALE_HIGH 32
 #define ACCEL_SCALE_LOW  16
-#define ACCEL_PORT_1     GPIOA
-#define ACCEL_CS_1       GPIO_ODR_OD1
-#define ACCEL_PORT_2     GPIOB
-#define ACCEL_CS_2       GPIO_ODR_OD0
-
-#define GYRO_PORT GPIOA
-#define GYRO_CS   GPIO_ODR_OD2
-
-#define BARO_PORT GPIOA
-#define BARO_CS   GPIO_ODR_OD3
 
 extern const uint8_t ACCEL_AXES_1[3];
 extern const uint8_t ACCEL_AXES_2[3];

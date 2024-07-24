@@ -1,11 +1,8 @@
 #ifndef _FLASH_H
 #define _FLASH_H
 
+#include "spi.h"
 #include "stm32f439xx.h"
-
-uint8_t read_FLASH(uint8_t);
-void configure_SPI2_Flash();
-void Flash_Write_Enable();
 
 // =========================================================
 //               SPI DATA PINS (SCLK, SDI, SDO)
@@ -50,5 +47,22 @@ void Flash_Write_Enable();
   | value << GPIO_OSPEEDR_OSPEED11_Pos   \
 )
 // clang-format on
+
+typedef struct Flash {
+  SPI base;
+  void (*erase)();
+  uint8_t (*read)(struct Flash *, uint32_t, uint8_t *);
+  uint8_t (*write)(struct Flash *, uint32_t, uint8_t *);
+} Flash;
+
+void configure_SPI4_Flash();
+void Flash_init(Flash *, GPIO_TypeDef *, unsigned long);
+uint8_t Flash_read(Flash *, uint32_t, uint8_t *);
+uint8_t Flash_write(Flash *, uint32_t, uint8_t *);
+void Flash_erase();
+void _Flash_writeEnable();
+uint8_t _Flash_readStatus1();
+uint8_t _Flash_readStatus2();
+uint8_t _Flash_readStatus3();
 
 #endif

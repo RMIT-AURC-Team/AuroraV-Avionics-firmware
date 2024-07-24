@@ -1,6 +1,4 @@
 #include "main.h"
-#include "data_output_spi.h"
-#include "gpio_struct.h"
 
 // Task Handles
 TaskHandle_t xDataAqcquisitionHHandle = NULL;
@@ -30,6 +28,8 @@ float press;
 uint8_t tempRaw[3];
 float temp;
 
+Flash flash;
+
 // Calculated attitude variables
 Quaternion qRot;                // Global attitude quaternion
 float vAttitude[3] = {0, 0, 1}; // Attitude vector
@@ -50,10 +50,6 @@ uint8_t outBuff[PAGE_SIZE];
 enum State currentState = PRELAUNCH; // Boot in prelaunch
 int interval2ms         = 0;
 
-SPI_HandleTypeDef hspi4;
-GPIO_Config spi4_cs;
-static void MX_SPI4_Init(void);
-
 const struct LoRa_Registers LoRa_Regs = {0, 1, 0xd, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0X1C, 0X1D, 0X1E, 0X1F, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X28, 0X29, 0X2A, 0X2C, 0X31, 0X33, 0X37, 0X39, 0X3B, 0X3D, 0X40, 0X41};
 
 int main(void) {
@@ -65,7 +61,7 @@ int main(void) {
   configure_UART3_GPS();
   configure_UART6_Serial_2_mini_USB();
   configure_SPI1_Sensor_Suite();
-  configure_SPI2_Flash();
+  configure_SPI4_Flash();
   configure_SPI3_LoRa();
 
   // Initialise timers
@@ -85,16 +81,26 @@ int main(void) {
   accel_s = lAccel_s;
 
   // Calculate ground pressure
-  baro_s.readPress(&baro_s, &pressGround);
+  baro_s.readPress(&baro_s, &pressGround);	
 
-  MX_SPI4_Init();
-  spi4_cs = create_GPIO_Config(GPIOE, GPIO_PIN_11);
-  HAL_GPIO_WritePin(spi4_cs.GPIOx, spi4_cs.GPIO_Pin, GPIO_PIN_RESET);
+	Flash_init(&flash, FLASH_PORT, FLASH_CS); 
 
   unsigned int CANHigh = 0;
   unsigned int CANLow  = 0;
   unsigned int id      = 0x603;
   CAN_TX(1, 8, CANHigh, CANLow, id);
+	
+	uint8_t data[255];
+	uint8_t data1[255];
+	for (int x =0; x<256;x++){
+		data[x] = (uint8_t)x;
+		data1[x] = 0;		
+	}
+
+		flash.erase();
+		flash.read(&flash, 0x000,data1);
+		flash.write(&flash, 0x000, data);
+		flash.read(&flash, 0x000,data1);
 
   MemBuff_init(&mem, buff, BUFF_SIZE, PAGE_SIZE);
   Quaternion_init(&qRot);
@@ -138,34 +144,10 @@ void vFlashBuffer(void *argument) {
       if (success) {
         // Write data to flash memory
         // Flash_Page_Program(flashAddress, outBuff, sizeof(outBuff));
-        write_data_spi(outBuff, &hspi4, pageAddr, spi4_cs);
+        flash.write(&flash, pageAddr, outBuff);
         pageAddr += 0x100;
       }
     }
-  }
-}
-
-static void MX_SPI4_Init(void) {
-  /* SPI4 parameter configuration*/
-  RCC->APB2ENR |= RCC_APB2ENR_SPI4EN;
-  RCC->APB2RSTR |= RCC_APB2RSTR_SPI4RST;
-  __ASM("NOP");
-  __ASM("NOP");
-  RCC->APB2RSTR &= ~RCC_APB2RSTR_SPI4RST;
-  hspi4.Instance               = SPI4;
-  hspi4.Init.Mode              = SPI_MODE_MASTER;
-  hspi4.Init.Direction         = SPI_DIRECTION_2LINES;
-  hspi4.Init.DataSize          = SPI_DATASIZE_8BIT;
-  hspi4.Init.CLKPolarity       = SPI_POLARITY_LOW;
-  hspi4.Init.CLKPhase          = SPI_PHASE_1EDGE;
-  hspi4.Init.NSS               = SPI_NSS_SOFT;
-  hspi4.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
-  hspi4.Init.FirstBit          = SPI_FIRSTBIT_MSB;
-  hspi4.Init.TIMode            = SPI_TIMODE_DISABLE;
-  hspi4.Init.CRCCalculation    = SPI_CRCCALCULATION_DISABLE;
-  hspi4.Init.CRCPolynomial     = 10;
-  if (HAL_SPI_Init(&hspi4) != HAL_OK) {
-    // Error_Handler();
   }
 }
 

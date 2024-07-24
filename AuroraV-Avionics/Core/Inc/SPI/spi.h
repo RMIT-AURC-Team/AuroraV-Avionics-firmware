@@ -4,10 +4,25 @@
 #include "stm32f439xx.h"
 #include <stdint.h>
 
+#define ACCEL_PORT_1     GPIOA
+#define ACCEL_CS_1       GPIO_ODR_OD1
+#define ACCEL_PORT_2     GPIOB
+#define ACCEL_CS_2       GPIO_ODR_OD0
+
+#define GYRO_PORT GPIOA
+#define GYRO_CS   GPIO_ODR_OD2
+
+#define BARO_PORT GPIOA
+#define BARO_CS   GPIO_ODR_OD3
+
+#define FLASH_PORT GPIOE
+#define FLASH_CS 	 GPIO_ODR_OD11
+
 typedef enum {
   SENSOR_ACCEL,
   SENSOR_GYRO,
-  SENSOR_BARO
+  SENSOR_BARO,
+	MEMORY_FLASH
 } DeviceType;
 
 typedef struct SPI {
