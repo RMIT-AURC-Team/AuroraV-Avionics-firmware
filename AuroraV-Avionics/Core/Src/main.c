@@ -77,6 +77,7 @@ int main(void) {
   CAN_Peripheral_config();
   configure_LoRa_module();
 
+  // Initialise sensors
   BMP581_init(&baro_s, BARO_PORT, BARO_CS, BMP581_TEMP_SENSITIVITY, BMP581_PRESS_SENSITIVITY);
   A3G4250D_init(&gyro_s, GYRO_PORT, GYRO_CS, A3G4250D_SENSITIVITY, GYRO_AXES);
   KX134_1211_init(&lAccel_s, ACCEL_PORT_1, ACCEL_CS_1, ACCEL_SCALE_LOW, ACCEL_AXES_1);
@@ -133,7 +134,7 @@ void vFlashBuffer(void *argument) {
     // Wait for write flag to be ready, clear flag on exit
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x01, pdTRUE, pdFALSE, timeout);
     if ((uxBits & 0x01) == 0x01) {
-      _Bool success = mem.readPage(&mem, outBuff); // Flush data to output buffer
+      bool success = mem.readPage(&mem, outBuff); // Flush data to output buffer
       if (success) {
         // Write data to flash memory
         // Flash_Page_Program(flashAddress, outBuff, sizeof(outBuff));
@@ -230,11 +231,7 @@ void vStateUpdate(void *argument) {
         currentState = LAUNCH;
         // Add launch event dataframe to buffer
         mem.append(&mem, HEADER_EVENT_LAUNCH);
-        // Append timestamp
-        mem.append(&mem, u.a[0]);
-        mem.append(&mem, u.a[1]);
-        mem.append(&mem, u.a[2]);
-        mem.append(&mem, u.a[3]);
+        mem.appendBytes(&mem, u.a, 4);
       }
       break;
     case LAUNCH:
@@ -248,11 +245,7 @@ void vStateUpdate(void *argument) {
         currentState = MOTOR_BURNOUT;
         // Add motor burnout event dataframe to buffer
         mem.append(&mem, HEADER_EVENT_MOTOR);
-        // Append timestamp
-        mem.append(&mem, u.a[0]);
-        mem.append(&mem, u.a[1]);
-        mem.append(&mem, u.a[2]);
-        mem.append(&mem, u.a[3]);
+        mem.appendBytes(&mem, u.a, 4);
       }
       break;
     case MOTOR_BURNOUT:
@@ -267,11 +260,7 @@ void vStateUpdate(void *argument) {
         currentState = APOGEE;
         // Add apogee event dataframe to buffer
         mem.append(&mem, HEADER_EVENT_APOGEE);
-        // Append timestamp
-        mem.append(&mem, u.a[0]);
-        mem.append(&mem, u.a[1]);
-        mem.append(&mem, u.a[2]);
-        mem.append(&mem, u.a[3]);
+        mem.appendBytes(&mem, u.a, 4);
         // Send transmission to trigger apogee E-matches
       }
       break;
@@ -280,11 +269,7 @@ void vStateUpdate(void *argument) {
         currentState = DESCENT;
         // Enable descent state
         mem.append(&mem, HEADER_EVENT_DESCENT);
-        // Append timestamp
-        mem.append(&mem, u.a[0]);
-        mem.append(&mem, u.a[1]);
-        mem.append(&mem, u.a[2]);
-        mem.append(&mem, u.a[3]);
+        mem.appendBytes(&mem, u.a, 4);
         // Add descent event dataframe to buffer
       }
       break;
@@ -325,18 +310,8 @@ void vDataAcquisitionH(void *argument) {
 
     // Add sensor data to dataframe
     mem.append(&mem, HEADER_HIGHRES);
-    mem.append(&mem, accelRaw[0]); // Accel X high
-    mem.append(&mem, accelRaw[1]); // Accel X low
-    mem.append(&mem, accelRaw[2]); // Accel Y high
-    mem.append(&mem, accelRaw[3]); // Accel Y low
-    mem.append(&mem, accelRaw[4]); // Accel Z high
-    mem.append(&mem, accelRaw[5]); // Accel Z low
-    mem.append(&mem, gyroRaw[0]);  // Gyro X high
-    mem.append(&mem, gyroRaw[1]);  // Gyro X low
-    mem.append(&mem, gyroRaw[2]);  // Gyro Y high
-    mem.append(&mem, gyroRaw[3]);  // Gyro Y low
-    mem.append(&mem, gyroRaw[4]);  // Gyro Z high
-    mem.append(&mem, gyroRaw[5]);  // Gyro Z low
+    mem.appendBytes(&mem, accelRaw, 6);
+    mem.appendBytes(&mem, gyroRaw, 6);
 
     // Only run calculations when enabled
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x02, pdFALSE, pdFALSE, blockTime);
@@ -422,12 +397,8 @@ void vDataAcquisitionL(void *argument) {
 
     // Add sensor data and barometer data to dataframe
     mem.append(&mem, HEADER_LOWRES);
-    mem.append(&mem, tempRaw[0]);
-    mem.append(&mem, tempRaw[1]);
-    mem.append(&mem, tempRaw[2]);
-    mem.append(&mem, pressRaw[0]);
-    mem.append(&mem, pressRaw[1]);
-    mem.append(&mem, pressRaw[2]);
+    mem.appendBytes(&mem, tempRaw, 3);
+    mem.appendBytes(&mem, pressRaw, 3);
 
     // Only run calculations when enabled
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x04, pdFALSE, pdFALSE, blockTime);
