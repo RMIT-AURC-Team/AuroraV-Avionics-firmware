@@ -50,19 +50,19 @@
 
 typedef struct Flash {
   SPI base;
-  void (*erase)();
-  uint8_t (*read)(struct Flash *, uint32_t, uint8_t *);
-  uint8_t (*write)(struct Flash *, uint32_t, uint8_t *);
+  void (*erase)(struct Flash *);
+  void (*readPage)(struct Flash *, uint32_t, uint8_t *);
+  void (*writePage)(struct Flash *, uint32_t, uint8_t *);
 } Flash;
 
 void configure_SPI4_Flash();
 void Flash_init(Flash *, GPIO_TypeDef *, unsigned long);
-uint8_t Flash_read(Flash *, uint32_t, uint8_t *);
-uint8_t Flash_write(Flash *, uint32_t, uint8_t *);
-void Flash_erase();
-void _Flash_writeEnable();
-uint8_t _Flash_readStatus1();
-uint8_t _Flash_readStatus2();
-uint8_t _Flash_readStatus3();
+void Flash_readPage(Flash *, uint32_t, uint8_t *);
+void Flash_writePage(Flash *, uint32_t, uint8_t *);
+void Flash_erase(Flash *);
+void _Flash_writeEnable(Flash *);
+void _Flash_readStatus1(Flash *, uint8_t *);
+void _Flash_readStatus2(Flash *, uint8_t *);
+void _Flash_readStatus3(Flash *, uint8_t *);
 
 #endif

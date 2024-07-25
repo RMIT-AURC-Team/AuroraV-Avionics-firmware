@@ -47,8 +47,8 @@ MemBuff mem;
 uint8_t buff[BUFF_SIZE];
 uint8_t outBuff[PAGE_SIZE];
 
-enum State currentState = PRELAUNCH; // Boot in prelaunch
-int interval2ms         = 0;
+enum State currentState               = PRELAUNCH; // Boot in prelaunch
+int interval2ms                       = 0;
 
 const struct LoRa_Registers LoRa_Regs = {0, 1, 0xd, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0X1C, 0X1D, 0X1E, 0X1F, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X28, 0X29, 0X2A, 0X2C, 0X31, 0X33, 0X37, 0X39, 0X3B, 0X3D, 0X40, 0X41};
 
@@ -81,26 +81,12 @@ int main(void) {
   accel_s = lAccel_s;
 
   // Calculate ground pressure
-  baro_s.readPress(&baro_s, &pressGround);	
-
-	Flash_init(&flash, FLASH_PORT, FLASH_CS); 
+  baro_s.readPress(&baro_s, &pressGround);
 
   unsigned int CANHigh = 0;
   unsigned int CANLow  = 0;
   unsigned int id      = 0x603;
   CAN_TX(1, 8, CANHigh, CANLow, id);
-	
-	uint8_t data[255];
-	uint8_t data1[255];
-	for (int x =0; x<256;x++){
-		data[x] = (uint8_t)x;
-		data1[x] = 0;		
-	}
-
-		flash.erase();
-		flash.read(&flash, 0x000,data1);
-		flash.write(&flash, 0x000, data);
-		flash.read(&flash, 0x000,data1);
 
   MemBuff_init(&mem, buff, BUFF_SIZE, PAGE_SIZE);
   Quaternion_init(&qRot);
@@ -144,7 +130,7 @@ void vFlashBuffer(void *argument) {
       if (success) {
         // Write data to flash memory
         // Flash_Page_Program(flashAddress, outBuff, sizeof(outBuff));
-        flash.write(&flash, pageAddr, outBuff);
+        flash.writePage(&flash, pageAddr, outBuff);
         pageAddr += 0x100;
       }
     }

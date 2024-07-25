@@ -2,6 +2,7 @@ CompileFlags:
   Add: [
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc",
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI/flash",
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI/sensors",
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI/sensors/accel",
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI/sensors/gyro",

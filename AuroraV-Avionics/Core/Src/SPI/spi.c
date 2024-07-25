@@ -7,6 +7,14 @@ void SPI_init(SPI *spi, DeviceType device, SPI_TypeDef *interface, GPIO_TypeDef 
   spi->cs        = cs;
   spi->send      = SPI_send;
   spi->receive   = SPI_receive;
+  spi->transmit  = SPI_transmit;
+}
+
+uint16_t SPI_transmit(SPI *spi, uint16_t data) {
+  uint16_t response;
+  SPI_send(spi, data);
+  SPI_receive(spi, &response);
+  return response;
 }
 
 void SPI_send(SPI *spi, uint16_t data) {
