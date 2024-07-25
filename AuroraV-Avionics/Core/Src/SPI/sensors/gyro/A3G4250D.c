@@ -1,18 +1,14 @@
 #include "A3G4250D.h"
 
 void A3G4250D_init(A3G4250D *gyro, GPIO_TypeDef *port, unsigned long cs, float sensitivity, const uint8_t *axes) {
-  gyro->base.device        = SENSOR_GYRO;
-  gyro->base.port          = port;
-  gyro->base.cs            = cs;
-  gyro->base.writeRegister = A3G4250D_writeRegister;
-  gyro->base.readRegister  = A3G4250D_readRegister;
-  gyro->sensitivity        = sensitivity;
-  gyro->axes               = axes;
-  gyro->readGyro           = A3G4250D_readGyro;
-  gyro->readRawBytes       = A3G4250D_readRawBytes;
-  gyro->processRawBytes    = A3G4250D_processRawBytes;
+  SPI_init(&gyro->base, SENSOR_GYRO, SPI1, port, cs);
+  gyro->sensitivity     = sensitivity;
+  gyro->axes            = axes;
+  gyro->readGyro        = A3G4250D_readGyro;
+  gyro->readRawBytes    = A3G4250D_readRawBytes;
+  gyro->processRawBytes = A3G4250D_processRawBytes;
 
-  gyro->base.writeRegister(gyro, A3G4250D_CTRL_REG1, A3G4250D_CTRL_REG1_ODR_800Hz | A3G4250D_CTRL_REG1_AXIS_ENABLE | A3G4250D_CTRL_REG1_PD_ENABLE);
+  A3G4250D_writeRegister(gyro, A3G4250D_CTRL_REG1, A3G4250D_CTRL_REG1_ODR_800Hz | A3G4250D_CTRL_REG1_AXIS_ENABLE | A3G4250D_CTRL_REG1_PD_ENABLE);
 }
 
 /******************************** DEVICE METHODS ********************************/
@@ -52,42 +48,41 @@ void A3G4250D_processRawBytes(A3G4250D *gyro, uint8_t *bytes, float *out) {
  *  - out: 6-byte array of raw X-Y-Z values in big-endian
  * =============================================================================== */
 void A3G4250D_readRawBytes(A3G4250D *gyro, uint8_t *out) {
-  out[0] = gyro->base.readRegister(gyro, A3G4250D_OUT_X_H); // gyro X high
-  out[1] = gyro->base.readRegister(gyro, A3G4250D_OUT_X_L); // gyro X low
-  out[2] = gyro->base.readRegister(gyro, A3G4250D_OUT_Y_H); // gyro Y high
-  out[3] = gyro->base.readRegister(gyro, A3G4250D_OUT_Y_L); // gyro Y low
-  out[4] = gyro->base.readRegister(gyro, A3G4250D_OUT_Z_H); // gyro Z high
-  out[5] = gyro->base.readRegister(gyro, A3G4250D_OUT_Z_L); // gyro Z low
+  out[0] = A3G4250D_readRegister(gyro, A3G4250D_OUT_X_H); // gyro X high
+  out[1] = A3G4250D_readRegister(gyro, A3G4250D_OUT_X_L); // gyro X low
+  out[2] = A3G4250D_readRegister(gyro, A3G4250D_OUT_Y_H); // gyro Y high
+  out[3] = A3G4250D_readRegister(gyro, A3G4250D_OUT_Y_L); // gyro Y low
+  out[4] = A3G4250D_readRegister(gyro, A3G4250D_OUT_Z_H); // gyro Z high
+  out[5] = A3G4250D_readRegister(gyro, A3G4250D_OUT_Z_L); // gyro Z low
 }
 
 /******************************** INTERFACE METHODS ********************************/
-void A3G4250D_writeRegister(void *sensor, uint8_t address, uint8_t payload) {
-  uint16_t return_value;
-  uint16_t payload_to_send = 0;
-  payload_to_send &= (~(0X4000));                     // clear  multiple transfer bit
-  payload_to_send &= (~(0x8000));                     // set 15th bit to 0 for write
-  payload_to_send |= (address << 0x8);                // load address into top 7 bits
-  payload_to_send |= (payload);                       // mask in data
-  ((SPI *)sensor)->port->ODR &= ~((SPI *)sensor)->cs; // lower gyro chip select
-  while ((SPI1->SR & SPI_SR_TXE) == 0);               // wait for transmission to be empty
-  SPI1->DR = payload_to_send;
-  while ((SPI1->SR & SPI_SR_RXNE) == 0);              // wait for received data
-  return_value = (uint16_t)(SPI1->DR);
-  while ((SPI1->SR & SPI_SR_BSY) == 1);
-  ((SPI *)sensor)->port->ODR |= ((SPI *)sensor)->cs;
+
+void A3G4250D_writeRegister(A3G4250D *gyro, uint8_t address, uint8_t data) {
+  uint16_t response;
+  SPI spi = gyro->base;
+
+  // Send write command with address and data
+  uint16_t payload = (address << 0x08) | data;
+  spi.port->ODR &= ~spi.cs;
+  spi.send(&spi, payload);
+
+  // Read in response from interface
+  spi.receive(&spi, &response);
+  spi.port->ODR |= spi.cs;
 }
 
-uint8_t A3G4250D_readRegister(void *sensor, uint8_t address) {
-  uint16_t return_value;
-  uint16_t payload_to_send = 0;
-  payload_to_send &= (~(0x4000));        // clear  multiple transfer bit
-  payload_to_send |= 0x8000;
-  payload_to_send |= (address << 0x8);   // load address into top 7 bits
-  while ((SPI1->SR & SPI_SR_TXE) == 0);
-  ((SPI *)sensor)->port->ODR &= ~((SPI *)sensor)->cs;
-  SPI1->DR = payload_to_send;
-  while ((SPI1->SR & SPI_SR_RXNE) == 0); // wait for received data
-  ((SPI *)sensor)->port->ODR |= ((SPI *)sensor)->cs;
-  return_value = (uint16_t)(SPI1->DR);
-  return (uint8_t)return_value;
+uint8_t A3G4250D_readRegister(A3G4250D *gyro, uint8_t address) {
+  uint16_t response;
+  SPI spi = gyro->base;
+
+  // Send write command with address and data
+  uint16_t payload = (address << 0x08) | 0x8000;
+  spi.port->ODR &= ~spi.cs;
+  spi.send(&spi, payload);
+
+  // Read in response from interface
+  spi.receive(&spi, &response);
+  spi.port->ODR |= spi.cs;
+  return (uint8_t)response;
 }

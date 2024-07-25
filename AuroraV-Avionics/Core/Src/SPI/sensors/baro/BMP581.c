@@ -1,23 +1,19 @@
 #include "BMP581.h"
 
 void BMP581_init(BMP581 *baro, GPIO_TypeDef *port, unsigned long cs, float tempSensitivity, float pressSensitivity) {
-  baro->base.device        = SENSOR_BARO;
-  baro->base.port          = port;
-  baro->base.cs            = cs;
-  baro->base.writeRegister = BMP581_writeRegister;
-  baro->base.readRegister  = BMP581_readRegister;
-  baro->tempSensitivity    = tempSensitivity;
-  baro->pressSensitivity   = pressSensitivity;
-  baro->readTemp           = BMP581_readTemp;
-  baro->readRawTemp        = BMP581_readRawTemp;
-  baro->processRawTemp     = BMP581_processRawTemp;
-  baro->readPress          = BMP581_readPress;
-  baro->readRawPress       = BMP581_readRawPress;
-  baro->processRawPress    = BMP581_processRawPress;
+  SPI_init(&baro->base, SENSOR_BARO, SPI1, port, cs);
+  baro->tempSensitivity  = tempSensitivity;
+  baro->pressSensitivity = pressSensitivity;
+  baro->readTemp         = BMP581_readTemp;
+  baro->readRawTemp      = BMP581_readRawTemp;
+  baro->processRawTemp   = BMP581_processRawTemp;
+  baro->readPress        = BMP581_readPress;
+  baro->readRawPress     = BMP581_readRawPress;
+  baro->processRawPress  = BMP581_processRawPress;
 
-  baro->base.writeRegister(baro, BMP581_ODR_CFG, BMP581_ODR_CFG_PWR | BMP581_ODR_CFG_DEEP_DIS);
-  uint8_t OSRCFG = baro->base.readRegister(baro, BMP581_OSR_CFG);
-  baro->base.writeRegister(baro, BMP581_OSR_CFG, (BMP581_OSR_CFG_RESERVED * OSRCFG) | BMP581_OSR_CFG_PRESS_EN);
+  BMP581_writeRegister(baro, BMP581_ODR_CFG, BMP581_ODR_CFG_PWR | BMP581_ODR_CFG_DEEP_DIS);
+  uint8_t OSRCFG = BMP581_readRegister(baro, BMP581_OSR_CFG);
+  BMP581_writeRegister(baro, BMP581_OSR_CFG, (BMP581_OSR_CFG_RESERVED & OSRCFG) | BMP581_OSR_CFG_PRESS_EN);
 }
 
 /******************************** DEVICE METHODS ********************************/
@@ -55,9 +51,9 @@ void BMP581_processRawTemp(BMP581 *baro, uint8_t *bytes, float *out) {
  *  - out: 3-byte array of raw temperature in big-endian
  * =============================================================================== */
 void BMP581_readRawTemp(BMP581 *baro, uint8_t *out) {
-  out[0] = baro->base.readRegister(baro, BMP581_TEMPERATURE_MSB);  // temp high
-  out[1] = baro->base.readRegister(baro, BMP581_TEMPERATURE_LSB);  // temp low
-  out[2] = baro->base.readRegister(baro, BMP581_TEMPERATURE_XLSB); // temp mid
+  out[0] = BMP581_readRegister(baro, BMP581_TEMPERATURE_MSB);  // temp high
+  out[1] = BMP581_readRegister(baro, BMP581_TEMPERATURE_LSB);  // temp low
+  out[2] = BMP581_readRegister(baro, BMP581_TEMPERATURE_XLSB); // temp mid
 }
 
 /* ===============================================================================
@@ -93,38 +89,38 @@ void BMP581_processRawPress(BMP581 *baro, uint8_t *bytes, float *out) {
  *  - out: 3-byte array of raw temperature in big-endian
  * =============================================================================== */
 void BMP581_readRawPress(BMP581 *baro, uint8_t *out) {
-  out[0] = baro->base.readRegister(baro, BMP581_PRESSURE_MSB);  // temp high
-  out[1] = baro->base.readRegister(baro, BMP581_PRESSURE_LSB);  // temp low
-  out[2] = baro->base.readRegister(baro, BMP581_PRESSURE_XLSB); // temp mid
+  out[0] = BMP581_readRegister(baro, BMP581_PRESSURE_MSB);  // temp high
+  out[1] = BMP581_readRegister(baro, BMP581_PRESSURE_LSB);  // temp low
+  out[2] = BMP581_readRegister(baro, BMP581_PRESSURE_XLSB); // temp mid
 }
 
 /******************************** INTERFACE METHODS ********************************/
-void BMP581_writeRegister(void *sensor, uint8_t address, uint8_t payload) {
-  uint16_t return_value    = 0;
-  uint16_t payload_to_send = 0;
-  payload_to_send &= (~(0x8000));                     // 0 write, dont need this lne really
-  payload_to_send |= (address << 0x8);                // load address into top 7 bits
-  payload_to_send |= payload;                         // load data in to write
-  ((SPI *)sensor)->port->ODR &= ~((SPI *)sensor)->cs; // lower gyro chip select
-  while ((SPI1->SR & SPI_SR_TXE) == 0);               // wait for transmission to be empty
-  SPI1->DR = payload_to_send;
-  while ((SPI1->SR & SPI_SR_RXNE) == 0);              // wait for received data
-  return_value = (uint16_t)(SPI1->DR);
-  while ((SPI1->SR & SPI_SR_BSY) == 1);
-  ((SPI *)sensor)->port->ODR |= ((SPI *)sensor)->cs;
+
+void BMP581_writeRegister(BMP581 *baro, uint8_t address, uint8_t data) {
+  uint16_t response;
+  SPI spi = baro->base;
+
+  // Send write command with address and data
+  uint16_t payload = (address << 0x08) | data;
+  spi.port->ODR &= ~spi.cs;
+  spi.send(&spi, payload);
+
+  // Read in response from interface
+  spi.receive(&spi, &response);
+  spi.port->ODR |= spi.cs;
 }
 
-uint8_t BMP581_readRegister(void *sensor, uint8_t address) {
-  uint16_t return_value;
-  uint16_t payload_to_send = 0;
-  payload_to_send |= 0x8000;                          // 1 read
-  payload_to_send |= (address << 0x8);                // load address into top 7 bits
-  ((SPI *)sensor)->port->ODR &= ~((SPI *)sensor)->cs; // lower gyro chip select
-  while ((SPI1->SR & SPI_SR_TXE) == 0);               // wait for transmission to be empty
-  SPI1->DR = payload_to_send;
-  while ((SPI1->SR & SPI_SR_RXNE) == 0);              // wait for received data
-  return_value = (uint16_t)(SPI1->DR);
-  while ((SPI1->SR & SPI_SR_BSY) == 1);
-  ((SPI *)sensor)->port->ODR |= ((SPI *)sensor)->cs;
-  return return_value;
+uint8_t BMP581_readRegister(BMP581 *baro, uint8_t address) {
+  uint16_t response;
+  SPI spi = baro->base;
+
+  // Send write command with address and data
+  uint16_t payload = (address << 0x8) | 0x8000;
+  spi.port->ODR &= ~spi.cs;
+  spi.send(&spi, payload);
+
+  // Read in response from interface
+  spi.receive(&spi, &response);
+  spi.port->ODR |= spi.cs;
+  return (uint8_t)response;
 }

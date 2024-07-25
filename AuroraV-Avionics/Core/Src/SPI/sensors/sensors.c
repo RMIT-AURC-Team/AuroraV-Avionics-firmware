@@ -2,7 +2,7 @@
 
 const uint8_t ACCEL_AXES_1[3] = {0, 1, 2};
 const uint8_t ACCEL_AXES_2[3] = {0, 1, 2};
-const uint8_t GYRO_AXES[3]    = {0, 1, 2};
+const uint8_t GYRO_AXES[3]    = {0, 2, 1};
 
 void configure_SPI1_Sensor_Suite(void) {
   GPIOA->MODER &= (~(GPIO_MODER_MODE5_Msk | GPIO_MODER_MODE6_Msk | GPIO_MODER_MODE7_Msk));

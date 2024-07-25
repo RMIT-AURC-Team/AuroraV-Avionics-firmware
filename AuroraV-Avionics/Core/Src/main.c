@@ -321,9 +321,9 @@ void vDataAcquisitionH(void *argument) {
       Quaternion_init(&qDot);
       qDot.fromEuler(
           &qDot,
-          (float)(dt * gyro[ROLL_INDEX]),
-          (float)(dt * gyro[PITCH_INDEX]),
-          (float)(dt * gyro[YAW_INDEX])
+          (float)(dt * gyro[gyro_s.axes[ROLL_INDEX]]),
+          (float)(dt * gyro[gyro_s.axes[PITCH_INDEX]]),
+          (float)(dt * gyro[gyro_s.axes[YAW_INDEX]])
       );
       qRot = Quaternion_mul(&qRot, &qDot);
       qRot.normalise(&qRot); // New attitude quaternion

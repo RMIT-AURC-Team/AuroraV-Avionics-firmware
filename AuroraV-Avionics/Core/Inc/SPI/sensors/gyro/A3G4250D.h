@@ -34,7 +34,7 @@ void A3G4250D_readGyro(A3G4250D *, float *);
 void A3G4250D_readRawBytes(A3G4250D *, uint8_t *);
 void A3G4250D_processRawBytes(A3G4250D *, uint8_t *, float *);
 
-uint8_t A3G4250D_readRegister(void *, uint8_t);
-void A3G4250D_writeRegister(void *, uint8_t, uint8_t);
+uint8_t A3G4250D_readRegister(A3G4250D *, uint8_t);
+void A3G4250D_writeRegister(A3G4250D *, uint8_t, uint8_t);
 
 #endif

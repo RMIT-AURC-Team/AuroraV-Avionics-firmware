@@ -43,7 +43,7 @@ void BMP581_readRawPress(BMP581 *, uint8_t *);
 void BMP581_processRawTemp(BMP581 *, uint8_t *, float *);
 void BMP581_processRawPress(BMP581 *, uint8_t *, float *);
 
-uint8_t BMP581_readRegister(void *, uint8_t);
-void BMP581_writeRegister(void *, uint8_t, uint8_t);
+uint8_t BMP581_readRegister(BMP581 *, uint8_t);
+void BMP581_writeRegister(BMP581 *, uint8_t, uint8_t);
 
 #endif
