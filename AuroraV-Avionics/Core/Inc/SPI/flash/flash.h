@@ -48,6 +48,14 @@
 )
 // clang-format on
 
+#define FLASH_PAGE_PROGRAM           0x02
+#define FLASH_READ_DATA              0x03
+#define FLASH_WRITE_ENABLE           0x06
+#define FLASH_ERASE_CHIP             0x60
+#define FLASH_READ_STATUS_REGISTER_1 0x05
+#define FLASH_READ_STATUS_REGISTER_2 0x35
+#define FLASH_READ_STATUS_REGISTER_3 0x15
+
 typedef struct Flash {
   SPI base;
   void (*erase)(struct Flash *);

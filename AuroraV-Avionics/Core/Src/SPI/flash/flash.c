@@ -1,6 +1,6 @@
 #include "flash.h"
 
-/* SPI2 FLASH
+/* SPI4 FLASH
  * ---------------------------------------------
  * Flash Pin       | MCU GPIO Pin  | SIGNAL TYPE
  * ----------------|---------------|------------
@@ -20,43 +20,68 @@ void Flash_init(Flash *flash, GPIO_TypeDef *port, unsigned long cs) {
 
 /******************************** PRIVATE METHODS ********************************/
 
+/* ===============================================================================
+ * WRITE_ENABLE
+ *
+ * PARAMETERS
+ * =============================================================================== */
 void _Flash_writeEnable(Flash *flash) {
   SPI spi = flash->base;
 
   spi.port->ODR &= ~spi.cs;
-  spi.transmit(&spi, 0x06);
+  spi.transmit(&spi, FLASH_WRITE_ENABLE);
   spi.port->ODR |= spi.cs;
 }
 
+/* ===============================================================================
+ * READ_STATUS_1
+ *
+ * PARAMETERS
+ * =============================================================================== */
 void _Flash_readStatus1(Flash *flash, uint8_t *status) {
   SPI spi = flash->base;
 
   spi.port->ODR &= ~spi.cs;
-  *status = spi.transmit(&spi, 0x05);
+  *status = spi.transmit(&spi, FLASH_READ_STATUS_REGISTER_1);
   *status = spi.transmit(&spi, 0x0F);
   spi.port->ODR |= spi.cs;
 }
 
+/* ===============================================================================
+ * READ_STATUS_2
+ *
+ * PARAMETERS
+ * =============================================================================== */
 void _Flash_readStatus2(Flash *flash, uint8_t *status) {
   SPI spi = flash->base;
 
   spi.port->ODR &= ~spi.cs;
-  *status = spi.transmit(&spi, 0x35);
+  *status = spi.transmit(&spi, FLASH_READ_STATUS_REGISTER_2);
   *status = spi.transmit(&spi, 0x0F);
   spi.port->ODR |= spi.cs;
 }
 
+/* ===============================================================================
+ * READ_STATUS_3
+ *
+ * PARAMETERS
+ * =============================================================================== */
 void _Flash_readStatus3(Flash *flash, uint8_t *status) {
   SPI spi = flash->base;
 
   spi.port->ODR &= ~spi.cs;
-  *status = spi.transmit(&spi, 0x15);
+  *status = spi.transmit(&spi, FLASH_READ_STATUS_REGISTER_3);
   *status = spi.transmit(&spi, 0x0F);
   spi.port->ODR |= spi.cs;
 }
 
 /******************************** DEVICE METHODS ********************************/
 
+/* ===============================================================================
+ * ERASE
+ *
+ * PARAMETERS
+ * =============================================================================== */
 void Flash_erase(Flash *flash) {
   _Flash_writeEnable(flash);
   SPI spi        = flash->base;
@@ -64,7 +89,7 @@ void Flash_erase(Flash *flash) {
 
   // Send Erase Chip instruction
   spi.port->ODR &= ~spi.cs;
-  spi.transmit(&spi, 0x60);
+  spi.transmit(&spi, FLASH_ERASE_CHIP);
   spi.port->ODR |= spi.cs;
 
   // Wait until chip BUSY is clear
@@ -73,50 +98,62 @@ void Flash_erase(Flash *flash) {
   } while (status & 0x01);
 }
 
+/* ===============================================================================
+ * WRITE_PAGE
+ *
+ * PARAMETERS
+ * =============================================================================== */
 void Flash_writePage(Flash *flash, uint32_t address, uint8_t *data) {
   _Flash_writeEnable(flash);
-  uint8_t response = 0;
-  uint8_t status   = 0;
-  SPI spi          = flash->base;
+  uint8_t status = 0;
+  SPI spi        = flash->base;
 
+  // Wait until chip BUSY is clear
   do {
     _Flash_readStatus1(flash, &status);
   } while (status & 0x1);
 
   spi.port->ODR &= ~spi.cs;
 
-  spi.transmit(&spi, 0x02);
+  // Send Page Program instruction and 24-bit address
+  spi.transmit(&spi, FLASH_PAGE_PROGRAM);
   spi.transmit(&spi, (address & 0xFF0000) >> 16);
   spi.transmit(&spi, (address & 0xFF00) >> 8);
   spi.transmit(&spi, (address & 0xFF));
 
-  // sent to flash
+  // Send page data
   for (int x = 0; x < 255; x++) {
-    response = spi.transmit(&spi, data[x]);
+    spi.transmit(&spi, data[x]);
   }
 
   spi.port->ODR |= spi.cs;
 }
 
+/* ===============================================================================
+ * READ_PAGE
+ *
+ * PARAMETERS
+ * =============================================================================== */
 void Flash_readPage(Flash *flash, uint32_t address, uint8_t *data) {
-  uint8_t status        = 0;
-  uint16_t return_value = 0;
-  SPI spi               = flash->base;
+  uint8_t status = 0;
+  SPI spi        = flash->base;
 
+  // Wait until chip BUSY is clear
   do {
     _Flash_readStatus1(flash, &status);
   } while (status & 0x1);
 
   spi.port->ODR &= ~spi.cs;
 
-  spi.transmit(&spi, 0x03);
+  // Send Read Data instruction and 24-bit address
+  spi.transmit(&spi, FLASH_READ_DATA);
   spi.transmit(&spi, (address & 0xFF0000) >> 16);
   spi.transmit(&spi, (address & 0xFF00) >> 8);
   spi.transmit(&spi, (address & 0xFF));
 
-  // sent to flash
+  // Receive page data
   for (int x = 0; x < 255; x++) {
-    data[x] = spi.transmit(&spi, 0x01);
+    data[x] = spi.transmit(&spi, 0x0F);
   }
 
   spi.port->ODR |= spi.cs;
