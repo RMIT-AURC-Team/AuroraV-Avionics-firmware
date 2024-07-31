@@ -1,5 +1,16 @@
 #include "BMP581.h"
 
+/* =============================================================================== */
+/**
+ * @brief Initialiser for a BMP581 barometer.
+ * @param *baro 						Pointer to BMP581 struct to be initialised.
+ * @param *port 						Pointer to GPIO port struct.
+ * @param cs 								Device chip select address.
+ * @param tempSensitivity   Barometer temperature sensitivity.
+ * @param pressSensitivity  Barometer pressure sensitivity.
+ * @return @c NULL.
+ **
+ * =============================================================================== */
 void BMP581_init(BMP581 *baro, GPIO_TypeDef *port, unsigned long cs, float tempSensitivity, float pressSensitivity) {
   SPI_init(&baro->base, SENSOR_BARO, SPI1, port, cs);
   baro->tempSensitivity  = tempSensitivity;
@@ -18,12 +29,13 @@ void BMP581_init(BMP581 *baro, GPIO_TypeDef *port, unsigned long cs, float tempS
 
 /******************************** DEVICE METHODS ********************************/
 
-/* ===============================================================================
- * READ_TEMP
- *  Read processed floating point temperature
- *
- * PARAMETERS
- *  - out: floating point temperature
+/* =============================================================================== */
+/**
+ * @brief 
+ * @param 	
+ * @param 	
+ * @returns @c NULL.
+ **
  * =============================================================================== */
 void BMP581_readTemp(BMP581 *baro, float *out) {
   uint8_t bytes[BMP581_DATA_TOTAL];
@@ -31,24 +43,25 @@ void BMP581_readTemp(BMP581 *baro, float *out) {
   baro->processRawTemp(baro, bytes, out);
 }
 
-/* ===============================================================================
- * PROCESS_RAW_TEMP
- *  Process raw values to floating point temperature
- *
- * PARAMETERS
- *  - bytes: 3-byte array of raw temperature values in big-endian
- *  - out: floating point temperature
+/* =============================================================================== */
+/**
+ * @brief 
+ * @param 	
+ * @param 
+ * @returns @c NULL.
+ **
  * =============================================================================== */
 void BMP581_processRawTemp(BMP581 *baro, uint8_t *bytes, float *out) {
   *out = baro->tempSensitivity * (int32_t)(((uint32_t)bytes[0] << 16) | ((uint32_t)bytes[1] << 8) | bytes[0]);
 }
 
-/* ===============================================================================
- * READ_RAW_TEMP
- *  Read in raw values from temperature registers
- *
- * PARAMETERS
- *  - out: 3-byte array of raw temperature in big-endian
+/* =============================================================================== */
+/**
+ * @brief
+ * @param 
+ * @param 	
+ * @returns @c NULL.
+ **
  * =============================================================================== */
 void BMP581_readRawTemp(BMP581 *baro, uint8_t *out) {
   out[0] = BMP581_readRegister(baro, BMP581_TEMPERATURE_MSB);  // temp high
@@ -56,12 +69,13 @@ void BMP581_readRawTemp(BMP581 *baro, uint8_t *out) {
   out[2] = BMP581_readRegister(baro, BMP581_TEMPERATURE_XLSB); // temp mid
 }
 
-/* ===============================================================================
- * READ_PRESS
- *  Read processed floating point pressure
- *
- * PARAMETERS
- *  - out: floating point pressure
+/* =============================================================================== */
+/**
+ * @brief 
+ * @param 	
+ * @param
+ * @returns @c NULL.
+ **
  * =============================================================================== */
 void BMP581_readPress(BMP581 *baro, float *out) {
   uint8_t bytes[BMP581_DATA_TOTAL];
@@ -69,24 +83,25 @@ void BMP581_readPress(BMP581 *baro, float *out) {
   baro->processRawPress(baro, bytes, out);
 }
 
-/* ===============================================================================
- * PROCESS_RAW_PRESSURE
- *  Process raw values to floating point pressure
- *
- * PARAMETERS
- *  - bytes: 3-byte array of raw pressure in big-endian
- *  - out: floating point pressure
+/* =============================================================================== */
+/**
+ * @brief 
+ * @param 
+ * @param 
+ * @returns @c NULL.
+ **
  * =============================================================================== */
 void BMP581_processRawPress(BMP581 *baro, uint8_t *bytes, float *out) {
   *out = baro->pressSensitivity * (int32_t)(((uint32_t)bytes[0] << 16) | ((uint32_t)bytes[1] << 8) | bytes[0]);
 }
 
-/* ===============================================================================
- * READ_RAW_TEMP
- *  Read in raw values from temperature registers
- *
- * PARAMETERS
- *  - out: 3-byte array of raw temperature in big-endian
+/* =============================================================================== */
+/**
+ * @brief
+ * @param 	
+ * @param 
+ * @returns @c NULL.
+ **
  * =============================================================================== */
 void BMP581_readRawPress(BMP581 *baro, uint8_t *out) {
   out[0] = BMP581_readRegister(baro, BMP581_PRESSURE_MSB);  // temp high

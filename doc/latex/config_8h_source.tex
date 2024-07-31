@@ -1,0 +1,58 @@
+\doxysection{config.\+h}
+\hypertarget{config_8h_source}{}\label{config_8h_source}\index{Core/Inc/config.h@{Core/Inc/config.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00001}00001\ \textcolor{comment}{/********************************************}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00002}00002\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ STM32F439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00003}00003\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ Configuration\ Options\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00004}00004\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ Author:\ Dr.\ Glenn\ Matthews\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00005}00005\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ Edited\ By:\ Matthew\ Pulis\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00006}00006\ \textcolor{comment}{*\ \ \ \ \ \ \ \ \ \ \ Header\ File\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00007}00007\ \textcolor{comment}{********************************************/}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00009}00009\ \textcolor{comment}{/*\ Define\ to\ prevent\ recursive\ inclusion\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00010}00010\ \textcolor{comment}{//\#ifndef\ \_\_MISC\_CONFIG\_H\_\_}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00011}00011\ \textcolor{comment}{//\#define\ \_\_MISC\_CONFIG\_H\_\_}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00013}00013\ \textcolor{comment}{//\ External\ Memory\ Interface}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00014}00014\ \textcolor{preprocessor}{\#define\ DATA\_IN\_ExtSDRAM\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{//\ Uncomment\ this\ line\ if\ an\ external\ memory\ interface\ is\ required\ (SDRAM).}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00015}00015\ \textcolor{preprocessor}{\#define\ SDRAM\_BANK\_1\ \ \ \ \ \ \ \ 0x10}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00017}00017\ \textcolor{comment}{//\ Clock\ Configuration\ -\/\ External\ Crystal\ }}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00018}00018\ \textcolor{preprocessor}{\#define\ HSE\_STARTUP\_TIMEOUT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((uint16\_t)0x0500)\ \ \ }}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00019}00019\ \textcolor{preprocessor}{\#define\ LSE\_STARTUP\_TIMEOUT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (unsigned\ int)\ 500}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00022}00022\ \textcolor{comment}{//\ 168\ MHz\ Core,\ 25\ MHz\ External}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00023}00023\ \textcolor{preprocessor}{\#define\ HSE\_VALUE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (unsigned\ int)\ 25000000\ \ \ \ \ }\textcolor{comment}{//\ Default\ value\ of\ the\ External\ oscillator\ in\ Hz}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00024}00024\ \textcolor{preprocessor}{\#define\ HSI\_VALUE\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (unsigned\ int)\ 16000000\ \ \ \ \ }\textcolor{comment}{//\ Value\ of\ the\ internal\ oscillator\ in\ Hz.}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00025}00025\ \textcolor{preprocessor}{\#define\ PLL\_M\ \ \ \ \ \ \ 25}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00026}00026\ \textcolor{preprocessor}{\#define\ PLL\_N\ \ \ \ \ \ \ 336}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00027}00027\ \textcolor{preprocessor}{\#define\ PLL\_P\ \ \ \ \ \ \ 2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{//\ SYSCLK\ =\ PLL\_VCO\ /\ PLL\_P}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00028}00028\ \textcolor{preprocessor}{\#define\ PLL\_Q\ \ \ \ \ \ \ 7\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{//\ USB\ OTG\ FS,\ SDIO\ and\ RNG\ Clock\ =\ \ PLL\_VCO\ /\ PLLQ}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00030}00030\ \textcolor{preprocessor}{\#define\ HSE\_USED\ \ \ \ 1}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00032}00032\ \textcolor{comment}{//\ Used\ to\ adjust\ the\ frequency\ of\ the\ internal\ clock}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00033}00033\ \textcolor{preprocessor}{\#define\ HSITRIM\ \ \ \ \ 0}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00034}00034\ \textcolor{preprocessor}{\#define\ HSICAL\ \ \ \ \ \ 0}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00036}00036\ \textcolor{preprocessor}{\#define\ HSIPLL\_M\ \ \ \ 16}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00037}00037\ \textcolor{preprocessor}{\#define\ HSIPLL\_N\ \ \ \ 336}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00038}00038\ \textcolor{preprocessor}{\#define\ HSIPLL\_P\ \ \ \ 2\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{//\ SYSCLK\ =\ PLL\_VCO\ /\ PLL\_P}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00039}00039\ \textcolor{preprocessor}{\#define\ HSIPLL\_Q\ \ \ \ 7\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }\textcolor{comment}{//\ USB\ OTG\ FS,\ SDIO\ and\ RNG\ Clock\ =\ \ PLL\_VCO\ /\ PLLQ}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00041}00041\ \textcolor{comment}{//\ Processor\ specific\ defines\ to\ allow\ access\ to\ some\ of\ the\ HAL\ libraries.}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00042}00042\ \textcolor{preprocessor}{\#define\ STM32F439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00043}00043\ \textcolor{preprocessor}{\#define\ STM32F439xx\ \ \ \ \ \ \ \ \ \ \ \ \ 1}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00044}00044\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00045}00045\ \textcolor{comment}{//\ Interrupt\ Vector\ Table\ Offset\ (Uncomment\ if\ in\ RAM)}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00046}00046\ \textcolor{preprocessor}{\#define\ VECT\_TAB\_SRAM}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00047}00047\ \textcolor{preprocessor}{\#define\ VECT\_TAB\_OFFSET\ \ 0x00}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00049}00049\ \textcolor{comment}{//\ Configuration\ for\ real-\/time\ clock}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00050}00050\ \textcolor{comment}{//\ \#define\ RTC\_ENABLE\ \ \ \ \ \ \ \ \ \ \ 0}}
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{config_8h_source_l00052}00052\ }
+
+\end{DoxyCode}

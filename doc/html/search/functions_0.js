@@ -1,0 +1,7 @@
+var searchData=
+[
+  ['a3g4250d_5finit_0',['A3G4250D_init',['../group___a3_g4250_d.html#gabd9827bb607041567765c6a476461d18',1,'A3G4250D_init(A3G4250D *, GPIO_TypeDef *, unsigned long, const float, const uint8_t *):&#160;A3G4250D.c'],['../group___a3_g4250_d.html#gabd9827bb607041567765c6a476461d18',1,'A3G4250D_init(A3G4250D *gyro, GPIO_TypeDef *port, unsigned long cs, float sensitivity, const uint8_t *axes):&#160;A3G4250D.c']]],
+  ['a3g4250d_5fprocessrawbytes_1',['A3G4250D_processRawBytes',['../group___a3_g4250_d.html#ga0b884ae90373ad5fa4565610707ea198',1,'A3G4250D_processRawBytes(A3G4250D *, uint8_t *, float *):&#160;A3G4250D.c'],['../group___a3_g4250_d.html#ga0b884ae90373ad5fa4565610707ea198',1,'A3G4250D_processRawBytes(A3G4250D *gyro, uint8_t *bytes, float *out):&#160;A3G4250D.c']]],
+  ['a3g4250d_5freadgyro_2',['A3G4250D_readGyro',['../group___a3_g4250_d.html#ga312e2655fabf3e10b2f71c90d8e1634d',1,'A3G4250D_readGyro(A3G4250D *, float *):&#160;A3G4250D.c'],['../group___a3_g4250_d.html#ga312e2655fabf3e10b2f71c90d8e1634d',1,'A3G4250D_readGyro(A3G4250D *gyro, float *out):&#160;A3G4250D.c']]],
+  ['a3g4250d_5freadrawbytes_3',['A3G4250D_readRawBytes',['../group___a3_g4250_d.html#gadd64ac77b1a4f0414abc10dd0e8ab8ef',1,'A3G4250D_readRawBytes(A3G4250D *, uint8_t *):&#160;A3G4250D.c'],['../group___a3_g4250_d.html#gadd64ac77b1a4f0414abc10dd0e8ab8ef',1,'A3G4250D_readRawBytes(A3G4250D *gyro, uint8_t *out):&#160;A3G4250D.c']]]
+];

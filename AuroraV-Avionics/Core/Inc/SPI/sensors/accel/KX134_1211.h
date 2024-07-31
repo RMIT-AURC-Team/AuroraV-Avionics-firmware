@@ -1,3 +1,10 @@
+/**
+ * @author Matt Ricci
+ * @ingroup Sensors
+ * @addtogroup Accelerometer
+ * @file KX134_1211.h
+ */
+
 #ifndef _KX134_1211_H
 #define _KX134_1211_H
 
@@ -27,21 +34,29 @@
 #define KX134_1211_DATA_COUNT 3 // Three axes - X Y Z
 #define KX134_1211_DATA_TOTAL (KX134_1211_DATA_COUNT * KX134_1211_DATA_SIZE)
 
+/**
+ * @ingroup Accelerometer
+ * @defgroup KX134-1211
+ * @addtogroup KX134-1211
+ * @{
+ */
+
+/** @extends SPI */
 typedef struct KX134_1211 {
-  SPI base;
-  float sensitivity;
-  const uint8_t *axes;
-  void (*readAccel)(struct KX134_1211 *, float *);
-  void (*readRawBytes)(struct KX134_1211 *, uint8_t *);
-  void (*processRawBytes)(struct KX134_1211 *, uint8_t *, float *);
+  SPI base;                                                         //!< Parent SPI interface
+  float sensitivity;                                                //!< Accelerometer sensitivity
+  const uint8_t *axes;                                              //!< Array defining axes of mounting
+  void (*readAccel)(struct KX134_1211 *, float *);                  //!< Accel read method.         @see KX134_1211_readAccel
+  void (*readRawBytes)(struct KX134_1211 *, uint8_t *);             //!< Raw accel read method.     @see KX134_1211_readRawBytes
+  void (*processRawBytes)(struct KX134_1211 *, uint8_t *, float *); //!< Process raw accel method.  @see KX134_1211_processRawBytes
 } KX134_1211;
 
 void KX134_1211_init(KX134_1211 *, GPIO_TypeDef *, unsigned long, const uint8_t, const uint8_t *);
 void KX134_1211_readAccel(KX134_1211 *, float *);
 void KX134_1211_readRawBytes(KX134_1211 *, uint8_t *);
 void KX134_1211_processRawBytes(KX134_1211 *, uint8_t *, float *);
-
 uint8_t KX134_1211_readRegister(KX134_1211 *, uint8_t);
 void KX134_1211_writeRegister(KX134_1211 *, uint8_t, uint8_t);
 
+/** @} */
 #endif

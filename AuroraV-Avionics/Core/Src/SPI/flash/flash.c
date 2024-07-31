@@ -11,6 +11,15 @@
  * Memory Hold     | PE10          | CONTROL
  * Write Protect   | PE9           | CONTROL    */
 
+/* =============================================================================== */
+/**
+ * @brief Initialise flash struct.
+ * @param *flash	Pointer to Flash struct.
+ * @param *port   Pointer to GPIO port.
+ * @param cs      Address to flash chip select.
+ * @return @c NULL.
+ **
+ * =============================================================================== */
 void Flash_init(Flash *flash, GPIO_TypeDef *port, unsigned long cs) {
   SPI_init(&flash->base, MEMORY_FLASH, SPI4, port, cs);
   flash->erase     = Flash_erase;
@@ -18,12 +27,16 @@ void Flash_init(Flash *flash, GPIO_TypeDef *port, unsigned long cs) {
   flash->writePage = Flash_writePage;
 }
 
-/******************************** PRIVATE METHODS ********************************/
+/********************************* PRIVATE METHODS *********************************/
 
-/* ===============================================================================
- * WRITE_ENABLE
- *
- * PARAMETERS
+/* =============================================================================== */
+/**
+ * @private
+ * @memberof Flash
+ * @brief Send Write Enable instruction to the flash device.
+ * @param *flash			Pointer to Flash struct.
+ * @return @c NULL.
+ **
  * =============================================================================== */
 void _Flash_writeEnable(Flash *flash) {
   SPI spi = flash->base;
@@ -33,10 +46,15 @@ void _Flash_writeEnable(Flash *flash) {
   spi.port->ODR |= spi.cs;
 }
 
-/* ===============================================================================
- * READ_STATUS_1
- *
- * PARAMETERS
+/* =============================================================================== */
+/**
+ * @private
+ * @memberof Flash
+ * @brief Read from Status Register 1.
+ * @param *flash		Pointer to Flash struct.
+ * @param *status 	Pointer to status output variable.
+ * @return @c NULL.
+ **
  * =============================================================================== */
 void _Flash_readStatus1(Flash *flash, uint8_t *status) {
   SPI spi = flash->base;
@@ -47,10 +65,15 @@ void _Flash_readStatus1(Flash *flash, uint8_t *status) {
   spi.port->ODR |= spi.cs;
 }
 
-/* ===============================================================================
- * READ_STATUS_2
- *
- * PARAMETERS
+/* =============================================================================== */
+/**
+ * @private
+ * @memberof Flash
+ * @brief Read from Status Register 2.
+ * @param *flash		Pointer to Flash struct.
+ * @param *status 	Pointer to status output variable.
+ * @return @c NULL.
+ **
  * =============================================================================== */
 void _Flash_readStatus2(Flash *flash, uint8_t *status) {
   SPI spi = flash->base;
@@ -61,10 +84,15 @@ void _Flash_readStatus2(Flash *flash, uint8_t *status) {
   spi.port->ODR |= spi.cs;
 }
 
-/* ===============================================================================
- * READ_STATUS_3
- *
- * PARAMETERS
+/* =============================================================================== */
+/**
+ * @private
+ * @memberof Flash
+ * @brief Read from Status Register 3.
+ * @param *flash		Pointer to Flash struct.
+ * @param *status 	Pointer to status output variable.
+ * @return @c NULL.
+ **
  * =============================================================================== */
 void _Flash_readStatus3(Flash *flash, uint8_t *status) {
   SPI spi = flash->base;
@@ -75,12 +103,14 @@ void _Flash_readStatus3(Flash *flash, uint8_t *status) {
   spi.port->ODR |= spi.cs;
 }
 
-/******************************** DEVICE METHODS ********************************/
+/********************************* DEVICE METHODS **********************************/
 
-/* ===============================================================================
- * ERASE
- *
- * PARAMETERS
+/* =============================================================================== */
+/**
+ * @brief Erase flash chip.
+ * @param *flash		Pointer to Flash struct.
+ * @return @c NULL.
+ **
  * =============================================================================== */
 void Flash_erase(Flash *flash) {
   _Flash_writeEnable(flash);
@@ -98,10 +128,14 @@ void Flash_erase(Flash *flash) {
   } while (status & 0x01);
 }
 
-/* ===============================================================================
- * WRITE_PAGE
- *
- * PARAMETERS
+/* =============================================================================== */
+/**
+ * @brief Write page to flash.
+ * @param *flash		Pointer to Flash struct.
+ * @param address 	Address in memory to write to.
+ * @param *data 		Pointer to start of page buffer to write.
+ * @return @c NULL.
+ **
  * =============================================================================== */
 void Flash_writePage(Flash *flash, uint32_t address, uint8_t *data) {
   _Flash_writeEnable(flash);
@@ -129,10 +163,14 @@ void Flash_writePage(Flash *flash, uint32_t address, uint8_t *data) {
   spi.port->ODR |= spi.cs;
 }
 
-/* ===============================================================================
- * READ_PAGE
- *
- * PARAMETERS
+/* =============================================================================== */
+/**
+ * @brief Read from flash.
+ * @param *flash		Pointer to Flash struct.
+ * @param address 	Address in memory to write to.
+ * @param *data 		Pointer to start of page buffer to read to.
+ * @return @c NULL.
+ **
  * =============================================================================== */
 void Flash_readPage(Flash *flash, uint32_t address, uint8_t *data) {
   uint8_t status = 0;
@@ -152,8 +190,8 @@ void Flash_readPage(Flash *flash, uint32_t address, uint8_t *data) {
   spi.transmit(&spi, (address & 0xFF));
 
   // Receive page data
-  for (int x = 0; x < 255; x++) {
-    data[x] = spi.transmit(&spi, 0x0F);
+  for (int i = 0; i < 255; i++) {
+    data[i] = spi.transmit(&spi, 0x0F);
   }
 
   spi.port->ODR |= spi.cs;

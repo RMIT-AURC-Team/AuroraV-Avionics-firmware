@@ -1,0 +1,549 @@
+\doxysection{Core/\+Src/main.c File Reference}
+\hypertarget{main_8c}{}\label{main_8c}\index{Core/Src/main.c@{Core/Src/main.c}}
+{\ttfamily \#include "{}main.\+h"{}}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{main_8c_a6c7cd32e1bac137f05e4a752b4ad10af}{BUFF\+\_\+\+SIZE}}~21000
+\item 
+\#define \mbox{\hyperlink{main_8c_a7d467c1d283fdfa1f2081ba1e0d01b6e}{PAGE\+\_\+\+SIZE}}~256
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{main_8c_a840291bc02cba5474a4cb46a9b9566fe}{main}} (void)
+\item 
+void \mbox{\hyperlink{main_8c_a97fd430f36f8b065226e2bff9bad1de5}{v\+Application\+Idle\+Hook}} (void)
+\item 
+void \mbox{\hyperlink{main_8c_a798c68604fb647f3740fa223d3396762}{v\+Flash\+Buffer}} (void \texorpdfstring{$\ast$}{*}argument)
+\item 
+void \mbox{\hyperlink{main_8c_a0f01e9ceadf46e8bb2fafaf020b063dc}{v\+Lo\+Ra\+Communicate}} (void \texorpdfstring{$\ast$}{*}argument)
+\item 
+void \mbox{\hyperlink{main_8c_af821836ad59b2a01ba350baf20ba3c1c}{v\+State\+Update}} (void \texorpdfstring{$\ast$}{*}argument)
+\item 
+void \mbox{\hyperlink{main_8c_ad1b54b762fb5bdefa566ff600ac94a06}{v\+Data\+AcquisitionH}} (void \texorpdfstring{$\ast$}{*}argument)
+\item 
+void \mbox{\hyperlink{main_8c_a36d58730bb6fe7b210475b8eeca88e50}{v\+Data\+AcquisitionL}} (void \texorpdfstring{$\ast$}{*}argument)
+\item 
+void \mbox{\hyperlink{main_8c_a53578094a6e7647b6a9f9ea86975c4c2}{\+\_\+init}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+Task\+Handle\+\_\+t \mbox{\hyperlink{main_8c_a62d1d0d57ecf734fe20acfa7282f008f}{x\+Data\+Aqcquisition\+HHandle}} = NULL
+\item 
+Task\+Handle\+\_\+t \mbox{\hyperlink{main_8c_a60ba6f8c1cd04bf3544af84fc14f7e22}{x\+Data\+Aqcquisition\+LHandle}} = NULL
+\item 
+Task\+Handle\+\_\+t \mbox{\hyperlink{main_8c_a650b69c0f06ee6ece484dbcbf643ac69}{x\+Flash\+Buffer\+Handle}} = NULL
+\item 
+Task\+Handle\+\_\+t \mbox{\hyperlink{main_8c_ab7be77a5b748af4b00a9bc93fed70644}{x\+State\+Update\+Handle}} = NULL
+\item 
+Task\+Handle\+\_\+t \mbox{\hyperlink{main_8c_aa129b0491d7e55dbd48928811a101aad}{x\+Lo\+Ra\+Communicate\+Handle}} = NULL
+\item 
+Event\+Group\+Handle\+\_\+t \mbox{\hyperlink{main_8c_a5959d40b46b15dda16dfe4c313fd531b}{x\+Task\+Enable\+Group}}
+\item 
+\mbox{\hyperlink{group___k_x134-1211_struct_k_x134__1211}{KX134\+\_\+1211}} \mbox{\hyperlink{main_8c_adaab7a0a1ae132252ab02df0421c27c8}{l\+Accel\+\_\+s}}
+\item 
+\mbox{\hyperlink{group___k_x134-1211_struct_k_x134__1211}{KX134\+\_\+1211}} \mbox{\hyperlink{main_8c_a7247c98214d885083d56872264d4a6a5}{h\+Accel\+\_\+s}}
+\item 
+\mbox{\hyperlink{group___k_x134-1211_struct_k_x134__1211}{KX134\+\_\+1211}} \mbox{\hyperlink{main_8c_a7aab63d30fd6cdcece177d0719275141}{accel\+\_\+s}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8c_aa3767274053fd672ab424a07db195d53}{accel\+Raw}} \mbox{[}6\mbox{]}
+\item 
+float \mbox{\hyperlink{main_8c_a579c1a74d7de6ed4e97b8a29d6d826cd}{accel}} \mbox{[}3\mbox{]}
+\item 
+\mbox{\hyperlink{group___a3_g4250_d_struct_a3_g4250_d}{A3\+G4250D}} \mbox{\hyperlink{main_8c_abb02b9f91dc5f35f1d4f628f8605e57d}{gyro\+\_\+s}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8c_a83df4bfd71cadf0ce1fac0616ae7c64b}{gyro\+Raw}} \mbox{[}6\mbox{]}
+\item 
+float \mbox{\hyperlink{main_8c_addac5578d412440de5e9c3760475dec7}{gyro}} \mbox{[}3\mbox{]}
+\item 
+\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \mbox{\hyperlink{main_8c_ae244f7072a69d14503a06a01218ac276}{baro\+\_\+s}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8c_a34dd9a8f43f81cb32bcb886e66286cf8}{press\+Raw}} \mbox{[}3\mbox{]}
+\item 
+float \mbox{\hyperlink{main_8c_a003b73ebc512d53fed78e0e31d34b623}{press\+Ground}} = 0
+\item 
+float \mbox{\hyperlink{main_8c_a512591c298ab1304bf391d08271daf2b}{press}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8c_a095315a35a2aa9e4b870e682d153b468}{temp\+Raw}} \mbox{[}3\mbox{]}
+\item 
+float \mbox{\hyperlink{main_8c_a24d61a35b72d7299eb6b5f48e71a571b}{temp}}
+\item 
+\mbox{\hyperlink{group___flash_struct_flash}{Flash}} \mbox{\hyperlink{main_8c_a895097e644be74457d126eb089622c69}{flash}}
+\item 
+Quaternion \mbox{\hyperlink{main_8c_a4955a90cba081e76dc7b17509f535e2f}{q\+Rot}}
+\item 
+float \mbox{\hyperlink{main_8c_a1f859d79d464599f822991841335bf6f}{v\+Attitude}} \mbox{[}3\mbox{]} = \{0, 0, 1\}
+\item 
+float \mbox{\hyperlink{main_8c_a548a838f1f4a52623fc5e1ec5ec958e0}{z\+Unit}} \mbox{[}3\mbox{]} = \{0, 0, 1\}
+\item 
+float \mbox{\hyperlink{main_8c_a5ba97e0f81fecfc53d5b2f0dc06b74ba}{cosine}} = 0
+\item 
+float \mbox{\hyperlink{main_8c_a8b07a56c9e764ad9c06fe53521fcf86d}{tilt}} = 0
+\item 
+float \mbox{\hyperlink{main_8c_a0e13a4b4ae0cefdac2a413284239caa6}{altitude}} = 0
+\item 
+float \mbox{\hyperlink{main_8c_ac46e821ae08930cc9e257642e34275a3}{velocity}} = 0
+\item 
+Mem\+Buff \mbox{\hyperlink{main_8c_ab1c0f887aa277ec2a64a442c9d90f2bb}{mem}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8c_a5ce7c80d9ecfc5c09f2a74580d960b15}{buff}} \mbox{[}\mbox{\hyperlink{main_8c_a6c7cd32e1bac137f05e4a752b4ad10af}{BUFF\+\_\+\+SIZE}}\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8c_aae808144241d1a8404dae3b3358e7408}{out\+Buff}} \mbox{[}\mbox{\hyperlink{main_8c_a7d467c1d283fdfa1f2081ba1e0d01b6e}{PAGE\+\_\+\+SIZE}}\mbox{]}
+\item 
+enum \mbox{\hyperlink{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8}{State}} \mbox{\hyperlink{main_8c_aa48fa13ce97ccd40d6d870e58bdfc137}{current\+State}} = \mbox{\hyperlink{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8a8fb9d84f659ab0adb96078a2404693b6}{PRELAUNCH}}
+\item 
+int \mbox{\hyperlink{main_8c_a91f60a93bf3c773e62311d04f82aa53e}{interval2ms}} = 0
+\item 
+const struct \mbox{\hyperlink{lora_8h_struct_lo_ra___registers}{Lo\+Ra\+\_\+\+Registers}} \mbox{\hyperlink{main_8c_a01f3cc424cf1efec4fb7a51293db06d5}{Lo\+Ra\+\_\+\+Regs}} = \{0, 1, 0xd, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0\+X1C, 0\+X1D, 0\+X1E, 0\+X1F, 0\+X20, 0\+X21, 0\+X22, 0\+X23, 0\+X24, 0\+X25, 0\+X28, 0\+X29, 0\+X2A, 0\+X2C, 0\+X31, 0\+X33, 0\+X37, 0\+X39, 0\+X3B, 0\+X3D, 0\+X40, 0\+X41\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{main_8c_a6c7cd32e1bac137f05e4a752b4ad10af}\index{main.c@{main.c}!BUFF\_SIZE@{BUFF\_SIZE}}
+\index{BUFF\_SIZE@{BUFF\_SIZE}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{BUFF\_SIZE}{BUFF\_SIZE}}
+{\footnotesize\ttfamily \label{main_8c_a6c7cd32e1bac137f05e4a752b4ad10af} 
+\#define BUFF\+\_\+\+SIZE~21000}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00044}{44}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a7d467c1d283fdfa1f2081ba1e0d01b6e}\index{main.c@{main.c}!PAGE\_SIZE@{PAGE\_SIZE}}
+\index{PAGE\_SIZE@{PAGE\_SIZE}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{PAGE\_SIZE}{PAGE\_SIZE}}
+{\footnotesize\ttfamily \label{main_8c_a7d467c1d283fdfa1f2081ba1e0d01b6e} 
+\#define PAGE\+\_\+\+SIZE~256}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00045}{45}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{main_8c_a840291bc02cba5474a4cb46a9b9566fe}\index{main.c@{main.c}!main@{main}}
+\index{main@{main}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily \label{main_8c_a840291bc02cba5474a4cb46a9b9566fe} 
+int main (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00055}{55}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a97fd430f36f8b065226e2bff9bad1de5}\index{main.c@{main.c}!vApplicationIdleHook@{vApplicationIdleHook}}
+\index{vApplicationIdleHook@{vApplicationIdleHook}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{vApplicationIdleHook()}{vApplicationIdleHook()}}
+{\footnotesize\ttfamily \label{main_8c_a97fd430f36f8b065226e2bff9bad1de5} 
+void v\+Application\+Idle\+Hook (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00116}{116}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a798c68604fb647f3740fa223d3396762}\index{main.c@{main.c}!vFlashBuffer@{vFlashBuffer}}
+\index{vFlashBuffer@{vFlashBuffer}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{vFlashBuffer()}{vFlashBuffer()}}
+{\footnotesize\ttfamily \label{main_8c_a798c68604fb647f3740fa223d3396762} 
+void v\+Flash\+Buffer (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{argument}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00122}{122}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a0f01e9ceadf46e8bb2fafaf020b063dc}\index{main.c@{main.c}!vLoRaCommunicate@{vLoRaCommunicate}}
+\index{vLoRaCommunicate@{vLoRaCommunicate}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{vLoRaCommunicate()}{vLoRaCommunicate()}}
+{\footnotesize\ttfamily \label{main_8c_a0f01e9ceadf46e8bb2fafaf020b063dc} 
+void v\+Lo\+Ra\+Communicate (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{argument}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00144}{144}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_af821836ad59b2a01ba350baf20ba3c1c}\index{main.c@{main.c}!vStateUpdate@{vStateUpdate}}
+\index{vStateUpdate@{vStateUpdate}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{vStateUpdate()}{vStateUpdate()}}
+{\footnotesize\ttfamily \label{main_8c_af821836ad59b2a01ba350baf20ba3c1c} 
+void v\+State\+Update (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{argument}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00168}{168}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_ad1b54b762fb5bdefa566ff600ac94a06}\index{main.c@{main.c}!vDataAcquisitionH@{vDataAcquisitionH}}
+\index{vDataAcquisitionH@{vDataAcquisitionH}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{vDataAcquisitionH()}{vDataAcquisitionH()}}
+{\footnotesize\ttfamily \label{main_8c_ad1b54b762fb5bdefa566ff600ac94a06} 
+void v\+Data\+AcquisitionH (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{argument}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00260}{260}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a36d58730bb6fe7b210475b8eeca88e50}\index{main.c@{main.c}!vDataAcquisitionL@{vDataAcquisitionL}}
+\index{vDataAcquisitionL@{vDataAcquisitionL}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{vDataAcquisitionL()}{vDataAcquisitionL()}}
+{\footnotesize\ttfamily \label{main_8c_a36d58730bb6fe7b210475b8eeca88e50} 
+void v\+Data\+AcquisitionL (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{argument}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00314}{314}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a53578094a6e7647b6a9f9ea86975c4c2}\index{main.c@{main.c}!\_init@{\_init}}
+\index{\_init@{\_init}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{\_init()}{\_init()}}
+{\footnotesize\ttfamily \label{main_8c_a53578094a6e7647b6a9f9ea86975c4c2} 
+void \+\_\+init (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00384}{384}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{main_8c_a62d1d0d57ecf734fe20acfa7282f008f}\index{main.c@{main.c}!xDataAqcquisitionHHandle@{xDataAqcquisitionHHandle}}
+\index{xDataAqcquisitionHHandle@{xDataAqcquisitionHHandle}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{xDataAqcquisitionHHandle}{xDataAqcquisitionHHandle}}
+{\footnotesize\ttfamily \label{main_8c_a62d1d0d57ecf734fe20acfa7282f008f} 
+Task\+Handle\+\_\+t x\+Data\+Aqcquisition\+HHandle = NULL}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00004}{4}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a60ba6f8c1cd04bf3544af84fc14f7e22}\index{main.c@{main.c}!xDataAqcquisitionLHandle@{xDataAqcquisitionLHandle}}
+\index{xDataAqcquisitionLHandle@{xDataAqcquisitionLHandle}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{xDataAqcquisitionLHandle}{xDataAqcquisitionLHandle}}
+{\footnotesize\ttfamily \label{main_8c_a60ba6f8c1cd04bf3544af84fc14f7e22} 
+Task\+Handle\+\_\+t x\+Data\+Aqcquisition\+LHandle = NULL}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00005}{5}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a650b69c0f06ee6ece484dbcbf643ac69}\index{main.c@{main.c}!xFlashBufferHandle@{xFlashBufferHandle}}
+\index{xFlashBufferHandle@{xFlashBufferHandle}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{xFlashBufferHandle}{xFlashBufferHandle}}
+{\footnotesize\ttfamily \label{main_8c_a650b69c0f06ee6ece484dbcbf643ac69} 
+Task\+Handle\+\_\+t x\+Flash\+Buffer\+Handle = NULL}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00006}{6}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_ab7be77a5b748af4b00a9bc93fed70644}\index{main.c@{main.c}!xStateUpdateHandle@{xStateUpdateHandle}}
+\index{xStateUpdateHandle@{xStateUpdateHandle}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{xStateUpdateHandle}{xStateUpdateHandle}}
+{\footnotesize\ttfamily \label{main_8c_ab7be77a5b748af4b00a9bc93fed70644} 
+Task\+Handle\+\_\+t x\+State\+Update\+Handle = NULL}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00007}{7}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_aa129b0491d7e55dbd48928811a101aad}\index{main.c@{main.c}!xLoRaCommunicateHandle@{xLoRaCommunicateHandle}}
+\index{xLoRaCommunicateHandle@{xLoRaCommunicateHandle}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{xLoRaCommunicateHandle}{xLoRaCommunicateHandle}}
+{\footnotesize\ttfamily \label{main_8c_aa129b0491d7e55dbd48928811a101aad} 
+Task\+Handle\+\_\+t x\+Lo\+Ra\+Communicate\+Handle = NULL}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00008}{8}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a5959d40b46b15dda16dfe4c313fd531b}\index{main.c@{main.c}!xTaskEnableGroup@{xTaskEnableGroup}}
+\index{xTaskEnableGroup@{xTaskEnableGroup}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{xTaskEnableGroup}{xTaskEnableGroup}}
+{\footnotesize\ttfamily \label{main_8c_a5959d40b46b15dda16dfe4c313fd531b} 
+Event\+Group\+Handle\+\_\+t x\+Task\+Enable\+Group}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00009}{9}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_adaab7a0a1ae132252ab02df0421c27c8}\index{main.c@{main.c}!lAccel\_s@{lAccel\_s}}
+\index{lAccel\_s@{lAccel\_s}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{lAccel\_s}{lAccel\_s}}
+{\footnotesize\ttfamily \label{main_8c_adaab7a0a1ae132252ab02df0421c27c8} 
+\mbox{\hyperlink{group___k_x134-1211_struct_k_x134__1211}{KX134\+\_\+1211}} l\+Accel\+\_\+s}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00012}{12}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a7247c98214d885083d56872264d4a6a5}\index{main.c@{main.c}!hAccel\_s@{hAccel\_s}}
+\index{hAccel\_s@{hAccel\_s}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{hAccel\_s}{hAccel\_s}}
+{\footnotesize\ttfamily \label{main_8c_a7247c98214d885083d56872264d4a6a5} 
+\mbox{\hyperlink{group___k_x134-1211_struct_k_x134__1211}{KX134\+\_\+1211}} h\+Accel\+\_\+s}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00013}{13}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a7aab63d30fd6cdcece177d0719275141}\index{main.c@{main.c}!accel\_s@{accel\_s}}
+\index{accel\_s@{accel\_s}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{accel\_s}{accel\_s}}
+{\footnotesize\ttfamily \label{main_8c_a7aab63d30fd6cdcece177d0719275141} 
+\mbox{\hyperlink{group___k_x134-1211_struct_k_x134__1211}{KX134\+\_\+1211}} accel\+\_\+s}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00014}{14}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_aa3767274053fd672ab424a07db195d53}\index{main.c@{main.c}!accelRaw@{accelRaw}}
+\index{accelRaw@{accelRaw}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{accelRaw}{accelRaw}}
+{\footnotesize\ttfamily \label{main_8c_aa3767274053fd672ab424a07db195d53} 
+uint8\+\_\+t accel\+Raw\mbox{[}6\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00015}{15}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a579c1a74d7de6ed4e97b8a29d6d826cd}\index{main.c@{main.c}!accel@{accel}}
+\index{accel@{accel}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{accel}{accel}}
+{\footnotesize\ttfamily \label{main_8c_a579c1a74d7de6ed4e97b8a29d6d826cd} 
+float accel\mbox{[}3\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00016}{16}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_abb02b9f91dc5f35f1d4f628f8605e57d}\index{main.c@{main.c}!gyro\_s@{gyro\_s}}
+\index{gyro\_s@{gyro\_s}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{gyro\_s}{gyro\_s}}
+{\footnotesize\ttfamily \label{main_8c_abb02b9f91dc5f35f1d4f628f8605e57d} 
+\mbox{\hyperlink{group___a3_g4250_d_struct_a3_g4250_d}{A3\+G4250D}} gyro\+\_\+s}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00019}{19}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a83df4bfd71cadf0ce1fac0616ae7c64b}\index{main.c@{main.c}!gyroRaw@{gyroRaw}}
+\index{gyroRaw@{gyroRaw}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{gyroRaw}{gyroRaw}}
+{\footnotesize\ttfamily \label{main_8c_a83df4bfd71cadf0ce1fac0616ae7c64b} 
+uint8\+\_\+t gyro\+Raw\mbox{[}6\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00020}{20}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_addac5578d412440de5e9c3760475dec7}\index{main.c@{main.c}!gyro@{gyro}}
+\index{gyro@{gyro}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{gyro}{gyro}}
+{\footnotesize\ttfamily \label{main_8c_addac5578d412440de5e9c3760475dec7} 
+float gyro\mbox{[}3\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00021}{21}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_ae244f7072a69d14503a06a01218ac276}\index{main.c@{main.c}!baro\_s@{baro\_s}}
+\index{baro\_s@{baro\_s}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{baro\_s}{baro\_s}}
+{\footnotesize\ttfamily \label{main_8c_ae244f7072a69d14503a06a01218ac276} 
+\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} baro\+\_\+s}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00024}{24}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a34dd9a8f43f81cb32bcb886e66286cf8}\index{main.c@{main.c}!pressRaw@{pressRaw}}
+\index{pressRaw@{pressRaw}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{pressRaw}{pressRaw}}
+{\footnotesize\ttfamily \label{main_8c_a34dd9a8f43f81cb32bcb886e66286cf8} 
+uint8\+\_\+t press\+Raw\mbox{[}3\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00025}{25}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a003b73ebc512d53fed78e0e31d34b623}\index{main.c@{main.c}!pressGround@{pressGround}}
+\index{pressGround@{pressGround}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{pressGround}{pressGround}}
+{\footnotesize\ttfamily \label{main_8c_a003b73ebc512d53fed78e0e31d34b623} 
+float press\+Ground = 0}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00026}{26}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a512591c298ab1304bf391d08271daf2b}\index{main.c@{main.c}!press@{press}}
+\index{press@{press}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{press}{press}}
+{\footnotesize\ttfamily \label{main_8c_a512591c298ab1304bf391d08271daf2b} 
+float press}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00027}{27}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a095315a35a2aa9e4b870e682d153b468}\index{main.c@{main.c}!tempRaw@{tempRaw}}
+\index{tempRaw@{tempRaw}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{tempRaw}{tempRaw}}
+{\footnotesize\ttfamily \label{main_8c_a095315a35a2aa9e4b870e682d153b468} 
+uint8\+\_\+t temp\+Raw\mbox{[}3\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00028}{28}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a24d61a35b72d7299eb6b5f48e71a571b}\index{main.c@{main.c}!temp@{temp}}
+\index{temp@{temp}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{temp}{temp}}
+{\footnotesize\ttfamily \label{main_8c_a24d61a35b72d7299eb6b5f48e71a571b} 
+float temp}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00029}{29}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a895097e644be74457d126eb089622c69}\index{main.c@{main.c}!flash@{flash}}
+\index{flash@{flash}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{flash}{flash}}
+{\footnotesize\ttfamily \label{main_8c_a895097e644be74457d126eb089622c69} 
+\mbox{\hyperlink{group___flash_struct_flash}{Flash}} flash}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00031}{31}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a4955a90cba081e76dc7b17509f535e2f}\index{main.c@{main.c}!qRot@{qRot}}
+\index{qRot@{qRot}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{qRot}{qRot}}
+{\footnotesize\ttfamily \label{main_8c_a4955a90cba081e76dc7b17509f535e2f} 
+Quaternion q\+Rot}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00034}{34}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a1f859d79d464599f822991841335bf6f}\index{main.c@{main.c}!vAttitude@{vAttitude}}
+\index{vAttitude@{vAttitude}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{vAttitude}{vAttitude}}
+{\footnotesize\ttfamily \label{main_8c_a1f859d79d464599f822991841335bf6f} 
+float v\+Attitude\mbox{[}3\mbox{]} = \{0, 0, 1\}}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00035}{35}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a548a838f1f4a52623fc5e1ec5ec958e0}\index{main.c@{main.c}!zUnit@{zUnit}}
+\index{zUnit@{zUnit}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{zUnit}{zUnit}}
+{\footnotesize\ttfamily \label{main_8c_a548a838f1f4a52623fc5e1ec5ec958e0} 
+float z\+Unit\mbox{[}3\mbox{]} = \{0, 0, 1\}}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00036}{36}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a5ba97e0f81fecfc53d5b2f0dc06b74ba}\index{main.c@{main.c}!cosine@{cosine}}
+\index{cosine@{cosine}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{cosine}{cosine}}
+{\footnotesize\ttfamily \label{main_8c_a5ba97e0f81fecfc53d5b2f0dc06b74ba} 
+float cosine = 0}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00037}{37}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a8b07a56c9e764ad9c06fe53521fcf86d}\index{main.c@{main.c}!tilt@{tilt}}
+\index{tilt@{tilt}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{tilt}{tilt}}
+{\footnotesize\ttfamily \label{main_8c_a8b07a56c9e764ad9c06fe53521fcf86d} 
+float tilt = 0}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00038}{38}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a0e13a4b4ae0cefdac2a413284239caa6}\index{main.c@{main.c}!altitude@{altitude}}
+\index{altitude@{altitude}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{altitude}{altitude}}
+{\footnotesize\ttfamily \label{main_8c_a0e13a4b4ae0cefdac2a413284239caa6} 
+float altitude = 0}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00041}{41}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_ac46e821ae08930cc9e257642e34275a3}\index{main.c@{main.c}!velocity@{velocity}}
+\index{velocity@{velocity}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{velocity}{velocity}}
+{\footnotesize\ttfamily \label{main_8c_ac46e821ae08930cc9e257642e34275a3} 
+float velocity = 0}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00042}{42}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_ab1c0f887aa277ec2a64a442c9d90f2bb}\index{main.c@{main.c}!mem@{mem}}
+\index{mem@{mem}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{mem}{mem}}
+{\footnotesize\ttfamily \label{main_8c_ab1c0f887aa277ec2a64a442c9d90f2bb} 
+Mem\+Buff mem}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00046}{46}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a5ce7c80d9ecfc5c09f2a74580d960b15}\index{main.c@{main.c}!buff@{buff}}
+\index{buff@{buff}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{buff}{buff}}
+{\footnotesize\ttfamily \label{main_8c_a5ce7c80d9ecfc5c09f2a74580d960b15} 
+uint8\+\_\+t buff\mbox{[}\mbox{\hyperlink{main_8c_a6c7cd32e1bac137f05e4a752b4ad10af}{BUFF\+\_\+\+SIZE}}\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00047}{47}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_aae808144241d1a8404dae3b3358e7408}\index{main.c@{main.c}!outBuff@{outBuff}}
+\index{outBuff@{outBuff}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{outBuff}{outBuff}}
+{\footnotesize\ttfamily \label{main_8c_aae808144241d1a8404dae3b3358e7408} 
+uint8\+\_\+t out\+Buff\mbox{[}\mbox{\hyperlink{main_8c_a7d467c1d283fdfa1f2081ba1e0d01b6e}{PAGE\+\_\+\+SIZE}}\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00048}{48}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_aa48fa13ce97ccd40d6d870e58bdfc137}\index{main.c@{main.c}!currentState@{currentState}}
+\index{currentState@{currentState}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{currentState}{currentState}}
+{\footnotesize\ttfamily \label{main_8c_aa48fa13ce97ccd40d6d870e58bdfc137} 
+enum \mbox{\hyperlink{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8}{State}} current\+State = \mbox{\hyperlink{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8a8fb9d84f659ab0adb96078a2404693b6}{PRELAUNCH}}}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00050}{50}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a91f60a93bf3c773e62311d04f82aa53e}\index{main.c@{main.c}!interval2ms@{interval2ms}}
+\index{interval2ms@{interval2ms}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{interval2ms}{interval2ms}}
+{\footnotesize\ttfamily \label{main_8c_a91f60a93bf3c773e62311d04f82aa53e} 
+int interval2ms = 0}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00051}{51}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+
+\Hypertarget{main_8c_a01f3cc424cf1efec4fb7a51293db06d5}\index{main.c@{main.c}!LoRa\_Regs@{LoRa\_Regs}}
+\index{LoRa\_Regs@{LoRa\_Regs}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{LoRa\_Regs}{LoRa\_Regs}}
+{\footnotesize\ttfamily \label{main_8c_a01f3cc424cf1efec4fb7a51293db06d5} 
+const struct \mbox{\hyperlink{lora_8h_struct_lo_ra___registers}{Lo\+Ra\+\_\+\+Registers}} Lo\+Ra\+\_\+\+Regs = \{0, 1, 0xd, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0\+X1C, 0\+X1D, 0\+X1E, 0\+X1F, 0\+X20, 0\+X21, 0\+X22, 0\+X23, 0\+X24, 0\+X25, 0\+X28, 0\+X29, 0\+X2A, 0\+X2C, 0\+X31, 0\+X33, 0\+X37, 0\+X39, 0\+X3B, 0\+X3D, 0\+X40, 0\+X41\}}
+
+
+
+Definition at line \mbox{\hyperlink{main_8c_source_l00053}{53}} of file \mbox{\hyperlink{main_8c_source}{main.\+c}}.
+

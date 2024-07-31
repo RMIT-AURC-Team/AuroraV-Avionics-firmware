@@ -1,3 +1,9 @@
+/**
+ * @author Matt Ricci
+ * @ingroup SPI_API
+ * @addtogroup Sensors 
+ */
+
 #ifndef _SENSORS_H
 #define _SENSORS_H
 

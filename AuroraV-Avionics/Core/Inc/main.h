@@ -1,9 +1,9 @@
 /* USER CODE BEGIN Header */
 /**
  ******************************************************************************
- * @file           : main.h
- * @brief          : Header for main.c file.
- *                   This file contains the common defines of the application.
+ * @file           main.h
+ * @brief          Header for main.c file.
+ *                 This file contains the common defines of the application.
  ******************************************************************************
  * @attention
  *
@@ -69,15 +69,32 @@ void Error_Handler(void);
 #define HEADER_EVENT_ID         0x03
 #define HEADER_EVENT_LENGTH     0x02
 #define HEADER_EVENT_LAUNCH_ID  0x00
-#define HEADER_EVENT_MOTOR_ID   0x01
+#define HEADER_EVENT_COAST_ID   0x01
 #define HEADER_EVENT_APOGEE_ID  0x02
 #define HEADER_EVENT_DESCENT_ID 0x03
 
 #define HEADER_EVENT_LAUNCH  (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_LAUNCH_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
-#define HEADER_EVENT_MOTOR   (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_MOTOR_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
+#define HEADER_EVENT_COAST   (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_COAST_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
 #define HEADER_EVENT_APOGEE  (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_APOGEE_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
 #define HEADER_EVENT_DESCENT (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_DESCENT_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
 
+/* ===================================================================== *
+ *                           DEVICE DEFINITIONS                          *
+ * ===================================================================== */
+
+#define ACCEL_PORT_1 GPIOA
+#define ACCEL_CS_1   GPIO_ODR_OD1
+#define ACCEL_PORT_2 GPIOB
+#define ACCEL_CS_2   GPIO_ODR_OD0
 #define ACCEL_LAUNCH 5
+
+#define GYRO_PORT GPIOA
+#define GYRO_CS   GPIO_ODR_OD2
+
+#define BARO_PORT GPIOA
+#define BARO_CS   GPIO_ODR_OD3
+
+#define FLASH_PORT GPIOE
+#define FLASH_CS   GPIO_ODR_OD11
 
 #endif

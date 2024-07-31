@@ -210,13 +210,13 @@ void vStateUpdate(void *argument) {
       CAN_TX(1, 8, CANHigh, CANLow, id);
       // Transition to motor burnout state on velocity decrease
       if (true) { // TODO: Change to decreasing velocity
-        currentState = MOTOR_BURNOUT;
+        currentState = COAST;
         // Add motor burnout event dataframe to buffer
-        mem.append(&mem, HEADER_EVENT_MOTOR);
+        mem.append(&mem, HEADER_EVENT_COAST);
         mem.appendBytes(&mem, u.a, 4);
       }
       break;
-    case MOTOR_BURNOUT:
+    case COAST:
       // Send altitude to aerobrakes via CAN
       CANHigh = 0x00000000;
       CANLow  = (unsigned int)altitude;
@@ -278,8 +278,8 @@ void vDataAcquisitionH(void *argument) {
 
     // Add sensor data to dataframe
     mem.append(&mem, HEADER_HIGHRES);
-    mem.appendBytes(&mem, accelRaw, 6);
-    mem.appendBytes(&mem, gyroRaw, 6);
+    mem.appendBytes(&mem, accelRaw, KX134_1211_DATA_TOTAL);
+    mem.appendBytes(&mem, gyroRaw, A3G4250D_DATA_TOTAL);
 
     // Only run calculations when enabled
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, 0x02, pdFALSE, pdFALSE, blockTime);

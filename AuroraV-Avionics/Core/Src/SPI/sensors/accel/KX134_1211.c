@@ -1,5 +1,16 @@
 #include "KX134_1211.h"
 
+/* =============================================================================== */
+/**
+ * @brief Initialiser for a KX134-1211 accelerometer.
+ * @param *accel 			Pointer to KX134-1211 struct to be initialised.
+ * @param *port 			Pointer to GPIO port struct.
+ * @param cs 					Device chip select address.
+ * @param scale       Selected scale for read accelerations.
+ * @param *axes       Array defining sensor mounting axes.
+ * @return @c NULL.
+ **
+ * =============================================================================== */
 void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, uint8_t scale, const uint8_t *axes) {
   SPI_init(&accel->base, SENSOR_ACCEL, SPI1, port, cs);
   accel->axes            = axes;
@@ -24,14 +35,15 @@ void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, ui
   KX134_1211_writeRegister(accel, KX134_1211_CNTL1, KX134_1211_CNTL1_PC1 | KX134_1211_CNTL1_RES | GSEL); // Enable PC1
 }
 
-/******************************** DEVICE METHODS ********************************/
+/********************************** DEVICE METHODS *********************************/
 
-/* ===============================================================================
- * READ_ACCEL
- *  Read processed floating point accelerations
- *
- * PARAMETERS
- *  - out: 3-float array of X-Y-Z accelerations
+/* =============================================================================== */
+/**
+ * @brief Read 3-axis floating point accelerations.
+ * @param 	*accel 		Pointer to accel struct.
+ * @param 	*out 		  Floating point acceleration array.
+ * @returns @c NULL.
+ **
  * =============================================================================== */
 void KX134_1211_readAccel(KX134_1211 *accel, float *out) {
   uint8_t bytes[KX134_1211_DATA_TOTAL];
@@ -39,13 +51,14 @@ void KX134_1211_readAccel(KX134_1211 *accel, float *out) {
   accel->processRawBytes(accel, bytes, out);
 }
 
-/* ===============================================================================
- * PROCESS_RAW_BYTES
- *  Process raw values to floating point accelerations
- *
- * PARAMETERS
- *  - bytes: 6-byte array of raw X-Y-Z values in big-endian
- *  - out: 3-float array of X-Y-Z accelerations
+/* =============================================================================== */
+/**
+ * @brief Process raw 3-axis data to floating point accelerations.
+ * @param 	*accel 		Pointer to accel struct.
+ * @param 	*bytes 		Raw 3-axis data array.
+ * @param 	*out 			Processed 3-axis data array to write.
+ * @returns @c NULL.
+ **
  * =============================================================================== */
 void KX134_1211_processRawBytes(KX134_1211 *accel, uint8_t *bytes, float *out) {
   out[0] = accel->sensitivity * (int16_t)(((uint16_t)bytes[0] << 8) | bytes[1]); // Accel X
@@ -53,12 +66,13 @@ void KX134_1211_processRawBytes(KX134_1211 *accel, uint8_t *bytes, float *out) {
   out[2] = accel->sensitivity * (int16_t)(((uint16_t)bytes[4] << 8) | bytes[5]); // Accel Z
 }
 
-/* ===============================================================================
- * READ_RAW_BYTES
- *  Read in raw values from sensor registers
- *
- * PARAMETERS
- *  - out: 6-byte array of raw X-Y-Z values in big-endian
+/* =============================================================================== */
+/**
+ * @brief Read raw 3-axis data.
+ * @param 	*accel 		Pointer to accel struct.
+ * @param 	*out 			Raw 3-axis data array to write.
+ * @returns @c NULL.
+ **
  * =============================================================================== */
 void KX134_1211_readRawBytes(KX134_1211 *accel, uint8_t *out) {
   out[0] = KX134_1211_readRegister(accel, KX134_1211_XOUT_H); // Accel X high

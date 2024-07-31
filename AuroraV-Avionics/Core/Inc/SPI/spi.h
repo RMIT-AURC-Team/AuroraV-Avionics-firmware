@@ -1,38 +1,45 @@
+/**
+ * @author Matt Ricci
+ * @defgroup SPI_API SPI
+ */
+
 #ifndef _SPI_H
 #define _SPI_H
 
 #include "stm32f439xx.h"
 #include <stdint.h>
 
-#define ACCEL_PORT_1 GPIOA
-#define ACCEL_CS_1   GPIO_ODR_OD1
-#define ACCEL_PORT_2 GPIOB
-#define ACCEL_CS_2   GPIO_ODR_OD0
+/**
+ * @ingroup SPI_API
+ * @addtogroup SPI Interface
+ * @brief SPI interface from which slave devices inherit.
+ * @todo Add in code block examples to API documentation.
+ * @{
+ */
 
-#define GYRO_PORT GPIOA
-#define GYRO_CS   GPIO_ODR_OD2
-
-#define BARO_PORT GPIOA
-#define BARO_CS   GPIO_ODR_OD3
-
-#define FLASH_PORT GPIOE
-#define FLASH_CS   GPIO_ODR_OD11
-
+/**
+ * @brief Device type enum
+ * Describes the type of peripheral implementing an SPI interface.
+ */
 typedef enum {
-  SENSOR_ACCEL,
-  SENSOR_GYRO,
-  SENSOR_BARO,
-  MEMORY_FLASH
+  SENSOR_ACCEL, //!< Accelerometer.
+  SENSOR_GYRO,  //!< Gyroscope.
+  SENSOR_BARO,  //!< Barometer.
+  MEMORY_FLASH  //!< Flash memory.
 } DeviceType;
 
+/**
+ * @brief Struct definition for \ref SPI "SPI interface".
+ * Provides the interface for API consumers to interact with the SPI peripheral.
+ */
 typedef struct SPI {
-  DeviceType device;
-  SPI_TypeDef *interface;
-  GPIO_TypeDef *port;
-  unsigned long cs; // Device CS address
-  void (*send)(struct SPI *, uint16_t);
-  void (*receive)(struct SPI *, uint16_t *);
-  uint16_t (*transmit)(struct SPI *, uint16_t);
+  DeviceType device;                            //!< Enum specifier for device type.
+  SPI_TypeDef *interface;                       //!< Pointer to SPI interface struct.
+  GPIO_TypeDef *port;                           //!< Pointer to GPIO port struct.
+  unsigned long cs;                             //!< Device chip select address.
+  void (*send)(struct SPI *, uint16_t);         //!< SPI send method.     @see SPI_send
+  void (*receive)(struct SPI *, uint16_t *);    //!< SPI receive method.  @see SPI_receive
+  uint16_t (*transmit)(struct SPI *, uint16_t); //!< SPI transmit method. @see SPI_transmit
 } SPI;
 
 void SPI_init(SPI *, DeviceType, SPI_TypeDef *, GPIO_TypeDef *, unsigned long);
@@ -40,4 +47,7 @@ void SPI_send(SPI *, uint16_t);
 void SPI_receive(SPI *, uint16_t *);
 uint16_t SPI_transmit(SPI *, uint16_t);
 
+/** @} */
 #endif
+
+

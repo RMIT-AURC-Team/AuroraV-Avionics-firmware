@@ -1,3 +1,10 @@
+/**
+ * @author Matt Ricci
+ * @ingroup Sensors
+ * @addtogroup Barometer
+ * @file BMP581.h
+ */
+
 #ifndef _BMP581_H
 #define _BMP581_H
 
@@ -23,6 +30,16 @@
 #define BMP581_DATA_COUNT 2 // Two readings - temperature, pressure
 #define BMP581_DATA_TOTAL (BMP581_DATA_COUNT * BMP581_DATA_SIZE)
 
+/**
+ * @ingroup Barometer
+ * @defgroup BMP581
+ * @addtogroup BMP581
+ * @todo Fill in implementation documentation in BMP581.c
+ * @todo Document interface in BMP581.h
+ * @{
+ */
+
+/** @extends SPI */
 typedef struct BMP581 {
   SPI base;
   float pressSensitivity;
@@ -46,4 +63,5 @@ void BMP581_processRawPress(BMP581 *, uint8_t *, float *);
 uint8_t BMP581_readRegister(BMP581 *, uint8_t);
 void BMP581_writeRegister(BMP581 *, uint8_t, uint8_t);
 
+/** @} */
 #endif

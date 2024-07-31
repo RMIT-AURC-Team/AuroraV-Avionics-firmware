@@ -8,7 +8,7 @@
 enum State {
   PRELAUNCH,
   LAUNCH,
-  MOTOR_BURNOUT,
+  COAST,
   APOGEE,
   DESCENT
 };

@@ -1,0 +1,20 @@
+\doxysection{Core/\+Inc/\+SPI/sensors/accel/\+KX134\+\_\+1211.h File Reference}
+\hypertarget{_k_x134__1211_8h}{}\label{_k_x134__1211_8h}\index{Core/Inc/SPI/sensors/accel/KX134\_1211.h@{Core/Inc/SPI/sensors/accel/KX134\_1211.h}}
+{\ttfamily \#include "{}SPI/spi.\+h"{}}\newline
+{\ttfamily \#include "{}stm32f439xx.\+h"{}}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{group___k_x134-1211_gafbe373f40c0c91f9521ae0913a6eec88}{KX134\+\_\+1211\+\_\+init}} (\mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}} \texorpdfstring{$\ast$}{*}, GPIO\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}, unsigned long, const uint8\+\_\+t, const uint8\+\_\+t \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Initialiser for a KX134-\/1211 accelerometer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___k_x134-1211_ga0871f31a356a20dde2bd73ba9385658c}{KX134\+\_\+1211\+\_\+read\+Accel}} (\mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}} \texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Read 3-\/axis floating point accelerations. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___k_x134-1211_gaa3064f02e75aabcbcae62c16733bc623}{KX134\+\_\+1211\+\_\+read\+Raw\+Bytes}} (\mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}} \texorpdfstring{$\ast$}{*}, uint8\+\_\+t \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Read raw 3-\/axis data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___k_x134-1211_ga9e1214c9a71e524c3c857c4275be344b}{KX134\+\_\+1211\+\_\+process\+Raw\+Bytes}} (\mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}} \texorpdfstring{$\ast$}{*}, uint8\+\_\+t \texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Process raw 3-\/axis data to floating point accelerations. \end{DoxyCompactList}\end{DoxyCompactItemize}

@@ -1,0 +1,53 @@
+\doxysection{sensors.\+c}
+\hypertarget{sensors_8c_source}{}\label{sensors_8c_source}\index{Core/Src/SPI/sensors/sensors.c@{Core/Src/SPI/sensors/sensors.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}sensors.h"{}}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00003}00003\ \textcolor{keyword}{const}\ uint8\_t\ ACCEL\_AXES\_1[3]\ =\ \{0,\ 1,\ 2\};}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00004}00004\ \textcolor{keyword}{const}\ uint8\_t\ ACCEL\_AXES\_2[3]\ =\ \{0,\ 1,\ 2\};}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00005}00005\ \textcolor{keyword}{const}\ uint8\_t\ GYRO\_AXES[3]\ \ \ \ =\ \{0,\ 2,\ 1\};}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00007}00007\ \textcolor{keywordtype}{void}\ configure\_SPI1\_Sensor\_Suite(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00008}00008\ \ \ GPIOA-\/>MODER\ \&=\ (\string~(GPIO\_MODER\_MODE5\_Msk\ |\ GPIO\_MODER\_MODE6\_Msk\ |\ GPIO\_MODER\_MODE7\_Msk));}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00009}00009\ \ \ GPIOA-\/>MODER\ |=\ ((0x2\ <<\ GPIO\_MODER\_MODE5\_Pos)\ |\ (0x2\ <<\ GPIO\_MODER\_MODE6\_Pos)\ |\ (0x2\ <<\ GPIO\_MODER\_MODE7\_Pos));}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00010}00010\ \ \ GPIOA-\/>AFR[0]\ \&=\ (\string~(0xFFF00000));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ clears\ AFRL\ 5,\ 6\ and\ 7}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00011}00011\ \ \ GPIOA-\/>AFR[0]\ |=\ (0x55500000);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ sets\ ports\ 5,6,7\ to\ AF5}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00013}00013\ \ \ GPIOA-\/>OTYPER\ \&=\ (\string~(GPIO\_OTYPER\_OT5\ |\ GPIO\_OTYPER\_OT6\ |\ GPIO\_OTYPER\_OT7));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ configure\ as\ push\ pull}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00014}00014\ \ \ GPIOA-\/>OSPEEDR\ \&=\ (\string~(GPIO\_OSPEEDR\_OSPEED5\_Msk\ |\ GPIO\_OSPEEDR\_OSPEED6\_Msk\ |\ GPIO\_OSPEEDR\_OSPEED7\_Msk));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ clears\ OSPEED}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00015}00015\ \ \ GPIOA-\/>OSPEEDR\ |=\ (0x2\ <<\ GPIO\_OSPEEDR\_OSPEED5\_Pos\ |\ 0x2\ <<\ GPIO\_OSPEEDR\_OSPEED6\_Pos\ |\ 0x2\ <<\ GPIO\_OSPEEDR\_OSPEED7\_Pos);\ \textcolor{comment}{//\ sets\ as\ high\ speed}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00017}00017\ \ \ SPI1-\/>CR1\ |=\ SPI\_CR1\_MSTR;}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00018}00018\ \ \ \textcolor{comment}{//\ \ \ \ SPI1-\/>CR1\ |=\ SPI\_CR1\_LSBFIRST;}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00019}00019\ \ \ SPI1-\/>CR1\ |=\ SPI\_CR1\_DFF;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ 16\ bit\ transfer}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00020}00020\ \ \ SPI1-\/>CR1\ |=\ SPI\_CR1\_SSM\ |\ SPI\_CR1\_SSI;}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00021}00021\ \ \ SPI1-\/>CR1\ \&=\ (\string~(SPI\_CR1\_BR\_Msk));}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00022}00022\ \ \ SPI1-\/>CR1\ |=\ (0x3\ <<\ SPI\_CR1\_BR\_Pos);\ \ \ \ \ \textcolor{comment}{//\ FOR\ 5.25\ mhz\ SCK}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00023}00023\ \ \ SPI1-\/>CR1\ |=\ SPI\_CR1\_CPOL\ |\ SPI\_CR1\_CPHA;\ \textcolor{comment}{//\ high\ sck\ idle}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00025}00025\ \ \ \textcolor{comment}{//\ pins\ PC2,\ PC3,\ PC4\ need\ to\ be\ set\ to\ interrupt\ pins}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00026}00026\ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00027}00027\ \ \ \textcolor{comment}{//\ \ pins\ PA2,\ PA4,\ PA1,\ PB0\ need\ to\ set\ as\ general\ purpose\ outputs}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00028}00028\ \ \ GPIOA-\/>MODER\ \&=\ (\string~(GPIO\_MODER\_MODE1\_Msk\ |\ GPIO\_MODER\_MODE2\_Msk\ |\ GPIO\_MODER\_MODE3\_Msk\ |\ GPIO\_MODER\_MODE4\_Msk));}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00029}00029\ \ \ GPIOA-\/>MODER\ |=\ ((0x1\ <<\ GPIO\_MODER\_MODE1\_Pos)\ |\ (0x1\ <<\ GPIO\_MODER\_MODE2\_Pos)\ |\ (0x1\ <<\ GPIO\_MODER\_MODE3\_Pos)\ |\ (0x1\ <<\ GPIO\_MODER\_MODE4\_Pos));}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00030}00030\ \ \ GPIOA-\/>OTYPER\ \&=\ (uint32\_t)(\string~(GPIO\_OTYPER\_OT1\ |\ GPIO\_OTYPER\_OT2\ |\ GPIO\_OTYPER\_OT3\ |\ GPIO\_OTYPER\_OT4));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ sets\ 0xboth\ as\ push-\/pull}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00031}00031\ \ \ GPIOA-\/>OSPEEDR\ \&=\ (\string~(GPIO\_OSPEEDR\_OSPEED1\_Msk\ |\ GPIO\_OSPEEDR\_OSPEED2\_Msk\ |\ GPIO\_OSPEEDR\_OSPEED3\_Msk\ |\ GPIO\_OSPEEDR\_OSPEED4\_Msk));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ clears\ Port\ 14\ and\ 15\ section}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00032}00032\ \ \ GPIOA-\/>OSPEEDR\ |=\ ((0x2\ <<\ GPIO\_OSPEEDR\_OSPEED1\_Pos)\ |\ (0x2\ <<\ GPIO\_OSPEEDR\_OSPEED2\_Pos)\ |\ (0x2\ <<\ GPIO\_OSPEEDR\_OSPEED3\_Pos)\ |\ (0x2\ <<\ GPIO\_OSPEEDR\_OSPEED4\_Pos));\ \textcolor{comment}{//\ sets\ slew\ rate\ as\ high\ speed}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00033}00033\ \ \ \textcolor{comment}{//\ PA2\ Gryo\ Chip\ Select\ -\/\ set\ to\ high\ for\ default}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00034}00034\ \ \ \textcolor{comment}{//\ \ PA1\ Accel\ 1\ Chip\ Select\ -\/\ set\ to\ high\ for\ default}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00035}00035\ \ \ \textcolor{comment}{//\ PA4\ Mag\ -\/\ chip\ select\ -\/\ set\ to\ high\ for\ dafault}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00037}00037\ \ \ GPIOA-\/>ODR\ |=\ (GPIO\_ODR\_OD1\ |\ GPIO\_ODR\_OD2\ |\ GPIO\_ODR\_OD3\ |\ GPIO\_ODR\_OD4);\ \textcolor{comment}{//\ sets\ to\ high\ to\ disable\ chip\ select}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00039}00039\ \ \ GPIOB-\/>MODER\ \&=\ (\string~(GPIO\_MODER\_MODE0\_Msk));}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00040}00040\ \ \ GPIOB-\/>MODER\ |=\ (0x1\ <<\ GPIO\_MODER\_MODE0\_Pos);}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00041}00041\ \ \ GPIOB-\/>OTYPER\ \&=\ (\string~(GPIO\_OTYPER\_OT0));}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00042}00042\ \ \ GPIOB-\/>OSPEEDR\ \&=\ (\string~(GPIO\_OSPEEDR\_OSPEED0\_Msk));}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00043}00043\ \ \ GPIOB-\/>OSPEEDR\ |=\ (0x2\ <<\ GPIO\_OSPEEDR\_OSPEED0\_Pos);}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00044}00044\ \ \ \textcolor{comment}{//\ PB0\ Accel\ 1\ Chip\ Select\ -\/\ set\ to\ high\ for\ default}}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00045}00045\ \ \ GPIOB-\/>ODR\ |=\ (GPIO\_ODR\_OD0);}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00046}00046\ \ \ SPI1-\/>CR1\ |=\ SPI\_CR1\_SPE;}
+\DoxyCodeLine{\Hypertarget{sensors_8c_source_l00047}00047\ \}}
+
+\end{DoxyCode}

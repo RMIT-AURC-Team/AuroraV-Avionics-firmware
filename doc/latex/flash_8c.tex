@@ -1,0 +1,14 @@
+\doxysection{Core/\+Src/\+SPI/flash/flash.c File Reference}
+\hypertarget{flash_8c}{}\label{flash_8c}\index{Core/Src/SPI/flash/flash.c@{Core/Src/SPI/flash/flash.c}}
+{\ttfamily \#include "{}flash.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{group___flash_gac40c1b5246c89d2d625430da01124049}{Flash\+\_\+init}} (\mbox{\hyperlink{group___flash_struct_flash}{Flash}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{main_8c_a895097e644be74457d126eb089622c69}{flash}}, GPIO\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}port, unsigned long cs)
+\begin{DoxyCompactList}\small\item\em Initialise flash struct. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___flash_gaee89dc3026c93c50415e20cf3b10a303}{Flash\+\_\+erase}} (\mbox{\hyperlink{group___flash_struct_flash}{Flash}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{main_8c_a895097e644be74457d126eb089622c69}{flash}})
+\begin{DoxyCompactList}\small\item\em Erase flash chip. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___flash_gab522cee3393b2c9d6be5f85f13b1c12d}{Flash\+\_\+write\+Page}} (\mbox{\hyperlink{group___flash_struct_flash}{Flash}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{main_8c_a895097e644be74457d126eb089622c69}{flash}}, uint32\+\_\+t address, uint8\+\_\+t \texorpdfstring{$\ast$}{*}data)
+\begin{DoxyCompactList}\small\item\em Write page to flash. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___flash_gab5de712bbfe5d6c7bcd959337ff02f2b}{Flash\+\_\+read\+Page}} (\mbox{\hyperlink{group___flash_struct_flash}{Flash}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{main_8c_a895097e644be74457d126eb089622c69}{flash}}, uint32\+\_\+t address, uint8\+\_\+t \texorpdfstring{$\ast$}{*}data)
+\begin{DoxyCompactList}\small\item\em Read from flash. \end{DoxyCompactList}\end{DoxyCompactItemize}

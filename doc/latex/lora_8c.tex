@@ -1,0 +1,87 @@
+\doxysection{Core/\+Src/lora.c File Reference}
+\hypertarget{lora_8c}{}\label{lora_8c}\index{Core/Src/lora.c@{Core/Src/lora.c}}
+{\ttfamily \#include "{}lora.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{lora_8c_aa92fb7d6b94d0ad06038e07072d6f67a}{configure\+\_\+\+SPI3\+\_\+\+Lo\+Ra}} ()
+\item 
+void \mbox{\hyperlink{lora_8c_a18d2419026d62f15af6fdcb0057b2e46}{Load\+\_\+\+And\+\_\+\+Send\+\_\+\+To\+\_\+\+Lo\+Ra}} (char \texorpdfstring{$\ast$}{*}pointerdata, const struct \mbox{\hyperlink{lora_8h_struct_lo_ra___registers}{Lo\+Ra\+\_\+\+Registers}} \texorpdfstring{$\ast$}{*}\mbox{\hyperlink{lora_8h_struct_lo_ra___registers}{Lo\+Ra\+\_\+\+Registers}})
+\item 
+void \mbox{\hyperlink{lora_8c_a5e2ee2ca748e01138181e1af4ff8137a}{write\+\_\+lora\+\_\+packet}} (uint8\+\_\+t address, uint8\+\_\+t payload)
+\item 
+void \mbox{\hyperlink{lora_8c_afacb602e4f3bfe119bc6136d5701feeb}{configure\+\_\+\+Lo\+Ra\+\_\+module}} ()
+\item 
+uint8\+\_\+t \mbox{\hyperlink{lora_8c_a71cd85c7ba704b517719f00df3c54915}{receive\+\_\+lora\+\_\+data}} (uint8\+\_\+t address)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const struct Lo\+Ra\+\_\+\+Registers \mbox{\hyperlink{lora_8c_a765dc6a58621172069f6b0971e61096d}{Lo\+Ra\+\_\+\+Registers}} = \{0, 1, 0xd, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x28, 0x29, 0x2A, 0x2C, 0x31, 0x33, 0x37, 0x39, 0x3B, 0x3D, 0x40, 0x41\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{lora_8c_aa92fb7d6b94d0ad06038e07072d6f67a}\index{lora.c@{lora.c}!configure\_SPI3\_LoRa@{configure\_SPI3\_LoRa}}
+\index{configure\_SPI3\_LoRa@{configure\_SPI3\_LoRa}!lora.c@{lora.c}}
+\doxysubsubsection{\texorpdfstring{configure\_SPI3\_LoRa()}{configure\_SPI3\_LoRa()}}
+{\footnotesize\ttfamily \label{lora_8c_aa92fb7d6b94d0ad06038e07072d6f67a} 
+void configure\+\_\+\+SPI3\+\_\+\+Lo\+Ra (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{lora_8c_source_l00016}{16}} of file \mbox{\hyperlink{lora_8c_source}{lora.\+c}}.
+
+\Hypertarget{lora_8c_a18d2419026d62f15af6fdcb0057b2e46}\index{lora.c@{lora.c}!Load\_And\_Send\_To\_LoRa@{Load\_And\_Send\_To\_LoRa}}
+\index{Load\_And\_Send\_To\_LoRa@{Load\_And\_Send\_To\_LoRa}!lora.c@{lora.c}}
+\doxysubsubsection{\texorpdfstring{Load\_And\_Send\_To\_LoRa()}{Load\_And\_Send\_To\_LoRa()}}
+{\footnotesize\ttfamily \label{lora_8c_a18d2419026d62f15af6fdcb0057b2e46} 
+void Load\+\_\+\+And\+\_\+\+Send\+\_\+\+To\+\_\+\+Lo\+Ra (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{pointerdata}{, }\item[{const struct \mbox{\hyperlink{lora_8h_struct_lo_ra___registers}{Lo\+Ra\+\_\+\+Registers}} \texorpdfstring{$\ast$}{*}}]{Lo\+Ra\+\_\+\+Registers}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{lora_8c_source_l00054}{54}} of file \mbox{\hyperlink{lora_8c_source}{lora.\+c}}.
+
+\Hypertarget{lora_8c_a5e2ee2ca748e01138181e1af4ff8137a}\index{lora.c@{lora.c}!write\_lora\_packet@{write\_lora\_packet}}
+\index{write\_lora\_packet@{write\_lora\_packet}!lora.c@{lora.c}}
+\doxysubsubsection{\texorpdfstring{write\_lora\_packet()}{write\_lora\_packet()}}
+{\footnotesize\ttfamily \label{lora_8c_a5e2ee2ca748e01138181e1af4ff8137a} 
+void write\+\_\+lora\+\_\+packet (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{address}{, }\item[{uint8\+\_\+t}]{payload}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{lora_8c_source_l00071}{71}} of file \mbox{\hyperlink{lora_8c_source}{lora.\+c}}.
+
+\Hypertarget{lora_8c_afacb602e4f3bfe119bc6136d5701feeb}\index{lora.c@{lora.c}!configure\_LoRa\_module@{configure\_LoRa\_module}}
+\index{configure\_LoRa\_module@{configure\_LoRa\_module}!lora.c@{lora.c}}
+\doxysubsubsection{\texorpdfstring{configure\_LoRa\_module()}{configure\_LoRa\_module()}}
+{\footnotesize\ttfamily \label{lora_8c_afacb602e4f3bfe119bc6136d5701feeb} 
+void configure\+\_\+\+Lo\+Ra\+\_\+module (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{lora_8c_source_l00087}{87}} of file \mbox{\hyperlink{lora_8c_source}{lora.\+c}}.
+
+\Hypertarget{lora_8c_a71cd85c7ba704b517719f00df3c54915}\index{lora.c@{lora.c}!receive\_lora\_data@{receive\_lora\_data}}
+\index{receive\_lora\_data@{receive\_lora\_data}!lora.c@{lora.c}}
+\doxysubsubsection{\texorpdfstring{receive\_lora\_data()}{receive\_lora\_data()}}
+{\footnotesize\ttfamily \label{lora_8c_a71cd85c7ba704b517719f00df3c54915} 
+uint8\+\_\+t receive\+\_\+lora\+\_\+data (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{address}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{lora_8c_source_l00120}{120}} of file \mbox{\hyperlink{lora_8c_source}{lora.\+c}}.
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{lora_8c_a765dc6a58621172069f6b0971e61096d}\index{lora.c@{lora.c}!LoRa\_Registers@{LoRa\_Registers}}
+\index{LoRa\_Registers@{LoRa\_Registers}!lora.c@{lora.c}}
+\doxysubsubsection{\texorpdfstring{LoRa\_Registers}{LoRa\_Registers}}
+{\footnotesize\ttfamily \label{lora_8c_a765dc6a58621172069f6b0971e61096d} 
+const struct Lo\+Ra\+\_\+\+Registers Lo\+Ra\+\_\+\+Registers = \{0, 1, 0xd, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x28, 0x29, 0x2A, 0x2C, 0x31, 0x33, 0x37, 0x39, 0x3B, 0x3D, 0x40, 0x41\}}
+
+
+
+Definition at line \mbox{\hyperlink{lora_8c_source_l00014}{14}} of file \mbox{\hyperlink{lora_8c_source}{lora.\+c}}.
+

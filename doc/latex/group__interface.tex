@@ -1,0 +1,186 @@
+\doxysection{Interface}
+\hypertarget{group__interface}{}\label{group__interface}\index{Interface@{Interface}}
+
+
+File containing example of doxygen usage for quick reference.  
+
+
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{group__interface_struct_s_p_i}{SPI}}
+\begin{DoxyCompactList}\small\item\em Struct definition for \doxylink{group__interface_struct_s_p_i}{SPI} interface.  \mbox{\hyperlink{group__interface_struct_s_p_i}{More...}}\end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{group__interface_gad258d4c51629346fceac4679b3209ad9}{Device\+Type}} \{ \mbox{\hyperlink{group__interface_ggad258d4c51629346fceac4679b3209ad9aa56beb7f0e9c67c156ee802c9f640cc8}{SENSOR\+\_\+\+ACCEL}}
+, \mbox{\hyperlink{group__interface_ggad258d4c51629346fceac4679b3209ad9a84b967fe10b7c1cfe2f779d99407703a}{SENSOR\+\_\+\+GYRO}}
+, \mbox{\hyperlink{group__interface_ggad258d4c51629346fceac4679b3209ad9ad6e973b156c9713198fd43f7eae95f56}{SENSOR\+\_\+\+BARO}}
+, \mbox{\hyperlink{group__interface_ggad258d4c51629346fceac4679b3209ad9aa44a4f1581ee02974dadb5d5d553b27b}{MEMORY\+\_\+\+FLASH}}
+ \}
+\begin{DoxyCompactList}\small\item\em Device type enum. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{group__interface_ga656f7b06a728e76eb9ac0b10e1bd5bb7}{SPI\+\_\+init}} (\mbox{\hyperlink{group__interface_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{group__interface_gad258d4c51629346fceac4679b3209ad9}{Device\+Type}}, SPI\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}, GPIO\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}, unsigned long)
+\item 
+void \mbox{\hyperlink{group__interface_ga205c59ab72d018c05d33f91e7c7808e7}{SPI\+\_\+send}} (\mbox{\hyperlink{group__interface_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\+\_\+t)
+\begin{DoxyCompactList}\small\item\em A simple stub function to show how links do work. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group__interface_gacddb795ecded56fe9f987bf41785a3a2}{SPI\+\_\+receive}} (\mbox{\hyperlink{group__interface_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\+\_\+t \texorpdfstring{$\ast$}{*})
+\item 
+uint16\+\_\+t \mbox{\hyperlink{group__interface_ga45245db392649677ce4d93b334f6e0fd}{SPI\+\_\+transmit}} (\mbox{\hyperlink{group__interface_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\+\_\+t)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+File containing example of doxygen usage for quick reference. 
+
+\begin{DoxyAuthor}{Author}
+Matt Ricci 
+\end{DoxyAuthor}
+Here typically goes a more extensive explanation of what the header defines. Doxygens tags are words preceeded by either a backslash \textbackslash{} or by an at symbol @. \begin{DoxySeeAlso}{See also}
+\href{http://www.stack.nl/~dimitri/doxygen/docblocks.html}{\texttt{ http\+://www.\+stack.\+nl/\texorpdfstring{$\sim$}{\string~}dimitri/doxygen/docblocks.\+html}} 
+
+\href{http://www.stack.nl/~dimitri/doxygen/commands.html}{\texttt{ http\+://www.\+stack.\+nl/\texorpdfstring{$\sim$}{\string~}dimitri/doxygen/commands.\+html}} 
+\end{DoxySeeAlso}
+
+
+\doxysubsection{Data Structure Documentation}
+\index{SPI@{SPI}}\label{struct_s_p_i}
+\Hypertarget{group__interface_struct_s_p_i}
+\doxysubsubsection{struct SPI}
+Struct definition for \doxylink{group__interface_struct_s_p_i}{SPI} interface. 
+
+Provides the interface for API consumers to interact with the \doxylink{group__interface_struct_s_p_i}{SPI} peripheral. 
+
+Definition at line \mbox{\hyperlink{spi_8h_source_l00037}{37}} of file \mbox{\hyperlink{spi_8h_source}{spi.\+h}}.
+
+\begin{DoxyFields}{Data Fields}
+\mbox{\Hypertarget{group__interface_a4037993dbe40ac54f2e929b5db9d3b4c}\label{group__interface_a4037993dbe40ac54f2e929b5db9d3b4c}} 
+\mbox{\hyperlink{group__interface_gad258d4c51629346fceac4679b3209ad9}{DeviceType}}&
+device&
+\\
+\hline
+
+\mbox{\Hypertarget{group__interface_acbda99bed92b76328c472ad0e523424e}\label{group__interface_acbda99bed92b76328c472ad0e523424e}} 
+SPI\_TypeDef \texorpdfstring{$\ast$}{*}&
+interface&
+\\
+\hline
+
+\mbox{\Hypertarget{group__interface_a82241972e0292c7de95ea1e293e11be3}\label{group__interface_a82241972e0292c7de95ea1e293e11be3}} 
+GPIO\_TypeDef \texorpdfstring{$\ast$}{*}&
+port&
+\\
+\hline
+
+\mbox{\Hypertarget{group__interface_a8f467bedd92cfa29ba7b757711ece04d}\label{group__interface_a8f467bedd92cfa29ba7b757711ece04d}} 
+unsigned long&
+cs&
+\\
+\hline
+
+\mbox{\Hypertarget{group__interface_a194e08b54d45d097bba08a024fb0826e}\label{group__interface_a194e08b54d45d097bba08a024fb0826e}} 
+void(\texorpdfstring{$\ast$}{*})(struct \mbox{\hyperlink{group__interface_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\_t)&
+send&
+\\
+\hline
+
+\mbox{\Hypertarget{group__interface_ac4444c9c043175f1ed173040fa123e2e}\label{group__interface_ac4444c9c043175f1ed173040fa123e2e}} 
+void(\texorpdfstring{$\ast$}{*})(struct \mbox{\hyperlink{group__interface_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\_t \texorpdfstring{$\ast$}{*})&
+receive&
+\\
+\hline
+
+\mbox{\Hypertarget{group__interface_a54668c3e267dcd01feff6c083a372846}\label{group__interface_a54668c3e267dcd01feff6c083a372846}} 
+uint16\_t(\texorpdfstring{$\ast$}{*})(struct \mbox{\hyperlink{group__interface_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\_t)&
+transmit&
+\\
+\hline
+
+\end{DoxyFields}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{group__interface_gad258d4c51629346fceac4679b3209ad9}\index{Interface@{Interface}!DeviceType@{DeviceType}}
+\index{DeviceType@{DeviceType}!Interface@{Interface}}
+\doxysubsubsection{\texorpdfstring{DeviceType}{DeviceType}}
+{\footnotesize\ttfamily \label{group__interface_gad258d4c51629346fceac4679b3209ad9} 
+enum \mbox{\hyperlink{group__interface_gad258d4c51629346fceac4679b3209ad9}{Device\+Type}}}
+
+
+
+Device type enum. 
+
+Describes the type of peripheral implementing an \doxylink{group__interface_struct_s_p_i}{SPI} interface. \begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_ACCEL@{SENSOR\_ACCEL}!Interface@{Interface}}\index{Interface@{Interface}!SENSOR\_ACCEL@{SENSOR\_ACCEL}}}\Hypertarget{group__interface_ggad258d4c51629346fceac4679b3209ad9aa56beb7f0e9c67c156ee802c9f640cc8}\label{group__interface_gad258d4c51629346fceac4679b3209ad9} 
+SENSOR\+\_\+\+ACCEL&enum value TVal1. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_GYRO@{SENSOR\_GYRO}!Interface@{Interface}}\index{Interface@{Interface}!SENSOR\_GYRO@{SENSOR\_GYRO}}}\Hypertarget{group__interface_ggad258d4c51629346fceac4679b3209ad9a84b967fe10b7c1cfe2f779d99407703a}\label{group__interface_gad258d4c51629346fceac4679b3209ad9} 
+SENSOR\+\_\+\+GYRO&enum value TVal1. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SENSOR\_BARO@{SENSOR\_BARO}!Interface@{Interface}}\index{Interface@{Interface}!SENSOR\_BARO@{SENSOR\_BARO}}}\Hypertarget{group__interface_ggad258d4c51629346fceac4679b3209ad9ad6e973b156c9713198fd43f7eae95f56}\label{group__interface_gad258d4c51629346fceac4679b3209ad9} 
+SENSOR\+\_\+\+BARO&enum value TVal1. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{MEMORY\_FLASH@{MEMORY\_FLASH}!Interface@{Interface}}\index{Interface@{Interface}!MEMORY\_FLASH@{MEMORY\_FLASH}}}\Hypertarget{group__interface_ggad258d4c51629346fceac4679b3209ad9aa44a4f1581ee02974dadb5d5d553b27b}\label{group__interface_gad258d4c51629346fceac4679b3209ad9} 
+MEMORY\+\_\+\+FLASH&enum value TVal1. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{spi_8h_source_l00025}{25}} of file \mbox{\hyperlink{spi_8h_source}{spi.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{group__interface_ga656f7b06a728e76eb9ac0b10e1bd5bb7}\index{Interface@{Interface}!SPI\_init@{SPI\_init}}
+\index{SPI\_init@{SPI\_init}!Interface@{Interface}}
+\doxysubsubsection{\texorpdfstring{SPI\_init()}{SPI\_init()}}
+{\footnotesize\ttfamily \label{group__interface_ga656f7b06a728e76eb9ac0b10e1bd5bb7} 
+void SPI\+\_\+init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__interface_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}}]{spi}{, }\item[{\mbox{\hyperlink{group__interface_gad258d4c51629346fceac4679b3209ad9}{Device\+Type}}}]{device}{, }\item[{SPI\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}}]{interface}{, }\item[{GPIO\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}}]{port}{, }\item[{unsigned long}]{cs}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{spi_8c_source_l00003}{3}} of file \mbox{\hyperlink{spi_8c_source}{spi.\+c}}.
+
+\Hypertarget{group__interface_ga205c59ab72d018c05d33f91e7c7808e7}\index{Interface@{Interface}!SPI\_send@{SPI\_send}}
+\index{SPI\_send@{SPI\_send}!Interface@{Interface}}
+\doxysubsubsection{\texorpdfstring{SPI\_send()}{SPI\_send()}}
+{\footnotesize\ttfamily \label{group__interface_ga205c59ab72d018c05d33f91e7c7808e7} 
+void SPI\+\_\+send (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__interface_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}}]{spi}{, }\item[{uint16\+\_\+t}]{data}{}\end{DoxyParamCaption})}
+
+
+
+A simple stub function to show how links do work. 
+
+Links are generated automatically for webpages (like \href{http://www.google.co.uk}{\texttt{ http\+://www.\+google.\+co.\+uk}}) and for structures, like Box\+Struct\+\_\+struct. For typedef-\/ed types use \#\+Box\+Struct. For functions, automatic links are generated when the parenthesis () follow the name of the function, like Box\+\_\+\+The\+\_\+\+Function\+\_\+\+Name(). Alternatively, you can use \#\+Box\+\_\+\+The\+\_\+\+Function\+\_\+\+Name. \begin{DoxyReturn}{Returns}
+{\ttfamily NULL} is always returned. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{spi_8c_source_l00021}{21}} of file \mbox{\hyperlink{spi_8c_source}{spi.\+c}}.
+
+\Hypertarget{group__interface_gacddb795ecded56fe9f987bf41785a3a2}\index{Interface@{Interface}!SPI\_receive@{SPI\_receive}}
+\index{SPI\_receive@{SPI\_receive}!Interface@{Interface}}
+\doxysubsubsection{\texorpdfstring{SPI\_receive()}{SPI\_receive()}}
+{\footnotesize\ttfamily \label{group__interface_gacddb795ecded56fe9f987bf41785a3a2} 
+void SPI\+\_\+receive (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__interface_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}}]{spi}{, }\item[{uint16\+\_\+t \texorpdfstring{$\ast$}{*}}]{data}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{spi_8c_source_l00026}{26}} of file \mbox{\hyperlink{spi_8c_source}{spi.\+c}}.
+
+\Hypertarget{group__interface_ga45245db392649677ce4d93b334f6e0fd}\index{Interface@{Interface}!SPI\_transmit@{SPI\_transmit}}
+\index{SPI\_transmit@{SPI\_transmit}!Interface@{Interface}}
+\doxysubsubsection{\texorpdfstring{SPI\_transmit()}{SPI\_transmit()}}
+{\footnotesize\ttfamily \label{group__interface_ga45245db392649677ce4d93b334f6e0fd} 
+uint16\+\_\+t SPI\+\_\+transmit (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{group__interface_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}}]{spi}{, }\item[{uint16\+\_\+t}]{data}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{spi_8c_source_l00013}{13}} of file \mbox{\hyperlink{spi_8c_source}{spi.\+c}}.
+
