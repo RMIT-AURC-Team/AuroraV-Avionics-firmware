@@ -9,7 +9,7 @@ PROJECT_NUMBER         =
 PROJECT_BRIEF          =
 PROJECT_LOGO           = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/img/banner.png
 PROJECT_ICON           =
-OUTPUT_DIRECTORY       = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/doc
+OUTPUT_DIRECTORY       = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/docs
 CREATE_SUBDIRS         = NO
 CREATE_SUBDIRS_LEVEL   = 8
 ALLOW_UNICODE_NAMES    = NO
@@ -230,12 +230,12 @@ IGNORE_PREFIX          =
 GENERATE_HTML          = YES
 HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
-HTML_HEADER            = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/doc/html/header.html
-HTML_FOOTER            = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/doc/html/footer.html
-HTML_STYLESHEET        = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/doc/html/customdoxygen.css
-HTML_EXTRA_STYLESHEET  = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/doc/html/doxygen-awesome-css/doxygen-awesome.css
-HTML_EXTRA_FILES       = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/doc/html/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js \
-                         C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/doc/html/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js
+HTML_HEADER            = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/docs/html/header.html
+HTML_FOOTER            = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/docs/html/footer.html
+HTML_STYLESHEET        = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/docs/html/customdoxygen.css
+HTML_EXTRA_STYLESHEET  = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/docs/html/doxygen-awesome-css/doxygen-awesome.css
+HTML_EXTRA_FILES       = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/docs/html/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js \
+                         C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/docs/html/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js
 HTML_COLORSTYLE        = LIGHT
 HTML_COLORSTYLE_HUE    = 164
 HTML_COLORSTYLE_SAT    = 106
