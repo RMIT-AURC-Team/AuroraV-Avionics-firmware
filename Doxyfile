@@ -7,9 +7,9 @@ DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = AuroraV-Avionics
 PROJECT_NUMBER         =
 PROJECT_BRIEF          =
-PROJECT_LOGO           = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/img/banner.png
+PROJECT_LOGO           = 
 PROJECT_ICON           =
-OUTPUT_DIRECTORY       = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/docs
+OUTPUT_DIRECTORY       = ./docs
 CREATE_SUBDIRS         = NO
 CREATE_SUBDIRS_LEVEL   = 8
 ALLOW_UNICODE_NAMES    = NO
@@ -180,16 +180,16 @@ FILE_PATTERNS          = *.c \
                          *.qsf \
                          *.ice
 RECURSIVE              = YES
-EXCLUDE                = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/FreeRTOSConfig.h \
-                         C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/stm32f4xx_hal_conf.h \
-                         C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/stm32f4xx_it.h \
-                         C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Data \
-                         C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Drivers \
-                         C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Lib \
-                         C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/MDK-ARM \
-                         C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares \
-                         C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Src/freertos.c \
-                         C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Src/system_stm32f4xx.c
+EXCLUDE                = ./AuroraV-Avionics/Core/Inc/FreeRTOSConfig.h \
+                         ./AuroraV-Avionics/Core/Inc/stm32f4xx_hal_conf.h \
+                         ./AuroraV-Avionics/Core/Inc/stm32f4xx_it.h \
+                         ./AuroraV-Avionics/Data \
+                         ./AuroraV-Avionics/Drivers \
+                         ./AuroraV-Avionics/Lib \
+                         ./AuroraV-Avionics/MDK-ARM \
+                         ./AuroraV-Avionics/Middlewares \
+                         ./AuroraV-Avionics/Core/Src/freertos.c \
+                         ./AuroraV-Avionics/Core/Src/system_stm32f4xx.c
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       =
 EXCLUDE_SYMBOLS        =
@@ -230,12 +230,12 @@ IGNORE_PREFIX          =
 GENERATE_HTML          = YES
 HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
-HTML_HEADER            = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/docs/html/header.html
-HTML_FOOTER            = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/docs/html/footer.html
-HTML_STYLESHEET        = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/docs/html/customdoxygen.css
-HTML_EXTRA_STYLESHEET  = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/docs/html/doxygen-awesome-css/doxygen-awesome.css
-HTML_EXTRA_FILES       = C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/docs/html/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js \
-                         C:/Users/Administrator/AURC2024/AuroraV-Avionics-firmware/docs/html/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js
+HTML_HEADER            = ./docs/html/header.html
+HTML_FOOTER            = ./docs/html/footer.html
+HTML_STYLESHEET        = ./docs/html/customdoxygen.css
+HTML_EXTRA_STYLESHEET  = ./docs/html/doxygen-awesome-css/doxygen-awesome.css
+HTML_EXTRA_FILES       = ./docs/html/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js \
+                         ./docs/html/doxygen-awesome-css/doxygen-awesome-darkmode-toggle.js
 HTML_COLORSTYLE        = LIGHT
 HTML_COLORSTYLE_HUE    = 164
 HTML_COLORSTYLE_SAT    = 106
