@@ -1,0 +1,53 @@
+\doxysection{KX134\+\_\+1211.\+h}
+\hypertarget{_k_x134__1211_8h_source}{}\label{_k_x134__1211_8h_source}\index{Core/Inc/SPI/sensors/accel/KX134\_1211.h@{Core/Inc/SPI/sensors/accel/KX134\_1211.h}}
+\mbox{\hyperlink{_k_x134__1211_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00008}00008\ \textcolor{preprocessor}{\#ifndef\ \_KX134\_1211\_H}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00009}00009\ \textcolor{preprocessor}{\#define\ \_KX134\_1211\_H}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}SPI/spi.h"{}}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00012}00012\ \textcolor{preprocessor}{\#include\ "{}stm32f439xx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00014}00014\ \textcolor{preprocessor}{\#define\ KX134\_1211\_SENSITIVITY\_32G\ \ \ \ (1.0f\ /\ 1024.0f)}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00015}00015\ \textcolor{preprocessor}{\#define\ KX134\_1211\_SENSITIVITY\_16G\ \ \ \ (1.0f\ /\ 2048.0f)}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00016}00016\ \textcolor{preprocessor}{\#define\ KX134\_1211\_SENSITIVITY(scale)\ KX134\_1211\_SENSITIVITY\_\#\#scale\#\#G}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00017}00017\ \textcolor{preprocessor}{\#define\ KX134\_1211\_CNTL1\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0x1B}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00018}00018\ \textcolor{preprocessor}{\#define\ KX134\_1211\_CNTL1\_PC1\ \ \ \ \ \ \ \ \ \ 0x80}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00019}00019\ \textcolor{preprocessor}{\#define\ KX134\_1211\_CNTL1\_RES\ \ \ \ \ \ \ \ \ \ 0x40}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00020}00020\ \textcolor{preprocessor}{\#define\ KX134\_1211\_CNTL1\_GSEL\_32G\ \ \ \ \ 0x10}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00021}00021\ \textcolor{preprocessor}{\#define\ KX134\_1211\_CNTL1\_GSEL\_16G\ \ \ \ \ 0x08}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00022}00022\ \textcolor{preprocessor}{\#define\ KX134\_1211\_CNTL1\_GSEL\_8G\ \ \ \ \ \ 0x00}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00023}00023\ \textcolor{preprocessor}{\#define\ KX134\_1211\_CNTL1\_GSEL(scale)\ \ KX134\_1211\_CNTL1\_GSEL\_\#\#scale\#\#G}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00024}00024\ \textcolor{preprocessor}{\#define\ KX134\_1211\_ODCNTL\ \ \ \ \ \ \ \ \ \ \ \ \ 0x21}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00025}00025\ \textcolor{preprocessor}{\#define\ KX134\_1211\_ODCNTL\_RESERVED\ \ \ \ 0x90}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00026}00026\ \textcolor{preprocessor}{\#define\ KX134\_1211\_XOUT\_L\ \ \ \ \ \ \ \ \ \ \ \ \ 0x08}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00027}00027\ \textcolor{preprocessor}{\#define\ KX134\_1211\_XOUT\_H\ \ \ \ \ \ \ \ \ \ \ \ \ 0x09}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00028}00028\ \textcolor{preprocessor}{\#define\ KX134\_1211\_YOUT\_L\ \ \ \ \ \ \ \ \ \ \ \ \ 0x0A}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00029}00029\ \textcolor{preprocessor}{\#define\ KX134\_1211\_YOUT\_H\ \ \ \ \ \ \ \ \ \ \ \ \ 0x0B}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00030}00030\ \textcolor{preprocessor}{\#define\ KX134\_1211\_ZOUT\_L\ \ \ \ \ \ \ \ \ \ \ \ \ 0x0C}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00031}00031\ \textcolor{preprocessor}{\#define\ KX134\_1211\_ZOUT\_H\ \ \ \ \ \ \ \ \ \ \ \ \ 0x0D}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00033}00033\ \textcolor{preprocessor}{\#define\ KX134\_1211\_DATA\_SIZE\ \ 2\ }\textcolor{comment}{//\ Two\ bytes\ per\ axis}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00034}00034\ \textcolor{preprocessor}{\#define\ KX134\_1211\_DATA\_COUNT\ 3\ }\textcolor{comment}{//\ Three\ axes\ -\/\ X\ Y\ Z}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00035}00035\ \textcolor{preprocessor}{\#define\ KX134\_1211\_DATA\_TOTAL\ (KX134\_1211\_DATA\_COUNT\ *\ KX134\_1211\_DATA\_SIZE)}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00045}\mbox{\hyperlink{struct_k_x134__1211}{00045}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ \{}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00046}\mbox{\hyperlink{struct_k_x134__1211_a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7}{00046}}\ \ \ \mbox{\hyperlink{struct_s_p_i}{SPI}}\ \mbox{\hyperlink{struct_k_x134__1211_a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7}{base}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00047}\mbox{\hyperlink{struct_k_x134__1211_ac518d2e94791ccc6f84de95271e52c76}{00047}}\ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{struct_k_x134__1211_ac518d2e94791ccc6f84de95271e52c76}{sensitivity}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00048}\mbox{\hyperlink{struct_k_x134__1211_a79d3b9139939da249534eb0e0e5cf22c}{00048}}\ \ \ \textcolor{keyword}{const}\ uint8\_t\ *\mbox{\hyperlink{struct_k_x134__1211_a79d3b9139939da249534eb0e0e5cf22c}{axes}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00049}\mbox{\hyperlink{struct_k_x134__1211_adad3b941aa2429dc185df9f146c65855}{00049}}\ \ \ void\ (*\mbox{\hyperlink{struct_k_x134__1211_adad3b941aa2429dc185df9f146c65855}{readAccel}})(\textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *,\ \textcolor{keywordtype}{float}\ *);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00050}\mbox{\hyperlink{struct_k_x134__1211_a8ba468b59f15c029417609e4789b5579}{00050}}\ \ \ void\ (*\mbox{\hyperlink{struct_k_x134__1211_a8ba468b59f15c029417609e4789b5579}{readRawBytes}})(\textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *,\ uint8\_t\ *);\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00051}\mbox{\hyperlink{struct_k_x134__1211_a7faa59e7e683aee9ea95fee44035dc76}{00051}}\ \ \ void\ (*\mbox{\hyperlink{struct_k_x134__1211_a7faa59e7e683aee9ea95fee44035dc76}{processRawBytes}})(\textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *,\ uint8\_t\ *,\ \textcolor{keywordtype}{float}\ *);\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00052}00052\ \}\ \mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}};}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00054}00054\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___k_x134-1211_gafbe373f40c0c91f9521ae0913a6eec88}{KX134\_1211\_init}}(\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *,\ GPIO\_TypeDef\ *,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long},\ \textcolor{keyword}{const}\ uint8\_t,\ \textcolor{keyword}{const}\ uint8\_t\ *);}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00055}00055\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___k_x134-1211_ga0871f31a356a20dde2bd73ba9385658c}{KX134\_1211\_readAccel}}(\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *,\ \textcolor{keywordtype}{float}\ *);}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00056}00056\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___k_x134-1211_gaa3064f02e75aabcbcae62c16733bc623}{KX134\_1211\_readRawBytes}}(\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *,\ uint8\_t\ *);}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00057}00057\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___k_x134-1211_ga9e1214c9a71e524c3c857c4275be344b}{KX134\_1211\_processRawBytes}}(\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *,\ uint8\_t\ *,\ \textcolor{keywordtype}{float}\ *);}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00058}00058\ uint8\_t\ KX134\_1211\_readRegister(\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *,\ uint8\_t);}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00059}00059\ \textcolor{keywordtype}{void}\ KX134\_1211\_writeRegister(\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *,\ uint8\_t,\ uint8\_t);}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8h_source_l00062}00062\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

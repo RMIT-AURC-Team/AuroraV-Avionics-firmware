@@ -1,0 +1,29 @@
+\doxysection{Core/\+Inc/\+SPI/spi.h File Reference}
+\hypertarget{spi_8h}{}\label{spi_8h}\index{Core/Inc/SPI/spi.h@{Core/Inc/SPI/spi.h}}
+{\ttfamily \#include "{}stm32f439xx.\+h"{}}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{group___s_p_i_struct_s_p_i}{SPI}}
+\begin{DoxyCompactList}\small\item\em Struct definition for \doxylink{group___s_p_i_struct_s_p_i}{SPI} interface.  \mbox{\hyperlink{group___s_p_i_struct_s_p_i}{More...}}\end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{group___s_p_i_gad258d4c51629346fceac4679b3209ad9}{Device\+Type}} \{ \mbox{\hyperlink{group___s_p_i_ggad258d4c51629346fceac4679b3209ad9aa56beb7f0e9c67c156ee802c9f640cc8}{SENSOR\+\_\+\+ACCEL}}
+, \mbox{\hyperlink{group___s_p_i_ggad258d4c51629346fceac4679b3209ad9a84b967fe10b7c1cfe2f779d99407703a}{SENSOR\+\_\+\+GYRO}}
+, \mbox{\hyperlink{group___s_p_i_ggad258d4c51629346fceac4679b3209ad9ad6e973b156c9713198fd43f7eae95f56}{SENSOR\+\_\+\+BARO}}
+, \mbox{\hyperlink{group___s_p_i_ggad258d4c51629346fceac4679b3209ad9aa44a4f1581ee02974dadb5d5d553b27b}{MEMORY\+\_\+\+FLASH}}
+ \}
+\begin{DoxyCompactList}\small\item\em Device type enum. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{group___s_p_i_ga656f7b06a728e76eb9ac0b10e1bd5bb7}{SPI\+\_\+init}} (\mbox{\hyperlink{group___s_p_i_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, \mbox{\hyperlink{group___s_p_i_gad258d4c51629346fceac4679b3209ad9}{Device\+Type}}, SPI\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}, GPIO\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}, unsigned long)
+\begin{DoxyCompactList}\small\item\em Initialiser for an \doxylink{group___s_p_i_struct_s_p_i}{SPI} device interface. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___s_p_i_ga205c59ab72d018c05d33f91e7c7808e7}{SPI\+\_\+send}} (\mbox{\hyperlink{group___s_p_i_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Foo. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___s_p_i_gacddb795ecded56fe9f987bf41785a3a2}{SPI\+\_\+receive}} (\mbox{\hyperlink{group___s_p_i_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\+\_\+t \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Bar. \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{group___s_p_i_ga45245db392649677ce4d93b334f6e0fd}{SPI\+\_\+transmit}} (\mbox{\hyperlink{group___s_p_i_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\+\_\+t)
+\begin{DoxyCompactList}\small\item\em Instance method to communicate a \doxylink{group___s_p_i_struct_s_p_i}{SPI} transaction with slave device. \end{DoxyCompactList}\end{DoxyCompactItemize}

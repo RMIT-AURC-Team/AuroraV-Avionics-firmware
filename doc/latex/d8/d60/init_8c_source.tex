@@ -1,0 +1,66 @@
+\doxysection{init.\+c}
+\hypertarget{init_8c_source}{}\label{init_8c_source}\index{Core/Src/init.c@{Core/Src/init.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}init.h"{}}}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00003}00003\ \textcolor{comment}{//\ configure\ RCC\ APB1\ :\ CAN1,\ CAN2,\ UART3,\ SPI2,\ SPI3,\ TIM6,\ TIM7,}}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00004}00004\ \textcolor{keywordtype}{void}\ configure\_RCC\_APB1(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00005}00005\ \ \ RCC-\/>APB1ENR\ \ |=\ (RCC\_APB1ENR\_CAN1EN\ |\ RCC\_APB1ENR\_CAN2EN\ |\ RCC\_APB1ENR\_USART3EN\ |\ RCC\_APB1ENR\_SPI3EN\ |\ RCC\_APB1ENR\_SPI2EN\ |\ RCC\_APB1ENR\_TIM6EN\ |\ RCC\_APB1ENR\_TIM7EN);}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00006}00006\ \ \ RCC-\/>APB1RSTR\ |=\ (RCC\_APB1RSTR\_CAN1RST\ |\ RCC\_APB1RSTR\_CAN2RST\ |\ RCC\_APB1RSTR\_USART3RST\ |\ RCC\_APB1RSTR\_SPI3RST\ |\ RCC\_APB1RSTR\_SPI2RST\ |\ RCC\_APB1RSTR\_TIM6RST\ |\ RCC\_APB1RSTR\_TIM7RST);}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00007}00007\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00008}00008\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00009}00009\ \ \ RCC-\/>APB1RSTR\ \&=\ (uint16\_t)(\string~(RCC\_APB1RSTR\_CAN1RST\ |\ RCC\_APB1RSTR\_CAN2RST\ |\ RCC\_APB1RSTR\_USART3RST\ |\ RCC\_APB1RSTR\_SPI3RST\ |\ RCC\_APB1RSTR\_SPI2RST\ |\ RCC\_APB1RSTR\_TIM6RST\ |\ RCC\_APB1RSTR\_TIM7RST));}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00010}00010\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00011}00011\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00012}00012\ \}}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00014}00014\ \textcolor{comment}{//\ configure\ RCC\ APB2\ :\ SPI1,\ USART6}}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00015}00015\ \textcolor{keywordtype}{void}\ configure\_RCC\_APB2(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00016}00016\ \ \ RCC-\/>APB2ENR\ \ |=\ (RCC\_APB2ENR\_SPI1EN\ |\ RCC\_APB2ENR\_USART6EN);}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00017}00017\ \ \ RCC-\/>APB2RSTR\ |=\ (RCC\_APB2RSTR\_SPI1RST\ |\ RCC\_APB2RSTR\_USART6RST);}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00018}00018\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00019}00019\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00020}00020\ \ \ RCC-\/>APB2RSTR\ \&=\ (uint16\_t)(\string~(RCC\_APB2RSTR\_SPI1RST\ |\ RCC\_APB2RSTR\_USART6RST));}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00021}00021\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00022}00022\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00023}00023\ \}}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00025}00025\ \textcolor{comment}{//\ configure\ RCC\ AHB1\ GPIO\ A,\ B,\ C,\ D,\ E}}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00026}00026\ \textcolor{keywordtype}{void}\ configure\_RCC\_AHB1(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00027}00027\ \ \ RCC-\/>AHB1ENR\ \ |=\ (RCC\_AHB1ENR\_GPIOAEN\ |\ RCC\_AHB1ENR\_GPIOBEN\ |\ RCC\_AHB1ENR\_GPIOCEN\ |\ RCC\_AHB1ENR\_GPIODEN\ |\ RCC\_AHB1ENR\_GPIOEEN);}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00028}00028\ \ \ RCC-\/>AHB1RSTR\ |=\ (RCC\_AHB1RSTR\_GPIOARST\ |\ RCC\_AHB1RSTR\_GPIOBRST\ |\ RCC\_AHB1RSTR\_GPIOCRST\ |\ RCC\_AHB1RSTR\_GPIODRST\ |\ RCC\_AHB1RSTR\_GPIOERST);}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00029}00029\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00030}00030\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00031}00031\ \ \ RCC-\/>AHB1RSTR\ \&=\ (uint16\_t)(\string~(RCC\_AHB1RSTR\_GPIOARST\ |\ RCC\_AHB1RSTR\_GPIOBRST\ |\ RCC\_AHB1RSTR\_GPIOCRST\ |\ RCC\_AHB1RSTR\_GPIODRST\ |\ RCC\_AHB1RSTR\_GPIOERST));}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00032}00032\ \}}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00034}00034\ \textcolor{keywordtype}{void}\ TIM6init(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00035}00035\ \ \ RCC-\/>APB1ENR\ \ |=\ RCC\_APB1ENR\_TIM6EN;}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00036}00036\ \ \ RCC-\/>APB1RSTR\ |=\ RCC\_APB1RSTR\_TIM6RST;}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00037}00037\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00038}00038\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00039}00039\ \ \ RCC-\/>APB1RSTR\ \&=\ \string~(RCC\_APB1RSTR\_TIM6RST);}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00040}00040\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00041}00041\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00042}00042\ \ \ TIM6-\/>CR1\ |=\ TIM\_CR1\_OPM;}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00043}00043\ \ \ TIM6-\/>PSC\ |=\ 20;}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00044}00044\ \ \ TIM6-\/>ARR\ \&=\ (\string~(TIM\_ARR\_ARR\_Msk));}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00045}00045\ \ \ TIM6-\/>ARR\ |=\ 0X20;\ \textcolor{comment}{//\ 0.0005S\ delay}}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00046}00046\ \}}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00048}00048\ \textcolor{keywordtype}{void}\ TIM7init(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00049}00049\ \ \ RCC-\/>APB1ENR\ \ |=\ RCC\_APB1ENR\_TIM7EN;}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00050}00050\ \ \ RCC-\/>APB1RSTR\ |=\ RCC\_APB1RSTR\_TIM7RST;}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00051}00051\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00052}00052\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00053}00053\ \ \ RCC-\/>APB1RSTR\ \&=\ \string~(RCC\_APB1RSTR\_TIM7RST);}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00054}00054\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00055}00055\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00056}00056\ \ \ TIM7-\/>CR1\ |=\ TIM\_CR1\_OPM;}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00057}00057\ \ \ TIM7-\/>PSC\ |=\ 1399;}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00058}00058\ \ \ TIM7-\/>ARR\ \&=\ (\string~(TIM\_ARR\_ARR\_Msk));}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00059}00059\ \ \ TIM7-\/>ARR\ |=\ 60000;\ \textcolor{comment}{//\ 1s\ delay}}
+\DoxyCodeLine{\Hypertarget{init_8c_source_l00060}00060\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,167 @@
+\doxysection{flash.\+c}
+\hypertarget{flash_8c_source}{}\label{flash_8c_source}\index{Core/Src/SPI/flash/flash.c@{Core/Src/SPI/flash/flash.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}flash.h"{}}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00003}00003\ \textcolor{comment}{/*\ SPI4\ FLASH}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00004}00004\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00005}00005\ \textcolor{comment}{\ *\ Flash\ Pin\ \ \ \ \ \ \ |\ MCU\ GPIO\ Pin\ \ |\ SIGNAL\ TYPE}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00006}00006\ \textcolor{comment}{\ *\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/|-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/|-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00007}00007\ \textcolor{comment}{\ *\ SDI\ \ \ \ \ \ \ \ \ \ \ \ \ |\ PE14\ \ \ \ \ \ \ \ \ \ |\ DATA}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00008}00008\ \textcolor{comment}{\ *\ SDO\ \ \ \ \ \ \ \ \ \ \ \ \ |\ PE13\ \ \ \ \ \ \ \ \ \ |\ DATA}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00009}00009\ \textcolor{comment}{\ *\ SCLK\ \ \ \ \ \ \ \ \ \ \ \ |\ PE12\ \ \ \ \ \ \ \ \ \ |\ DATA}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00010}00010\ \textcolor{comment}{\ *\ CS\ \ \ \ \ \ \ \ \ \ \ \ \ \ |\ PE11\ \ \ \ \ \ \ \ \ \ |\ CONTROL}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00011}00011\ \textcolor{comment}{\ *\ Memory\ Hold\ \ \ \ \ |\ PE10\ \ \ \ \ \ \ \ \ \ |\ CONTROL}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00012}00012\ \textcolor{comment}{\ *\ Write\ Protect\ \ \ |\ PE9\ \ \ \ \ \ \ \ \ \ \ |\ CONTROL\ \ \ \ */}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00014}00014\ \textcolor{keywordtype}{void}\ Flash\_init(\mbox{\hyperlink{struct_flash}{Flash}}\ *flash,\ GPIO\_TypeDef\ *port,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ cs)\ \{}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00015}00015\ \ \ SPI\_init(\&flash-\/>base,\ \mbox{\hyperlink{spi_8h_ad258d4c51629346fceac4679b3209ad9aa44a4f1581ee02974dadb5d5d553b27b}{MEMORY\_FLASH}},\ SPI4,\ port,\ cs);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00016}00016\ \ \ flash-\/>erase\ \ \ \ \ =\ Flash\_erase;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00017}00017\ \ \ flash-\/>readPage\ \ =\ Flash\_readPage;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00018}00018\ \ \ flash-\/>writePage\ =\ Flash\_writePage;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00019}00019\ \}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00021}00021\ \textcolor{comment}{/********************************\ PRIVATE\ METHODS\ ********************************/}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00023}00023\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00024}00024\ \textcolor{comment}{\ *\ WRITE\_ENABLE}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00025}00025\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00026}00026\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00027}00027\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00028}00028\ \textcolor{keywordtype}{void}\ \_Flash\_writeEnable(\mbox{\hyperlink{struct_flash}{Flash}}\ *flash)\ \{}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00029}00029\ \ \ \mbox{\hyperlink{spi_8h_d5/d83/struct_s_p_i}{SPI}}\ spi\ =\ flash-\/>base;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00031}00031\ \ \ spi.port-\/>ODR\ \&=\ \string~spi.cs;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00032}00032\ \ \ spi.transmit(\&spi,\ FLASH\_WRITE\_ENABLE);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00033}00033\ \ \ spi.port-\/>ODR\ |=\ spi.cs;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00034}00034\ \}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00036}00036\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00037}00037\ \textcolor{comment}{\ *\ READ\_STATUS\_1}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00038}00038\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00039}00039\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00040}00040\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00041}00041\ \textcolor{keywordtype}{void}\ \_Flash\_readStatus1(\mbox{\hyperlink{struct_flash}{Flash}}\ *flash,\ uint8\_t\ *status)\ \{}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00042}00042\ \ \ \mbox{\hyperlink{spi_8h_d5/d83/struct_s_p_i}{SPI}}\ spi\ =\ flash-\/>base;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00044}00044\ \ \ spi.port-\/>ODR\ \&=\ \string~spi.cs;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00045}00045\ \ \ *status\ =\ spi.transmit(\&spi,\ FLASH\_READ\_STATUS\_REGISTER\_1);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00046}00046\ \ \ *status\ =\ spi.transmit(\&spi,\ 0x0F);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00047}00047\ \ \ spi.port-\/>ODR\ |=\ spi.cs;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00048}00048\ \}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00050}00050\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00051}00051\ \textcolor{comment}{\ *\ READ\_STATUS\_2}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00052}00052\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00053}00053\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00054}00054\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00055}00055\ \textcolor{keywordtype}{void}\ \_Flash\_readStatus2(\mbox{\hyperlink{struct_flash}{Flash}}\ *flash,\ uint8\_t\ *status)\ \{}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00056}00056\ \ \ \mbox{\hyperlink{spi_8h_d5/d83/struct_s_p_i}{SPI}}\ spi\ =\ flash-\/>base;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00058}00058\ \ \ spi.port-\/>ODR\ \&=\ \string~spi.cs;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00059}00059\ \ \ *status\ =\ spi.transmit(\&spi,\ FLASH\_READ\_STATUS\_REGISTER\_2);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00060}00060\ \ \ *status\ =\ spi.transmit(\&spi,\ 0x0F);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00061}00061\ \ \ spi.port-\/>ODR\ |=\ spi.cs;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00062}00062\ \}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00064}00064\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00065}00065\ \textcolor{comment}{\ *\ READ\_STATUS\_3}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00066}00066\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00067}00067\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00068}00068\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00069}00069\ \textcolor{keywordtype}{void}\ \_Flash\_readStatus3(\mbox{\hyperlink{struct_flash}{Flash}}\ *flash,\ uint8\_t\ *status)\ \{}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00070}00070\ \ \ \mbox{\hyperlink{spi_8h_d5/d83/struct_s_p_i}{SPI}}\ spi\ =\ flash-\/>base;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00072}00072\ \ \ spi.port-\/>ODR\ \&=\ \string~spi.cs;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00073}00073\ \ \ *status\ =\ spi.transmit(\&spi,\ FLASH\_READ\_STATUS\_REGISTER\_3);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00074}00074\ \ \ *status\ =\ spi.transmit(\&spi,\ 0x0F);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00075}00075\ \ \ spi.port-\/>ODR\ |=\ spi.cs;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00076}00076\ \}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00078}00078\ \textcolor{comment}{/********************************\ DEVICE\ METHODS\ ********************************/}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00080}00080\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00081}00081\ \textcolor{comment}{\ *\ ERASE}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00082}00082\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00083}00083\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00084}00084\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00085}00085\ \textcolor{keywordtype}{void}\ Flash\_erase(\mbox{\hyperlink{struct_flash}{Flash}}\ *flash)\ \{}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00086}00086\ \ \ \_Flash\_writeEnable(flash);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00087}00087\ \ \ \mbox{\hyperlink{spi_8h_d5/d83/struct_s_p_i}{SPI}}\ spi\ \ \ \ \ \ \ \ =\ flash-\/>base;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00088}00088\ \ \ uint8\_t\ status\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00090}00090\ \ \ \textcolor{comment}{//\ Send\ Erase\ Chip\ instruction}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00091}00091\ \ \ spi.port-\/>ODR\ \&=\ \string~spi.cs;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00092}00092\ \ \ spi.transmit(\&spi,\ FLASH\_ERASE\_CHIP);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00093}00093\ \ \ spi.port-\/>ODR\ |=\ spi.cs;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00094}00094\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00095}00095\ \ \ \textcolor{comment}{//\ Wait\ until\ chip\ BUSY\ is\ clear}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00096}00096\ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00097}00097\ \ \ \ \ \_Flash\_readStatus1(flash,\ \&status);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00098}00098\ \ \ \}\ \textcolor{keywordflow}{while}\ (status\ \&\ 0x01);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00099}00099\ \}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00100}00100\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00101}00101\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00102}00102\ \textcolor{comment}{\ *\ WRITE\_PAGE}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00103}00103\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00104}00104\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00105}00105\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00106}00106\ \textcolor{keywordtype}{void}\ Flash\_writePage(\mbox{\hyperlink{struct_flash}{Flash}}\ *flash,\ uint32\_t\ address,\ uint8\_t\ *data)\ \{}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00107}00107\ \ \ \_Flash\_writeEnable(flash);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00108}00108\ \ \ uint8\_t\ status\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00109}00109\ \ \ \mbox{\hyperlink{spi_8h_d5/d83/struct_s_p_i}{SPI}}\ spi\ \ \ \ \ \ \ \ =\ flash-\/>base;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00111}00111\ \ \ \textcolor{comment}{//\ Wait\ until\ chip\ BUSY\ is\ clear}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00112}00112\ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00113}00113\ \ \ \ \ \_Flash\_readStatus1(flash,\ \&status);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00114}00114\ \ \ \}\ \textcolor{keywordflow}{while}\ (status\ \&\ 0x1);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00116}00116\ \ \ spi.port-\/>ODR\ \&=\ \string~spi.cs;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00118}00118\ \ \ \textcolor{comment}{//\ Send\ Page\ Program\ instruction\ and\ 24-\/bit\ address}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00119}00119\ \ \ spi.transmit(\&spi,\ FLASH\_PAGE\_PROGRAM);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00120}00120\ \ \ spi.transmit(\&spi,\ (address\ \&\ 0xFF0000)\ >>\ 16);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00121}00121\ \ \ spi.transmit(\&spi,\ (address\ \&\ 0xFF00)\ >>\ 8);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00122}00122\ \ \ spi.transmit(\&spi,\ (address\ \&\ 0xFF));}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00124}00124\ \ \ \textcolor{comment}{//\ Send\ page\ data}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00125}00125\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ 0;\ x\ <\ 255;\ x++)\ \{}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00126}00126\ \ \ \ \ spi.transmit(\&spi,\ data[x]);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00127}00127\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00129}00129\ \ \ spi.port-\/>ODR\ |=\ spi.cs;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00130}00130\ \}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00132}00132\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00133}00133\ \textcolor{comment}{\ *\ READ\_PAGE}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00134}00134\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00135}00135\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00136}00136\ \textcolor{comment}{\ *\ \ ...}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00137}00137\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00138}00138\ \textcolor{keywordtype}{void}\ Flash\_readPage(\mbox{\hyperlink{struct_flash}{Flash}}\ *flash,\ uint32\_t\ address,\ uint8\_t\ *data)\ \{}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00139}00139\ \ \ uint8\_t\ status\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00140}00140\ \ \ \mbox{\hyperlink{spi_8h_d5/d83/struct_s_p_i}{SPI}}\ spi\ \ \ \ \ \ \ \ =\ flash-\/>base;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00142}00142\ \ \ \textcolor{comment}{//\ Wait\ until\ chip\ BUSY\ is\ clear}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00143}00143\ \ \ \textcolor{keywordflow}{do}\ \{}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00144}00144\ \ \ \ \ \_Flash\_readStatus1(flash,\ \&status);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00145}00145\ \ \ \}\ \textcolor{keywordflow}{while}\ (status\ \&\ 0x1);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00147}00147\ \ \ spi.port-\/>ODR\ \&=\ \string~spi.cs;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00148}00148\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00149}00149\ \ \ \textcolor{comment}{//\ Send\ Read\ Data\ instruction\ and\ 24-\/bit\ address}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00150}00150\ \ \ spi.transmit(\&spi,\ FLASH\_READ\_DATA);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00151}00151\ \ \ spi.transmit(\&spi,\ (address\ \&\ 0xFF0000)\ >>\ 16);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00152}00152\ \ \ spi.transmit(\&spi,\ (address\ \&\ 0xFF00)\ >>\ 8);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00153}00153\ \ \ spi.transmit(\&spi,\ (address\ \&\ 0xFF));}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00155}00155\ \ \ \textcolor{comment}{//\ Receive\ page\ data}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00156}00156\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ x\ =\ 0;\ x\ <\ 255;\ x++)\ \{}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00157}00157\ \ \ \ \ data[x]\ =\ spi.transmit(\&spi,\ 0x0F);}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00158}00158\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00159}00159\ }
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00160}00160\ \ \ spi.port-\/>ODR\ |=\ spi.cs;}
+\DoxyCodeLine{\Hypertarget{flash_8c_source_l00161}00161\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,95 @@
+\doxysection{BMP581.\+c}
+\hypertarget{_b_m_p581_8c_source}{}\label{_b_m_p581_8c_source}\index{Core/Src/SPI/sensors/baro/BMP581.c@{Core/Src/SPI/sensors/baro/BMP581.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_b_m_p581_8h}{BMP581.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00003}00003\ \textcolor{comment}{/*\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00014}\mbox{\hyperlink{group___b_m_p581_gaf0ef88ff81506d372b4e1d514da63f0a}{00014}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___b_m_p581_gaf0ef88ff81506d372b4e1d514da63f0a}{BMP581\_init}}(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ GPIO\_TypeDef\ *port,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ cs,\ \textcolor{keywordtype}{float}\ tempSensitivity,\ \textcolor{keywordtype}{float}\ pressSensitivity)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00015}00015\ \ \ \mbox{\hyperlink{group___s_p_i_ga656f7b06a728e76eb9ac0b10e1bd5bb7}{SPI\_init}}(\&baro-\/>base,\ \mbox{\hyperlink{group___s_p_i_ggad258d4c51629346fceac4679b3209ad9ad6e973b156c9713198fd43f7eae95f56}{SENSOR\_BARO}},\ SPI1,\ port,\ cs);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00016}00016\ \ \ baro-\/>tempSensitivity\ \ =\ tempSensitivity;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00017}00017\ \ \ baro-\/>pressSensitivity\ =\ pressSensitivity;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00018}00018\ \ \ baro-\/>readTemp\ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{group___b_m_p581_ga13a6eced2f99e5f6b059c16eb3fdaf34}{BMP581\_readTemp}};}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00019}00019\ \ \ baro-\/>readRawTemp\ \ \ \ \ \ =\ \mbox{\hyperlink{group___b_m_p581_ga5c2001e8ffdfedb9ba2114e3200a0163}{BMP581\_readRawTemp}};}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00020}00020\ \ \ baro-\/>processRawTemp\ \ \ =\ \mbox{\hyperlink{group___b_m_p581_ga30620996a5c54f9347152c6c1a9ffe3f}{BMP581\_processRawTemp}};}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00021}00021\ \ \ baro-\/>readPress\ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{group___b_m_p581_gad4cdc3fdf15ff84bf27f0fbd44a864cb}{BMP581\_readPress}};}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00022}00022\ \ \ baro-\/>readRawPress\ \ \ \ \ =\ \mbox{\hyperlink{group___b_m_p581_ga079e56e39011d47394cd00238096b832}{BMP581\_readRawPress}};}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00023}00023\ \ \ baro-\/>processRawPress\ \ =\ \mbox{\hyperlink{group___b_m_p581_ga79cd0b07111850e9da010a032a9f0c67}{BMP581\_processRawPress}};}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00025}00025\ \ \ BMP581\_writeRegister(baro,\ BMP581\_ODR\_CFG,\ BMP581\_ODR\_CFG\_PWR\ |\ BMP581\_ODR\_CFG\_DEEP\_DIS);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00026}00026\ \ \ uint8\_t\ OSRCFG\ =\ BMP581\_readRegister(baro,\ BMP581\_OSR\_CFG);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00027}00027\ \ \ BMP581\_writeRegister(baro,\ BMP581\_OSR\_CFG,\ (BMP581\_OSR\_CFG\_RESERVED\ \&\ OSRCFG)\ |\ BMP581\_OSR\_CFG\_PRESS\_EN);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00028}00028\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00030}00030\ \textcolor{comment}{/********************************\ DEVICE\ METHODS\ ********************************/}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00032}00032\ \textcolor{comment}{/*\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00040}\mbox{\hyperlink{group___b_m_p581_ga13a6eced2f99e5f6b059c16eb3fdaf34}{00040}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___b_m_p581_ga13a6eced2f99e5f6b059c16eb3fdaf34}{BMP581\_readTemp}}(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ \textcolor{keywordtype}{float}\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00041}00041\ \ \ uint8\_t\ bytes[BMP581\_DATA\_TOTAL];}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00042}00042\ \ \ baro-\/>readRawTemp(baro,\ bytes);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00043}00043\ \ \ baro-\/>processRawTemp(baro,\ bytes,\ out);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00044}00044\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00046}00046\ \textcolor{comment}{/*\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00054}\mbox{\hyperlink{group___b_m_p581_ga30620996a5c54f9347152c6c1a9ffe3f}{00054}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___b_m_p581_ga30620996a5c54f9347152c6c1a9ffe3f}{BMP581\_processRawTemp}}(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ uint8\_t\ *bytes,\ \textcolor{keywordtype}{float}\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00055}00055\ \ \ *out\ =\ baro-\/>tempSensitivity\ *\ (int32\_t)(((uint32\_t)bytes[0]\ <<\ 16)\ |\ ((uint32\_t)bytes[1]\ <<\ 8)\ |\ bytes[0]);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00056}00056\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00058}00058\ \textcolor{comment}{/*\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00066}\mbox{\hyperlink{group___b_m_p581_ga5c2001e8ffdfedb9ba2114e3200a0163}{00066}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___b_m_p581_ga5c2001e8ffdfedb9ba2114e3200a0163}{BMP581\_readRawTemp}}(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ uint8\_t\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00067}00067\ \ \ out[0]\ =\ BMP581\_readRegister(baro,\ BMP581\_TEMPERATURE\_MSB);\ \ \textcolor{comment}{//\ temp\ high}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00068}00068\ \ \ out[1]\ =\ BMP581\_readRegister(baro,\ BMP581\_TEMPERATURE\_LSB);\ \ \textcolor{comment}{//\ temp\ low}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00069}00069\ \ \ out[2]\ =\ BMP581\_readRegister(baro,\ BMP581\_TEMPERATURE\_XLSB);\ \textcolor{comment}{//\ temp\ mid}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00070}00070\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00072}00072\ \textcolor{comment}{/*\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00080}\mbox{\hyperlink{group___b_m_p581_gad4cdc3fdf15ff84bf27f0fbd44a864cb}{00080}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___b_m_p581_gad4cdc3fdf15ff84bf27f0fbd44a864cb}{BMP581\_readPress}}(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ \textcolor{keywordtype}{float}\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00081}00081\ \ \ uint8\_t\ bytes[BMP581\_DATA\_TOTAL];}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00082}00082\ \ \ baro-\/>readRawPress(baro,\ bytes);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00083}00083\ \ \ baro-\/>processRawPress(baro,\ bytes,\ out);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00084}00084\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00086}00086\ \textcolor{comment}{/*\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00094}\mbox{\hyperlink{group___b_m_p581_ga79cd0b07111850e9da010a032a9f0c67}{00094}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___b_m_p581_ga79cd0b07111850e9da010a032a9f0c67}{BMP581\_processRawPress}}(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ uint8\_t\ *bytes,\ \textcolor{keywordtype}{float}\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00095}00095\ \ \ *out\ =\ baro-\/>pressSensitivity\ *\ (int32\_t)(((uint32\_t)bytes[0]\ <<\ 16)\ |\ ((uint32\_t)bytes[1]\ <<\ 8)\ |\ bytes[0]);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00096}00096\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00098}00098\ \textcolor{comment}{/*\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00106}\mbox{\hyperlink{group___b_m_p581_ga079e56e39011d47394cd00238096b832}{00106}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___b_m_p581_ga079e56e39011d47394cd00238096b832}{BMP581\_readRawPress}}(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ uint8\_t\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00107}00107\ \ \ out[0]\ =\ BMP581\_readRegister(baro,\ BMP581\_PRESSURE\_MSB);\ \ \textcolor{comment}{//\ temp\ high}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00108}00108\ \ \ out[1]\ =\ BMP581\_readRegister(baro,\ BMP581\_PRESSURE\_LSB);\ \ \textcolor{comment}{//\ temp\ low}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00109}00109\ \ \ out[2]\ =\ BMP581\_readRegister(baro,\ BMP581\_PRESSURE\_XLSB);\ \textcolor{comment}{//\ temp\ mid}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00110}00110\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00112}00112\ \textcolor{comment}{/********************************\ INTERFACE\ METHODS\ ********************************/}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00114}00114\ \textcolor{keywordtype}{void}\ BMP581\_writeRegister(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ uint8\_t\ address,\ uint8\_t\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00115}00115\ \ \ uint16\_t\ response;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00116}00116\ \ \ \mbox{\hyperlink{struct_s_p_i}{SPI}}\ spi\ =\ baro-\/>base;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00118}00118\ \ \ \textcolor{comment}{//\ Send\ write\ command\ with\ address\ and\ data}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00119}00119\ \ \ uint16\_t\ payload\ =\ (address\ <<\ 0x08)\ |\ data;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00120}00120\ \ \ spi.\mbox{\hyperlink{struct_s_p_i_a82241972e0292c7de95ea1e293e11be3}{port}}-\/>ODR\ \&=\ \string~spi.cs;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00121}00121\ \ \ spi.\mbox{\hyperlink{struct_s_p_i_a194e08b54d45d097bba08a024fb0826e}{send}}(\&spi,\ payload);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00123}00123\ \ \ \textcolor{comment}{//\ Read\ in\ response\ from\ interface}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00124}00124\ \ \ spi.\mbox{\hyperlink{struct_s_p_i_ac4444c9c043175f1ed173040fa123e2e}{receive}}(\&spi,\ \&response);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00125}00125\ \ \ spi.\mbox{\hyperlink{struct_s_p_i_a82241972e0292c7de95ea1e293e11be3}{port}}-\/>ODR\ |=\ spi.\mbox{\hyperlink{struct_s_p_i_a8f467bedd92cfa29ba7b757711ece04d}{cs}};}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00126}00126\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00128}00128\ uint8\_t\ BMP581\_readRegister(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ uint8\_t\ address)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00129}00129\ \ \ uint16\_t\ response;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00130}00130\ \ \ \mbox{\hyperlink{struct_s_p_i}{SPI}}\ spi\ =\ baro-\/>base;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00132}00132\ \ \ \textcolor{comment}{//\ Send\ write\ command\ with\ address\ and\ data}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00133}00133\ \ \ uint16\_t\ payload\ =\ (address\ <<\ 0x8)\ |\ 0x8000;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00134}00134\ \ \ spi.\mbox{\hyperlink{struct_s_p_i_a82241972e0292c7de95ea1e293e11be3}{port}}-\/>ODR\ \&=\ \string~spi.cs;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00135}00135\ \ \ spi.\mbox{\hyperlink{struct_s_p_i_a194e08b54d45d097bba08a024fb0826e}{send}}(\&spi,\ payload);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00137}00137\ \ \ \textcolor{comment}{//\ Read\ in\ response\ from\ interface}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00138}00138\ \ \ spi.\mbox{\hyperlink{struct_s_p_i_ac4444c9c043175f1ed173040fa123e2e}{receive}}(\&spi,\ \&response);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00139}00139\ \ \ spi.\mbox{\hyperlink{struct_s_p_i_a82241972e0292c7de95ea1e293e11be3}{port}}-\/>ODR\ |=\ spi.\mbox{\hyperlink{struct_s_p_i_a8f467bedd92cfa29ba7b757711ece04d}{cs}};}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00140}00140\ \ \ \textcolor{keywordflow}{return}\ (uint8\_t)response;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00141}00141\ \}}
+
+\end{DoxyCode}

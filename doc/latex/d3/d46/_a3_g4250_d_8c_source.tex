@@ -1,0 +1,94 @@
+\doxysection{A3\+G4250\+D.\+c}
+\hypertarget{_a3_g4250_d_8c_source}{}\label{_a3_g4250_d_8c_source}\index{Core/Src/SPI/sensors/gyro/A3G4250D.c@{Core/Src/SPI/sensors/gyro/A3G4250D.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}A3G4250D.h"{}}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00003}00003\ \textcolor{keywordtype}{void}\ A3G4250D\_init(\mbox{\hyperlink{struct_a3_g4250_d}{A3G4250D}}\ *gyro,\ GPIO\_TypeDef\ *port,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ cs,\ \textcolor{keywordtype}{float}\ sensitivity,\ \textcolor{keyword}{const}\ uint8\_t\ *axes)\ \{}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00004}00004\ \ \ SPI\_init(\&gyro-\/>base,\ \mbox{\hyperlink{spi_8h_ad258d4c51629346fceac4679b3209ad9a84b967fe10b7c1cfe2f779d99407703a}{SENSOR\_GYRO}},\ SPI1,\ port,\ cs);}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00005}00005\ \ \ gyro-\/>sensitivity\ \ \ \ \ =\ sensitivity;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00006}00006\ \ \ gyro-\/>axes\ \ \ \ \ \ \ \ \ \ \ \ =\ axes;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00007}00007\ \ \ gyro-\/>readGyro\ \ \ \ \ \ \ \ =\ A3G4250D\_readGyro;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00008}00008\ \ \ gyro-\/>readRawBytes\ \ \ \ =\ A3G4250D\_readRawBytes;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00009}00009\ \ \ gyro-\/>processRawBytes\ =\ A3G4250D\_processRawBytes;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00011}00011\ \ \ A3G4250D\_writeRegister(gyro,\ A3G4250D\_CTRL\_REG1,\ A3G4250D\_CTRL\_REG1\_ODR\_800Hz\ |\ A3G4250D\_CTRL\_REG1\_AXIS\_ENABLE\ |\ A3G4250D\_CTRL\_REG1\_PD\_ENABLE);}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00012}00012\ \}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00014}00014\ \textcolor{comment}{/********************************\ DEVICE\ METHODS\ ********************************/}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00016}00016\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00017}00017\ \textcolor{comment}{\ *\ READ\_GYRO}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00018}00018\ \textcolor{comment}{\ *\ \ Read\ processed\ floating\ point\ rates}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00019}00019\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00020}00020\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00021}00021\ \textcolor{comment}{\ *\ \ -\/\ out:\ 3-\/float\ array\ of\ X-\/Y-\/Z\ rates}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00022}00022\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00023}00023\ \textcolor{keywordtype}{void}\ A3G4250D\_readGyro(\mbox{\hyperlink{struct_a3_g4250_d}{A3G4250D}}\ *gyro,\ \textcolor{keywordtype}{float}\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00024}00024\ \ \ uint8\_t\ bytes[A3G4250D\_DATA\_TOTAL];}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00025}00025\ \ \ gyro-\/>readRawBytes(gyro,\ bytes);}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00026}00026\ \ \ gyro-\/>processRawBytes(gyro,\ bytes,\ out);}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00027}00027\ \}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00029}00029\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00030}00030\ \textcolor{comment}{\ *\ PROCESS\_RAW\_BYTES}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00031}00031\ \textcolor{comment}{\ *\ \ Process\ raw\ values\ to\ floating\ point\ rates}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00032}00032\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00033}00033\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00034}00034\ \textcolor{comment}{\ *\ \ -\/\ bytes:\ 6-\/byte\ array\ of\ raw\ X-\/Y-\/Z\ values\ in\ big-\/endian}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00035}00035\ \textcolor{comment}{\ *\ \ -\/\ out:\ 3-\/float\ array\ of\ X-\/Y-\/Z\ rates}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00036}00036\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00037}00037\ \textcolor{keywordtype}{void}\ A3G4250D\_processRawBytes(\mbox{\hyperlink{struct_a3_g4250_d}{A3G4250D}}\ *gyro,\ uint8\_t\ *bytes,\ \textcolor{keywordtype}{float}\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00038}00038\ \ \ out[0]\ =\ gyro-\/>sensitivity\ *\ (int16\_t)(((uint16\_t)bytes[0]\ <<\ 8)\ |\ bytes[1]);\ \textcolor{comment}{//\ gyro\ X}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00039}00039\ \ \ out[1]\ =\ gyro-\/>sensitivity\ *\ (int16\_t)(((uint16\_t)bytes[2]\ <<\ 8)\ |\ bytes[3]);\ \textcolor{comment}{//\ gyro\ Y}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00040}00040\ \ \ out[2]\ =\ gyro-\/>sensitivity\ *\ (int16\_t)(((uint16\_t)bytes[4]\ <<\ 8)\ |\ bytes[5]);\ \textcolor{comment}{//\ gyro\ Z}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00041}00041\ \}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00043}00043\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00044}00044\ \textcolor{comment}{\ *\ READ\_RAW\_BYTES}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00045}00045\ \textcolor{comment}{\ *\ \ Read\ in\ raw\ values\ from\ sensor\ registers}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00046}00046\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00047}00047\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00048}00048\ \textcolor{comment}{\ *\ \ -\/\ out:\ 6-\/byte\ array\ of\ raw\ X-\/Y-\/Z\ values\ in\ big-\/endian}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00049}00049\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00050}00050\ \textcolor{keywordtype}{void}\ A3G4250D\_readRawBytes(\mbox{\hyperlink{struct_a3_g4250_d}{A3G4250D}}\ *gyro,\ uint8\_t\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00051}00051\ \ \ out[0]\ =\ A3G4250D\_readRegister(gyro,\ A3G4250D\_OUT\_X\_H);\ \textcolor{comment}{//\ gyro\ X\ high}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00052}00052\ \ \ out[1]\ =\ A3G4250D\_readRegister(gyro,\ A3G4250D\_OUT\_X\_L);\ \textcolor{comment}{//\ gyro\ X\ low}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00053}00053\ \ \ out[2]\ =\ A3G4250D\_readRegister(gyro,\ A3G4250D\_OUT\_Y\_H);\ \textcolor{comment}{//\ gyro\ Y\ high}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00054}00054\ \ \ out[3]\ =\ A3G4250D\_readRegister(gyro,\ A3G4250D\_OUT\_Y\_L);\ \textcolor{comment}{//\ gyro\ Y\ low}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00055}00055\ \ \ out[4]\ =\ A3G4250D\_readRegister(gyro,\ A3G4250D\_OUT\_Z\_H);\ \textcolor{comment}{//\ gyro\ Z\ high}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00056}00056\ \ \ out[5]\ =\ A3G4250D\_readRegister(gyro,\ A3G4250D\_OUT\_Z\_L);\ \textcolor{comment}{//\ gyro\ Z\ low}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00057}00057\ \}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00059}00059\ \textcolor{comment}{/********************************\ INTERFACE\ METHODS\ ********************************/}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00061}00061\ \textcolor{keywordtype}{void}\ A3G4250D\_writeRegister(\mbox{\hyperlink{struct_a3_g4250_d}{A3G4250D}}\ *gyro,\ uint8\_t\ address,\ uint8\_t\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00062}00062\ \ \ uint16\_t\ response;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00063}00063\ \ \ \mbox{\hyperlink{spi_8h_d5/d83/struct_s_p_i}{SPI}}\ spi\ =\ gyro-\/>base;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00065}00065\ \ \ \textcolor{comment}{//\ Send\ write\ command\ with\ address\ and\ data}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00066}00066\ \ \ uint16\_t\ payload\ =\ (address\ <<\ 0x08)\ |\ data;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00067}00067\ \ \ spi.port-\/>ODR\ \&=\ \string~spi.cs;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00068}00068\ \ \ spi.send(\&spi,\ payload);}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00070}00070\ \ \ \textcolor{comment}{//\ Read\ in\ response\ from\ interface}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00071}00071\ \ \ spi.receive(\&spi,\ \&response);}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00072}00072\ \ \ spi.port-\/>ODR\ |=\ spi.cs;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00073}00073\ \}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00075}00075\ uint8\_t\ A3G4250D\_readRegister(\mbox{\hyperlink{struct_a3_g4250_d}{A3G4250D}}\ *gyro,\ uint8\_t\ address)\ \{}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00076}00076\ \ \ uint16\_t\ response;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00077}00077\ \ \ \mbox{\hyperlink{spi_8h_d5/d83/struct_s_p_i}{SPI}}\ spi\ =\ gyro-\/>base;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00079}00079\ \ \ \textcolor{comment}{//\ Send\ write\ command\ with\ address\ and\ data}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00080}00080\ \ \ uint16\_t\ payload\ =\ (address\ <<\ 0x08)\ |\ 0x8000;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00081}00081\ \ \ spi.port-\/>ODR\ \&=\ \string~spi.cs;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00082}00082\ \ \ spi.send(\&spi,\ payload);}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00084}00084\ \ \ \textcolor{comment}{//\ Read\ in\ response\ from\ interface}}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00085}00085\ \ \ spi.receive(\&spi,\ \&response);}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00086}00086\ \ \ spi.port-\/>ODR\ |=\ spi.cs;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00087}00087\ \ \ \textcolor{keywordflow}{return}\ (uint8\_t)response;}
+\DoxyCodeLine{\Hypertarget{_a3_g4250_d_8c_source_l00088}00088\ \}}
+
+\end{DoxyCode}

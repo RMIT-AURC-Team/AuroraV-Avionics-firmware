@@ -1,0 +1,132 @@
+\doxysubsubsubsection{A3\+G4250D}
+\hypertarget{group___a3_g4250_d}{}\label{group___a3_g4250_d}\index{A3G4250D@{A3G4250D}}
+\doxysubsubsubsubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_a3_g4250_d}{A3\+G4250D}}
+\end{DoxyCompactItemize}
+\doxysubsubsubsubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{group___a3_g4250_d_gabd9827bb607041567765c6a476461d18}{A3\+G4250\+D\+\_\+init}} (\mbox{\hyperlink{struct_a3_g4250_d}{A3\+G4250D}} \texorpdfstring{$\ast$}{*}, GPIO\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}, unsigned long, const float, const uint8\+\_\+t \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Initialiser for a \doxylink{struct_a3_g4250_d}{A3\+G4250D} gyroscope. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___a3_g4250_d_ga312e2655fabf3e10b2f71c90d8e1634d}{A3\+G4250\+D\+\_\+read\+Gyro}} (\mbox{\hyperlink{struct_a3_g4250_d}{A3\+G4250D}} \texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Read 3-\/axis floating point gyro rates. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___a3_g4250_d_gadd64ac77b1a4f0414abc10dd0e8ab8ef}{A3\+G4250\+D\+\_\+read\+Raw\+Bytes}} (\mbox{\hyperlink{struct_a3_g4250_d}{A3\+G4250D}} \texorpdfstring{$\ast$}{*}, uint8\+\_\+t \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Read raw 3-\/axis data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___a3_g4250_d_ga0b884ae90373ad5fa4565610707ea198}{A3\+G4250\+D\+\_\+process\+Raw\+Bytes}} (\mbox{\hyperlink{struct_a3_g4250_d}{A3\+G4250D}} \texorpdfstring{$\ast$}{*}, uint8\+\_\+t \texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Process raw 3-\/axis data to floating point gyro rates. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsubsubsubsection{Detailed Description}
+
+
+\doxysubsubsubsubsection{Function Documentation}
+\Hypertarget{group___a3_g4250_d_gabd9827bb607041567765c6a476461d18}\index{A3G4250D@{A3G4250D}!A3G4250D\_init@{A3G4250D\_init}}
+\index{A3G4250D\_init@{A3G4250D\_init}!A3G4250D@{A3G4250D}}
+\doxysubsubsubsubsubsection{\texorpdfstring{A3G4250D\_init()}{A3G4250D\_init()}}
+{\footnotesize\ttfamily \label{group___a3_g4250_d_gabd9827bb607041567765c6a476461d18} 
+void A3\+G4250\+D\+\_\+init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a3_g4250_d}{A3\+G4250D}} \texorpdfstring{$\ast$}{*}}]{gyro}{, }\item[{GPIO\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}}]{port}{, }\item[{unsigned long}]{cs}{, }\item[{float}]{sensitivity}{, }\item[{const uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{axes}{}\end{DoxyParamCaption})}
+
+
+
+Initialiser for a \doxylink{struct_a3_g4250_d}{A3\+G4250D} gyroscope. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \texorpdfstring{$\ast$}{*}gyro} & Pointer to \doxylink{struct_a3_g4250_d}{A3\+G4250D} struct to be initialised. \\
+\hline
+{\em \texorpdfstring{$\ast$}{*}port} & Pointer to GPIO port struct. \\
+\hline
+{\em cs} & Device chip select address. \\
+\hline
+{\em scale} & Selected scale for read gyro rates. \\
+\hline
+{\em \texorpdfstring{$\ast$}{*}axes} & Array defining sensor mounting axes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily NULL}.
+\end{DoxyReturn}
+\DoxyHorRuler{0}
+ 
+
+Definition at line \mbox{\hyperlink{_a3_g4250_d_8c_source_l00020}{20}} of file \mbox{\hyperlink{_a3_g4250_d_8c_source}{A3\+G4250\+D.\+c}}.
+
+\Hypertarget{group___a3_g4250_d_ga312e2655fabf3e10b2f71c90d8e1634d}\index{A3G4250D@{A3G4250D}!A3G4250D\_readGyro@{A3G4250D\_readGyro}}
+\index{A3G4250D\_readGyro@{A3G4250D\_readGyro}!A3G4250D@{A3G4250D}}
+\doxysubsubsubsubsubsection{\texorpdfstring{A3G4250D\_readGyro()}{A3G4250D\_readGyro()}}
+{\footnotesize\ttfamily \label{group___a3_g4250_d_ga312e2655fabf3e10b2f71c90d8e1634d} 
+void A3\+G4250\+D\+\_\+read\+Gyro (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a3_g4250_d}{A3\+G4250D}} \texorpdfstring{$\ast$}{*}}]{gyro}{, }\item[{float \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Read 3-\/axis floating point gyro rates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \texorpdfstring{$\ast$}{*}gyro} & Pointer to gyro struct. \\
+\hline
+{\em \texorpdfstring{$\ast$}{*}out} & Floating point gyro rate array. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily NULL}.
+\end{DoxyReturn}
+\DoxyHorRuler{0}
+ 
+
+Definition at line \mbox{\hyperlink{_a3_g4250_d_8c_source_l00041}{41}} of file \mbox{\hyperlink{_a3_g4250_d_8c_source}{A3\+G4250\+D.\+c}}.
+
+\Hypertarget{group___a3_g4250_d_gadd64ac77b1a4f0414abc10dd0e8ab8ef}\index{A3G4250D@{A3G4250D}!A3G4250D\_readRawBytes@{A3G4250D\_readRawBytes}}
+\index{A3G4250D\_readRawBytes@{A3G4250D\_readRawBytes}!A3G4250D@{A3G4250D}}
+\doxysubsubsubsubsubsection{\texorpdfstring{A3G4250D\_readRawBytes()}{A3G4250D\_readRawBytes()}}
+{\footnotesize\ttfamily \label{group___a3_g4250_d_gadd64ac77b1a4f0414abc10dd0e8ab8ef} 
+void A3\+G4250\+D\+\_\+read\+Raw\+Bytes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a3_g4250_d}{A3\+G4250D}} \texorpdfstring{$\ast$}{*}}]{gyro}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Read raw 3-\/axis data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \texorpdfstring{$\ast$}{*}gyro} & Pointer to gyro struct. \\
+\hline
+{\em \texorpdfstring{$\ast$}{*}out} & Raw 3-\/axis data array to write. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily NULL}.
+\end{DoxyReturn}
+\DoxyHorRuler{0}
+ 
+
+Definition at line \mbox{\hyperlink{_a3_g4250_d_8c_source_l00070}{70}} of file \mbox{\hyperlink{_a3_g4250_d_8c_source}{A3\+G4250\+D.\+c}}.
+
+\Hypertarget{group___a3_g4250_d_ga0b884ae90373ad5fa4565610707ea198}\index{A3G4250D@{A3G4250D}!A3G4250D\_processRawBytes@{A3G4250D\_processRawBytes}}
+\index{A3G4250D\_processRawBytes@{A3G4250D\_processRawBytes}!A3G4250D@{A3G4250D}}
+\doxysubsubsubsubsubsection{\texorpdfstring{A3G4250D\_processRawBytes()}{A3G4250D\_processRawBytes()}}
+{\footnotesize\ttfamily \label{group___a3_g4250_d_ga0b884ae90373ad5fa4565610707ea198} 
+void A3\+G4250\+D\+\_\+process\+Raw\+Bytes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_a3_g4250_d}{A3\+G4250D}} \texorpdfstring{$\ast$}{*}}]{gyro}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{bytes}{, }\item[{float \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Process raw 3-\/axis data to floating point gyro rates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \texorpdfstring{$\ast$}{*}gyro} & Pointer to gyro struct. \\
+\hline
+{\em \texorpdfstring{$\ast$}{*}bytes} & Raw 3-\/axis data array. \\
+\hline
+{\em \texorpdfstring{$\ast$}{*}out} & Processed 3-\/axis data array to write. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily NULL}.
+\end{DoxyReturn}
+\DoxyHorRuler{0}
+ 
+
+Definition at line \mbox{\hyperlink{_a3_g4250_d_8c_source_l00056}{56}} of file \mbox{\hyperlink{_a3_g4250_d_8c_source}{A3\+G4250\+D.\+c}}.
+

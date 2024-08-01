@@ -1,0 +1,190 @@
+\doxysection{drivers.\+c}
+\hypertarget{drivers_8c_source}{}\label{drivers_8c_source}\index{Core/Src/drivers.c@{Core/Src/drivers.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}drivers.h"{}}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00003}00003\ \textcolor{comment}{//\ ===============================================================}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00004}00004\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ RCC\ INITIALISATION}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00005}00005\ \textcolor{comment}{//\ ===============================================================}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00007}00007\ \textcolor{comment}{//\ configure\ RCC\ APB1\ :\ CAN1,\ CAN2,\ UART3,\ SPI2,\ SPI3,\ TIM6,\ TIM7,}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00008}00008\ \textcolor{keywordtype}{void}\ configure\_RCC\_APB1(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00009}00009\ \ \ RCC-\/>APB1ENR\ |=\ (RCC\_APB1ENR\_CAN1EN\ |\ RCC\_APB1ENR\_CAN2EN\ |\ RCC\_APB1ENR\_USART3EN\ |\ RCC\_APB1ENR\_SPI3EN\ |\ RCC\_APB1ENR\_SPI2EN\ |\ RCC\_APB1ENR\_TIM6EN\ |\ RCC\_APB1ENR\_TIM7EN);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00010}00010\ \ \ RCC-\/>APB1RSTR\ |=\ (RCC\_APB1RSTR\_CAN1RST\ |\ RCC\_APB1RSTR\_CAN2RST\ |\ RCC\_APB1RSTR\_USART3RST\ |\ RCC\_APB1RSTR\_SPI3RST\ |\ RCC\_APB1RSTR\_SPI2RST\ |\ RCC\_APB1RSTR\_TIM6RST\ |\ RCC\_APB1RSTR\_TIM7RST);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00011}00011\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00012}00012\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00013}00013\ \ \ RCC-\/>APB1RSTR\ \&=\ (uint16\_t)(\string~(RCC\_APB1RSTR\_CAN1RST\ |\ RCC\_APB1RSTR\_CAN2RST\ |\ RCC\_APB1RSTR\_USART3RST\ |\ RCC\_APB1RSTR\_SPI3RST\ |\ RCC\_APB1RSTR\_SPI2RST\ |\ RCC\_APB1RSTR\_TIM6RST\ |\ RCC\_APB1RSTR\_TIM7RST));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00014}00014\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00015}00015\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00016}00016\ \}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00018}00018\ \textcolor{comment}{//\ configure\ RCC\ APB2\ :\ SPI1,\ USART6}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00019}00019\ \textcolor{keywordtype}{void}\ configure\_RCC\_APB2(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00020}00020\ \ \ RCC-\/>APB2ENR\ |=\ (RCC\_APB2ENR\_SPI1EN\ |\ RCC\_APB2ENR\_USART6EN\ |\ RCC\_APB2ENR\_SPI4EN\ |\ RCC\_APB2ENR\_SYSCFGEN);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00021}00021\ \ \ RCC-\/>APB2RSTR\ |=\ (RCC\_APB2RSTR\_SPI1RST\ |\ RCC\_APB2RSTR\_USART6RST\ |\ RCC\_APB2RSTR\_SPI4RST\ |\ RCC\_APB2RSTR\_SYSCFGRST);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00022}00022\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00023}00023\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00024}00024\ \ \ RCC-\/>APB2RSTR\ \&=\ (uint16\_t)(\string~(RCC\_APB2RSTR\_SPI1RST\ |\ RCC\_APB2RSTR\_SPI4RST\ |\ RCC\_APB2RSTR\_SYSCFGRST));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00025}00025\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00026}00026\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00027}00027\ \}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00029}00029\ \textcolor{comment}{//\ configure\ RCC\ AHB1\ GPIO\ A,\ B,\ C,\ D,\ E}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00030}00030\ \textcolor{keywordtype}{void}\ configure\_RCC\_AHB1(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00031}00031\ \ \ RCC-\/>AHB1ENR\ |=\ (RCC\_AHB1ENR\_GPIOAEN\ |\ RCC\_AHB1ENR\_GPIOBEN\ |\ RCC\_AHB1ENR\_GPIOCEN\ |\ RCC\_AHB1ENR\_GPIODEN\ |\ RCC\_AHB1ENR\_GPIOEEN);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00032}00032\ \ \ RCC-\/>AHB1RSTR\ |=\ (RCC\_AHB1RSTR\_GPIOARST\ |\ RCC\_AHB1RSTR\_GPIOBRST\ |\ RCC\_AHB1RSTR\_GPIOCRST\ |\ RCC\_AHB1RSTR\_GPIODRST\ |\ RCC\_AHB1RSTR\_GPIOERST);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00033}00033\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00034}00034\ \ \ \_\_ASM(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00035}00035\ \ \ RCC-\/>AHB1RSTR\ \&=\ (uint16\_t)(\string~(RCC\_AHB1RSTR\_GPIOARST\ |\ RCC\_AHB1RSTR\_GPIOBRST\ |\ RCC\_AHB1RSTR\_GPIOCRST\ |\ RCC\_AHB1RSTR\_GPIODRST\ |\ RCC\_AHB1RSTR\_GPIOERST));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00036}00036\ \}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00038}00038\ \textcolor{comment}{//\ ===============================================================}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00039}00039\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FLASH}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00040}00040\ \textcolor{comment}{//\ ===============================================================}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00042}00042\ \textcolor{keywordtype}{void}\ configure\_SPI4\_Flash(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00043}00043\ \ \ GPIOE-\/>MODER\ \&=\ (\string~(GPIO\_MODER\_MODE12\_Msk\ |\ GPIO\_MODER\_MODE13\_Msk\ |\ GPIO\_MODER\_MODE14\_Msk));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00044}00044\ \ \ GPIOE-\/>MODER\ |=\ ((0x2\ <<\ GPIO\_MODER\_MODE12\_Pos)\ |\ (0x2\ <<\ GPIO\_MODER\_MODE13\_Pos)\ |\ (0x2\ <<\ GPIO\_MODER\_MODE14\_Pos));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00045}00045\ \ \ GPIOE-\/>AFR[1]\ \&=\ (uint32\_t)(\string~(0x0FFFF000));\ \textcolor{comment}{//\ clears\ AFRH\ 11,\ 12,\ 13\ and\ 14}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00046}00046\ \ \ GPIOE-\/>AFR[1]\ |=\ (0x05555000);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ sets\ AFRH\ 10,\ 11\ and\ 12\ to\ AF6\ for\ lora\ SPI}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00047}00047\ \ \ GPIOE-\/>MODER\ \&=\ (\string~(GPIO\_MODER\_MODE9\_Msk\ |\ GPIO\_MODER\_MODE10\_Msk\ |\ GPIO\_MODER\_MODE11\_Msk));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00048}00048\ \ \ GPIOE-\/>MODER\ |=\ ((0x1\ <<\ GPIO\_MODER\_MODE9\_Pos)\ |\ (0x1\ <<\ GPIO\_MODER\_MODE10\_Pos)\ |\ (0x1\ <<\ GPIO\_MODER\_MODE11\_Pos));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00049}00049\ \ \ GPIOE-\/>OTYPER\ \&=\ (uint16\_t)(\string~(GPIO\_OTYPER\_OT9\ |\ GPIO\_OTYPER\_OT10\ |\ GPIO\_OTYPER\_OT11));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00050}00050\ \ \ GPIOE-\/>OSPEEDR\ \&=\ (\string~(GPIO\_OSPEEDR\_OSPEED9\_Msk\ |\ GPIO\_OSPEEDR\_OSPEED10\_Msk\ |\ GPIO\_OSPEEDR\_OSPEED11\_Msk));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00051}00051\ \ \ GPIOE-\/>OSPEEDR\ |=\ ((0x2\ <<\ GPIO\_OSPEEDR\_OSPEED9\_Pos)\ |\ (0x2\ <<\ GPIO\_OSPEEDR\_OSPEED10\_Pos)\ |\ (0x2\ <<\ GPIO\_OSPEEDR\_OSPEED11\_Pos));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00052}00052\ \ \ GPIOE-\/>OTYPER\ \&=\ (\string~(GPIO\_OTYPER\_OT12\ |\ GPIO\_OTYPER\_OT13\ |\ GPIO\_OTYPER\_OT14));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00053}00053\ \ \ GPIOE-\/>OSPEEDR\ \&=\ (\string~(GPIO\_OSPEEDR\_OSPEED12\_Msk\ |\ GPIO\_OSPEEDR\_OSPEED13\_Msk\ |\ GPIO\_OSPEEDR\_OSPEED14\_Msk));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00054}00054\ \ \ GPIOE-\/>OSPEEDR\ |=\ (0x2\ <<\ GPIO\_OSPEEDR\_OSPEED12\_Pos\ |\ 0x2\ <<\ GPIO\_OSPEEDR\_OSPEED13\_Pos\ |\ 0x2\ <<\ GPIO\_OSPEEDR\_OSPEED14\_Pos);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00055}00055\ \ \ GPIOE-\/>ODR\ |=\ (GPIO\_ODR\_OD10)\ |\ (GPIO\_ODR\_OD11)\ |\ (GPIO\_ODR\_OD9);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00056}00056\ \ \ SPI4-\/>CR1\ \&=\ (\string~(SPI\_CR1\_BR\_Msk));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00057}00057\ \ \ SPI4-\/>CR1\ \&=\ (\string~(SPI\_CR1\_CPHA\_Msk)\ |\ (SPI\_CR1\_CPOL\_Msk));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00058}00058\ \ \ SPI4-\/>CR1\ |=\ SPI\_CR1\_MSTR;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ micro\ is\ master}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00059}00059\ \ \ SPI4-\/>CR1\ |=\ SPI\_CR1\_SSM\ |\ SPI\_CR1\_SSI;\ \textcolor{comment}{//\ Software\ management}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00060}00060\ \ \ SPI4-\/>CR1\ \&=\ (\string~(SPI\_CR1\_LSBFIRST\_Msk));\ \textcolor{comment}{//\ MSB\ FIRST}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00061}00061\ \ \ SPI4-\/>CR1\ \&=\ \string~(SPI\_CR1\_BIDIMODE\ |\ SPI\_CR1\_RXONLY);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00062}00062\ \ \ SPI4-\/>CR1\ \&=\ (\string~(SPI\_CR1\_BR\_Msk));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00063}00063\ \ \ SPI4-\/>CR1\ |=\ ((0x01\ <<\ SPI\_CR1\_BR\_Pos));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00064}00064\ \ \ SPI4-\/>CR1\ |=\ (0x1\ <<\ SPI\_CR1\_SPE\_Pos);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00065}00065\ \}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00067}00067\ \textcolor{comment}{//\ ===============================================================}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00068}00068\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ UART\ AND\ GPIO}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00069}00069\ \textcolor{comment}{//\ ===============================================================}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00071}00071\ \textcolor{keywordtype}{void}\ configure\_UART3\_GPS(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00072}00072\ \ \ GPIOD-\/>MODER\ \&=\ (\string~(GPIO\_MODER\_MODE8\_Msk\ |\ GPIO\_MODER\_MODE9\_Msk\ |\ GPIO\_MODER\_MODE13\_Msk));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00073}00073\ \ \ GPIOD-\/>MODER\ |=\ ((0x2\ <<\ GPIO\_MODER\_MODE8\_Pos)\ |\ (0x2\ <<\ GPIO\_MODER\_MODE9\_Pos)\ |\ (0x1\ <<\ GPIO\_MODER\_MODE13\_Pos));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00074}00074\ \ \ GPIOD-\/>AFR[1]\ \&=\ (uint32\_t)(\string~(0x000000FF));\ \textcolor{comment}{//\ clears\ AFRL\ 6\ and\ 7}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00075}00075\ \ \ GPIOD-\/>AFR[1]\ |=\ (0x00000077);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ sets\ PD\ 8,\ 9\ and\ 13\ to\ AF7}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00077}00077\ \ \ GPIOD-\/>PUPDR\ |=\ (0X1\ <<\ GPIO\_PUPDR\_PUPD9\_Pos);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00079}00079\ \ \ GPIOD-\/>OSPEEDR\ \&=\ (\string~(GPIO\_OSPEEDR\_OSPEED8\ |\ GPIO\_OSPEEDR\_OSPEED9\ |\ GPIO\_OSPEEDR\_OSPEED13));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00080}00080\ \ \ GPIOD-\/>OSPEEDR\ |=\ (0x3\ <<\ GPIO\_OSPEEDR\_OSPEED8\_Pos)\ |\ (0x3\ <<\ GPIO\_OSPEEDR\_OSPEED9\_Pos)\ |\ (0x3\ <<\ GPIO\_OSPEEDR\_OSPEED13\_Pos);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00082}00082\ \ \ \textcolor{comment}{//\ need\ over\ sampling\ =\ 1}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00083}00083\ \ \ USART3-\/>BRR\ \&=\ (\textcolor{keywordtype}{unsigned}\ int)(0xFFFF0000);\ \textcolor{comment}{//\ \ clear\ mantissa\ and\ div\ in\ baud\ rate\ reg}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00084}00084\ \ \ USART3-\/>BRR\ |=\ (0x0002227);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ set\ mantissa\ and\ div\ in\ baud\ rate\ reg\ to\ 9600}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00086}00086\ \ \ USART3-\/>CR1\ \&=\ (\textcolor{keywordtype}{unsigned}\ int)(\string~(0x400));\ \ \ \textcolor{comment}{//\ disable\ parity}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00087}00087\ \ \ USART3-\/>CR2\ \&=\ (\textcolor{keywordtype}{unsigned}\ int)(\string~(0xE00));\ \ \ \textcolor{comment}{//\ disable\ synchrnous\ mode}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00088}00088\ \ \ USART3-\/>CR3\ \&=\ (\textcolor{keywordtype}{unsigned}\ int)(\string~(0x300));\ \ \ \textcolor{comment}{//\ disable\ flow\ control}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00089}00089\ \ \ USART3-\/>CR1\ |=\ (\textcolor{keywordtype}{unsigned}\ int)(0x200C);\ \ \ \ \ \textcolor{comment}{//\ enable\ usart,\ enable\ receive\ and\ transmitt}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00090}00090\ \ \ USART3-\/>CR1\ |=\ USART\_CR1\_OVER8;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00092}00092\ \ \ \textcolor{comment}{//\ turn\ reset\ pin\ high}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00093}00093\ \ \ GPIOD-\/>ODR\ |=\ GPIO\_ODR\_OD13;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00094}00094\ \}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00096}00096\ \textcolor{keywordtype}{void}\ configure\_UART6\_Serial\_2\_mini\_USB(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00097}00097\ \ \ GPIOC-\/>MODER\ \&=\ (\string~(GPIO\_MODER\_MODE6\_Msk\ |\ GPIO\_MODER\_MODE7\_Msk\ |\ GPIO\_MODER\_MODE8\_Msk));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00098}00098\ \ \ GPIOC-\/>MODER\ |=\ ((0x2\ <<\ GPIO\_MODER\_MODE6\_Pos)\ |\ (0x2\ <<\ GPIO\_MODER\_MODE7\_Pos)\ |\ (0x2\ <<\ GPIO\_MODER\_MODE8\_Pos));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00099}00099\ \ \ GPIOC-\/>AFR[0]\ \&=\ (\string~(0xFF000000));\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ clears\ AFRL\ 6\ and\ 7\ and}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00100}00100\ \ \ GPIOC-\/>AFR[1]\ \&=\ (uint32\_t)(\string~(0x0000000F));\ \textcolor{comment}{//\ clears\ AFRH\ 8}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00101}00101\ \ \ GPIOC-\/>AFR[0]\ |=\ (0x88000000);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ sets\ PC\ 6\ and\ 7\ to\ AF8}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00102}00102\ \ \ GPIOC-\/>AFR[1]\ |=\ (0x00000008);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ sets\ PC\ 8\ to\ AF8}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00103}00103\ \}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00105}00105\ \textcolor{comment}{//\ General\ GPIO\ Configure\ for\ MISC:\ LED1,\ LED2,\ Piezo\ Buzzer\ (PD14,\ PD15,\ PB15\ respectivley)}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00106}00106\ \textcolor{keywordtype}{void}\ configure\_MISC\_GPIO(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00107}00107\ \ \ GPIOD-\/>MODER\ \&=\ (\string~(GPIO\_MODER\_MODE14\_Msk\ |\ GPIO\_MODER\_MODE15\_Msk));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00108}00108\ \ \ GPIOD-\/>MODER\ |=\ ((0x1\ <<\ GPIO\_MODER\_MODE14\_Pos)\ |\ (0x1\ <<\ GPIO\_MODER\_MODE15\_Pos));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00109}00109\ \ \ GPIOD-\/>OTYPER\ \&=\ (uint16\_t)(\string~(GPIO\_OTYPER\_OT14\ |\ GPIO\_OTYPER\_OT15));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ sets\ 0xboth\ as\ push-\/pull}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00110}00110\ \ \ GPIOD-\/>OSPEEDR\ \&=\ (\string~(GPIO\_OSPEEDR\_OSPEED14\_Msk\ |\ GPIO\_OSPEEDR\_OSPEED15\_Msk));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ clears\ Port\ 14\ and\ 15\ section}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00111}00111\ \ \ GPIOD-\/>OSPEEDR\ |=\ ((0x2\ <<\ GPIO\_OSPEEDR\_OSPEED14\_Pos)\ |\ (0x2\ <<\ GPIO\_OSPEEDR\_OSPEED15\_Pos));\ \textcolor{comment}{//\ sets\ slew\ rate\ as\ high\ speed}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00113}00113\ \ \ \textcolor{comment}{//\ \ \ \ GPIOD-\/>PUPDR\ \&=\ (\string~(GPIO\_PUPDR\_PUPD14\ |\ GPIO\_PUPDR\_PUPD15));\ //\ clears\ register\ for\ port\ 14\ and\ 15}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00114}00114\ \ \ \textcolor{comment}{//\ \ \ \ GPIOD-\/>PUPDR\ |=\ (0x00<<GPIO\_PUPDR\_PUPD14\_Pos\ |\ 0x00<<GPIO\_PUPDR\_PUPD15\_Pos\ );\ //\ shifts\ 00\ into\ and\ pos\ for\ 14\ and\ 15}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00115}00115\ \ \ GPIOD-\/>ODR\ \&=\ (\string~(GPIO\_ODR\_OD14\ |\ GPIO\_ODR\_OD15));\ \ \ \ \ \textcolor{comment}{//\ turns\ LEDs\ off}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00117}00117\ \ \ GPIOB-\/>MODER\ \&=\ (\string~(GPIO\_MODER\_MODE15\_Pos));\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ clears\ pos\ 15\ of\ port\ B\ moder\ R\ reg}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00118}00118\ \ \ GPIOB-\/>MODER\ |=\ (0x1\ <<\ GPIO\_MODER\_MODE15\_Pos);\ \ \ \ \ \ \ \textcolor{comment}{//\ sets\ pos\ 15\ to\ general\ purpose\ output}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00119}00119\ \ \ GPIOB-\/>OTYPER\ \&=\ (\string~(GPIO\_OTYPER\_OT15\_Msk));\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ sets\ port\ B\ 15\ to\ push-\/pull}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00120}00120\ \ \ GPIOB-\/>OSPEEDR\ \&=\ (\string~(GPIO\_OSPEEDR\_OSPEED15\_Msk));\ \ \ \ \ \textcolor{comment}{//\ clears\ pos\ 15\ in\ Ospeed\ R\ reg}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00121}00121\ \ \ GPIOB-\/>OSPEEDR\ |=\ (0x2\ <<\ GPIO\_OSPEEDR\_OSPEED15\_Pos);\ \textcolor{comment}{//\ sets\ slew\ rate\ to\ highspeed}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00122}00122\ \ \ GPIOB-\/>ODR\ \&=\ (\string~(GPIO\_ODR\_OD15));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ turns\ peizer\ buzzer\ IO\ to\ low}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00124}00124\ \ \ \textcolor{comment}{//\ configure\ PB1\ as\ input\ for\ B\ switch}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00125}00125\ \ \ GPIOB-\/>MODER\ \&=\ (\string~(GPIO\_MODER\_MODE1\_Pos));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00126}00126\ \ \ GPIOB-\/>OTYPER\ \&=\ (\string~(GPIO\_OTYPER\_OT1\_Msk));\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ sets\ port\ B\ 15\ to\ push-\/pull}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00127}00127\ \ \ GPIOB-\/>OSPEEDR\ \&=\ (\string~(GPIO\_OSPEEDR\_OSPEED1\_Msk));\ \ \ \ \ \textcolor{comment}{//\ clears\ pos\ 15\ in\ Ospeed\ R\ reg}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00128}00128\ \ \ GPIOB-\/>OSPEEDR\ |=\ (0x2\ <<\ GPIO\_OSPEEDR\_OSPEED1\_Pos);\ \textcolor{comment}{//\ sets\ slew\ rate\ to\ highspeed}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00129}00129\ \ \ GPIOB-\/>PUPDR\ \&=\ (\string~(GPIO\_PUPDR\_PUPD1));\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ clears\ PUPDR\ for\ PB1}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00130}00130\ \ \ GPIOB-\/>PUPDR\ |=\ (0x01\ <<\ GPIO\_PUPDR\_PUPD1\_Pos);\ \ \ \ \ \ \textcolor{comment}{//\ set\ pull\ up\ resistor\ for\ PB1}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00131}00131\ \}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00133}00133\ \textcolor{comment}{//\ ===============================================================}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00134}00134\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TIMERS}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00135}00135\ \textcolor{comment}{//\ ===============================================================}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00137}00137\ \textcolor{keywordtype}{void}\ TIM6init(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00138}00138\ \ \ RCC-\/>APB1ENR\ |=\ RCC\_APB1ENR\_TIM6EN;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00139}00139\ \ \ RCC-\/>APB1RSTR\ |=\ RCC\_APB1RSTR\_TIM6RST;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00140}00140\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00141}00141\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00142}00142\ \ \ RCC-\/>APB1RSTR\ \&=\ \string~(RCC\_APB1RSTR\_TIM6RST);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00143}00143\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00144}00144\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00145}00145\ \ \ TIM6-\/>CR1\ |=\ TIM\_CR1\_OPM;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00146}00146\ \ \ TIM6-\/>PSC\ |=\ 20;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00147}00147\ \ \ TIM6-\/>ARR\ \&=\ (\string~(TIM\_ARR\_ARR\_Msk));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00148}00148\ \ \ TIM6-\/>ARR\ |=\ 0X20;\ \textcolor{comment}{//\ 0.0005S\ delay}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00149}00149\ \}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00151}00151\ \textcolor{keywordtype}{void}\ TIM7init(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00152}00152\ \ \ RCC-\/>APB1ENR\ |=\ RCC\_APB1ENR\_TIM7EN;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00153}00153\ \ \ RCC-\/>APB1RSTR\ |=\ RCC\_APB1RSTR\_TIM7RST;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00154}00154\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00155}00155\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00156}00156\ \ \ RCC-\/>APB1RSTR\ \&=\ \string~(RCC\_APB1RSTR\_TIM7RST);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00157}00157\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00158}00158\ \ \ \_\_asm(\textcolor{stringliteral}{"{}NOP"{}});}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00159}00159\ \ \ TIM7-\/>CR1\ |=\ TIM\_CR1\_OPM;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00160}00160\ \ \ TIM7-\/>PSC\ |=\ 1399;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00161}00161\ \ \ TIM7-\/>ARR\ \&=\ (\string~(TIM\_ARR\_ARR\_Msk));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00162}00162\ \ \ TIM7-\/>ARR\ |=\ 60000;\ \textcolor{comment}{//\ 1s\ delay}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00163}00163\ \}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00165}00165\ \textcolor{comment}{//\ ===============================================================}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00166}00166\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MISC}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00167}00167\ \textcolor{comment}{//\ ===============================================================}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00168}00168\ }
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00169}00169\ \textcolor{keywordtype}{void}\ buzzer(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00170}00170\ \ \ TIM6-\/>ARR\ \&=\ (\string~(TIM\_ARR\_ARR\_Msk));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00171}00171\ \ \ TIM6-\/>PSC\ \&=\ (\string~(TIM\_PSC\_PSC\_Msk));}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00172}00172\ \ \ TIM6-\/>ARR\ |=\ 80;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00173}00173\ \ \ TIM6-\/>PSC\ |=\ 128;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00174}00174\ \ \ TIM7-\/>CR1\ |=\ TIM\_CR1\_CEN;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00175}00175\ \ \ TIM6-\/>CR1\ |=\ TIM\_CR1\_CEN;\ \ \ \ \textcolor{comment}{//\ ensures\ timer\ is\ enabled}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00176}00176\ \ \ \textcolor{keywordflow}{while}\ ((TIM7-\/>SR\ \&\ TIM\_SR\_UIF)\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00177}00177\ \ \ \ \ GPIOB-\/>ODR\ \string^=\ 0X8000;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00178}00178\ \ \ \ \ \textcolor{keywordflow}{while}\ ((TIM6-\/>SR\ \&\ TIM\_SR\_UIF)\ ==\ 0);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00179}00179\ \ \ \ \ TIM6-\/>SR\ \&=\ \string~(TIM\_SR\_UIF);\ \textcolor{comment}{//\ clears\ UIF}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00180}00180\ \ \ \ \ TIM6-\/>ARR\ |=\ 80;}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00181}00181\ \ \ \ \ TIM6-\/>CR1\ |=\ TIM\_CR1\_CEN;\ \ \textcolor{comment}{//\ Enables\ counter}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00182}00182\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00183}00183\ \ \ TIM7-\/>SR\ \&=\ \string~(TIM\_SR\_UIF);}
+\DoxyCodeLine{\Hypertarget{drivers_8c_source_l00184}00184\ \}}
+
+\end{DoxyCode}

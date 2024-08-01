@@ -1,0 +1,264 @@
+\doxysection{Core/\+Inc/drivers.h File Reference}
+\hypertarget{drivers_8h}{}\label{drivers_8h}\index{Core/Inc/drivers.h@{Core/Inc/drivers.h}}
+{\ttfamily \#include "{}stm32f439xx.\+h"{}}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{drivers_8h_struct_g_p_s_data}{GPSData}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{drivers_8h_a6e95e02b995bb4f50d04ef5f8704f75d}{configure\+\_\+\+RCC\+\_\+\+APB1}} (void)
+\item 
+void \mbox{\hyperlink{drivers_8h_a895a5f44ceb1ac1262630438d3ae9807}{configure\+\_\+\+RCC\+\_\+\+APB2}} (void)
+\item 
+void \mbox{\hyperlink{drivers_8h_a5d091ef2b490c16dff08bccfd24c2f2d}{configure\+\_\+\+RCC\+\_\+\+AHB1}} (void)
+\item 
+void \mbox{\hyperlink{drivers_8h_a396abb17e841e49b7ddc3d8fec118882}{configure\+\_\+\+MISC\+\_\+\+GPIO}} (void)
+\item 
+void \mbox{\hyperlink{drivers_8h_ae12f2c6b7fc26a15f45dd26111c4a04e}{configure\+\_\+\+UART3\+\_\+\+GPS}} (void)
+\item 
+void \mbox{\hyperlink{drivers_8h_a4d6db5a1704607a0a31b10dca548e8e9}{configure\+\_\+\+UART6\+\_\+\+Serial\+\_\+2\+\_\+mini\+\_\+\+USB}} (void)
+\item 
+void \mbox{\hyperlink{drivers_8h_a7ce52f956bf9b4a1f740b8eecf91261e}{configure\+\_\+external\+\_\+interrupts}} (void)
+\item 
+void \mbox{\hyperlink{drivers_8h_a49cfdd46eb8d0ef3e1987514aa9343dc}{EXTI1\+\_\+\+IRQHandler}} (void)
+\item 
+void \mbox{\hyperlink{drivers_8h_a2423e886cbde4e5c59dfdfe139dd4b03}{TIM6init}} (void)
+\item 
+void \mbox{\hyperlink{drivers_8h_abb6de9c437b93876c6dc7cc487463f88}{TIM7init}} (void)
+\item 
+void \mbox{\hyperlink{drivers_8h_a42a34094203344c51b03f900187ed69c}{buzzer}} (void)
+\item 
+void \mbox{\hyperlink{drivers_8h_ae2ead554365f48e18f2a21f78df7e5b1}{send\+\_\+\+GPS\+\_\+messege}} (char \texorpdfstring{$\ast$}{*}pointerdata)
+\item 
+void \mbox{\hyperlink{drivers_8h_a3f5501024c37a6b1f81b4e193e5d971a}{Decode\+GPS}} (char \texorpdfstring{$\ast$}{*}GPS, struct \mbox{\hyperlink{drivers_8h_struct_g_p_s_data}{GPSData}} \texorpdfstring{$\ast$}{*}data)
+\item 
+void \mbox{\hyperlink{drivers_8h_a17f2b5caf8cb54bb2d82054ace5fabed}{GPS\+\_\+test}} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Data Structure Documentation}
+\index{GPSData@{GPSData}}\label{struct_g_p_s_data}
+\Hypertarget{drivers_8h_struct_g_p_s_data}
+\doxysubsubsection{struct GPSData}
+
+
+Definition at line \mbox{\hyperlink{drivers_8h_source_l00006}{6}} of file \mbox{\hyperlink{drivers_8h_source}{drivers.\+h}}.
+
+\begin{DoxyFields}{Data Fields}
+\mbox{\Hypertarget{drivers_8h_a58b39e3fa7de7e8aad0119ece77023eb}\label{drivers_8h_a58b39e3fa7de7e8aad0119ece77023eb}} 
+char&
+time\mbox{[}15\mbox{]}&
+\\
+\hline
+
+\mbox{\Hypertarget{drivers_8h_ae5af4ff48939d13d480f87e56a9385d6}\label{drivers_8h_ae5af4ff48939d13d480f87e56a9385d6}} 
+uint8\_t&
+hour&
+\\
+\hline
+
+\mbox{\Hypertarget{drivers_8h_a8ff981ec55c945940f4a0da7d8709b3c}\label{drivers_8h_a8ff981ec55c945940f4a0da7d8709b3c}} 
+uint8\_t&
+minute&
+\\
+\hline
+
+\mbox{\Hypertarget{drivers_8h_a8459fc4e94de7eefc74991e41779c8fc}\label{drivers_8h_a8459fc4e94de7eefc74991e41779c8fc}} 
+uint8\_t&
+second&
+\\
+\hline
+
+\mbox{\Hypertarget{drivers_8h_a973b7f5af5ac7019511db191e87f853e}\label{drivers_8h_a973b7f5af5ac7019511db191e87f853e}} 
+char&
+latitude\mbox{[}15\mbox{]}&
+\\
+\hline
+
+\mbox{\Hypertarget{drivers_8h_a46d73596d54646a8f2e432835b4e1783}\label{drivers_8h_a46d73596d54646a8f2e432835b4e1783}} 
+unsigned long&
+latitude\_num&
+\\
+\hline
+
+\mbox{\Hypertarget{drivers_8h_ac592f05d5e073e7d8a3c01b0922a5735}\label{drivers_8h_ac592f05d5e073e7d8a3c01b0922a5735}} 
+char&
+N\_S\mbox{[}15\mbox{]}&
+\\
+\hline
+
+\mbox{\Hypertarget{drivers_8h_a0f2b48350012075ebe117bcb82b068bb}\label{drivers_8h_a0f2b48350012075ebe117bcb82b068bb}} 
+char&
+longitude\mbox{[}15\mbox{]}&
+\\
+\hline
+
+\mbox{\Hypertarget{drivers_8h_a6be68a8e071e359ca0ac358a44690be2}\label{drivers_8h_a6be68a8e071e359ca0ac358a44690be2}} 
+unsigned long&
+longitude\_num&
+\\
+\hline
+
+\mbox{\Hypertarget{drivers_8h_a20f4d2848e58af382d2de7dcb734a609}\label{drivers_8h_a20f4d2848e58af382d2de7dcb734a609}} 
+char&
+E\_W\mbox{[}15\mbox{]}&
+\\
+\hline
+
+\mbox{\Hypertarget{drivers_8h_a27e7ac928dd5ce4e29cb59f062fec3e6}\label{drivers_8h_a27e7ac928dd5ce4e29cb59f062fec3e6}} 
+char&
+fix\mbox{[}15\mbox{]}&
+\\
+\hline
+
+\mbox{\Hypertarget{drivers_8h_a2bc9af20f07152fb9235a2bcfc009552}\label{drivers_8h_a2bc9af20f07152fb9235a2bcfc009552}} 
+char&
+satellites\mbox{[}15\mbox{]}&
+\\
+\hline
+
+\mbox{\Hypertarget{drivers_8h_af754b2c3affe2342dd39f96e0e242bb5}\label{drivers_8h_af754b2c3affe2342dd39f96e0e242bb5}} 
+char&
+hdop\mbox{[}15\mbox{]}&
+\\
+\hline
+
+\mbox{\Hypertarget{drivers_8h_a35e461c043b39bbbf59935c9476aca79}\label{drivers_8h_a35e461c043b39bbbf59935c9476aca79}} 
+char&
+altitude\mbox{[}15\mbox{]}&
+\\
+\hline
+
+\mbox{\Hypertarget{drivers_8h_a92435efb84d6814afd444fd462802e9c}\label{drivers_8h_a92435efb84d6814afd444fd462802e9c}} 
+uint8\_t&
+lock&
+\\
+\hline
+
+\end{DoxyFields}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{drivers_8h_a6e95e02b995bb4f50d04ef5f8704f75d}\index{drivers.h@{drivers.h}!configure\_RCC\_APB1@{configure\_RCC\_APB1}}
+\index{configure\_RCC\_APB1@{configure\_RCC\_APB1}!drivers.h@{drivers.h}}
+\doxysubsubsection{\texorpdfstring{configure\_RCC\_APB1()}{configure\_RCC\_APB1()}}
+{\footnotesize\ttfamily \label{drivers_8h_a6e95e02b995bb4f50d04ef5f8704f75d} 
+void configure\+\_\+\+RCC\+\_\+\+APB1 (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{drivers_8c_source_l00008}{8}} of file \mbox{\hyperlink{drivers_8c_source}{drivers.\+c}}.
+
+\Hypertarget{drivers_8h_a895a5f44ceb1ac1262630438d3ae9807}\index{drivers.h@{drivers.h}!configure\_RCC\_APB2@{configure\_RCC\_APB2}}
+\index{configure\_RCC\_APB2@{configure\_RCC\_APB2}!drivers.h@{drivers.h}}
+\doxysubsubsection{\texorpdfstring{configure\_RCC\_APB2()}{configure\_RCC\_APB2()}}
+{\footnotesize\ttfamily \label{drivers_8h_a895a5f44ceb1ac1262630438d3ae9807} 
+void configure\+\_\+\+RCC\+\_\+\+APB2 (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{drivers_8c_source_l00019}{19}} of file \mbox{\hyperlink{drivers_8c_source}{drivers.\+c}}.
+
+\Hypertarget{drivers_8h_a5d091ef2b490c16dff08bccfd24c2f2d}\index{drivers.h@{drivers.h}!configure\_RCC\_AHB1@{configure\_RCC\_AHB1}}
+\index{configure\_RCC\_AHB1@{configure\_RCC\_AHB1}!drivers.h@{drivers.h}}
+\doxysubsubsection{\texorpdfstring{configure\_RCC\_AHB1()}{configure\_RCC\_AHB1()}}
+{\footnotesize\ttfamily \label{drivers_8h_a5d091ef2b490c16dff08bccfd24c2f2d} 
+void configure\+\_\+\+RCC\+\_\+\+AHB1 (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{drivers_8c_source_l00030}{30}} of file \mbox{\hyperlink{drivers_8c_source}{drivers.\+c}}.
+
+\Hypertarget{drivers_8h_a396abb17e841e49b7ddc3d8fec118882}\index{drivers.h@{drivers.h}!configure\_MISC\_GPIO@{configure\_MISC\_GPIO}}
+\index{configure\_MISC\_GPIO@{configure\_MISC\_GPIO}!drivers.h@{drivers.h}}
+\doxysubsubsection{\texorpdfstring{configure\_MISC\_GPIO()}{configure\_MISC\_GPIO()}}
+{\footnotesize\ttfamily \label{drivers_8h_a396abb17e841e49b7ddc3d8fec118882} 
+void configure\+\_\+\+MISC\+\_\+\+GPIO (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{drivers_8c_source_l00106}{106}} of file \mbox{\hyperlink{drivers_8c_source}{drivers.\+c}}.
+
+\Hypertarget{drivers_8h_ae12f2c6b7fc26a15f45dd26111c4a04e}\index{drivers.h@{drivers.h}!configure\_UART3\_GPS@{configure\_UART3\_GPS}}
+\index{configure\_UART3\_GPS@{configure\_UART3\_GPS}!drivers.h@{drivers.h}}
+\doxysubsubsection{\texorpdfstring{configure\_UART3\_GPS()}{configure\_UART3\_GPS()}}
+{\footnotesize\ttfamily \label{drivers_8h_ae12f2c6b7fc26a15f45dd26111c4a04e} 
+void configure\+\_\+\+UART3\+\_\+\+GPS (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{drivers_8c_source_l00071}{71}} of file \mbox{\hyperlink{drivers_8c_source}{drivers.\+c}}.
+
+\Hypertarget{drivers_8h_a4d6db5a1704607a0a31b10dca548e8e9}\index{drivers.h@{drivers.h}!configure\_UART6\_Serial\_2\_mini\_USB@{configure\_UART6\_Serial\_2\_mini\_USB}}
+\index{configure\_UART6\_Serial\_2\_mini\_USB@{configure\_UART6\_Serial\_2\_mini\_USB}!drivers.h@{drivers.h}}
+\doxysubsubsection{\texorpdfstring{configure\_UART6\_Serial\_2\_mini\_USB()}{configure\_UART6\_Serial\_2\_mini\_USB()}}
+{\footnotesize\ttfamily \label{drivers_8h_a4d6db5a1704607a0a31b10dca548e8e9} 
+void configure\+\_\+\+UART6\+\_\+\+Serial\+\_\+2\+\_\+mini\+\_\+\+USB (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{drivers_8c_source_l00096}{96}} of file \mbox{\hyperlink{drivers_8c_source}{drivers.\+c}}.
+
+\Hypertarget{drivers_8h_a7ce52f956bf9b4a1f740b8eecf91261e}\index{drivers.h@{drivers.h}!configure\_external\_interrupts@{configure\_external\_interrupts}}
+\index{configure\_external\_interrupts@{configure\_external\_interrupts}!drivers.h@{drivers.h}}
+\doxysubsubsection{\texorpdfstring{configure\_external\_interrupts()}{configure\_external\_interrupts()}}
+{\footnotesize\ttfamily \label{drivers_8h_a7ce52f956bf9b4a1f740b8eecf91261e} 
+void configure\+\_\+external\+\_\+interrupts (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{drivers_8h_a49cfdd46eb8d0ef3e1987514aa9343dc}\index{drivers.h@{drivers.h}!EXTI1\_IRQHandler@{EXTI1\_IRQHandler}}
+\index{EXTI1\_IRQHandler@{EXTI1\_IRQHandler}!drivers.h@{drivers.h}}
+\doxysubsubsection{\texorpdfstring{EXTI1\_IRQHandler()}{EXTI1\_IRQHandler()}}
+{\footnotesize\ttfamily \label{drivers_8h_a49cfdd46eb8d0ef3e1987514aa9343dc} 
+void EXTI1\+\_\+\+IRQHandler (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{drivers_8h_a2423e886cbde4e5c59dfdfe139dd4b03}\index{drivers.h@{drivers.h}!TIM6init@{TIM6init}}
+\index{TIM6init@{TIM6init}!drivers.h@{drivers.h}}
+\doxysubsubsection{\texorpdfstring{TIM6init()}{TIM6init()}}
+{\footnotesize\ttfamily \label{drivers_8h_a2423e886cbde4e5c59dfdfe139dd4b03} 
+void TIM6init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{drivers_8c_source_l00137}{137}} of file \mbox{\hyperlink{drivers_8c_source}{drivers.\+c}}.
+
+\Hypertarget{drivers_8h_abb6de9c437b93876c6dc7cc487463f88}\index{drivers.h@{drivers.h}!TIM7init@{TIM7init}}
+\index{TIM7init@{TIM7init}!drivers.h@{drivers.h}}
+\doxysubsubsection{\texorpdfstring{TIM7init()}{TIM7init()}}
+{\footnotesize\ttfamily \label{drivers_8h_abb6de9c437b93876c6dc7cc487463f88} 
+void TIM7init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{drivers_8c_source_l00151}{151}} of file \mbox{\hyperlink{drivers_8c_source}{drivers.\+c}}.
+
+\Hypertarget{drivers_8h_a42a34094203344c51b03f900187ed69c}\index{drivers.h@{drivers.h}!buzzer@{buzzer}}
+\index{buzzer@{buzzer}!drivers.h@{drivers.h}}
+\doxysubsubsection{\texorpdfstring{buzzer()}{buzzer()}}
+{\footnotesize\ttfamily \label{drivers_8h_a42a34094203344c51b03f900187ed69c} 
+void buzzer (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{drivers_8c_source_l00169}{169}} of file \mbox{\hyperlink{drivers_8c_source}{drivers.\+c}}.
+
+\Hypertarget{drivers_8h_ae2ead554365f48e18f2a21f78df7e5b1}\index{drivers.h@{drivers.h}!send\_GPS\_messege@{send\_GPS\_messege}}
+\index{send\_GPS\_messege@{send\_GPS\_messege}!drivers.h@{drivers.h}}
+\doxysubsubsection{\texorpdfstring{send\_GPS\_messege()}{send\_GPS\_messege()}}
+{\footnotesize\ttfamily \label{drivers_8h_ae2ead554365f48e18f2a21f78df7e5b1} 
+void send\+\_\+\+GPS\+\_\+messege (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{pointerdata}{}\end{DoxyParamCaption})}
+
+\Hypertarget{drivers_8h_a3f5501024c37a6b1f81b4e193e5d971a}\index{drivers.h@{drivers.h}!DecodeGPS@{DecodeGPS}}
+\index{DecodeGPS@{DecodeGPS}!drivers.h@{drivers.h}}
+\doxysubsubsection{\texorpdfstring{DecodeGPS()}{DecodeGPS()}}
+{\footnotesize\ttfamily \label{drivers_8h_a3f5501024c37a6b1f81b4e193e5d971a} 
+void Decode\+GPS (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{GPS}{, }\item[{struct \mbox{\hyperlink{drivers_8h_struct_g_p_s_data}{GPSData}} \texorpdfstring{$\ast$}{*}}]{data}{}\end{DoxyParamCaption})}
+
+\Hypertarget{drivers_8h_a17f2b5caf8cb54bb2d82054ace5fabed}\index{drivers.h@{drivers.h}!GPS\_test@{GPS\_test}}
+\index{GPS\_test@{GPS\_test}!drivers.h@{drivers.h}}
+\doxysubsubsection{\texorpdfstring{GPS\_test()}{GPS\_test()}}
+{\footnotesize\ttfamily \label{drivers_8h_a17f2b5caf8cb54bb2d82054ace5fabed} 
+void GPS\+\_\+test (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+

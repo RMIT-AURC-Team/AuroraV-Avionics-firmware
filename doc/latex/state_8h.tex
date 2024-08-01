@@ -1,0 +1,142 @@
+\doxysection{Core/\+Inc/state.h File Reference}
+\hypertarget{state_8h}{}\label{state_8h}\index{Core/Inc/state.h@{Core/Inc/state.h}}
+{\ttfamily \#include "{}stdbool.\+h"{}}\newline
+{\ttfamily \#include "{}math.\+h"{}}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8}{State}} \{ \newline
+\mbox{\hyperlink{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8a8fb9d84f659ab0adb96078a2404693b6}{PRELAUNCH}}
+, \mbox{\hyperlink{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8aa1781f8094bad4504b180803157c42d7}{LAUNCH}}
+, \mbox{\hyperlink{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8ae509e364ab4c8f25b108b70b0840b142}{COAST}}
+, \mbox{\hyperlink{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8a677bc950828f1c6afe6fe5b0de6e9c8d}{APOGEE}}
+, \newline
+\mbox{\hyperlink{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8af62e575f86d657669e784a5ec4fd4427}{DESCENT}}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{state_8h_a01fdbba1899914c94a55da0cebaa25bb}{is\+Acceleration\+Above5\+Gs}} (float accelZ)
+\item 
+void \mbox{\hyperlink{state_8h_a82ffb1fef09d973f7a2c75e4fe9df62d}{send\+Velocity\+And\+Altitude}} (void)
+\item 
+bool \mbox{\hyperlink{state_8h_a71cd696fb28302a84cc1749e08793f37}{is\+Velocity\+Decreasing}} (float \mbox{\hyperlink{main_8c_ac46e821ae08930cc9e257642e34275a3}{velocity}}, float previousvelocity, uint8\+\_\+t velocitydecreasecount)
+\item 
+bool \mbox{\hyperlink{state_8h_a584f944be1ca6accb1410724f2432da4}{is\+Altitude\+Dropping}} (float \mbox{\hyperlink{main_8c_a0e13a4b4ae0cefdac2a413284239caa6}{altitude}}, float previousaltitude, uint8\+\_\+t altitudedecreasecount)
+\item 
+bool \mbox{\hyperlink{state_8h_a1c1aa1d91b1eb596f8f3c021955188d3}{is\+Tilt\+Angle\+Above90}} (float \mbox{\hyperlink{main_8c_a8b07a56c9e764ad9c06fe53521fcf86d}{tilt}})
+\item 
+bool \mbox{\hyperlink{state_8h_ac10ee4bc8238aad188ecd1773af61849}{is\+Negative\+Velocity}} (float \mbox{\hyperlink{main_8c_ac46e821ae08930cc9e257642e34275a3}{velocity}})
+\item 
+bool \mbox{\hyperlink{state_8h_a3a069e646da955ab5438a12480a2ab5f}{is\+Altitude1300ft}} (float \mbox{\hyperlink{main_8c_a0e13a4b4ae0cefdac2a413284239caa6}{altitude}})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8}\index{state.h@{state.h}!State@{State}}
+\index{State@{State}!state.h@{state.h}}
+\doxysubsubsection{\texorpdfstring{State}{State}}
+{\footnotesize\ttfamily \label{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8} 
+enum \mbox{\hyperlink{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8}{State}}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PRELAUNCH@{PRELAUNCH}!state.h@{state.h}}\index{state.h@{state.h}!PRELAUNCH@{PRELAUNCH}}}\Hypertarget{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8a8fb9d84f659ab0adb96078a2404693b6}\label{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8} 
+PRELAUNCH&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{LAUNCH@{LAUNCH}!state.h@{state.h}}\index{state.h@{state.h}!LAUNCH@{LAUNCH}}}\Hypertarget{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8aa1781f8094bad4504b180803157c42d7}\label{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8} 
+LAUNCH&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{COAST@{COAST}!state.h@{state.h}}\index{state.h@{state.h}!COAST@{COAST}}}\Hypertarget{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8ae509e364ab4c8f25b108b70b0840b142}\label{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8} 
+COAST&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{APOGEE@{APOGEE}!state.h@{state.h}}\index{state.h@{state.h}!APOGEE@{APOGEE}}}\Hypertarget{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8a677bc950828f1c6afe6fe5b0de6e9c8d}\label{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8} 
+APOGEE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{DESCENT@{DESCENT}!state.h@{state.h}}\index{state.h@{state.h}!DESCENT@{DESCENT}}}\Hypertarget{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8af62e575f86d657669e784a5ec4fd4427}\label{state_8h_a5d74787dedbc4e11c1ab15bf487e61f8} 
+DESCENT&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{state_8h_source_l00008}{8}} of file \mbox{\hyperlink{state_8h_source}{state.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{state_8h_a01fdbba1899914c94a55da0cebaa25bb}\index{state.h@{state.h}!isAccelerationAbove5Gs@{isAccelerationAbove5Gs}}
+\index{isAccelerationAbove5Gs@{isAccelerationAbove5Gs}!state.h@{state.h}}
+\doxysubsubsection{\texorpdfstring{isAccelerationAbove5Gs()}{isAccelerationAbove5Gs()}}
+{\footnotesize\ttfamily \label{state_8h_a01fdbba1899914c94a55da0cebaa25bb} 
+bool is\+Acceleration\+Above5\+Gs (\begin{DoxyParamCaption}\item[{float}]{accelZ}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{state_8c_source_l00004}{4}} of file \mbox{\hyperlink{state_8c_source}{state.\+c}}.
+
+\Hypertarget{state_8h_a82ffb1fef09d973f7a2c75e4fe9df62d}\index{state.h@{state.h}!sendVelocityAndAltitude@{sendVelocityAndAltitude}}
+\index{sendVelocityAndAltitude@{sendVelocityAndAltitude}!state.h@{state.h}}
+\doxysubsubsection{\texorpdfstring{sendVelocityAndAltitude()}{sendVelocityAndAltitude()}}
+{\footnotesize\ttfamily \label{state_8h_a82ffb1fef09d973f7a2c75e4fe9df62d} 
+void send\+Velocity\+And\+Altitude (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{state_8c_source_l00012}{12}} of file \mbox{\hyperlink{state_8c_source}{state.\+c}}.
+
+\Hypertarget{state_8h_a71cd696fb28302a84cc1749e08793f37}\index{state.h@{state.h}!isVelocityDecreasing@{isVelocityDecreasing}}
+\index{isVelocityDecreasing@{isVelocityDecreasing}!state.h@{state.h}}
+\doxysubsubsection{\texorpdfstring{isVelocityDecreasing()}{isVelocityDecreasing()}}
+{\footnotesize\ttfamily \label{state_8h_a71cd696fb28302a84cc1749e08793f37} 
+bool is\+Velocity\+Decreasing (\begin{DoxyParamCaption}\item[{float}]{velocity}{, }\item[{float}]{previousvelocity}{, }\item[{uint8\+\_\+t}]{velocitydecreasecount}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{state_8c_source_l00016}{16}} of file \mbox{\hyperlink{state_8c_source}{state.\+c}}.
+
+\Hypertarget{state_8h_a584f944be1ca6accb1410724f2432da4}\index{state.h@{state.h}!isAltitudeDropping@{isAltitudeDropping}}
+\index{isAltitudeDropping@{isAltitudeDropping}!state.h@{state.h}}
+\doxysubsubsection{\texorpdfstring{isAltitudeDropping()}{isAltitudeDropping()}}
+{\footnotesize\ttfamily \label{state_8h_a584f944be1ca6accb1410724f2432da4} 
+bool is\+Altitude\+Dropping (\begin{DoxyParamCaption}\item[{float}]{altitude}{, }\item[{float}]{previousaltitude}{, }\item[{uint8\+\_\+t}]{altitudedecreasecount}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{state_8c_source_l00042}{42}} of file \mbox{\hyperlink{state_8c_source}{state.\+c}}.
+
+\Hypertarget{state_8h_a1c1aa1d91b1eb596f8f3c021955188d3}\index{state.h@{state.h}!isTiltAngleAbove90@{isTiltAngleAbove90}}
+\index{isTiltAngleAbove90@{isTiltAngleAbove90}!state.h@{state.h}}
+\doxysubsubsection{\texorpdfstring{isTiltAngleAbove90()}{isTiltAngleAbove90()}}
+{\footnotesize\ttfamily \label{state_8h_a1c1aa1d91b1eb596f8f3c021955188d3} 
+bool is\+Tilt\+Angle\+Above90 (\begin{DoxyParamCaption}\item[{float}]{tilt}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{state_8c_source_l00069}{69}} of file \mbox{\hyperlink{state_8c_source}{state.\+c}}.
+
+\Hypertarget{state_8h_ac10ee4bc8238aad188ecd1773af61849}\index{state.h@{state.h}!isNegativeVelocity@{isNegativeVelocity}}
+\index{isNegativeVelocity@{isNegativeVelocity}!state.h@{state.h}}
+\doxysubsubsection{\texorpdfstring{isNegativeVelocity()}{isNegativeVelocity()}}
+{\footnotesize\ttfamily \label{state_8h_ac10ee4bc8238aad188ecd1773af61849} 
+bool is\+Negative\+Velocity (\begin{DoxyParamCaption}\item[{float}]{velocity}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{state_8c_source_l00078}{78}} of file \mbox{\hyperlink{state_8c_source}{state.\+c}}.
+
+\Hypertarget{state_8h_a3a069e646da955ab5438a12480a2ab5f}\index{state.h@{state.h}!isAltitude1300ft@{isAltitude1300ft}}
+\index{isAltitude1300ft@{isAltitude1300ft}!state.h@{state.h}}
+\doxysubsubsection{\texorpdfstring{isAltitude1300ft()}{isAltitude1300ft()}}
+{\footnotesize\ttfamily \label{state_8h_a3a069e646da955ab5438a12480a2ab5f} 
+bool is\+Altitude1300ft (\begin{DoxyParamCaption}\item[{float}]{altitude}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{state_8c_source_l00088}{88}} of file \mbox{\hyperlink{state_8c_source}{state.\+c}}.
+

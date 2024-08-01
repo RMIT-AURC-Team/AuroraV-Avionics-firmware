@@ -1,0 +1,117 @@
+\doxysection{Core/\+Src/\+SPI/sensors/baro/\+BMP581.c File Reference}
+\hypertarget{_b_m_p581_8c}{}\label{_b_m_p581_8c}\index{Core/Src/SPI/sensors/baro/BMP581.c@{Core/Src/SPI/sensors/baro/BMP581.c}}
+{\ttfamily \#include "{}BMP581.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{_b_m_p581_8c_a071b0c90b0d7a9b77febe27fb45cab9c}{BMP581\+\_\+init}} (\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}baro, GPIO\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}port, unsigned long cs, float temp\+Sensitivity, float press\+Sensitivity)
+\item 
+void \mbox{\hyperlink{_b_m_p581_8c_a50b5708801934b36667aabf9d00558ca}{BMP581\+\_\+read\+Temp}} (\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}baro, float \texorpdfstring{$\ast$}{*}out)
+\item 
+void \mbox{\hyperlink{_b_m_p581_8c_a64233c4697ed5fc22218ab539b2494e1}{BMP581\+\_\+process\+Raw\+Temp}} (\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}baro, uint8\+\_\+t \texorpdfstring{$\ast$}{*}bytes, float \texorpdfstring{$\ast$}{*}out)
+\item 
+void \mbox{\hyperlink{_b_m_p581_8c_a80063d2799a78fc2819fd4e4fc1ebc49}{BMP581\+\_\+read\+Raw\+Temp}} (\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}baro, uint8\+\_\+t \texorpdfstring{$\ast$}{*}out)
+\item 
+void \mbox{\hyperlink{_b_m_p581_8c_a9aca860761e21144691093475d07e08f}{BMP581\+\_\+read\+Press}} (\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}baro, float \texorpdfstring{$\ast$}{*}out)
+\item 
+void \mbox{\hyperlink{_b_m_p581_8c_a41f455502a91795ee56cd5dc2a260ebd}{BMP581\+\_\+process\+Raw\+Press}} (\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}baro, uint8\+\_\+t \texorpdfstring{$\ast$}{*}bytes, float \texorpdfstring{$\ast$}{*}out)
+\item 
+void \mbox{\hyperlink{_b_m_p581_8c_a4f79af9445244f0115a83b7550c54d90}{BMP581\+\_\+read\+Raw\+Press}} (\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}baro, uint8\+\_\+t \texorpdfstring{$\ast$}{*}out)
+\item 
+void \mbox{\hyperlink{_b_m_p581_8c_a87e2b85895172a32002cb5fda50e3c46}{BMP581\+\_\+write\+Register}} (\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}baro, uint8\+\_\+t address, uint8\+\_\+t data)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{_b_m_p581_8c_adb893f5a9501eb5b6085b42fe537401a}{BMP581\+\_\+read\+Register}} (\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}baro, uint8\+\_\+t address)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{_b_m_p581_8c_a071b0c90b0d7a9b77febe27fb45cab9c}\index{BMP581.c@{BMP581.c}!BMP581\_init@{BMP581\_init}}
+\index{BMP581\_init@{BMP581\_init}!BMP581.c@{BMP581.c}}
+\doxysubsubsection{\texorpdfstring{BMP581\_init()}{BMP581\_init()}}
+{\footnotesize\ttfamily \label{_b_m_p581_8c_a071b0c90b0d7a9b77febe27fb45cab9c} 
+void BMP581\+\_\+init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}}]{baro}{, }\item[{GPIO\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}}]{port}{, }\item[{unsigned long}]{cs}{, }\item[{float}]{temp\+Sensitivity}{, }\item[{float}]{press\+Sensitivity}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_b_m_p581_8c_source_l00003}{3}} of file \mbox{\hyperlink{_b_m_p581_8c_source}{BMP581.\+c}}.
+
+\Hypertarget{_b_m_p581_8c_a50b5708801934b36667aabf9d00558ca}\index{BMP581.c@{BMP581.c}!BMP581\_readTemp@{BMP581\_readTemp}}
+\index{BMP581\_readTemp@{BMP581\_readTemp}!BMP581.c@{BMP581.c}}
+\doxysubsubsection{\texorpdfstring{BMP581\_readTemp()}{BMP581\_readTemp()}}
+{\footnotesize\ttfamily \label{_b_m_p581_8c_a50b5708801934b36667aabf9d00558ca} 
+void BMP581\+\_\+read\+Temp (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}}]{baro}{, }\item[{float \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_b_m_p581_8c_source_l00028}{28}} of file \mbox{\hyperlink{_b_m_p581_8c_source}{BMP581.\+c}}.
+
+\Hypertarget{_b_m_p581_8c_a64233c4697ed5fc22218ab539b2494e1}\index{BMP581.c@{BMP581.c}!BMP581\_processRawTemp@{BMP581\_processRawTemp}}
+\index{BMP581\_processRawTemp@{BMP581\_processRawTemp}!BMP581.c@{BMP581.c}}
+\doxysubsubsection{\texorpdfstring{BMP581\_processRawTemp()}{BMP581\_processRawTemp()}}
+{\footnotesize\ttfamily \label{_b_m_p581_8c_a64233c4697ed5fc22218ab539b2494e1} 
+void BMP581\+\_\+process\+Raw\+Temp (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}}]{baro}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{bytes}{, }\item[{float \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_b_m_p581_8c_source_l00042}{42}} of file \mbox{\hyperlink{_b_m_p581_8c_source}{BMP581.\+c}}.
+
+\Hypertarget{_b_m_p581_8c_a80063d2799a78fc2819fd4e4fc1ebc49}\index{BMP581.c@{BMP581.c}!BMP581\_readRawTemp@{BMP581\_readRawTemp}}
+\index{BMP581\_readRawTemp@{BMP581\_readRawTemp}!BMP581.c@{BMP581.c}}
+\doxysubsubsection{\texorpdfstring{BMP581\_readRawTemp()}{BMP581\_readRawTemp()}}
+{\footnotesize\ttfamily \label{_b_m_p581_8c_a80063d2799a78fc2819fd4e4fc1ebc49} 
+void BMP581\+\_\+read\+Raw\+Temp (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}}]{baro}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_b_m_p581_8c_source_l00053}{53}} of file \mbox{\hyperlink{_b_m_p581_8c_source}{BMP581.\+c}}.
+
+\Hypertarget{_b_m_p581_8c_a9aca860761e21144691093475d07e08f}\index{BMP581.c@{BMP581.c}!BMP581\_readPress@{BMP581\_readPress}}
+\index{BMP581\_readPress@{BMP581\_readPress}!BMP581.c@{BMP581.c}}
+\doxysubsubsection{\texorpdfstring{BMP581\_readPress()}{BMP581\_readPress()}}
+{\footnotesize\ttfamily \label{_b_m_p581_8c_a9aca860761e21144691093475d07e08f} 
+void BMP581\+\_\+read\+Press (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}}]{baro}{, }\item[{float \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_b_m_p581_8c_source_l00066}{66}} of file \mbox{\hyperlink{_b_m_p581_8c_source}{BMP581.\+c}}.
+
+\Hypertarget{_b_m_p581_8c_a41f455502a91795ee56cd5dc2a260ebd}\index{BMP581.c@{BMP581.c}!BMP581\_processRawPress@{BMP581\_processRawPress}}
+\index{BMP581\_processRawPress@{BMP581\_processRawPress}!BMP581.c@{BMP581.c}}
+\doxysubsubsection{\texorpdfstring{BMP581\_processRawPress()}{BMP581\_processRawPress()}}
+{\footnotesize\ttfamily \label{_b_m_p581_8c_a41f455502a91795ee56cd5dc2a260ebd} 
+void BMP581\+\_\+process\+Raw\+Press (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}}]{baro}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{bytes}{, }\item[{float \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_b_m_p581_8c_source_l00080}{80}} of file \mbox{\hyperlink{_b_m_p581_8c_source}{BMP581.\+c}}.
+
+\Hypertarget{_b_m_p581_8c_a4f79af9445244f0115a83b7550c54d90}\index{BMP581.c@{BMP581.c}!BMP581\_readRawPress@{BMP581\_readRawPress}}
+\index{BMP581\_readRawPress@{BMP581\_readRawPress}!BMP581.c@{BMP581.c}}
+\doxysubsubsection{\texorpdfstring{BMP581\_readRawPress()}{BMP581\_readRawPress()}}
+{\footnotesize\ttfamily \label{_b_m_p581_8c_a4f79af9445244f0115a83b7550c54d90} 
+void BMP581\+\_\+read\+Raw\+Press (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}}]{baro}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_b_m_p581_8c_source_l00091}{91}} of file \mbox{\hyperlink{_b_m_p581_8c_source}{BMP581.\+c}}.
+
+\Hypertarget{_b_m_p581_8c_a87e2b85895172a32002cb5fda50e3c46}\index{BMP581.c@{BMP581.c}!BMP581\_writeRegister@{BMP581\_writeRegister}}
+\index{BMP581\_writeRegister@{BMP581\_writeRegister}!BMP581.c@{BMP581.c}}
+\doxysubsubsection{\texorpdfstring{BMP581\_writeRegister()}{BMP581\_writeRegister()}}
+{\footnotesize\ttfamily \label{_b_m_p581_8c_a87e2b85895172a32002cb5fda50e3c46} 
+void BMP581\+\_\+write\+Register (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}}]{baro}{, }\item[{uint8\+\_\+t}]{address}{, }\item[{uint8\+\_\+t}]{data}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_b_m_p581_8c_source_l00099}{99}} of file \mbox{\hyperlink{_b_m_p581_8c_source}{BMP581.\+c}}.
+
+\Hypertarget{_b_m_p581_8c_adb893f5a9501eb5b6085b42fe537401a}\index{BMP581.c@{BMP581.c}!BMP581\_readRegister@{BMP581\_readRegister}}
+\index{BMP581\_readRegister@{BMP581\_readRegister}!BMP581.c@{BMP581.c}}
+\doxysubsubsection{\texorpdfstring{BMP581\_readRegister()}{BMP581\_readRegister()}}
+{\footnotesize\ttfamily \label{_b_m_p581_8c_adb893f5a9501eb5b6085b42fe537401a} 
+uint8\+\_\+t BMP581\+\_\+read\+Register (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{_b_m_p581_8h_struct_b_m_p581}{BMP581}} \texorpdfstring{$\ast$}{*}}]{baro}{, }\item[{uint8\+\_\+t}]{address}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_b_m_p581_8c_source_l00113}{113}} of file \mbox{\hyperlink{_b_m_p581_8c_source}{BMP581.\+c}}.
+

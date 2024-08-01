@@ -1,0 +1,55 @@
+\doxysection{BMP581.\+h}
+\hypertarget{_b_m_p581_8h_source}{}\label{_b_m_p581_8h_source}\index{Core/Inc/SPI/sensors/baro/BMP581.h@{Core/Inc/SPI/sensors/baro/BMP581.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00001}00001\ \textcolor{preprocessor}{\#ifndef\ \_BMP581\_H}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00002}00002\ \textcolor{preprocessor}{\#define\ \_BMP581\_H}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{spi_8h}{SPI/spi.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00005}00005\ \textcolor{preprocessor}{\#include\ "{}stm32f439xx.h"{}}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00007}00007\ \textcolor{preprocessor}{\#define\ BMP581\_TEMP\_SENSITIVITY\ \ (1.0f\ /\ 65535)}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00008}00008\ \textcolor{preprocessor}{\#define\ BMP581\_PRESS\_SENSITIVITY\ (1.0f\ /\ 64)}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00009}00009\ \textcolor{preprocessor}{\#define\ BMP581\_ODR\_CFG\ \ \ \ \ \ \ \ \ \ \ 0x37}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00010}00010\ \textcolor{preprocessor}{\#define\ BMP581\_ODR\_CFG\_PWR\ \ \ \ \ \ \ 0x01}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00011}00011\ \textcolor{preprocessor}{\#define\ BMP581\_ODR\_CFG\_DEEP\_DIS\ \ 0x80}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00012}00012\ \textcolor{preprocessor}{\#define\ BMP581\_OSR\_CFG\_RESERVED\ \ 0x80}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00013}00013\ \textcolor{preprocessor}{\#define\ BMP581\_OSR\_CFG\ \ \ \ \ \ \ \ \ \ \ 0x36}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00014}00014\ \textcolor{preprocessor}{\#define\ BMP581\_OSR\_CFG\_PRESS\_EN\ \ 0x40}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00015}00015\ \textcolor{preprocessor}{\#define\ BMP581\_TEMPERATURE\_XLSB\ \ 0x1D}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00016}00016\ \textcolor{preprocessor}{\#define\ BMP581\_TEMPERATURE\_LSB\ \ \ 0x1E}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00017}00017\ \textcolor{preprocessor}{\#define\ BMP581\_TEMPERATURE\_MSB\ \ \ 0x1F}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00018}00018\ \textcolor{preprocessor}{\#define\ BMP581\_PRESSURE\_XLSB\ \ \ \ \ 0x20}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00019}00019\ \textcolor{preprocessor}{\#define\ BMP581\_PRESSURE\_LSB\ \ \ \ \ \ 0x21}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00020}00020\ \textcolor{preprocessor}{\#define\ BMP581\_PRESSURE\_MSB\ \ \ \ \ \ 0x22}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00022}00022\ \textcolor{preprocessor}{\#define\ BMP581\_DATA\_SIZE\ \ 3\ }\textcolor{comment}{//\ Three\ bytes\ per\ reading}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00023}00023\ \textcolor{preprocessor}{\#define\ BMP581\_DATA\_COUNT\ 2\ }\textcolor{comment}{//\ Two\ readings\ -\/\ temperature,\ pressure}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00024}00024\ \textcolor{preprocessor}{\#define\ BMP581\_DATA\_TOTAL\ (BMP581\_DATA\_COUNT\ *\ BMP581\_DATA\_SIZE)}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00026}\mbox{\hyperlink{struct_b_m_p581}{00026}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00027}00027\ \ \ \mbox{\hyperlink{spi_8h_d5/d83/struct_s_p_i}{SPI}}\ base;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00028}00028\ \ \ \textcolor{keywordtype}{float}\ pressSensitivity;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00029}00029\ \ \ \textcolor{keywordtype}{float}\ tempSensitivity;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00030}00030\ \ \ void\ (*readTemp)(\textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ \textcolor{keywordtype}{float}\ *);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00031}00031\ \ \ void\ (*readPress)(\textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ \textcolor{keywordtype}{float}\ *);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00032}00032\ \ \ void\ (*readRawTemp)(\textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ uint8\_t\ *);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00033}00033\ \ \ void\ (*readRawPress)(\textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ uint8\_t\ *);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00034}00034\ \ \ void\ (*processRawTemp)(\textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ uint8\_t\ *,\ \textcolor{keywordtype}{float}\ *);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00035}00035\ \ \ void\ (*processRawPress)(\textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ uint8\_t\ *,\ \textcolor{keywordtype}{float}\ *);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00036}00036\ \}\ \mbox{\hyperlink{struct_b_m_p581}{BMP581}};}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00038}00038\ \textcolor{keywordtype}{void}\ BMP581\_init(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ GPIO\_TypeDef\ *,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float},\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float});}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00039}00039\ \textcolor{keywordtype}{void}\ BMP581\_readTemp(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ \textcolor{keywordtype}{float}\ *);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00040}00040\ \textcolor{keywordtype}{void}\ BMP581\_readPress(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ \textcolor{keywordtype}{float}\ *);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00041}00041\ \textcolor{keywordtype}{void}\ BMP581\_readRawTemp(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ uint8\_t\ *);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00042}00042\ \textcolor{keywordtype}{void}\ BMP581\_readRawPress(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ uint8\_t\ *);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00043}00043\ \textcolor{keywordtype}{void}\ BMP581\_processRawTemp(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ uint8\_t\ *,\ \textcolor{keywordtype}{float}\ *);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00044}00044\ \textcolor{keywordtype}{void}\ BMP581\_processRawPress(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ uint8\_t\ *,\ \textcolor{keywordtype}{float}\ *);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00046}00046\ uint8\_t\ BMP581\_readRegister(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ uint8\_t);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00047}00047\ \textcolor{keywordtype}{void}\ BMP581\_writeRegister(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *,\ uint8\_t,\ uint8\_t);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8h_source_l00049}00049\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,46 @@
+\doxysection{drivers.\+h}
+\hypertarget{drivers_8h_source}{}\label{drivers_8h_source}\index{Core/Inc/drivers.h@{Core/Inc/drivers.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00001}00001\ \textcolor{preprocessor}{\#ifndef\ \_DRIVERS\_H}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00002}00002\ \textcolor{preprocessor}{\#define\ \_DRIVERS\_H}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00004}00004\ \textcolor{preprocessor}{\#include\ "{}stm32f439xx.h"{}}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00006}\mbox{\hyperlink{struct_g_p_s_data}{00006}}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_g_p_s_data}{GPSData}}\ \{}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00007}00007\ \ \ \textcolor{keywordtype}{char}\ time[15];}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00008}00008\ \ \ uint8\_t\ hour;}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00009}00009\ \ \ uint8\_t\ minute;}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00010}00010\ \ \ uint8\_t\ second;}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00011}00011\ \ \ \textcolor{keywordtype}{char}\ latitude[15];}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00012}00012\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ latitude\_num;}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00013}00013\ \ \ \textcolor{keywordtype}{char}\ N\_S[15];}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00014}00014\ \ \ \textcolor{keywordtype}{char}\ longitude[15];}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00015}00015\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ longitude\_num;}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00016}00016\ \ \ \textcolor{keywordtype}{char}\ E\_W[15];}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00017}00017\ \ \ \textcolor{keywordtype}{char}\ fix[15];}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00018}00018\ \ \ \textcolor{keywordtype}{char}\ satellites[15];}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00019}00019\ \ \ \textcolor{keywordtype}{char}\ hdop[15];}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00020}00020\ \ \ \textcolor{keywordtype}{char}\ altitude[15];}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00021}00021\ \ \ uint8\_t\ lock;\ \textcolor{comment}{//\ 0\ =\ no\ lock,\ 1\ =\ lock}}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00022}00022\ \};}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00024}00024\ \textcolor{keywordtype}{void}\ configure\_RCC\_APB1(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00025}00025\ \textcolor{keywordtype}{void}\ configure\_RCC\_APB2(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00026}00026\ \textcolor{keywordtype}{void}\ configure\_RCC\_AHB1(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00027}00027\ \textcolor{keywordtype}{void}\ configure\_MISC\_GPIO(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00028}00028\ \textcolor{keywordtype}{void}\ configure\_UART3\_GPS(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00029}00029\ \textcolor{keywordtype}{void}\ configure\_UART6\_Serial\_2\_mini\_USB(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00030}00030\ \textcolor{keywordtype}{void}\ configure\_external\_interrupts(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00031}00031\ \textcolor{keywordtype}{void}\ EXTI1\_IRQHandler(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00033}00033\ \textcolor{keywordtype}{void}\ TIM6init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00034}00034\ \textcolor{keywordtype}{void}\ TIM7init(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00035}00035\ \textcolor{keywordtype}{void}\ buzzer(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00036}00036\ \textcolor{keywordtype}{void}\ send\_GPS\_messege(\textcolor{keywordtype}{char}\ *pointerdata);}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00038}00038\ \textcolor{keywordtype}{void}\ DecodeGPS(\textcolor{keywordtype}{char}\ *GPS,\ \textcolor{keyword}{struct}\ \mbox{\hyperlink{struct_g_p_s_data}{GPSData}}\ *data);}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00039}00039\ \textcolor{keywordtype}{void}\ GPS\_test(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{drivers_8h_source_l00040}00040\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

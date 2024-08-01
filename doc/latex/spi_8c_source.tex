@@ -1,0 +1,39 @@
+\doxysection{spi.\+c}
+\hypertarget{spi_8c_source}{}\label{spi_8c_source}\index{Core/Src/SPI/spi.c@{Core/Src/SPI/spi.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}spi.h"{}}}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00003}00003\ \textcolor{comment}{/*\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00014}\mbox{\hyperlink{group___s_p_i_ga656f7b06a728e76eb9ac0b10e1bd5bb7}{00014}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___s_p_i_ga656f7b06a728e76eb9ac0b10e1bd5bb7}{SPI\_init}}(\mbox{\hyperlink{struct_s_p_i}{SPI}}\ *spi,\ \mbox{\hyperlink{group___s_p_i_gad258d4c51629346fceac4679b3209ad9}{DeviceType}}\ device,\ SPI\_TypeDef\ *interface,\ GPIO\_TypeDef\ *port,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ cs)\ \{}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00015}00015\ \ \ spi-\/>\mbox{\hyperlink{struct_s_p_i_a4037993dbe40ac54f2e929b5db9d3b4c}{device}}\ \ \ \ =\ device;}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00016}00016\ \ \ spi-\/>\mbox{\hyperlink{struct_s_p_i_acbda99bed92b76328c472ad0e523424e}{interface}}\ =\ interface;}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00017}00017\ \ \ spi-\/>\mbox{\hyperlink{struct_s_p_i_a82241972e0292c7de95ea1e293e11be3}{port}}\ \ \ \ \ \ =\ port;}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00018}00018\ \ \ spi-\/>\mbox{\hyperlink{struct_s_p_i_a8f467bedd92cfa29ba7b757711ece04d}{cs}}\ \ \ \ \ \ \ \ =\ cs;}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00019}00019\ \ \ spi-\/>\mbox{\hyperlink{struct_s_p_i_a194e08b54d45d097bba08a024fb0826e}{send}}\ \ \ \ \ \ =\ \mbox{\hyperlink{group___s_p_i_ga205c59ab72d018c05d33f91e7c7808e7}{SPI\_send}};}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00020}00020\ \ \ spi-\/>\mbox{\hyperlink{struct_s_p_i_ac4444c9c043175f1ed173040fa123e2e}{receive}}\ \ \ =\ \mbox{\hyperlink{group___s_p_i_gacddb795ecded56fe9f987bf41785a3a2}{SPI\_receive}};}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00021}00021\ \ \ spi-\/>\mbox{\hyperlink{struct_s_p_i_a54668c3e267dcd01feff6c083a372846}{transmit}}\ \ =\ \mbox{\hyperlink{group___s_p_i_ga45245db392649677ce4d93b334f6e0fd}{SPI\_transmit}};}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00022}00022\ \}}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00024}00024\ \textcolor{comment}{/*\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00032}\mbox{\hyperlink{group___s_p_i_ga45245db392649677ce4d93b334f6e0fd}{00032}}\ uint16\_t\ \mbox{\hyperlink{group___s_p_i_ga45245db392649677ce4d93b334f6e0fd}{SPI\_transmit}}(\mbox{\hyperlink{struct_s_p_i}{SPI}}\ *spi,\ uint16\_t\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00033}00033\ \ \ uint16\_t\ response;}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00034}00034\ \ \ \mbox{\hyperlink{group___s_p_i_ga205c59ab72d018c05d33f91e7c7808e7}{SPI\_send}}(spi,\ data);}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00035}00035\ \ \ \mbox{\hyperlink{group___s_p_i_gacddb795ecded56fe9f987bf41785a3a2}{SPI\_receive}}(spi,\ \&response);}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00036}00036\ \ \ \textcolor{keywordflow}{while}\ ((spi-\/>\mbox{\hyperlink{struct_s_p_i_acbda99bed92b76328c472ad0e523424e}{interface}}-\/>SR\ \&\ SPI\_SR\_BSY)\ ==\ SPI\_SR\_BSY);}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00037}00037\ \ \ \textcolor{keywordflow}{return}\ response;}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00038}00038\ \}}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00040}00040\ \textcolor{comment}{/*\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00048}\mbox{\hyperlink{group___s_p_i_ga205c59ab72d018c05d33f91e7c7808e7}{00048}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___s_p_i_ga205c59ab72d018c05d33f91e7c7808e7}{SPI\_send}}(\mbox{\hyperlink{struct_s_p_i}{SPI}}\ *spi,\ uint16\_t\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00049}00049\ \ \ \textcolor{keywordflow}{while}\ ((spi-\/>\mbox{\hyperlink{struct_s_p_i_acbda99bed92b76328c472ad0e523424e}{interface}}-\/>SR\ \&\ SPI\_SR\_TXE)\ ==\ 0);}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00050}00050\ \ \ spi-\/>\mbox{\hyperlink{struct_s_p_i_acbda99bed92b76328c472ad0e523424e}{interface}}-\/>DR\ =\ data;}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00051}00051\ \}}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00053}00053\ \textcolor{comment}{/*\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00061}\mbox{\hyperlink{group___s_p_i_gacddb795ecded56fe9f987bf41785a3a2}{00061}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___s_p_i_gacddb795ecded56fe9f987bf41785a3a2}{SPI\_receive}}(\mbox{\hyperlink{struct_s_p_i}{SPI}}\ *spi,\ uint16\_t\ *data)\ \{}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00062}00062\ \ \ \textcolor{keywordflow}{while}\ ((spi-\/>\mbox{\hyperlink{struct_s_p_i_acbda99bed92b76328c472ad0e523424e}{interface}}-\/>SR\ \&\ (SPI\_SR\_RXNE))\ ==\ 0);}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00063}00063\ \ \ *data\ =\ spi-\/>\mbox{\hyperlink{struct_s_p_i_acbda99bed92b76328c472ad0e523424e}{interface}}-\/>DR;}
+\DoxyCodeLine{\Hypertarget{spi_8c_source_l00064}00064\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,132 @@
+\doxysection{BMP581.\+c}
+\hypertarget{_b_m_p581_8c_source}{}\label{_b_m_p581_8c_source}\index{Core/Src/SPI/sensors/baro/BMP581.c@{Core/Src/SPI/sensors/baro/BMP581.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}BMP581.h"{}}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00003}00003\ \textcolor{keywordtype}{void}\ BMP581\_init(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ GPIO\_TypeDef\ *port,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ cs,\ \textcolor{keywordtype}{float}\ tempSensitivity,\ \textcolor{keywordtype}{float}\ pressSensitivity)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00004}00004\ \ \ SPI\_init(\&baro-\/>base,\ \mbox{\hyperlink{spi_8h_ad258d4c51629346fceac4679b3209ad9ad6e973b156c9713198fd43f7eae95f56}{SENSOR\_BARO}},\ SPI1,\ port,\ cs);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00005}00005\ \ \ baro-\/>tempSensitivity\ \ =\ tempSensitivity;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00006}00006\ \ \ baro-\/>pressSensitivity\ =\ pressSensitivity;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00007}00007\ \ \ baro-\/>readTemp\ \ \ \ \ \ \ \ \ =\ BMP581\_readTemp;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00008}00008\ \ \ baro-\/>readRawTemp\ \ \ \ \ \ =\ BMP581\_readRawTemp;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00009}00009\ \ \ baro-\/>processRawTemp\ \ \ =\ BMP581\_processRawTemp;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00010}00010\ \ \ baro-\/>readPress\ \ \ \ \ \ \ \ =\ BMP581\_readPress;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00011}00011\ \ \ baro-\/>readRawPress\ \ \ \ \ =\ BMP581\_readRawPress;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00012}00012\ \ \ baro-\/>processRawPress\ \ =\ BMP581\_processRawPress;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00014}00014\ \ \ BMP581\_writeRegister(baro,\ BMP581\_ODR\_CFG,\ BMP581\_ODR\_CFG\_PWR\ |\ BMP581\_ODR\_CFG\_DEEP\_DIS);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00015}00015\ \ \ uint8\_t\ OSRCFG\ =\ BMP581\_readRegister(baro,\ BMP581\_OSR\_CFG);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00016}00016\ \ \ BMP581\_writeRegister(baro,\ BMP581\_OSR\_CFG,\ (BMP581\_OSR\_CFG\_RESERVED\ \&\ OSRCFG)\ |\ BMP581\_OSR\_CFG\_PRESS\_EN);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00017}00017\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00019}00019\ \textcolor{comment}{/********************************\ DEVICE\ METHODS\ ********************************/}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00021}00021\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00022}00022\ \textcolor{comment}{\ *\ READ\_TEMP}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00023}00023\ \textcolor{comment}{\ *\ \ Read\ processed\ floating\ point\ temperature}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00024}00024\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00025}00025\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00026}00026\ \textcolor{comment}{\ *\ \ -\/\ out:\ floating\ point\ temperature}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00027}00027\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00028}00028\ \textcolor{keywordtype}{void}\ BMP581\_readTemp(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ \textcolor{keywordtype}{float}\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00029}00029\ \ \ uint8\_t\ bytes[BMP581\_DATA\_TOTAL];}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00030}00030\ \ \ baro-\/>readRawTemp(baro,\ bytes);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00031}00031\ \ \ baro-\/>processRawTemp(baro,\ bytes,\ out);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00032}00032\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00034}00034\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00035}00035\ \textcolor{comment}{\ *\ PROCESS\_RAW\_TEMP}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00036}00036\ \textcolor{comment}{\ *\ \ Process\ raw\ values\ to\ floating\ point\ temperature}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00037}00037\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00038}00038\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00039}00039\ \textcolor{comment}{\ *\ \ -\/\ bytes:\ 3-\/byte\ array\ of\ raw\ temperature\ values\ in\ big-\/endian}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00040}00040\ \textcolor{comment}{\ *\ \ -\/\ out:\ floating\ point\ temperature}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00041}00041\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00042}00042\ \textcolor{keywordtype}{void}\ BMP581\_processRawTemp(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ uint8\_t\ *bytes,\ \textcolor{keywordtype}{float}\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00043}00043\ \ \ *out\ =\ baro-\/>tempSensitivity\ *\ (int32\_t)(((uint32\_t)bytes[0]\ <<\ 16)\ |\ ((uint32\_t)bytes[1]\ <<\ 8)\ |\ bytes[0]);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00044}00044\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00046}00046\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00047}00047\ \textcolor{comment}{\ *\ READ\_RAW\_TEMP}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00048}00048\ \textcolor{comment}{\ *\ \ Read\ in\ raw\ values\ from\ temperature\ registers}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00049}00049\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00050}00050\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00051}00051\ \textcolor{comment}{\ *\ \ -\/\ out:\ 3-\/byte\ array\ of\ raw\ temperature\ in\ big-\/endian}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00052}00052\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00053}00053\ \textcolor{keywordtype}{void}\ BMP581\_readRawTemp(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ uint8\_t\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00054}00054\ \ \ out[0]\ =\ BMP581\_readRegister(baro,\ BMP581\_TEMPERATURE\_MSB);\ \ \textcolor{comment}{//\ temp\ high}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00055}00055\ \ \ out[1]\ =\ BMP581\_readRegister(baro,\ BMP581\_TEMPERATURE\_LSB);\ \ \textcolor{comment}{//\ temp\ low}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00056}00056\ \ \ out[2]\ =\ BMP581\_readRegister(baro,\ BMP581\_TEMPERATURE\_XLSB);\ \textcolor{comment}{//\ temp\ mid}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00057}00057\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00059}00059\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00060}00060\ \textcolor{comment}{\ *\ READ\_PRESS}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00061}00061\ \textcolor{comment}{\ *\ \ Read\ processed\ floating\ point\ pressure}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00062}00062\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00063}00063\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00064}00064\ \textcolor{comment}{\ *\ \ -\/\ out:\ floating\ point\ pressure}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00065}00065\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00066}00066\ \textcolor{keywordtype}{void}\ BMP581\_readPress(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ \textcolor{keywordtype}{float}\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00067}00067\ \ \ uint8\_t\ bytes[BMP581\_DATA\_TOTAL];}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00068}00068\ \ \ baro-\/>readRawPress(baro,\ bytes);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00069}00069\ \ \ baro-\/>processRawPress(baro,\ bytes,\ out);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00070}00070\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00072}00072\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00073}00073\ \textcolor{comment}{\ *\ PROCESS\_RAW\_PRESSURE}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00074}00074\ \textcolor{comment}{\ *\ \ Process\ raw\ values\ to\ floating\ point\ pressure}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00075}00075\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00076}00076\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00077}00077\ \textcolor{comment}{\ *\ \ -\/\ bytes:\ 3-\/byte\ array\ of\ raw\ pressure\ in\ big-\/endian}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00078}00078\ \textcolor{comment}{\ *\ \ -\/\ out:\ floating\ point\ pressure}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00079}00079\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00080}00080\ \textcolor{keywordtype}{void}\ BMP581\_processRawPress(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ uint8\_t\ *bytes,\ \textcolor{keywordtype}{float}\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00081}00081\ \ \ *out\ =\ baro-\/>pressSensitivity\ *\ (int32\_t)(((uint32\_t)bytes[0]\ <<\ 16)\ |\ ((uint32\_t)bytes[1]\ <<\ 8)\ |\ bytes[0]);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00082}00082\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00084}00084\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00085}00085\ \textcolor{comment}{\ *\ READ\_RAW\_TEMP}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00086}00086\ \textcolor{comment}{\ *\ \ Read\ in\ raw\ values\ from\ temperature\ registers}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00087}00087\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00088}00088\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00089}00089\ \textcolor{comment}{\ *\ \ -\/\ out:\ 3-\/byte\ array\ of\ raw\ temperature\ in\ big-\/endian}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00090}00090\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00091}00091\ \textcolor{keywordtype}{void}\ BMP581\_readRawPress(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ uint8\_t\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00092}00092\ \ \ out[0]\ =\ BMP581\_readRegister(baro,\ BMP581\_PRESSURE\_MSB);\ \ \textcolor{comment}{//\ temp\ high}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00093}00093\ \ \ out[1]\ =\ BMP581\_readRegister(baro,\ BMP581\_PRESSURE\_LSB);\ \ \textcolor{comment}{//\ temp\ low}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00094}00094\ \ \ out[2]\ =\ BMP581\_readRegister(baro,\ BMP581\_PRESSURE\_XLSB);\ \textcolor{comment}{//\ temp\ mid}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00095}00095\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00097}00097\ \textcolor{comment}{/********************************\ INTERFACE\ METHODS\ ********************************/}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00099}00099\ \textcolor{keywordtype}{void}\ BMP581\_writeRegister(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ uint8\_t\ address,\ uint8\_t\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00100}00100\ \ \ uint16\_t\ response;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00101}00101\ \ \ \mbox{\hyperlink{spi_8h_d5/d83/struct_s_p_i}{SPI}}\ spi\ =\ baro-\/>base;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00103}00103\ \ \ \textcolor{comment}{//\ Send\ write\ command\ with\ address\ and\ data}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00104}00104\ \ \ uint16\_t\ payload\ =\ (address\ <<\ 0x08)\ |\ data;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00105}00105\ \ \ spi.port-\/>ODR\ \&=\ \string~spi.cs;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00106}00106\ \ \ spi.send(\&spi,\ payload);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00108}00108\ \ \ \textcolor{comment}{//\ Read\ in\ response\ from\ interface}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00109}00109\ \ \ spi.receive(\&spi,\ \&response);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00110}00110\ \ \ spi.port-\/>ODR\ |=\ spi.cs;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00111}00111\ \}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00113}00113\ uint8\_t\ BMP581\_readRegister(\mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ *baro,\ uint8\_t\ address)\ \{}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00114}00114\ \ \ uint16\_t\ response;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00115}00115\ \ \ \mbox{\hyperlink{spi_8h_d5/d83/struct_s_p_i}{SPI}}\ spi\ =\ baro-\/>base;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00116}00116\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00117}00117\ \ \ \textcolor{comment}{//\ Send\ write\ command\ with\ address\ and\ data}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00118}00118\ \ \ uint16\_t\ payload\ =\ (address\ <<\ 0x8)\ |\ 0x8000;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00119}00119\ \ \ spi.port-\/>ODR\ \&=\ \string~spi.cs;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00120}00120\ \ \ spi.send(\&spi,\ payload);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00122}00122\ \ \ \textcolor{comment}{//\ Read\ in\ response\ from\ interface}}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00123}00123\ \ \ spi.receive(\&spi,\ \&response);}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00124}00124\ \ \ spi.port-\/>ODR\ |=\ spi.cs;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00125}00125\ \ \ \textcolor{keywordflow}{return}\ (uint8\_t)response;}
+\DoxyCodeLine{\Hypertarget{_b_m_p581_8c_source_l00126}00126\ \}}
+
+\end{DoxyCode}

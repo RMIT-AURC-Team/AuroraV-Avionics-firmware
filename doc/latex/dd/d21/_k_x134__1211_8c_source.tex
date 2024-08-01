@@ -1,0 +1,107 @@
+\doxysection{KX134\+\_\+1211.\+c}
+\hypertarget{_k_x134__1211_8c_source}{}\label{_k_x134__1211_8c_source}\index{Core/Src/SPI/sensors/accel/KX134\_1211.c@{Core/Src/SPI/sensors/accel/KX134\_1211.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}KX134\_1211.h"{}}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00003}00003\ \textcolor{keywordtype}{void}\ KX134\_1211\_init(\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *accel,\ GPIO\_TypeDef\ *port,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{long}\ cs,\ uint8\_t\ scale,\ \textcolor{keyword}{const}\ uint8\_t\ *axes)\ \{}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00004}00004\ \ \ SPI\_init(\&accel-\/>base,\ \mbox{\hyperlink{spi_8h_ad258d4c51629346fceac4679b3209ad9aa56beb7f0e9c67c156ee802c9f640cc8}{SENSOR\_ACCEL}},\ SPI1,\ port,\ cs);}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00005}00005\ \ \ accel-\/>axes\ \ \ \ \ \ \ \ \ \ \ \ =\ axes;}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00006}00006\ \ \ accel-\/>readAccel\ \ \ \ \ \ \ =\ KX134\_1211\_readAccel;}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00007}00007\ \ \ accel-\/>readRawBytes\ \ \ \ =\ KX134\_1211\_readRawBytes;}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00008}00008\ \ \ accel-\/>processRawBytes\ =\ KX134\_1211\_processRawBytes;}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00010}00010\ \ \ \textcolor{comment}{//\ Set\ value\ of\ GSEL\ and\ sensitivity\ based\ on\ selected\ scale}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00011}00011\ \ \ uint8\_t\ GSEL\ =\ 0x00;}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00012}00012\ \ \ \textcolor{keywordflow}{if}\ (scale\ ==\ 32)\ \{}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00013}00013\ \ \ \ \ GSEL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ KX134\_1211\_CNTL1\_GSEL(32);}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00014}00014\ \ \ \ \ accel-\/>sensitivity\ =\ KX134\_1211\_SENSITIVITY(32);}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00015}00015\ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (scale\ ==\ 16)\ \{}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00016}00016\ \ \ \ \ GSEL\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ KX134\_1211\_CNTL1\_GSEL(16);}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00017}00017\ \ \ \ \ accel-\/>sensitivity\ =\ KX134\_1211\_SENSITIVITY(16);}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00018}00018\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00020}00020\ \ \ \textcolor{comment}{//\ Configure\ accelerometer\ registers}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00021}00021\ \ \ KX134\_1211\_writeRegister(accel,\ KX134\_1211\_CNTL1,\ KX134\_1211\_CNTL1\_RES\ |\ GSEL);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Accel\ select,\ selected\ sensitivity}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00022}00022\ \ \ uint8\_t\ ODCNTL\ =\ KX134\_1211\_readRegister(accel,\ KX134\_1211\_ODCNTL);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Read\ from\ register\ for\ reserve\ mask}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00023}00023\ \ \ KX134\_1211\_writeRegister(accel,\ KX134\_1211\_ODCNTL,\ (KX134\_1211\_ODCNTL\_RESERVED\ \&\ ODCNTL)\ |\ 0x2A);\ \ \ \ \ \ \textcolor{comment}{//\ No\ filter,\ fast\ startup,\ 800Hz}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00024}00024\ \ \ KX134\_1211\_writeRegister(accel,\ KX134\_1211\_CNTL1,\ KX134\_1211\_CNTL1\_PC1\ |\ KX134\_1211\_CNTL1\_RES\ |\ GSEL);\ \textcolor{comment}{//\ Enable\ PC1}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00025}00025\ \}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00027}00027\ \textcolor{comment}{/********************************\ DEVICE\ METHODS\ ********************************/}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00029}00029\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00030}00030\ \textcolor{comment}{\ *\ READ\_ACCEL}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00031}00031\ \textcolor{comment}{\ *\ \ Read\ processed\ floating\ point\ accelerations}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00032}00032\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00033}00033\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00034}00034\ \textcolor{comment}{\ *\ \ -\/\ out:\ 3-\/float\ array\ of\ X-\/Y-\/Z\ accelerations}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00035}00035\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00036}00036\ \textcolor{keywordtype}{void}\ KX134\_1211\_readAccel(\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *accel,\ \textcolor{keywordtype}{float}\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00037}00037\ \ \ uint8\_t\ bytes[KX134\_1211\_DATA\_TOTAL];}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00038}00038\ \ \ accel-\/>readRawBytes(accel,\ bytes);}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00039}00039\ \ \ accel-\/>processRawBytes(accel,\ bytes,\ out);}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00040}00040\ \}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00042}00042\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00043}00043\ \textcolor{comment}{\ *\ PROCESS\_RAW\_BYTES}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00044}00044\ \textcolor{comment}{\ *\ \ Process\ raw\ values\ to\ floating\ point\ accelerations}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00045}00045\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00046}00046\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00047}00047\ \textcolor{comment}{\ *\ \ -\/\ bytes:\ 6-\/byte\ array\ of\ raw\ X-\/Y-\/Z\ values\ in\ big-\/endian}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00048}00048\ \textcolor{comment}{\ *\ \ -\/\ out:\ 3-\/float\ array\ of\ X-\/Y-\/Z\ accelerations}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00049}00049\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00050}00050\ \textcolor{keywordtype}{void}\ KX134\_1211\_processRawBytes(\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *accel,\ uint8\_t\ *bytes,\ \textcolor{keywordtype}{float}\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00051}00051\ \ \ out[0]\ =\ accel-\/>sensitivity\ *\ (int16\_t)(((uint16\_t)bytes[0]\ <<\ 8)\ |\ bytes[1]);\ \textcolor{comment}{//\ Accel\ X}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00052}00052\ \ \ out[1]\ =\ accel-\/>sensitivity\ *\ (int16\_t)(((uint16\_t)bytes[2]\ <<\ 8)\ |\ bytes[3]);\ \textcolor{comment}{//\ Accel\ Y}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00053}00053\ \ \ out[2]\ =\ accel-\/>sensitivity\ *\ (int16\_t)(((uint16\_t)bytes[4]\ <<\ 8)\ |\ bytes[5]);\ \textcolor{comment}{//\ Accel\ Z}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00054}00054\ \}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00056}00056\ \textcolor{comment}{/*\ ===============================================================================}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00057}00057\ \textcolor{comment}{\ *\ READ\_RAW\_BYTES}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00058}00058\ \textcolor{comment}{\ *\ \ Read\ in\ raw\ values\ from\ sensor\ registers}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00059}00059\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00060}00060\ \textcolor{comment}{\ *\ PARAMETERS}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00061}00061\ \textcolor{comment}{\ *\ \ -\/\ out:\ 6-\/byte\ array\ of\ raw\ X-\/Y-\/Z\ values\ in\ big-\/endian}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00062}00062\ \textcolor{comment}{\ *\ ===============================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00063}00063\ \textcolor{keywordtype}{void}\ KX134\_1211\_readRawBytes(\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *accel,\ uint8\_t\ *out)\ \{}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00064}00064\ \ \ out[0]\ =\ KX134\_1211\_readRegister(accel,\ KX134\_1211\_XOUT\_H);\ \textcolor{comment}{//\ Accel\ X\ high}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00065}00065\ \ \ out[1]\ =\ KX134\_1211\_readRegister(accel,\ KX134\_1211\_XOUT\_L);\ \textcolor{comment}{//\ Accel\ X\ low}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00066}00066\ \ \ out[2]\ =\ KX134\_1211\_readRegister(accel,\ KX134\_1211\_YOUT\_H);\ \textcolor{comment}{//\ Accel\ Y\ high}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00067}00067\ \ \ out[3]\ =\ KX134\_1211\_readRegister(accel,\ KX134\_1211\_YOUT\_L);\ \textcolor{comment}{//\ Accel\ Y\ low}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00068}00068\ \ \ out[4]\ =\ KX134\_1211\_readRegister(accel,\ KX134\_1211\_ZOUT\_H);\ \textcolor{comment}{//\ Accel\ Z\ high}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00069}00069\ \ \ out[5]\ =\ KX134\_1211\_readRegister(accel,\ KX134\_1211\_ZOUT\_L);\ \textcolor{comment}{//\ Accel\ Z\ low}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00070}00070\ \}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00072}00072\ \textcolor{comment}{/********************************\ INTERFACE\ METHODS\ ********************************/}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00074}00074\ \textcolor{keywordtype}{void}\ KX134\_1211\_writeRegister(\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *accel,\ uint8\_t\ address,\ uint8\_t\ data)\ \{}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00075}00075\ \ \ uint16\_t\ response;}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00076}00076\ \ \ \mbox{\hyperlink{spi_8h_d5/d83/struct_s_p_i}{SPI}}\ spi\ =\ accel-\/>base;}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00078}00078\ \ \ \textcolor{comment}{//\ Send\ write\ command\ with\ address\ and\ data}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00079}00079\ \ \ uint16\_t\ payload\ =\ (address\ <<\ 0x08)\ |\ data;\ \textcolor{comment}{//\ Load\ payload\ with\ address\ and\ data}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00080}00080\ \ \ spi.port-\/>ODR\ \&=\ \string~spi.cs;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Lower\ chip\ select}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00081}00081\ \ \ spi.send(\&spi,\ payload);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Send\ payload}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00083}00083\ \ \ \textcolor{comment}{//\ Read\ in\ response\ from\ interface}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00084}00084\ \ \ spi.receive(\&spi,\ \&response);\ \textcolor{comment}{//\ Read\ in\ response\ from\ receive\ buffer}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00085}00085\ \ \ spi.port-\/>ODR\ |=\ spi.cs;\ \ \ \ \ \ \textcolor{comment}{//\ Raise\ chip\ select}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00086}00086\ \}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00088}00088\ uint8\_t\ KX134\_1211\_readRegister(\mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ *accel,\ uint8\_t\ address)\ \{}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00089}00089\ \ \ uint16\_t\ response;}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00090}00090\ \ \ \mbox{\hyperlink{spi_8h_d5/d83/struct_s_p_i}{SPI}}\ spi\ =\ accel-\/>base;}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00092}00092\ \ \ \textcolor{comment}{//\ Send\ read\ command\ and\ address}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00093}00093\ \ \ uint16\_t\ payload\ =\ (address\ <<\ 0x08)\ |\ 0x8000;\ \textcolor{comment}{//\ Load\ payload\ with\ address\ and\ read\ command}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00094}00094\ \ \ spi.port-\/>ODR\ \&=\ \string~spi.cs;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Lower\ chip\ select}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00095}00095\ \ \ spi.send(\&spi,\ payload);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Send\ payload}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00097}00097\ \ \ \textcolor{comment}{//\ Read\ in\ response\ from\ interface}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00098}00098\ \ \ spi.receive(\&spi,\ \&response);\ \textcolor{comment}{//\ Read\ in\ response\ from\ receive\ buffer}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00099}00099\ \ \ spi.port-\/>ODR\ |=\ spi.cs;\ \ \ \ \ \ \textcolor{comment}{//\ Raise\ chip\ select}}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00100}00100\ \ \ \textcolor{keywordflow}{return}\ (uint8\_t)response;}
+\DoxyCodeLine{\Hypertarget{_k_x134__1211_8c_source_l00101}00101\ \}}
+
+\end{DoxyCode}

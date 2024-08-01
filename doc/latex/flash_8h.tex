@@ -1,0 +1,47 @@
+\doxysection{Core/\+Inc/\+SPI/flash/flash.h File Reference}
+\hypertarget{flash_8h}{}\label{flash_8h}\index{Core/Inc/SPI/flash/flash.h@{Core/Inc/SPI/flash/flash.h}}
+{\ttfamily \#include "{}spi.\+h"{}}\newline
+{\ttfamily \#include "{}stm32f439xx.\+h"{}}\newline
+\doxysubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{group___flash_struct_flash}{Flash}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group___flash_ga89ac9240526b89adb341e6c9b8dcfc5c}{FLASH\+\_\+\+PAGE\+\_\+\+PROGRAM}}~0x02
+\item 
+\#define \mbox{\hyperlink{group___flash_ga19873f9e7a38acf026833f08eb28a89e}{FLASH\+\_\+\+READ\+\_\+\+DATA}}~0x03
+\item 
+\#define \mbox{\hyperlink{group___flash_ga70ec69c62090d150ee5c9a13aacf6618}{FLASH\+\_\+\+WRITE\+\_\+\+ENABLE}}~0x06
+\item 
+\#define \mbox{\hyperlink{group___flash_gaef6ee7d536780e36601904de04faa0a7}{FLASH\+\_\+\+ERASE\+\_\+\+CHIP}}~0x60
+\item 
+\#define \mbox{\hyperlink{group___flash_ga71ac0f214ff0259c93d60df7af7784d4}{FLASH\+\_\+\+READ\+\_\+\+STATUS\+\_\+\+REGISTER\+\_\+1}}~0x05
+\item 
+\#define \mbox{\hyperlink{group___flash_gaa680972ad784de3c4ef229388d465308}{FLASH\+\_\+\+READ\+\_\+\+STATUS\+\_\+\+REGISTER\+\_\+2}}~0x35
+\item 
+\#define \mbox{\hyperlink{group___flash_gadb268320644dcc17ac0c835b5a39d031}{FLASH\+\_\+\+READ\+\_\+\+STATUS\+\_\+\+REGISTER\+\_\+3}}~0x15
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{group___flash_gab4d53222e9f65ac2d2e9b5c67648d129}{configure\+\_\+\+SPI4\+\_\+\+Flash}} ()
+\item 
+void \mbox{\hyperlink{group___flash_gac40c1b5246c89d2d625430da01124049}{Flash\+\_\+init}} (\mbox{\hyperlink{group___flash_struct_flash}{Flash}} \texorpdfstring{$\ast$}{*}, GPIO\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}, unsigned long)
+\begin{DoxyCompactList}\small\item\em Initialise flash struct. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___flash_gab5de712bbfe5d6c7bcd959337ff02f2b}{Flash\+\_\+read\+Page}} (\mbox{\hyperlink{group___flash_struct_flash}{Flash}} \texorpdfstring{$\ast$}{*}, uint32\+\_\+t, uint8\+\_\+t \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Read from flash. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___flash_gab522cee3393b2c9d6be5f85f13b1c12d}{Flash\+\_\+write\+Page}} (\mbox{\hyperlink{group___flash_struct_flash}{Flash}} \texorpdfstring{$\ast$}{*}, uint32\+\_\+t, uint8\+\_\+t \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Write page to flash. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___flash_gaee89dc3026c93c50415e20cf3b10a303}{Flash\+\_\+erase}} (\mbox{\hyperlink{group___flash_struct_flash}{Flash}} \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Erase flash chip. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___flash_gad9cd1f3e0356d77482277c39d67b5773}{\+\_\+\+Flash\+\_\+write\+Enable}} (\mbox{\hyperlink{group___flash_struct_flash}{Flash}} \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Send Write Enable instruction to the flash device. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___flash_ga73950265865b16a6cab61eaf6d7f1f70}{\+\_\+\+Flash\+\_\+read\+Status1}} (\mbox{\hyperlink{group___flash_struct_flash}{Flash}} \texorpdfstring{$\ast$}{*}, uint8\+\_\+t \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Read from Status Register 1. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___flash_ga2c793189c4cb30a3548467c95c15d56d}{\+\_\+\+Flash\+\_\+read\+Status2}} (\mbox{\hyperlink{group___flash_struct_flash}{Flash}} \texorpdfstring{$\ast$}{*}, uint8\+\_\+t \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Read from Status Register 2. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___flash_gaac90082a4208c49157bae75e00e643b1}{\+\_\+\+Flash\+\_\+read\+Status3}} (\mbox{\hyperlink{group___flash_struct_flash}{Flash}} \texorpdfstring{$\ast$}{*}, uint8\+\_\+t \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Read from Status Register 3. \end{DoxyCompactList}\end{DoxyCompactItemize}

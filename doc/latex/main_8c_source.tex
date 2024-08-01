@@ -1,0 +1,390 @@
+\doxysection{main.\+c}
+\hypertarget{main_8c_source}{}\label{main_8c_source}\index{Core/Src/main.c@{Core/Src/main.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00001}00001\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{main_8h}{main.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00003}00003\ \textcolor{comment}{//\ Task\ Handles}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00004}00004\ TaskHandle\_t\ xDataAqcquisitionHHandle\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00005}00005\ TaskHandle\_t\ xDataAqcquisitionLHandle\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00006}00006\ TaskHandle\_t\ xFlashBufferHandle\ \ \ \ \ \ \ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00007}00007\ TaskHandle\_t\ xStateUpdateHandle\ \ \ \ \ \ \ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00008}00008\ TaskHandle\_t\ xLoRaCommunicateHandle\ \ \ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00009}00009\ EventGroupHandle\_t\ xTaskEnableGroup;\ \textcolor{comment}{//\ 0:\ FLASH,\ \ 1:\ HIGHRES,\ 2:\ LOWRES,\ 7:\ IDLE}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00011}00011\ \textcolor{comment}{//\ Accelerometer}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00012}00012\ \mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ lAccel\_s;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00013}00013\ \mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ hAccel\_s;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00014}00014\ \mbox{\hyperlink{struct_k_x134__1211}{KX134\_1211}}\ accel\_s;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00015}00015\ uint8\_t\ accelRaw[6];}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00016}00016\ \textcolor{keywordtype}{float}\ accel[3];}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00018}00018\ \textcolor{comment}{//\ Gyroscope}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00019}00019\ \mbox{\hyperlink{struct_a3_g4250_d}{A3G4250D}}\ gyro\_s;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00020}00020\ uint8\_t\ gyroRaw[6];}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00021}00021\ \textcolor{keywordtype}{float}\ gyro[3];}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00023}00023\ \textcolor{comment}{//\ Barometer}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00024}00024\ \mbox{\hyperlink{struct_b_m_p581}{BMP581}}\ baro\_s;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00025}00025\ uint8\_t\ pressRaw[3];}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00026}00026\ \textcolor{keywordtype}{float}\ pressGround\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00027}00027\ \textcolor{keywordtype}{float}\ press;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00028}00028\ uint8\_t\ tempRaw[3];}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00029}00029\ \textcolor{keywordtype}{float}\ temp;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00031}00031\ \mbox{\hyperlink{struct_flash}{Flash}}\ flash;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00033}00033\ \textcolor{comment}{//\ Calculated\ attitude\ variables}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00034}00034\ Quaternion\ qRot;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Global\ attitude\ quaternion}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00035}00035\ \textcolor{keywordtype}{float}\ vAttitude[3]\ =\ \{0,\ 0,\ 1\};\ \textcolor{comment}{//\ Attitude\ vector}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00036}00036\ \textcolor{keywordtype}{float}\ zUnit[3]\ \ \ \ \ =\ \{0,\ 0,\ 1\};\ \textcolor{comment}{//\ Z\ unit\ vector}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00037}00037\ \textcolor{keywordtype}{float}\ cosine\ \ \ \ \ \ \ =\ 0;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Tilt\ angle\ cosine}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00038}00038\ \textcolor{keywordtype}{float}\ tilt\ \ \ \ \ \ \ \ \ =\ 0;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Tilt\ angle}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00040}00040\ \textcolor{comment}{//\ Flight\ dynamics\ state\ variables}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00041}00041\ \textcolor{keywordtype}{float}\ altitude\ =\ 0;\ \ \ \ \ \textcolor{comment}{//\ Current\ altitude}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00042}00042\ \textcolor{keywordtype}{float}\ velocity\ =\ 0;\ \ \ \ \ \textcolor{comment}{//\ Current\ vertical\ velocity}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00044}00044\ \textcolor{preprocessor}{\#define\ BUFF\_SIZE\ 21000\ }\textcolor{comment}{//\ 2s\ worth\ of\ data\ in\ buffer}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00045}00045\ \textcolor{preprocessor}{\#define\ PAGE\_SIZE\ 256}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00046}00046\ MemBuff\ mem;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00047}00047\ uint8\_t\ buff[BUFF\_SIZE];}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00048}00048\ uint8\_t\ outBuff[PAGE\_SIZE];}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00050}00050\ \textcolor{keyword}{enum}\ State\ currentState\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ PRELAUNCH;\ \textcolor{comment}{//\ Boot\ in\ prelaunch}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00051}00051\ \textcolor{keywordtype}{int}\ interval2ms\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00053}00053\ \textcolor{keyword}{const}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_lo_ra___registers}{LoRa\_Registers}}\ LoRa\_Regs\ =\ \{0,\ 1,\ 0xd,\ 0xE,\ 0xF,\ 0x10,\ 0x11,\ 0x12,\ 0x13,\ 0x14,\ 0x15,\ 0x16,\ 0x17,\ 0x18,\ 0x19,\ 0x1A,\ 0x1B,\ 0X1C,\ 0X1D,\ 0X1E,\ 0X1F,\ 0X20,\ 0X21,\ 0X22,\ 0X23,\ 0X24,\ 0X25,\ 0X28,\ 0X29,\ 0X2A,\ 0X2C,\ 0X31,\ 0X33,\ 0X37,\ 0X39,\ 0X3B,\ 0X3D,\ 0X40,\ 0X41\};}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00055}00055\ \textcolor{keywordtype}{int}\ main(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00056}00056\ \ \ \textcolor{comment}{//\ Bring\ up\ RCC}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00057}00057\ \ \ configure\_RCC\_APB1();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00058}00058\ \ \ configure\_RCC\_APB2();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00059}00059\ \ \ configure\_RCC\_AHB1();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00060}00060\ \ \ configure\_MISC\_GPIO();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00061}00061\ \ \ configure\_UART3\_GPS();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00062}00062\ \ \ configure\_UART6\_Serial\_2\_mini\_USB();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00063}00063\ \ \ configure\_SPI1\_Sensor\_Suite();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00064}00064\ \ \ configure\_SPI4\_Flash();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00065}00065\ \ \ configure\_SPI3\_LoRa();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00067}00067\ \ \ \textcolor{comment}{//\ Initialise\ timers}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00068}00068\ \ \ TIM6init();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00069}00069\ \ \ TIM7init();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00071}00071\ \ \ \textcolor{comment}{//\ Configure\ peripherals}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00072}00072\ \ \ CANGPIO\_config();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00073}00073\ \ \ CAN\_Peripheral\_config();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00074}00074\ \ \ configure\_LoRa\_module();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00076}00076\ \ \ \textcolor{comment}{//\ Initialise\ sensors}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00077}00077\ \ \ \mbox{\hyperlink{group___b_m_p581_gaf0ef88ff81506d372b4e1d514da63f0a}{BMP581\_init}}(\&baro\_s,\ BARO\_PORT,\ BARO\_CS,\ BMP581\_TEMP\_SENSITIVITY,\ BMP581\_PRESS\_SENSITIVITY);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00078}00078\ \ \ \mbox{\hyperlink{group___a3_g4250_d_gabd9827bb607041567765c6a476461d18}{A3G4250D\_init}}(\&gyro\_s,\ GYRO\_PORT,\ GYRO\_CS,\ A3G4250D\_SENSITIVITY,\ GYRO\_AXES);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00079}00079\ \ \ \mbox{\hyperlink{group___k_x134-1211_gafbe373f40c0c91f9521ae0913a6eec88}{KX134\_1211\_init}}(\&lAccel\_s,\ ACCEL\_PORT\_1,\ ACCEL\_CS\_1,\ ACCEL\_SCALE\_LOW,\ ACCEL\_AXES\_1);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00080}00080\ \ \ \mbox{\hyperlink{group___k_x134-1211_gafbe373f40c0c91f9521ae0913a6eec88}{KX134\_1211\_init}}(\&hAccel\_s,\ ACCEL\_PORT\_2,\ ACCEL\_CS\_2,\ ACCEL\_SCALE\_HIGH,\ ACCEL\_AXES\_2);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00081}00081\ \ \ accel\_s\ =\ lAccel\_s;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00083}00083\ \ \ \textcolor{comment}{//\ Calculate\ ground\ pressure}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00084}00084\ \ \ baro\_s.readPress(\&baro\_s,\ \&pressGround);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00086}00086\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ CANHigh\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00087}00087\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ CANLow\ \ =\ 0;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00088}00088\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ \ \ \ \ \ =\ 0x603;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00089}00089\ \ \ CAN\_TX(1,\ 8,\ CANHigh,\ CANLow,\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00091}00091\ \ \ MemBuff\_init(\&mem,\ buff,\ BUFF\_SIZE,\ PAGE\_SIZE);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00092}00092\ \ \ Quaternion\_init(\&qRot);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00094}00094\ \ \ xTaskEnableGroup\ =\ xEventGroupCreate();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00095}00095\ \ \ xEventGroupClearBits(xTaskEnableGroup,\ 0xFF);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00097}00097\ \ \ \textcolor{comment}{//\ Create\ task\ handles}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00098}00098\ \ \ xTaskCreate(vDataAcquisitionH,\ \textcolor{stringliteral}{"{}HDataAcq"{}},\ 256,\ NULL,\ configMAX\_PRIORITIES\ -\/\ 2,\ \&xDataAqcquisitionHHandle);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00099}00099\ \ \ xTaskCreate(vDataAcquisitionL,\ \textcolor{stringliteral}{"{}LDataAcq"{}},\ 256,\ NULL,\ configMAX\_PRIORITIES\ -\/\ 3,\ \&xDataAqcquisitionLHandle);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00100}00100\ \ \ xTaskCreate(vStateUpdate,\ \textcolor{stringliteral}{"{}StateUpdate"{}},\ 256,\ NULL,\ configMAX\_PRIORITIES\ -\/\ 4,\ \&xStateUpdateHandle);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00101}00101\ \ \ xTaskCreate(vFlashBuffer,\ \textcolor{stringliteral}{"{}FlashData"{}},\ 256,\ NULL,\ configMAX\_PRIORITIES\ -\/\ 1,\ \&xFlashBufferHandle);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00102}00102\ \ \ \textcolor{comment}{//\ xTaskCreate(vLoRaCommunicate,\ "{}LoRa"{},\ 256,\ NULL,\ configMAX\_PRIORITIES\ -\/\ 1,\ \&xLoRaCommunicateHandle);}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00104}00104\ \ \ vTaskStartScheduler();}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00106}00106\ \ \ \textcolor{comment}{//\ Should\ never\ reach\ here}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00107}00107\ \ \ \textcolor{keywordflow}{while}\ (1)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00108}00108\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00109}00109\ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00111}00111\ \textcolor{comment}{/*\ =====================================================================\ *}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00112}00112\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ FLASH\ HANDLING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00113}00113\ \textcolor{comment}{\ *\ =====================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00115}00115\ \textcolor{comment}{//\ Use\ idle\ time\ to\ write\ flash}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00116}00116\ \textcolor{keywordtype}{void}\ vApplicationIdleHook(\textcolor{keywordtype}{void})\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00117}00117\ \ \ \textcolor{comment}{//\ Write\ if\ a\ page\ is\ available\ in\ the\ buffer}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00118}00118\ \ \ \textcolor{keywordflow}{if}\ (currentState\ ==\ LAUNCH\ \&\&\ mem.pageReady)}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00119}00119\ \ \ \ \ xEventGroupSetBits(xTaskEnableGroup,\ 0x01);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00120}00120\ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00122}00122\ \textcolor{keywordtype}{void}\ vFlashBuffer(\textcolor{keywordtype}{void}\ *argument)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00123}00123\ \ \ \textcolor{keyword}{const}\ TickType\_t\ timeout\ =\ pdMS\_TO\_TICKS(1);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00124}00124\ \ \ uint32\_t\ pageAddr\ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00125}00125\ \ \ \textcolor{keywordflow}{for}\ (;;)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00126}00126\ \ \ \ \ \textcolor{comment}{//\ Wait\ for\ write\ flag\ to\ be\ ready,\ clear\ flag\ on\ exit}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00127}00127\ \ \ \ \ EventBits\_t\ uxBits\ =\ xEventGroupWaitBits(xTaskEnableGroup,\ 0x01,\ pdTRUE,\ pdFALSE,\ timeout);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00128}00128\ \ \ \ \ \textcolor{keywordflow}{if}\ ((uxBits\ \&\ 0x01)\ ==\ 0x01)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00129}00129\ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ success\ =\ mem.readPage(\&mem,\ outBuff);\ \textcolor{comment}{//\ Flush\ data\ to\ output\ buffer}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00130}00130\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (success)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00131}00131\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Write\ data\ to\ flash\ memory}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Flash\_Page\_Program(flashAddress,\ outBuff,\ sizeof(outBuff));}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00133}00133\ \ \ \ \ \ \ \ \ flash.\mbox{\hyperlink{struct_flash_ac94ed56d1714de0eddcf9e61557d7f77}{writePage}}(\&flash,\ pageAddr,\ outBuff);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00134}00134\ \ \ \ \ \ \ \ \ pageAddr\ +=\ 0x100;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00135}00135\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00136}00136\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00137}00137\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00138}00138\ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00140}00140\ \textcolor{comment}{/*\ =====================================================================\ *}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00141}00141\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LORA\ HANDLING\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00142}00142\ \textcolor{comment}{\ *\ =====================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00144}00144\ \textcolor{keywordtype}{void}\ vLoRaCommunicate(\textcolor{keywordtype}{void}\ *argument)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00145}00145\ \ \ TickType\_t\ xLastWakeTime;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00146}00146\ \ \ \textcolor{keyword}{const}\ TickType\_t\ xFrequency\ =\ pdMS\_TO\_TICKS(500);\ \textcolor{comment}{//\ 2Hz}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00147}00147\ \ \ \textcolor{keywordflow}{for}\ (;;)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00148}00148\ \ \ \ \ \textcolor{keywordtype}{char}\ payload[16]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00149}00149\ \ \ \ \ \ \ \ \ LORA\_HEADER\_AVD1,}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00150}00150\ \ \ \ \ \ \ \ \ accelRaw[0],\ accelRaw[1],\ accelRaw[2],}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00151}00151\ \ \ \ \ \ \ \ \ accelRaw[3],\ accelRaw[4],\ accelRaw[5],}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00152}00152\ \ \ \ \ \ \ \ \ \textcolor{charliteral}{':'},\ \textcolor{charliteral}{'/'},}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00153}00153\ \ \ \ \ \ \ \ \ \textcolor{charliteral}{':'},\ \textcolor{charliteral}{')'}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00154}00154\ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00155}00155\ \ \ \ \ Load\_And\_Send\_To\_LoRa(payload,\ \&LoRa\_Regs);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00156}00156\ \ \ \ \ \textcolor{comment}{//\ Block\ until\ transmit\ enable\ task\ group\ bit\ is\ set}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00157}00157\ \ \ \ \ \textcolor{comment}{//\ \ this\ is\ managed\ within\ an\ ISR\ triggered\ by\ the\ LoRa\ module}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00158}00158\ \ \ \ \ \textcolor{comment}{//\ ...}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00159}00159\ \ \ \ \ \textcolor{comment}{//\ Repeat\ 2\ more\ times\ to\ delivery\ all\ payloads}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00160}00160\ \ \ \ \ vTaskDelayUntil(\&xLastWakeTime,\ xFrequency);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00161}00161\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00162}00162\ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00164}00164\ \textcolor{comment}{/*\ =====================================================================\ *}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00165}00165\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ STATE\ MANAGEMENT\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00166}00166\ \textcolor{comment}{\ *\ =====================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00168}00168\ \textcolor{keywordtype}{void}\ vStateUpdate(\textcolor{keywordtype}{void}\ *argument)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00169}00169\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ ms\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00170}00170\ \ \ \textcolor{keyword}{union\ }\{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00171}00171\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00172}00172\ \ \ \ \ uint8\_t\ a[4];}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00173}00173\ \ \ \}\ u;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00174}00174\ \ \ TickType\_t\ xLastWakeTime;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00175}00175\ \ \ \textcolor{keyword}{const}\ TickType\_t\ xFrequency\ =\ pdMS\_TO\_TICKS(20);\ \textcolor{comment}{//\ 50Hz}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00176}00176\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00177}00177\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ CANHigh\ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00178}00178\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ CANLow\ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00179}00179\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \textcolor{keywordtype}{id}\ \ \ \ \ \ \ \ \ \ \ \ \ =\ 0;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00181}00181\ \ \ \textcolor{keywordflow}{for}\ (;;)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00182}00182\ \ \ \ \ \textcolor{comment}{//\ Block\ until\ 20ms\ interval}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00183}00183\ \ \ \ \ vTaskDelayUntil(\&xLastWakeTime,\ xFrequency);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00184}00184\ \ \ \ \ \textcolor{comment}{//\ Emergency\ aerobrakes\ for\ excessive\ tilt}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00185}00185\ \ \ \ \ \textcolor{keywordflow}{if}\ (tilt\ >=\ 30.0f)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00186}00186\ \ \ \ \ \ \ \textcolor{comment}{//\ CAN\ payload\ for\ aerobrakes\ retract}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00187}00187\ \ \ \ \ \ \ CANHigh\ =\ 0x00000000;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00188}00188\ \ \ \ \ \ \ CANLow\ \ =\ 0x00000000;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00189}00189\ \ \ \ \ \ \ \textcolor{keywordtype}{id}\ \ \ \ \ \ =\ 0x602;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00190}00190\ \ \ \ \ \ \ CAN\_TX(1,\ 8,\ CANHigh,\ CANLow,\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00191}00191\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00193}00193\ \ \ \ \ \textcolor{keywordflow}{switch}\ (currentState)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00194}00194\ \ \ \ \ \textcolor{keywordflow}{case}\ PRELAUNCH:}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00195}00195\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (accel[accel\_s.\mbox{\hyperlink{struct_k_x134__1211_a79d3b9139939da249534eb0e0e5cf22c}{axes}}[ZINDEX]]\ >=\ ACCEL\_LAUNCH)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00196}00196\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ load\ and\ send\ to\ lora}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00197}00197\ \ \ \ \ \ \ \ \ xEventGroupSetBits(xTaskEnableGroup,\ 0x80);\ \textcolor{comment}{//\ Enable\ flash}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00198}00198\ \ \ \ \ \ \ \ \ xEventGroupSetBits(xTaskEnableGroup,\ 0x06);\ \textcolor{comment}{//\ Enable\ data\ acquisition}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00199}00199\ \ \ \ \ \ \ \ \ currentState\ =\ LAUNCH;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00200}00200\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ launch\ event\ dataframe\ to\ buffer}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00201}00201\ \ \ \ \ \ \ \ \ mem.append(\&mem,\ HEADER\_EVENT\_LAUNCH);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00202}00202\ \ \ \ \ \ \ \ \ mem.appendBytes(\&mem,\ u.a,\ 4);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00203}00203\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00204}00204\ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00205}00205\ \ \ \ \ \textcolor{keywordflow}{case}\ LAUNCH:}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00206}00206\ \ \ \ \ \ \ \textcolor{comment}{//\ Send\ altitude\ to\ aerobrakes\ via\ CAN}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00207}00207\ \ \ \ \ \ \ CANHigh\ =\ 0x00000000;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00208}00208\ \ \ \ \ \ \ CANLow\ \ =\ (\textcolor{keywordtype}{unsigned}\ int)altitude;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00209}00209\ \ \ \ \ \ \ \textcolor{keywordtype}{id}\ \ \ \ \ \ =\ 0x601;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00210}00210\ \ \ \ \ \ \ CAN\_TX(1,\ 8,\ CANHigh,\ CANLow,\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00211}00211\ \ \ \ \ \ \ \textcolor{comment}{//\ Transition\ to\ motor\ burnout\ state\ on\ velocity\ decrease}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00212}00212\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{true})\ \{\ \textcolor{comment}{//\ TODO:\ Change\ to\ decreasing\ velocity}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00213}00213\ \ \ \ \ \ \ \ \ currentState\ =\ COAST;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00214}00214\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ motor\ burnout\ event\ dataframe\ to\ buffer}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00215}00215\ \ \ \ \ \ \ \ \ mem.append(\&mem,\ HEADER\_EVENT\_COAST);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00216}00216\ \ \ \ \ \ \ \ \ mem.appendBytes(\&mem,\ u.a,\ 4);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00217}00217\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00218}00218\ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00219}00219\ \ \ \ \ \textcolor{keywordflow}{case}\ COAST:}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00220}00220\ \ \ \ \ \ \ \textcolor{comment}{//\ Send\ altitude\ to\ aerobrakes\ via\ CAN}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00221}00221\ \ \ \ \ \ \ CANHigh\ =\ 0x00000000;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00222}00222\ \ \ \ \ \ \ CANLow\ \ =\ (\textcolor{keywordtype}{unsigned}\ int)altitude;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00223}00223\ \ \ \ \ \ \ \textcolor{keywordtype}{id}\ \ \ \ \ \ =\ 0x601;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00224}00224\ \ \ \ \ \ \ CAN\_TX(1,\ 8,\ CANHigh,\ CANLow,\ \textcolor{keywordtype}{id});}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00225}00225\ \ \ \ \ \ \ \textcolor{comment}{//\ Transition\ to\ apogee\ state\ on\ three\ way\ vote\ of\ altitude,\ velocity,\ and\ tilt}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00226}00226\ \ \ \ \ \ \ \textcolor{comment}{//\ apogee\ is\ determined\ as\ two\ of\ three\ conditions\ evaluating\ true}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00227}00227\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (((\textcolor{keyword}{true})\ +\ (tilt\ >=\ 90)\ +\ (velocity\ <\ 0.0f))\ >=\ 2)\ \{\ \textcolor{comment}{//\ TODO:\ change\ first\ condition\ to\ decreasing\ altitude}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00228}00228\ \ \ \ \ \ \ \ \ currentState\ =\ APOGEE;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00229}00229\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ apogee\ event\ dataframe\ to\ buffer}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00230}00230\ \ \ \ \ \ \ \ \ mem.append(\&mem,\ HEADER\_EVENT\_APOGEE);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00231}00231\ \ \ \ \ \ \ \ \ mem.appendBytes(\&mem,\ u.a,\ 4);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00232}00232\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Send\ transmission\ to\ trigger\ apogee\ E-\/matches}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00233}00233\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00234}00234\ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00235}00235\ \ \ \ \ \textcolor{keywordflow}{case}\ APOGEE:}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00236}00236\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isAltitude1300ft(altitude))\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00237}00237\ \ \ \ \ \ \ \ \ currentState\ =\ DESCENT;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00238}00238\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Enable\ descent\ state}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00239}00239\ \ \ \ \ \ \ \ \ mem.append(\&mem,\ HEADER\_EVENT\_DESCENT);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00240}00240\ \ \ \ \ \ \ \ \ mem.appendBytes(\&mem,\ u.a,\ 4);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00241}00241\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Add\ descent\ event\ dataframe\ to\ buffer}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00242}00242\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00243}00243\ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00244}00244\ \ \ \ \ \textcolor{keywordflow}{case}\ DESCENT:}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00245}00245\ \ \ \ \ \ \ \textcolor{comment}{//\ Handle\ descent\ state\ actions}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00246}00246\ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00247}00247\ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00248}00248\ \ \ \ \ \ \ \textcolor{comment}{//\ Handle\ unexpected\ state}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00249}00249\ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00250}00250\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00251}00251\ \ \ \ \ ms\ +=\ 2;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00252}00252\ \ \ \ \ u.i\ =\ ms;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00253}00253\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00254}00254\ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00256}00256\ \textcolor{comment}{/*\ =====================================================================\ *}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00257}00257\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ HIGH\ RESOLUTION\ DATA\ ACQUISITION\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00258}00258\ \textcolor{comment}{\ *\ =====================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00259}00259\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00260}00260\ \textcolor{keywordtype}{void}\ vDataAcquisitionH(\textcolor{keywordtype}{void}\ *argument)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00261}00261\ \ \ \textcolor{keywordtype}{float}\ dt\ =\ 0.002;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00262}00262\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00263}00263\ \ \ TickType\_t\ xLastWakeTime;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00264}00264\ \ \ \textcolor{keyword}{const}\ TickType\_t\ xFrequency\ =\ pdMS\_TO\_TICKS(2);\ \textcolor{comment}{//\ 500Hz}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00265}00265\ \ \ \textcolor{keyword}{const}\ TickType\_t\ blockTime\ \ =\ pdMS\_TO\_TICKS(0);\ \textcolor{comment}{//\ Don't\ need\ to\ block\ calculations}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00266}00266\ \ \ \textcolor{keywordflow}{for}\ (;;)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00267}00267\ \ \ \ \ \textcolor{comment}{//\ Block\ until\ 2ms\ interval}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00268}00268\ \ \ \ \ vTaskDelayUntil(\&xLastWakeTime,\ xFrequency);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00269}00269\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00270}00270\ \ \ \ \ \textcolor{comment}{//\ Read\ and\ process\ accelerometer}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00271}00271\ \ \ \ \ accel\_s\ =\ (accel[accel\_s.\mbox{\hyperlink{struct_k_x134__1211_a79d3b9139939da249534eb0e0e5cf22c}{axes}}[ZINDEX]]\ <\ 15)\ ?\ lAccel\_s\ :\ hAccel\_s;\ \textcolor{comment}{//\ Select\ which\ accelerometer\ to\ use}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00272}00272\ \ \ \ \ accel\_s.\mbox{\hyperlink{struct_k_x134__1211_a8ba468b59f15c029417609e4789b5579}{readRawBytes}}(\&accel\_s,\ accelRaw);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Read\ in\ raw\ data}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00273}00273\ \ \ \ \ accel\_s.\mbox{\hyperlink{struct_k_x134__1211_a7faa59e7e683aee9ea95fee44035dc76}{processRawBytes}}(\&accel\_s,\ accelRaw,\ accel);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Process\ to\ per-\/axis\ accelerations}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00274}00274\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00275}00275\ \ \ \ \ \textcolor{comment}{//\ Read\ and\ process\ gyroscope}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00276}00276\ \ \ \ \ gyro\_s.\mbox{\hyperlink{struct_a3_g4250_d_a7d5c1b1d70094a6beb695a586ad0057f}{readRawBytes}}(\&gyro\_s,\ gyroRaw);\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Read\ in\ raw\ data}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00277}00277\ \ \ \ \ gyro\_s.\mbox{\hyperlink{struct_a3_g4250_d_adc07467e77b3bb604af33435a5af1bd1}{processRawBytes}}(\&gyro\_s,\ gyroRaw,\ gyro);\ \textcolor{comment}{//\ Process\ to\ per-\/axis\ rates}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00279}00279\ \ \ \ \ \textcolor{comment}{//\ Add\ sensor\ data\ to\ dataframe}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00280}00280\ \ \ \ \ mem.append(\&mem,\ HEADER\_HIGHRES);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00281}00281\ \ \ \ \ mem.appendBytes(\&mem,\ accelRaw,\ KX134\_1211\_DATA\_TOTAL);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00282}00282\ \ \ \ \ mem.appendBytes(\&mem,\ gyroRaw,\ A3G4250D\_DATA\_TOTAL);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00284}00284\ \ \ \ \ \textcolor{comment}{//\ Only\ run\ calculations\ when\ enabled}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00285}00285\ \ \ \ \ EventBits\_t\ uxBits\ =\ xEventGroupWaitBits(xTaskEnableGroup,\ 0x02,\ pdFALSE,\ pdFALSE,\ blockTime);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00286}00286\ \ \ \ \ \textcolor{keywordflow}{if}\ ((uxBits\ \&\ 0x02)\ ==\ 0x02)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00287}00287\ \ \ \ \ \ \ \textcolor{comment}{//\ Integrate\ attitude\ quaternion\ from\ rotations}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00288}00288\ \ \ \ \ \ \ Quaternion\ qDot;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00289}00289\ \ \ \ \ \ \ Quaternion\_init(\&qDot);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00290}00290\ \ \ \ \ \ \ qDot.fromEuler(}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \&qDot,}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})(dt\ *\ gyro[gyro\_s.\mbox{\hyperlink{struct_a3_g4250_d_a79d3b9139939da249534eb0e0e5cf22c}{axes}}[ROLL\_INDEX]]),}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})(dt\ *\ gyro[gyro\_s.\mbox{\hyperlink{struct_a3_g4250_d_a79d3b9139939da249534eb0e0e5cf22c}{axes}}[PITCH\_INDEX]]),}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{float})(dt\ *\ gyro[gyro\_s.\mbox{\hyperlink{struct_a3_g4250_d_a79d3b9139939da249534eb0e0e5cf22c}{axes}}[YAW\_INDEX]])}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00295}00295\ \ \ \ \ \ \ );}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00296}00296\ \ \ \ \ \ \ qRot\ =\ Quaternion\_mul(\&qRot,\ \&qDot);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00297}00297\ \ \ \ \ \ \ qRot.normalise(\&qRot);\ \textcolor{comment}{//\ New\ attitude\ quaternion}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00298}00298\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00299}00299\ \ \ \ \ \ \ \textcolor{comment}{//\ Apply\ rotation\ to\ z-\/axis\ unit\ vector}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00300}00300\ \ \ \ \ \ \ qRot.fRotateVector3D(\&qRot,\ zUnit,\ vAttitude);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00301}00301\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00302}00302\ \ \ \ \ \ \ \textcolor{comment}{//\ Calculate\ tilt\ angle}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00303}00303\ \ \ \ \ \ \ \textcolor{comment}{//\ tilt\ =\ cos\string^-\/1(attitude\ ·\ initial)}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00304}00304\ \ \ \ \ \ \ cosine\ =\ zUnit[0]\ *\ vAttitude[0]\ +\ zUnit[1]\ *\ vAttitude[1]\ +\ zUnit[2]\ *\ vAttitude[2];}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00305}00305\ \ \ \ \ \ \ tilt\ \ \ =\ acos(cosine)\ *\ 180\ /\ M\_PI;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00306}00306\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00307}00307\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00308}00308\ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00309}00309\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00310}00310\ \textcolor{comment}{/*\ =====================================================================\ *}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00311}00311\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ LOW\ RESOLUTION\ DATA\ ACQUISITION\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00312}00312\ \textcolor{comment}{\ *\ =====================================================================\ */}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00314}00314\ \textcolor{keywordtype}{void}\ vDataAcquisitionL(\textcolor{keywordtype}{void}\ *argument)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00315}00315\ \ \ \textcolor{keywordtype}{float}\ dt\ =\ 0.020;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00316}00316\ \ \ KalmanFilter\ kf;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00317}00317\ \ \ KalmanFilter\_init(\&kf);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00318}00318\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00319}00319\ \ \ \textcolor{comment}{//\ Initialise\ filter\ parameters}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00320}00320\ \ \ \textcolor{keywordtype}{float}\ A[9]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00321}00321\ \ \ \ \ \ \ 1.0,\ dt,\ 0.5\ *\ (dt\ *\ dt),}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00322}00322\ \ \ \ \ \ \ 0.0,\ 1.0,\ dt,}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00323}00323\ \ \ \ \ \ \ 0.0,\ 0.0,\ 1.0}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00324}00324\ \ \ \};}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00325}00325\ \ \ kf.A.pData\ =\ A;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00326}00326\ \ \ \textcolor{keywordtype}{float}\ Q[9]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00327}00327\ \ \ \ \ \ \ 99.52,\ 0.0,\ 0.0,}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00328}00328\ \ \ \ \ \ \ 0.0,\ 1.42,\ 0.0,}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00329}00329\ \ \ \ \ \ \ 0.0,\ 0.0,\ 6.27}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00330}00330\ \ \ \};}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00331}00331\ \ \ kf.Q.pData\ =\ Q;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00332}00332\ \ \ \textcolor{keywordtype}{float}\ R[4]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00333}00333\ \ \ \ \ \ \ 97.92,\ 0.0,}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00334}00334\ \ \ \ \ \ \ 0.0,\ 0.61}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00335}00335\ \ \ \};}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00336}00336\ \ \ kf.R.pData\ =\ R;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00337}00337\ \ \ \textcolor{keywordtype}{float}\ P[9]\ =\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00338}00338\ \ \ \ \ \ \ 1,\ 0.0,\ 0.0,}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00339}00339\ \ \ \ \ \ \ 0.0,\ 0.1,\ 0.0,}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00340}00340\ \ \ \ \ \ \ 0.0,\ 0.0,\ 100.0}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00341}00341\ \ \ \};}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00342}00342\ \ \ kf.P.pData\ =\ P;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00343}00343\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00344}00344\ \ \ \textcolor{comment}{//\ Initialise\ measurement\ matrix}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00345}00345\ \ \ arm\_matrix\_instance\_f32\ z;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00346}00346\ \ \ \textcolor{keywordtype}{float}\ zData[2]\ =\ \{0.0,\ 0.0\};}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00347}00347\ \ \ arm\_mat\_init\_f32(\&z,\ 2,\ 1,\ zData);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00348}00348\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00349}00349\ \ \ TickType\_t\ xLastWakeTime;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00350}00350\ \ \ \textcolor{keyword}{const}\ TickType\_t\ xFrequency\ =\ pdMS\_TO\_TICKS(20);\ \textcolor{comment}{//\ 50Hz}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00351}00351\ \ \ \textcolor{keyword}{const}\ TickType\_t\ blockTime\ \ =\ pdMS\_TO\_TICKS(0);\ \ \textcolor{comment}{//\ Don't\ need\ to\ block}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00352}00352\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00353}00353\ \ \ \textcolor{keywordflow}{for}\ (;;)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00354}00354\ \ \ \ \ \textcolor{comment}{//\ Block\ until\ 20ms\ interval}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00355}00355\ \ \ \ \ vTaskDelayUntil(\&xLastWakeTime,\ xFrequency);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00356}00356\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00357}00357\ \ \ \ \ \textcolor{comment}{//\ Read\ baro\ data}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00358}00358\ \ \ \ \ baro\_s.readRawTemp(\&baro\_s,\ tempRaw);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00359}00359\ \ \ \ \ baro\_s.readRawPress(\&baro\_s,\ pressRaw);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00360}00360\ \ \ \ \ baro\_s.processRawTemp(\&baro\_s,\ tempRaw,\ \&temp);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00361}00361\ \ \ \ \ baro\_s.processRawPress(\&baro\_s,\ pressRaw,\ \&press);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00362}00362\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00363}00363\ \ \ \ \ \textcolor{comment}{//\ Calculate\ altitude}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00364}00364\ \ \ \ \ altitude\ =\ 44330\ *\ (1.0\ -\/\ pow(press\ /\ pressGround,\ 0.1903));}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00365}00365\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00366}00366\ \ \ \ \ \textcolor{comment}{//\ Add\ sensor\ data\ and\ barometer\ data\ to\ dataframe}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00367}00367\ \ \ \ \ mem.append(\&mem,\ HEADER\_LOWRES);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00368}00368\ \ \ \ \ mem.appendBytes(\&mem,\ tempRaw,\ 3);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00369}00369\ \ \ \ \ mem.appendBytes(\&mem,\ pressRaw,\ 3);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00371}00371\ \ \ \ \ \textcolor{comment}{//\ Only\ run\ calculations\ when\ enabled}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00372}00372\ \ \ \ \ EventBits\_t\ uxBits\ =\ xEventGroupWaitBits(xTaskEnableGroup,\ 0x04,\ pdFALSE,\ pdFALSE,\ blockTime);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00373}00373\ \ \ \ \ \textcolor{keywordflow}{if}\ ((uxBits\ \&\ 0x04)\ ==\ 0x04)\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00374}00374\ \ \ \ \ \ \ \textcolor{comment}{//\ Calculate\ state}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00375}00375\ \ \ \ \ \ \ z.pData[0]\ =\ altitude;}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00376}00376\ \ \ \ \ \ \ z.pData[1]\ =\ (cosine\ *\ 9.81\ *\ accel[accel\_s.\mbox{\hyperlink{struct_k_x134__1211_a79d3b9139939da249534eb0e0e5cf22c}{axes}}[ZINDEX]]\ -\/\ 9.81);\ \textcolor{comment}{//\ Acceleration\ measured\ in\ m/s\string^2}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00377}00377\ \ \ \ \ \ \ kf.update(\&kf,\ \&z);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00378}00378\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00379}00379\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00380}00380\ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00381}00381\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00382}00382\ \textcolor{comment}{//\ Unsure\ of\ actual\ fix\ for\ linker\ error}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00383}00383\ \textcolor{comment}{//\ temporary\ (lol)\ solution}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00384}00384\ \textcolor{keywordtype}{void}\ \_init()\ \{\}}
+
+\end{DoxyCode}

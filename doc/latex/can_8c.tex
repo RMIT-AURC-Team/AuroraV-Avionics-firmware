@@ -1,0 +1,71 @@
+\doxysection{Core/\+Src/can.c File Reference}
+\hypertarget{can_8c}{}\label{can_8c}\index{Core/Src/can.c@{Core/Src/can.c}}
+{\ttfamily \#include "{}can.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{can_8c_a930daef19aa94cb9154cc5bf99f62345}{CAN\+\_\+\+RX}} (struct \mbox{\hyperlink{can_8h_struct_c_a_n___r_x__data}{CAN\+\_\+\+RX\+\_\+data}} \texorpdfstring{$\ast$}{*}CAN)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{can_8c_acde6d9195302b33fd3d0edb5cd50e6c8}{CAN\+\_\+\+TX}} (uint8\+\_\+t CAN, uint8\+\_\+t data\+\_\+length, unsigned int dataH, unsigned int dataL, unsigned int address)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{can_8c_aeb18316e2320c20dfe950fb5347df245}{find\+\_\+empty\+\_\+\+CAN\+\_\+\+TX\+\_\+mailbox}} (uint8\+\_\+t CAN)
+\item 
+void \mbox{\hyperlink{can_8c_a77c3ffb25f1d8b8d438e075744319cc1}{CANGPIO\+\_\+config}} ()
+\item 
+void \mbox{\hyperlink{can_8c_a53f199934365c4ba47ab5e5377d46d9c}{CAN\+\_\+\+Peripheral\+\_\+config}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{can_8c_a930daef19aa94cb9154cc5bf99f62345}\index{can.c@{can.c}!CAN\_RX@{CAN\_RX}}
+\index{CAN\_RX@{CAN\_RX}!can.c@{can.c}}
+\doxysubsubsection{\texorpdfstring{CAN\_RX()}{CAN\_RX()}}
+{\footnotesize\ttfamily \label{can_8c_a930daef19aa94cb9154cc5bf99f62345} 
+uint8\+\_\+t CAN\+\_\+\+RX (\begin{DoxyParamCaption}\item[{struct \mbox{\hyperlink{can_8h_struct_c_a_n___r_x__data}{CAN\+\_\+\+RX\+\_\+data}} \texorpdfstring{$\ast$}{*}}]{CAN}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{can_8c_source_l00003}{3}} of file \mbox{\hyperlink{can_8c_source}{can.\+c}}.
+
+\Hypertarget{can_8c_acde6d9195302b33fd3d0edb5cd50e6c8}\index{can.c@{can.c}!CAN\_TX@{CAN\_TX}}
+\index{CAN\_TX@{CAN\_TX}!can.c@{can.c}}
+\doxysubsubsection{\texorpdfstring{CAN\_TX()}{CAN\_TX()}}
+{\footnotesize\ttfamily \label{can_8c_acde6d9195302b33fd3d0edb5cd50e6c8} 
+uint8\+\_\+t CAN\+\_\+\+TX (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{CAN}{, }\item[{uint8\+\_\+t}]{data\+\_\+length}{, }\item[{unsigned int}]{dataH}{, }\item[{unsigned int}]{dataL}{, }\item[{unsigned int}]{address}{}\end{DoxyParamCaption})}
+
+add timer in here for timeout
+
+add timer in here for timeout
+
+Definition at line \mbox{\hyperlink{can_8c_source_l00032}{32}} of file \mbox{\hyperlink{can_8c_source}{can.\+c}}.
+
+\Hypertarget{can_8c_aeb18316e2320c20dfe950fb5347df245}\index{can.c@{can.c}!find\_empty\_CAN\_TX\_mailbox@{find\_empty\_CAN\_TX\_mailbox}}
+\index{find\_empty\_CAN\_TX\_mailbox@{find\_empty\_CAN\_TX\_mailbox}!can.c@{can.c}}
+\doxysubsubsection{\texorpdfstring{find\_empty\_CAN\_TX\_mailbox()}{find\_empty\_CAN\_TX\_mailbox()}}
+{\footnotesize\ttfamily \label{can_8c_aeb18316e2320c20dfe950fb5347df245} 
+uint8\+\_\+t find\+\_\+empty\+\_\+\+CAN\+\_\+\+TX\+\_\+mailbox (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{CAN}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{can_8c_source_l00081}{81}} of file \mbox{\hyperlink{can_8c_source}{can.\+c}}.
+
+\Hypertarget{can_8c_a77c3ffb25f1d8b8d438e075744319cc1}\index{can.c@{can.c}!CANGPIO\_config@{CANGPIO\_config}}
+\index{CANGPIO\_config@{CANGPIO\_config}!can.c@{can.c}}
+\doxysubsubsection{\texorpdfstring{CANGPIO\_config()}{CANGPIO\_config()}}
+{\footnotesize\ttfamily \label{can_8c_a77c3ffb25f1d8b8d438e075744319cc1} 
+void CANGPIO\+\_\+config (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{can_8c_source_l00098}{98}} of file \mbox{\hyperlink{can_8c_source}{can.\+c}}.
+
+\Hypertarget{can_8c_a53f199934365c4ba47ab5e5377d46d9c}\index{can.c@{can.c}!CAN\_Peripheral\_config@{CAN\_Peripheral\_config}}
+\index{CAN\_Peripheral\_config@{CAN\_Peripheral\_config}!can.c@{can.c}}
+\doxysubsubsection{\texorpdfstring{CAN\_Peripheral\_config()}{CAN\_Peripheral\_config()}}
+{\footnotesize\ttfamily \label{can_8c_a53f199934365c4ba47ab5e5377d46d9c} 
+void CAN\+\_\+\+Peripheral\+\_\+config (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{can_8c_source_l00124}{124}} of file \mbox{\hyperlink{can_8c_source}{can.\+c}}.
+

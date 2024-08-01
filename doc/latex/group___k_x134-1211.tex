@@ -1,0 +1,132 @@
+\doxysubsubsubsection{KX134-\/1211}
+\hypertarget{group___k_x134-1211}{}\label{group___k_x134-1211}\index{KX134-\/1211@{KX134-\/1211}}
+\doxysubsubsubsubsubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}}
+\end{DoxyCompactItemize}
+\doxysubsubsubsubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{group___k_x134-1211_gafbe373f40c0c91f9521ae0913a6eec88}{KX134\+\_\+1211\+\_\+init}} (\mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}} \texorpdfstring{$\ast$}{*}, GPIO\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}, unsigned long, const uint8\+\_\+t, const uint8\+\_\+t \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Initialiser for a KX134-\/1211 accelerometer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___k_x134-1211_ga0871f31a356a20dde2bd73ba9385658c}{KX134\+\_\+1211\+\_\+read\+Accel}} (\mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}} \texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Read 3-\/axis floating point accelerations. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___k_x134-1211_gaa3064f02e75aabcbcae62c16733bc623}{KX134\+\_\+1211\+\_\+read\+Raw\+Bytes}} (\mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}} \texorpdfstring{$\ast$}{*}, uint8\+\_\+t \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Read raw 3-\/axis data. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___k_x134-1211_ga9e1214c9a71e524c3c857c4275be344b}{KX134\+\_\+1211\+\_\+process\+Raw\+Bytes}} (\mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}} \texorpdfstring{$\ast$}{*}, uint8\+\_\+t \texorpdfstring{$\ast$}{*}, float \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em Process raw 3-\/axis data to floating point accelerations. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsubsubsubsection{Detailed Description}
+
+
+\doxysubsubsubsubsection{Function Documentation}
+\Hypertarget{group___k_x134-1211_gafbe373f40c0c91f9521ae0913a6eec88}\index{KX134-\/1211@{KX134-\/1211}!KX134\_1211\_init@{KX134\_1211\_init}}
+\index{KX134\_1211\_init@{KX134\_1211\_init}!KX134-\/1211@{KX134-\/1211}}
+\doxysubsubsubsubsubsection{\texorpdfstring{KX134\_1211\_init()}{KX134\_1211\_init()}}
+{\footnotesize\ttfamily \label{group___k_x134-1211_gafbe373f40c0c91f9521ae0913a6eec88} 
+void KX134\+\_\+1211\+\_\+init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}} \texorpdfstring{$\ast$}{*}}]{accel}{, }\item[{GPIO\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}}]{port}{, }\item[{unsigned long}]{cs}{, }\item[{uint8\+\_\+t}]{scale}{, }\item[{const uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{axes}{}\end{DoxyParamCaption})}
+
+
+
+Initialiser for a KX134-\/1211 accelerometer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \texorpdfstring{$\ast$}{*}accel} & Pointer to KX134-\/1211 struct to be initialised. \\
+\hline
+{\em \texorpdfstring{$\ast$}{*}port} & Pointer to GPIO port struct. \\
+\hline
+{\em cs} & Device chip select address. \\
+\hline
+{\em scale} & Selected scale for read accelerations. \\
+\hline
+{\em \texorpdfstring{$\ast$}{*}axes} & Array defining sensor mounting axes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily NULL}.
+\end{DoxyReturn}
+\DoxyHorRuler{0}
+ 
+
+Definition at line \mbox{\hyperlink{_k_x134__1211_8c_source_l00014}{14}} of file \mbox{\hyperlink{_k_x134__1211_8c_source}{KX134\+\_\+1211.\+c}}.
+
+\Hypertarget{group___k_x134-1211_ga0871f31a356a20dde2bd73ba9385658c}\index{KX134-\/1211@{KX134-\/1211}!KX134\_1211\_readAccel@{KX134\_1211\_readAccel}}
+\index{KX134\_1211\_readAccel@{KX134\_1211\_readAccel}!KX134-\/1211@{KX134-\/1211}}
+\doxysubsubsubsubsubsection{\texorpdfstring{KX134\_1211\_readAccel()}{KX134\_1211\_readAccel()}}
+{\footnotesize\ttfamily \label{group___k_x134-1211_ga0871f31a356a20dde2bd73ba9385658c} 
+void KX134\+\_\+1211\+\_\+read\+Accel (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}} \texorpdfstring{$\ast$}{*}}]{accel}{, }\item[{float \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Read 3-\/axis floating point accelerations. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \texorpdfstring{$\ast$}{*}accel} & Pointer to accel struct. \\
+\hline
+{\em \texorpdfstring{$\ast$}{*}out} & Floating point acceleration array. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily NULL}.
+\end{DoxyReturn}
+\DoxyHorRuler{0}
+ 
+
+Definition at line \mbox{\hyperlink{_k_x134__1211_8c_source_l00048}{48}} of file \mbox{\hyperlink{_k_x134__1211_8c_source}{KX134\+\_\+1211.\+c}}.
+
+\Hypertarget{group___k_x134-1211_gaa3064f02e75aabcbcae62c16733bc623}\index{KX134-\/1211@{KX134-\/1211}!KX134\_1211\_readRawBytes@{KX134\_1211\_readRawBytes}}
+\index{KX134\_1211\_readRawBytes@{KX134\_1211\_readRawBytes}!KX134-\/1211@{KX134-\/1211}}
+\doxysubsubsubsubsubsection{\texorpdfstring{KX134\_1211\_readRawBytes()}{KX134\_1211\_readRawBytes()}}
+{\footnotesize\ttfamily \label{group___k_x134-1211_gaa3064f02e75aabcbcae62c16733bc623} 
+void KX134\+\_\+1211\+\_\+read\+Raw\+Bytes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}} \texorpdfstring{$\ast$}{*}}]{accel}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Read raw 3-\/axis data. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \texorpdfstring{$\ast$}{*}accel} & Pointer to accel struct. \\
+\hline
+{\em \texorpdfstring{$\ast$}{*}out} & Raw 3-\/axis data array to write. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily NULL}.
+\end{DoxyReturn}
+\DoxyHorRuler{0}
+ 
+
+Definition at line \mbox{\hyperlink{_k_x134__1211_8c_source_l00077}{77}} of file \mbox{\hyperlink{_k_x134__1211_8c_source}{KX134\+\_\+1211.\+c}}.
+
+\Hypertarget{group___k_x134-1211_ga9e1214c9a71e524c3c857c4275be344b}\index{KX134-\/1211@{KX134-\/1211}!KX134\_1211\_processRawBytes@{KX134\_1211\_processRawBytes}}
+\index{KX134\_1211\_processRawBytes@{KX134\_1211\_processRawBytes}!KX134-\/1211@{KX134-\/1211}}
+\doxysubsubsubsubsubsection{\texorpdfstring{KX134\_1211\_processRawBytes()}{KX134\_1211\_processRawBytes()}}
+{\footnotesize\ttfamily \label{group___k_x134-1211_ga9e1214c9a71e524c3c857c4275be344b} 
+void KX134\+\_\+1211\+\_\+process\+Raw\+Bytes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}} \texorpdfstring{$\ast$}{*}}]{accel}{, }\item[{uint8\+\_\+t \texorpdfstring{$\ast$}{*}}]{bytes}{, }\item[{float \texorpdfstring{$\ast$}{*}}]{out}{}\end{DoxyParamCaption})}
+
+
+
+Process raw 3-\/axis data to floating point accelerations. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em \texorpdfstring{$\ast$}{*}accel} & Pointer to accel struct. \\
+\hline
+{\em \texorpdfstring{$\ast$}{*}bytes} & Raw 3-\/axis data array. \\
+\hline
+{\em \texorpdfstring{$\ast$}{*}out} & Processed 3-\/axis data array to write. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily NULL}.
+\end{DoxyReturn}
+\DoxyHorRuler{0}
+ 
+
+Definition at line \mbox{\hyperlink{_k_x134__1211_8c_source_l00063}{63}} of file \mbox{\hyperlink{_k_x134__1211_8c_source}{KX134\+\_\+1211.\+c}}.
+

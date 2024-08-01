@@ -1,0 +1,14 @@
+\doxysection{Core/\+Src/\+SPI/spi.c File Reference}
+\hypertarget{spi_8c}{}\label{spi_8c}\index{Core/Src/SPI/spi.c@{Core/Src/SPI/spi.c}}
+{\ttfamily \#include "{}spi.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{group___s_p_i_ga656f7b06a728e76eb9ac0b10e1bd5bb7}{SPI\+\_\+init}} (\mbox{\hyperlink{group___s_p_i_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}spi, \mbox{\hyperlink{group___s_p_i_gad258d4c51629346fceac4679b3209ad9}{Device\+Type}} device, SPI\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}interface, GPIO\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*}port, unsigned long cs)
+\begin{DoxyCompactList}\small\item\em Initialiser for an \doxylink{group___s_p_i_struct_s_p_i}{SPI} device interface. \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{group___s_p_i_ga45245db392649677ce4d93b334f6e0fd}{SPI\+\_\+transmit}} (\mbox{\hyperlink{group___s_p_i_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}spi, uint16\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em Instance method to communicate a \doxylink{group___s_p_i_struct_s_p_i}{SPI} transaction with slave device. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___s_p_i_ga205c59ab72d018c05d33f91e7c7808e7}{SPI\+\_\+send}} (\mbox{\hyperlink{group___s_p_i_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}spi, uint16\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em Foo. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{group___s_p_i_gacddb795ecded56fe9f987bf41785a3a2}{SPI\+\_\+receive}} (\mbox{\hyperlink{group___s_p_i_struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}spi, uint16\+\_\+t \texorpdfstring{$\ast$}{*}data)
+\begin{DoxyCompactList}\small\item\em Bar. \end{DoxyCompactList}\end{DoxyCompactItemize}

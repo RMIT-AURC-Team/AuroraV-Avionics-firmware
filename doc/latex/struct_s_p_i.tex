@@ -1,0 +1,102 @@
+\doxysection{SPI Struct Reference}
+\hypertarget{struct_s_p_i}{}\label{struct_s_p_i}\index{SPI@{SPI}}
+
+
+Struct definition for \doxylink{group___s_p_i}{SPI interface}. Provides the interface for API consumers to interact with the \doxylink{struct_s_p_i}{SPI} peripheral.  
+
+
+
+
+{\ttfamily \#include $<$spi.\+h$>$}
+
+
+
+Inherited by \mbox{\hyperlink{struct_a3_g4250_d}{A3\+G4250D}}, \mbox{\hyperlink{struct_b_m_p581}{BMP581}}, \mbox{\hyperlink{struct_flash}{Flash}}, and \mbox{\hyperlink{struct_k_x134__1211}{KX134\+\_\+1211}}.
+
+\doxysubsubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{struct_s_p_i_a4037993dbe40ac54f2e929b5db9d3b4c}\label{struct_s_p_i_a4037993dbe40ac54f2e929b5db9d3b4c} 
+\mbox{\hyperlink{group___s_p_i_gad258d4c51629346fceac4679b3209ad9}{Device\+Type}} {\bfseries device}
+\begin{DoxyCompactList}\small\item\em Enum specifier for device type. \end{DoxyCompactList}\item 
+\Hypertarget{struct_s_p_i_acbda99bed92b76328c472ad0e523424e}\label{struct_s_p_i_acbda99bed92b76328c472ad0e523424e} 
+SPI\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*} {\bfseries interface}
+\begin{DoxyCompactList}\small\item\em Pointer to \doxylink{struct_s_p_i}{SPI} interface struct. \end{DoxyCompactList}\item 
+\Hypertarget{struct_s_p_i_a82241972e0292c7de95ea1e293e11be3}\label{struct_s_p_i_a82241972e0292c7de95ea1e293e11be3} 
+GPIO\+\_\+\+Type\+Def \texorpdfstring{$\ast$}{*} {\bfseries port}
+\begin{DoxyCompactList}\small\item\em Pointer to GPIO port struct. \end{DoxyCompactList}\item 
+\Hypertarget{struct_s_p_i_a8f467bedd92cfa29ba7b757711ece04d}\label{struct_s_p_i_a8f467bedd92cfa29ba7b757711ece04d} 
+unsigned long {\bfseries cs}
+\begin{DoxyCompactList}\small\item\em Device chip select address. \end{DoxyCompactList}\item 
+void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{struct_s_p_i_a194e08b54d45d097bba08a024fb0826e}{send}} )(struct \mbox{\hyperlink{struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\+\_\+t)
+\begin{DoxyCompactList}\small\item\em \doxylink{struct_s_p_i}{SPI} send method. \end{DoxyCompactList}\item 
+void(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{struct_s_p_i_ac4444c9c043175f1ed173040fa123e2e}{receive}} )(struct \mbox{\hyperlink{struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\+\_\+t \texorpdfstring{$\ast$}{*})
+\begin{DoxyCompactList}\small\item\em \doxylink{struct_s_p_i}{SPI} receive method. \end{DoxyCompactList}\item 
+uint16\+\_\+t(\texorpdfstring{$\ast$}{*} \mbox{\hyperlink{struct_s_p_i_a54668c3e267dcd01feff6c083a372846}{transmit}} )(struct \mbox{\hyperlink{struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\+\_\+t)
+\begin{DoxyCompactList}\small\item\em \doxylink{struct_s_p_i}{SPI} transmit method. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Struct definition for \doxylink{group___s_p_i}{SPI interface}. Provides the interface for API consumers to interact with the \doxylink{struct_s_p_i}{SPI} peripheral. 
+
+Definition at line \mbox{\hyperlink{spi_8h_source_l00035}{35}} of file \mbox{\hyperlink{spi_8h_source}{spi.\+h}}.
+
+
+
+\doxysubsection{Field Documentation}
+\Hypertarget{struct_s_p_i_a194e08b54d45d097bba08a024fb0826e}\index{SPI@{SPI}!send@{send}}
+\index{send@{send}!SPI@{SPI}}
+\doxysubsubsection{\texorpdfstring{send}{send}}
+{\footnotesize\ttfamily \label{struct_s_p_i_a194e08b54d45d097bba08a024fb0826e} 
+void(\texorpdfstring{$\ast$}{*} send) (struct \mbox{\hyperlink{struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\+\_\+t)}
+
+
+
+\doxylink{struct_s_p_i}{SPI} send method. 
+
+\begin{DoxySeeAlso}{See also}
+\doxylink{group___s_p_i_ga205c59ab72d018c05d33f91e7c7808e7}{SPI\+\_\+send} 
+\end{DoxySeeAlso}
+
+
+Definition at line \mbox{\hyperlink{spi_8h_source_l00040}{40}} of file \mbox{\hyperlink{spi_8h_source}{spi.\+h}}.
+
+\Hypertarget{struct_s_p_i_ac4444c9c043175f1ed173040fa123e2e}\index{SPI@{SPI}!receive@{receive}}
+\index{receive@{receive}!SPI@{SPI}}
+\doxysubsubsection{\texorpdfstring{receive}{receive}}
+{\footnotesize\ttfamily \label{struct_s_p_i_ac4444c9c043175f1ed173040fa123e2e} 
+void(\texorpdfstring{$\ast$}{*} receive) (struct \mbox{\hyperlink{struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\+\_\+t \texorpdfstring{$\ast$}{*})}
+
+
+
+\doxylink{struct_s_p_i}{SPI} receive method. 
+
+\begin{DoxySeeAlso}{See also}
+\doxylink{group___s_p_i_gacddb795ecded56fe9f987bf41785a3a2}{SPI\+\_\+receive} 
+\end{DoxySeeAlso}
+
+
+Definition at line \mbox{\hyperlink{spi_8h_source_l00041}{41}} of file \mbox{\hyperlink{spi_8h_source}{spi.\+h}}.
+
+\Hypertarget{struct_s_p_i_a54668c3e267dcd01feff6c083a372846}\index{SPI@{SPI}!transmit@{transmit}}
+\index{transmit@{transmit}!SPI@{SPI}}
+\doxysubsubsection{\texorpdfstring{transmit}{transmit}}
+{\footnotesize\ttfamily \label{struct_s_p_i_a54668c3e267dcd01feff6c083a372846} 
+uint16\+\_\+t(\texorpdfstring{$\ast$}{*} transmit) (struct \mbox{\hyperlink{struct_s_p_i}{SPI}} \texorpdfstring{$\ast$}{*}, uint16\+\_\+t)}
+
+
+
+\doxylink{struct_s_p_i}{SPI} transmit method. 
+
+\begin{DoxySeeAlso}{See also}
+\doxylink{group___s_p_i_ga45245db392649677ce4d93b334f6e0fd}{SPI\+\_\+transmit} 
+\end{DoxySeeAlso}
+
+
+Definition at line \mbox{\hyperlink{spi_8h_source_l00042}{42}} of file \mbox{\hyperlink{spi_8h_source}{spi.\+h}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Core/\+Inc/\+SPI/spi.\+h\end{DoxyCompactItemize}
