@@ -5,4 +5,7 @@
 *.lnp
 *.dep
 *.htm
+*bak
+*orig
+*~
 doc/
