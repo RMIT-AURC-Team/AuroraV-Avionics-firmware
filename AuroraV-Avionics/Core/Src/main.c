@@ -5,8 +5,9 @@ TaskHandle_t xDataAqcquisitionHHandle = NULL;
 TaskHandle_t xDataAqcquisitionLHandle = NULL;
 TaskHandle_t xFlashBufferHandle       = NULL;
 TaskHandle_t xStateUpdateHandle       = NULL;
-TaskHandle_t xLoRaCommunicateHandle   = NULL;
 //TaskHandle_t xUARTCommunicateHandle   = NULL;
+TaskHandle_t xLoRaTransmitHandle  	  = NULL;
+
 EventGroupHandle_t xTaskEnableGroup; // 0: FLASH,  1: HIGHRES, 2: LOWRES, 7: IDLE
 
 // Accelerometer
@@ -31,6 +32,7 @@ float temp;
 
 Flash flash;
 UART usb;
+LoRa lora;
 
 // Calculated attitude variables
 Quaternion qRot;                // Global attitude quaternion
@@ -49,10 +51,8 @@ MemBuff mem;
 uint8_t buff[BUFF_SIZE];
 uint8_t outBuff[PAGE_SIZE];
 
-enum State currentState               = PRELAUNCH; // Boot in prelaunch
-int interval2ms                       = 0;
-
-const struct LoRa_Registers LoRa_Regs = {0, 1, 0xd, 0xE, 0xF, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0X1C, 0X1D, 0X1E, 0X1F, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X28, 0X29, 0X2A, 0X2C, 0X31, 0X33, 0X37, 0X39, 0X3B, 0X3D, 0X40, 0X41};
+enum State currentState = PRELAUNCH; // Boot in prelaunch
+int interval2ms         = 0;
 
 int main(void) {
   // Bring up RCC
@@ -62,8 +62,8 @@ int main(void) {
   configure_MISC_GPIO();
   configure_UART3_GPS();
   configure_SPI1_Sensor_Suite();
-  configure_SPI4_Flash();
   configure_SPI3_LoRa();
+  configure_SPI4_Flash();
 
   // Initialise timers
   TIM6init();
@@ -72,10 +72,10 @@ int main(void) {
   // Configure peripherals
   CANGPIO_config();
   CAN_Peripheral_config();
-  configure_LoRa_module();
-	
+
 	Flash_init(&flash, FLASH_PORT, FLASH_CS);
 	UART_init(&usb, USB_INTERFACE, USB_PORT, USB_BAUD, OVER8);
+  LoRa_init(&lora, LORA_PORT, LORA_CS, BW250, SF9, CR5);
 
   // Initialise sensors
   BMP581_init(&baro_s, BARO_PORT, BARO_CS, BMP581_TEMP_SENSITIVITY, BMP581_PRESS_SENSITIVITY);
@@ -103,9 +103,9 @@ int main(void) {
   xTaskCreate(vDataAcquisitionL, "LDataAcq", 256, NULL, configMAX_PRIORITIES - 3, &xDataAqcquisitionLHandle);
   xTaskCreate(vStateUpdate, "StateUpdate", 256, NULL, configMAX_PRIORITIES - 4, &xStateUpdateHandle);
   xTaskCreate(vFlashBuffer, "FlashData", 256, NULL, configMAX_PRIORITIES - 1, &xFlashBufferHandle);
-  xTaskCreate(vLoRaCommunicate, "LoRa", 256, NULL, configMAX_PRIORITIES - 1, &xLoRaCommunicateHandle);
 	//xTaskCreate(vUARTCommunicate, "UART", 256, NULL, configMAX_PRIORITIES - 5, &xUARTCommunicateHandle);
-
+  xTaskCreate(vLoRaTransmit, "LoRaTx", 256, NULL, configMAX_PRIORITIES - 5, &xLoRaTransmitHandle);
+	
   vTaskStartScheduler();
 
   // Should never reach here
@@ -146,18 +146,18 @@ void vFlashBuffer(void *argument) {
  *                             LORA HANDLING                             *
  * ===================================================================== */
 
-void vLoRaCommunicate(void *argument) {
+void vLoRaTransmit(void *argument) {
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(500); // 2Hz
   for (;;) {
-    char payload[16] = {
+    uint8_t payload[16] = {
         LORA_HEADER_AVD1,
         accelRaw[0], accelRaw[1], accelRaw[2],
         accelRaw[3], accelRaw[4], accelRaw[5],
         ':', '/',
         ':', ')'
     };
-    Load_And_Send_To_LoRa(payload, &LoRa_Regs);
+    lora.transmit(&lora, payload);
     // Block until transmit enable task group bit is set
     //  this is managed within an ISR triggered by the LoRa module
     // ...

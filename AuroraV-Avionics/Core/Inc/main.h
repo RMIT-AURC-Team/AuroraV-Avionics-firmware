@@ -47,7 +47,7 @@ void vFlashBuffer(void *pvParameters);
 void vDataAcquisitionH(void *pvParameters);
 void vDataAcquisitionL(void *pvParameters);
 void vStateUpdate(void *pvParameters);
-void vLoRaCommunicate(void *pvParameters);
+void vLoRaTransmit(void *pvParameters);
 
 void Error_Handler(void);
 
@@ -109,5 +109,8 @@ void Error_Handler(void);
 #define USB_PORT 			GPIOC
 #define USB_INTERFACE	USART6
 #define USB_BAUD 			230400
+
+#define LORA_PORT GPIOC
+#define LORA_CS 	GPIO_ODR_OD0
 
 #endif
