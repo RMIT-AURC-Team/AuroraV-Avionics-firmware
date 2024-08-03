@@ -65,6 +65,48 @@ void configure_SPI4_Flash(void) {
 }
 
 // ===============================================================
+//                         COMMUNICATIONS
+// ===============================================================
+
+void configure_SPI3_LoRa() {
+  GPIOC->MODER &= (~(GPIO_MODER_MODE10_Msk | GPIO_MODER_MODE11_Msk | GPIO_MODER_MODE12_Msk));
+  GPIOC->MODER |= ((0x2 << GPIO_MODER_MODE10_Pos) | (0x2 << GPIO_MODER_MODE11_Pos) | (0x2 << GPIO_MODER_MODE12_Pos));
+  GPIOC->PUPDR &= (~(GPIO_PUPDR_PUPD10_Msk | GPIO_PUPDR_PUPD11_Msk | GPIO_PUPDR_PUPD12_Msk));
+  GPIOC->PUPDR |= ((0X1 << GPIO_PUPDR_PUPD10_Pos) | (0X1 << GPIO_PUPDR_PUPD11_Pos) | (0X1 << GPIO_PUPDR_PUPD12_Pos));
+  GPIOD->PUPDR |= (0X1 << GPIO_PUPDR_PUPD1_Pos);
+  GPIOD->MODER &= (~(GPIO_MODER_MODE0_Msk) | (GPIO_MODER_MODE7_Msk) | (GPIO_MODER_MODE1_Msk));
+  GPIOD->MODER |= (0X01 << GPIO_MODER_MODE0_Pos) | (0X01 << GPIO_MODER_MODE7_Pos); // chip select stuff
+  TIM6->ARR &= (~(TIM_ARR_ARR_Msk));
+  TIM6->PSC &= (~(TIM_PSC_PSC_Msk));
+  TIM6->ARR |= 20000;
+  TIM6->PSC |= 251;
+
+  GPIOD->ODR |= (GPIO_ODR_OD7);
+  TIM6->CR1 |= TIM_CR1_CEN;
+  while ((TIM6->SR & TIM_SR_UIF) == 0);                    // 60 ms delay
+  GPIOD->ODR &= (~(GPIO_ODR_OD7));
+  TIM6->SR &= ~(TIM_SR_UIF);                               // clears UIF
+
+  GPIOC->OTYPER &= (~(GPIO_OTYPER_OT10 | GPIO_OTYPER_OT11 | GPIO_OTYPER_OT12));
+  GPIOC->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED10_Msk | GPIO_OSPEEDR_OSPEED11_Msk | GPIO_OSPEEDR_OSPEED12_Msk));
+  GPIOC->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED10_Pos | 0x2 << GPIO_OSPEEDR_OSPEED11_Pos | 0x2 << GPIO_OSPEEDR_OSPEED12_Pos);
+  GPIOD->ODR |= GPIO_ODR_OD0;                              // raise chip select
+  GPIOC->AFR[1] &= (uint32_t)(~(0x000FFF00));              // clears AFRH 10, 11 and 12
+  GPIOC->AFR[1] |= (0x00066600);                           // sets AFRH 10, 11 and 12 to AF6 for lora SPI
+
+  SPI3->CR1 &= (~(SPI_CR1_BR_Msk));
+  SPI3->CR1 |= (0x2 << SPI_CR1_BR_Pos);                    // set board rate too fclck / 16 = 42/8 = 5.25 (10 MHz max for LoRa)
+  SPI3->CR1 &= (~(SPI_CR1_CPHA_Msk) | (SPI_CR1_CPOL_Msk)); // sets CPOL and CPHA to zero as specified in LoRa datasheet
+  // needs bit DIO and Reset configured to idk what
+  SPI3->CR1 |= SPI_CR1_MSTR;              // micro is master
+  SPI3->CR1 |= SPI_CR1_SSM | SPI_CR1_SSI; // Software management
+  SPI3->CR1 &= (~(SPI_CR1_LSBFIRST_Msk)); // MSB FIRST
+  SPI3->CR1 |= SPI_CR1_DFF;
+  SPI3->CR1 &= ~(SPI_CR1_BIDIMODE | SPI_CR1_RXONLY);
+  SPI3->CR1 |= (0x1 << SPI_CR1_SPE_Pos);
+}
+
+// ===============================================================
 //                       UART AND GPIO
 // ===============================================================
 

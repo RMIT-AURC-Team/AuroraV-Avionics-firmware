@@ -26,6 +26,7 @@ void configure_RCC_APB2(void);
 void configure_RCC_AHB1(void);
 void configure_MISC_GPIO(void);
 void configure_UART3_GPS(void);
+void configure_SPI3_LoRa();
 void configure_UART6_Serial_2_mini_USB(void);
 void configure_external_interrupts(void);
 void EXTI1_IRQHandler(void);

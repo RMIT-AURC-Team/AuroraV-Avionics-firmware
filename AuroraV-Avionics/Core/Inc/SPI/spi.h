@@ -22,10 +22,11 @@
  * Describes the type of peripheral implementing an SPI interface.
  */
 typedef enum {
-  SENSOR_ACCEL, //!< Accelerometer.
-  SENSOR_GYRO,  //!< Gyroscope.
-  SENSOR_BARO,  //!< Barometer.
-  MEMORY_FLASH  //!< Flash memory.
+  SENSOR_ACCEL,  //!< Accelerometer.
+  SENSOR_GYRO,   //!< Gyroscope.
+  SENSOR_BARO,   //!< Barometer.
+  MEMORY_FLASH,  //!< Flash memory.
+	COMM_LORA 		 //!< LoRa module
 } DeviceType;
 
 /**
