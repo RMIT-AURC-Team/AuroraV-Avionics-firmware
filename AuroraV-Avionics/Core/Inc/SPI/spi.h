@@ -38,13 +38,13 @@ typedef struct SPI {
   GPIO_TypeDef *port;                           //!< Pointer to GPIO port struct.
   unsigned long cs;                             //!< Device chip select address.
   void (*send)(struct SPI *, uint16_t);         //!< SPI send method.     @see SPI_send
-  void (*receive)(struct SPI *, uint16_t *);    //!< SPI receive method.  @see SPI_receive
+  void (*receive)(struct SPI *, volatile uint16_t *);    //!< SPI receive method.  @see SPI_receive
   uint16_t (*transmit)(struct SPI *, uint16_t); //!< SPI transmit method. @see SPI_transmit
 } SPI;
 
 void SPI_init(SPI *, DeviceType, SPI_TypeDef *, GPIO_TypeDef *, unsigned long);
 void SPI_send(SPI *, uint16_t);
-void SPI_receive(SPI *, uint16_t *);
+void SPI_receive(SPI *, volatile uint16_t *);
 uint16_t SPI_transmit(SPI *, uint16_t);
 
 /** @} */

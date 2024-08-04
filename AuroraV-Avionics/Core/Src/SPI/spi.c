@@ -30,7 +30,7 @@ void SPI_init(SPI *spi, DeviceType device, SPI_TypeDef *interface, GPIO_TypeDef 
  **
  * =============================================================================== */
 uint16_t SPI_transmit(SPI *spi, uint16_t data) {
-  uint16_t response;
+  volatile uint16_t response;
   SPI_send(spi, data);
   SPI_receive(spi, &response);
   while ((spi->interface->SR & SPI_SR_BSY) == SPI_SR_BSY);
@@ -58,7 +58,7 @@ void SPI_send(SPI *spi, uint16_t data) {
  * @return @c NULL.
  **
  * =============================================================================== */
-void SPI_receive(SPI *spi, uint16_t *data) {
+void SPI_receive(SPI *spi, volatile uint16_t *data) {
   while ((spi->interface->SR & (SPI_SR_RXNE)) == 0);
   *data = spi->interface->DR;
 }
