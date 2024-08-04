@@ -11,12 +11,13 @@
  * @return @c NULL.
  **
  * =============================================================================== */
-void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, uint8_t scale, const uint8_t *axes) {
+void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, uint8_t scale, const uint8_t *axes, const int8_t *sign) {
   SPI_init(&accel->base, SENSOR_ACCEL, SPI1, port, cs);
-  accel->axes            = axes;
   accel->readAccel       = KX134_1211_readAccel;
   accel->readRawBytes    = KX134_1211_readRawBytes;
   accel->processRawBytes = KX134_1211_processRawBytes;
+	memcpy(accel->axes, axes, KX134_1211_DATA_COUNT);
+  memcpy(accel->sign, sign, KX134_1211_DATA_COUNT);
 
   // Set value of GSEL and sensitivity based on selected scale
   uint8_t GSEL = 0x00;

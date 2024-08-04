@@ -8,8 +8,9 @@
 #ifndef _KX134_1211_H
 #define _KX134_1211_H
 
-#include "SPI/spi.h"
+#include "spi.h"
 #include "stm32f439xx.h"
+#include "string.h"
 
 #define KX134_1211_SENSITIVITY_32G    (1.0f / 1024.0f)
 #define KX134_1211_SENSITIVITY_16G    (1.0f / 2048.0f)
@@ -45,13 +46,14 @@
 typedef struct KX134_1211 {
   SPI base;                                                         //!< Parent SPI interface
   float sensitivity;                                                //!< Accelerometer sensitivity
-  const uint8_t *axes;                                              //!< Array defining axes of mounting
   void (*readAccel)(struct KX134_1211 *, float *);                  //!< Accel read method.         @see KX134_1211_readAccel
   void (*readRawBytes)(struct KX134_1211 *, uint8_t *);             //!< Raw accel read method.     @see KX134_1211_readRawBytes
   void (*processRawBytes)(struct KX134_1211 *, uint8_t *, float *); //!< Process raw accel method.  @see KX134_1211_processRawBytes
+	uint8_t axes[KX134_1211_DATA_COUNT];                              //!< Array defining axes of mounting
+  int8_t sign[KX134_1211_DATA_COUNT];                               //!< Array defining sign of axes
 } KX134_1211;
 
-void KX134_1211_init(KX134_1211 *, GPIO_TypeDef *, unsigned long, const uint8_t, const uint8_t *);
+void KX134_1211_init(KX134_1211 *, GPIO_TypeDef *, unsigned long, const uint8_t, const uint8_t *, const int8_t *);
 void KX134_1211_readAccel(KX134_1211 *, float *);
 void KX134_1211_readRawBytes(KX134_1211 *, uint8_t *);
 void KX134_1211_processRawBytes(KX134_1211 *, uint8_t *, float *);

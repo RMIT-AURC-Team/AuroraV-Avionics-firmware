@@ -21,10 +21,6 @@
 #define ACCEL_SCALE_HIGH 32
 #define ACCEL_SCALE_LOW  16
 
-extern const uint8_t ACCEL_AXES_1[3];
-extern const uint8_t ACCEL_AXES_2[3];
-extern const uint8_t GYRO_AXES[3];
-
 void configure_SPI1_Sensor_Suite();
 
 #endif
