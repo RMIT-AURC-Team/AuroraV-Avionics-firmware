@@ -6,7 +6,7 @@ var group___s_p_i =
       [ "port", "struct_s_p_i.html#a82241972e0292c7de95ea1e293e11be3", null ],
       [ "cs", "struct_s_p_i.html#a8f467bedd92cfa29ba7b757711ece04d", null ],
       [ "send", "struct_s_p_i.html#a194e08b54d45d097bba08a024fb0826e", null ],
-      [ "receive", "struct_s_p_i.html#ac4444c9c043175f1ed173040fa123e2e", null ],
+      [ "receive", "struct_s_p_i.html#ac67e3827d337ab14c922753d83ecee5e", null ],
       [ "transmit", "struct_s_p_i.html#a54668c3e267dcd01feff6c083a372846", null ]
     ] ],
     [ "DeviceType", "group___s_p_i.html#gad258d4c51629346fceac4679b3209ad9", [
@@ -17,6 +17,6 @@ var group___s_p_i =
     ] ],
     [ "SPI_init", "group___s_p_i.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7", null ],
     [ "SPI_send", "group___s_p_i.html#ga205c59ab72d018c05d33f91e7c7808e7", null ],
-    [ "SPI_receive", "group___s_p_i.html#gacddb795ecded56fe9f987bf41785a3a2", null ],
+    [ "SPI_receive", "group___s_p_i.html#ga4fbfc141ea14655d6e93aed8ac67aa67", null ],
     [ "SPI_transmit", "group___s_p_i.html#ga45245db392649677ce4d93b334f6e0fd", null ]
 ];

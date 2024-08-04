@@ -19,7 +19,7 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
-<link href="customdoxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
        <script type="text/javascript">
@@ -131,9 +131,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga205c59ab72d018c05d33f91e7c7808e7" id="r_ga205c59ab72d018c05d33f91e7c7808e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga205c59ab72d018c05d33f91e7c7808e7">SPI_send</a> (<a class="el" href="struct_s_p_i.html">SPI</a> *, uint16_t)</td></tr>
 <tr class="memdesc:ga205c59ab72d018c05d33f91e7c7808e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send data through the <a class="el" href="struct_s_p_i.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> interface.  <br /></td></tr>
 <tr class="separator:ga205c59ab72d018c05d33f91e7c7808e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacddb795ecded56fe9f987bf41785a3a2" id="r_gacddb795ecded56fe9f987bf41785a3a2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacddb795ecded56fe9f987bf41785a3a2">SPI_receive</a> (<a class="el" href="struct_s_p_i.html">SPI</a> *, uint16_t *)</td></tr>
-<tr class="memdesc:gacddb795ecded56fe9f987bf41785a3a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive data through the <a class="el" href="struct_s_p_i.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> interface.  <br /></td></tr>
-<tr class="separator:gacddb795ecded56fe9f987bf41785a3a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4fbfc141ea14655d6e93aed8ac67aa67" id="r_ga4fbfc141ea14655d6e93aed8ac67aa67"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4fbfc141ea14655d6e93aed8ac67aa67">SPI_receive</a> (<a class="el" href="struct_s_p_i.html">SPI</a> *, volatile uint16_t *)</td></tr>
+<tr class="memdesc:ga4fbfc141ea14655d6e93aed8ac67aa67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive data through the <a class="el" href="struct_s_p_i.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> interface.  <br /></td></tr>
+<tr class="separator:ga4fbfc141ea14655d6e93aed8ac67aa67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga45245db392649677ce4d93b334f6e0fd" id="r_ga45245db392649677ce4d93b334f6e0fd"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga45245db392649677ce4d93b334f6e0fd">SPI_transmit</a> (<a class="el" href="struct_s_p_i.html">SPI</a> *, uint16_t)</td></tr>
 <tr class="memdesc:ga45245db392649677ce4d93b334f6e0fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instance method to communicate a <a class="el" href="struct_s_p_i.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> transaction with slave device.  <br /></td></tr>
 <tr class="separator:ga45245db392649677ce4d93b334f6e0fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -257,8 +257,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="gacddb795ecded56fe9f987bf41785a3a2" name="gacddb795ecded56fe9f987bf41785a3a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gacddb795ecded56fe9f987bf41785a3a2">&#9670;&#160;</a></span>SPI_receive()</h2>
+<a id="ga4fbfc141ea14655d6e93aed8ac67aa67" name="ga4fbfc141ea14655d6e93aed8ac67aa67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4fbfc141ea14655d6e93aed8ac67aa67">&#9670;&#160;</a></span>SPI_receive()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -271,7 +271,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint16_t *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>&#160;)</td>
+          <td class="paramtype">volatile uint16_t *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -332,10 +332,11 @@ Functions</h2></td></tr>
 </div>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<!-- HTML footer for doxygen 1.11.0-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-	<img id="footer" src="footer.png"/>
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
+  </ul>
 </div>
 </body>
 </html>

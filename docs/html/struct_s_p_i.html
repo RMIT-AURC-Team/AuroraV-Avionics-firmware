@@ -19,7 +19,7 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
-<link href="customdoxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
        <script type="text/javascript">
@@ -130,9 +130,9 @@ unsigned long&#160;</td><td class="memItemRight" valign="bottom"><b>cs</b></td><
 <tr class="memitem:a194e08b54d45d097bba08a024fb0826e" id="r_a194e08b54d45d097bba08a024fb0826e"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a194e08b54d45d097bba08a024fb0826e">send</a> )(struct <a class="el" href="struct_s_p_i.html">SPI</a> *, uint16_t)</td></tr>
 <tr class="memdesc:a194e08b54d45d097bba08a024fb0826e"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="struct_s_p_i.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> send method.  <br /></td></tr>
 <tr class="separator:a194e08b54d45d097bba08a024fb0826e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4444c9c043175f1ed173040fa123e2e" id="r_ac4444c9c043175f1ed173040fa123e2e"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4444c9c043175f1ed173040fa123e2e">receive</a> )(struct <a class="el" href="struct_s_p_i.html">SPI</a> *, uint16_t *)</td></tr>
-<tr class="memdesc:ac4444c9c043175f1ed173040fa123e2e"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="struct_s_p_i.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> receive method.  <br /></td></tr>
-<tr class="separator:ac4444c9c043175f1ed173040fa123e2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac67e3827d337ab14c922753d83ecee5e" id="r_ac67e3827d337ab14c922753d83ecee5e"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac67e3827d337ab14c922753d83ecee5e">receive</a> )(struct <a class="el" href="struct_s_p_i.html">SPI</a> *, volatile uint16_t *)</td></tr>
+<tr class="memdesc:ac67e3827d337ab14c922753d83ecee5e"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="struct_s_p_i.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> receive method.  <br /></td></tr>
+<tr class="separator:ac67e3827d337ab14c922753d83ecee5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54668c3e267dcd01feff6c083a372846" id="r_a54668c3e267dcd01feff6c083a372846"><td class="memItemLeft" align="right" valign="top">uint16_t(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a54668c3e267dcd01feff6c083a372846">transmit</a> )(struct <a class="el" href="struct_s_p_i.html">SPI</a> *, uint16_t)</td></tr>
 <tr class="memdesc:a54668c3e267dcd01feff6c083a372846"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="struct_s_p_i.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> transmit method.  <br /></td></tr>
 <tr class="separator:a54668c3e267dcd01feff6c083a372846"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -161,20 +161,20 @@ unsigned long&#160;</td><td class="memItemRight" valign="bottom"><b>cs</b></td><
 
 </div>
 </div>
-<a id="ac4444c9c043175f1ed173040fa123e2e" name="ac4444c9c043175f1ed173040fa123e2e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4444c9c043175f1ed173040fa123e2e">&#9670;&#160;</a></span>receive</h2>
+<a id="ac67e3827d337ab14c922753d83ecee5e" name="ac67e3827d337ab14c922753d83ecee5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac67e3827d337ab14c922753d83ecee5e">&#9670;&#160;</a></span>receive</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void(* receive) (struct <a class="el" href="struct_s_p_i.html">SPI</a> *, uint16_t *)</td>
+          <td class="memname">void(* receive) (struct <a class="el" href="struct_s_p_i.html">SPI</a> *, volatile uint16_t *)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p><a class="el" href="struct_s_p_i.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> receive method. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="group___s_p_i.html#gacddb795ecded56fe9f987bf41785a3a2" title="Receive data through the SPI interface.">SPI_receive</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group___s_p_i.html#ga4fbfc141ea14655d6e93aed8ac67aa67" title="Receive data through the SPI interface.">SPI_receive</a> </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="spi_8h_source.html#l00041">41</a> of file <a class="el" href="spi_8h_source.html">spi.h</a>.</p>
 
@@ -200,14 +200,16 @@ unsigned long&#160;</td><td class="memItemRight" valign="bottom"><b>cs</b></td><
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>Core/Inc/SPI/<a class="el" href="spi_8h_source.html">spi.h</a></li>
+<li>AuroraV-Avionics/Core/Inc/SPI/<a class="el" href="spi_8h_source.html">spi.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<!-- HTML footer for doxygen 1.11.0-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-	<img id="footer" src="footer.png"/>
+  <ul>
+    <li class="navelem"><a class="el" href="struct_s_p_i.html">SPI</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
+  </ul>
 </div>
 </body>
 </html>

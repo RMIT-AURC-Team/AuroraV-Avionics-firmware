@@ -8,5 +8,6 @@ var hierarchy =
       [ "BMP581", "struct_b_m_p581.html", null ],
       [ "Flash", "struct_flash.html", null ],
       [ "KX134_1211", "struct_k_x134__1211.html", null ]
-    ] ]
+    ] ],
+    [ "UART", "group___u_a_r_t.html#struct_u_a_r_t", null ]
 ];

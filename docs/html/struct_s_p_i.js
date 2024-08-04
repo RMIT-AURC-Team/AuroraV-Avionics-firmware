@@ -5,6 +5,6 @@ var struct_s_p_i =
     [ "port", "struct_s_p_i.html#a82241972e0292c7de95ea1e293e11be3", null ],
     [ "cs", "struct_s_p_i.html#a8f467bedd92cfa29ba7b757711ece04d", null ],
     [ "send", "struct_s_p_i.html#a194e08b54d45d097bba08a024fb0826e", null ],
-    [ "receive", "struct_s_p_i.html#ac4444c9c043175f1ed173040fa123e2e", null ],
+    [ "receive", "struct_s_p_i.html#ac67e3827d337ab14c922753d83ecee5e", null ],
     [ "transmit", "struct_s_p_i.html#a54668c3e267dcd01feff6c083a372846", null ]
 ];

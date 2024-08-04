@@ -1,4 +1,4 @@
 var files_dup =
 [
-    [ "Core", "dir_c6310732a22f63c0c2fc5595561e68f1.html", "dir_c6310732a22f63c0c2fc5595561e68f1" ]
+    [ "AuroraV-Avionics", "dir_792ef69f7340d1afb8e8d9f9961cfbb5.html", "dir_792ef69f7340d1afb8e8d9f9961cfbb5" ]
 ];

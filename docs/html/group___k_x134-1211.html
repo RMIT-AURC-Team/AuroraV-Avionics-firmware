@@ -19,7 +19,7 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
-<link href="customdoxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
        <script type="text/javascript">
@@ -110,9 +110,9 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gafbe373f40c0c91f9521ae0913a6eec88" id="r_gafbe373f40c0c91f9521ae0913a6eec88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafbe373f40c0c91f9521ae0913a6eec88">KX134_1211_init</a> (<a class="el" href="struct_k_x134__1211.html">KX134_1211</a> *, GPIO_TypeDef *, unsigned long, const uint8_t, const uint8_t *)</td></tr>
-<tr class="memdesc:gafbe373f40c0c91f9521ae0913a6eec88"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialiser for a KX134-1211 accelerometer.  <br /></td></tr>
-<tr class="separator:gafbe373f40c0c91f9521ae0913a6eec88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab0e28a010d78d6e33ccbdb9f47b0096" id="r_gaab0e28a010d78d6e33ccbdb9f47b0096"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaab0e28a010d78d6e33ccbdb9f47b0096">KX134_1211_init</a> (<a class="el" href="struct_k_x134__1211.html">KX134_1211</a> *, GPIO_TypeDef *, unsigned long, const uint8_t, const uint8_t *, const int8_t *)</td></tr>
+<tr class="memdesc:gaab0e28a010d78d6e33ccbdb9f47b0096"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialiser for a KX134-1211 accelerometer.  <br /></td></tr>
+<tr class="separator:gaab0e28a010d78d6e33ccbdb9f47b0096"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0871f31a356a20dde2bd73ba9385658c" id="r_ga0871f31a356a20dde2bd73ba9385658c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0871f31a356a20dde2bd73ba9385658c">KX134_1211_readAccel</a> (<a class="el" href="struct_k_x134__1211.html">KX134_1211</a> *, float *)</td></tr>
 <tr class="memdesc:ga0871f31a356a20dde2bd73ba9385658c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read 3-axis floating point accelerations.  <br /></td></tr>
 <tr class="separator:ga0871f31a356a20dde2bd73ba9385658c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -125,8 +125,8 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gafbe373f40c0c91f9521ae0913a6eec88" name="gafbe373f40c0c91f9521ae0913a6eec88"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafbe373f40c0c91f9521ae0913a6eec88">&#9670;&#160;</a></span>KX134_1211_init()</h2>
+<a id="gaab0e28a010d78d6e33ccbdb9f47b0096" name="gaab0e28a010d78d6e33ccbdb9f47b0096"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaab0e28a010d78d6e33ccbdb9f47b0096">&#9670;&#160;</a></span>KX134_1211_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -154,7 +154,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em>axes</em></span>&#160;)</td>
+          <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em>axes</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int8_t *</td>          <td class="paramname"><span class="paramname"><em>sign</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -207,7 +212,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="_k_x134__1211_8c_source.html#l00048">48</a> of file <a class="el" href="_k_x134__1211_8c_source.html">KX134_1211.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_k_x134__1211_8c_source.html#l00049">49</a> of file <a class="el" href="_k_x134__1211_8c_source.html">KX134_1211.c</a>.</p>
 
 </div>
 </div>
@@ -241,7 +246,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="_k_x134__1211_8c_source.html#l00077">77</a> of file <a class="el" href="_k_x134__1211_8c_source.html">KX134_1211.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_k_x134__1211_8c_source.html#l00078">78</a> of file <a class="el" href="_k_x134__1211_8c_source.html">KX134_1211.c</a>.</p>
 
 </div>
 </div>
@@ -281,16 +286,17 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="_k_x134__1211_8c_source.html#l00063">63</a> of file <a class="el" href="_k_x134__1211_8c_source.html">KX134_1211.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_k_x134__1211_8c_source.html#l00064">64</a> of file <a class="el" href="_k_x134__1211_8c_source.html">KX134_1211.c</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<!-- HTML footer for doxygen 1.11.0-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-	<img id="footer" src="footer.png"/>
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
+  </ul>
 </div>
 </body>
 </html>

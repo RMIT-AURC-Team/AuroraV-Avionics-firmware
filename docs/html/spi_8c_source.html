@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.11.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>AuroraV-Avionics: Core/Src/SPI/spi.c Source File</title>
+<title>AuroraV-Avionics: AuroraV-Avionics/Core/Src/SPI/spi.c Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,7 +19,7 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
-<link href="customdoxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
        <script type="text/javascript">
@@ -109,7 +109,7 @@ $(function(){initNavTree('spi_8c_source.html',''); initResizable(true); });
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  spi-&gt;<a class="code hl_variable" href="struct_s_p_i.html#a82241972e0292c7de95ea1e293e11be3">port</a>      = port;</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  spi-&gt;<a class="code hl_variable" href="struct_s_p_i.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>        = cs;</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  spi-&gt;<a class="code hl_variable" href="struct_s_p_i.html#a194e08b54d45d097bba08a024fb0826e">send</a>      = <a class="code hl_function" href="group___s_p_i.html#ga205c59ab72d018c05d33f91e7c7808e7">SPI_send</a>;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  spi-&gt;<a class="code hl_variable" href="struct_s_p_i.html#ac4444c9c043175f1ed173040fa123e2e">receive</a>   = <a class="code hl_function" href="group___s_p_i.html#gacddb795ecded56fe9f987bf41785a3a2">SPI_receive</a>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  spi-&gt;<a class="code hl_variable" href="struct_s_p_i.html#ac67e3827d337ab14c922753d83ecee5e">receive</a>   = <a class="code hl_function" href="group___s_p_i.html#ga4fbfc141ea14655d6e93aed8ac67aa67">SPI_receive</a>;</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  spi-&gt;<a class="code hl_variable" href="struct_s_p_i.html#a54668c3e267dcd01feff6c083a372846">transmit</a>  = <a class="code hl_function" href="group___s_p_i.html#ga45245db392649677ce4d93b334f6e0fd">SPI_transmit</a>;</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>}</div>
 </div>
@@ -117,9 +117,9 @@ $(function(){initNavTree('spi_8c_source.html',''); initResizable(true); });
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">/* =============================================================================== */</span></div>
 <div class="foldopen" id="foldopen00032" data-start="{" data-end="}">
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="group___s_p_i.html#ga45245db392649677ce4d93b334f6e0fd">   32</a></span>uint16_t <a class="code hl_function" href="group___s_p_i.html#ga45245db392649677ce4d93b334f6e0fd">SPI_transmit</a>(<a class="code hl_struct" href="struct_s_p_i.html">SPI</a> *spi, uint16_t data) {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  uint16_t response;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">volatile</span> uint16_t response;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <a class="code hl_function" href="group___s_p_i.html#ga205c59ab72d018c05d33f91e7c7808e7">SPI_send</a>(spi, data);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <a class="code hl_function" href="group___s_p_i.html#gacddb795ecded56fe9f987bf41785a3a2">SPI_receive</a>(spi, &amp;response);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <a class="code hl_function" href="group___s_p_i.html#ga4fbfc141ea14655d6e93aed8ac67aa67">SPI_receive</a>(spi, &amp;response);</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keywordflow">while</span> ((spi-&gt;<a class="code hl_variable" href="struct_s_p_i.html#acbda99bed92b76328c472ad0e523424e">interface</a>-&gt;SR &amp; SPI_SR_BSY) == SPI_SR_BSY);</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keywordflow">return</span> response;</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>}</div>
@@ -135,15 +135,15 @@ $(function(){initNavTree('spi_8c_source.html',''); initResizable(true); });
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="comment">/* =============================================================================== */</span></div>
 <div class="foldopen" id="foldopen00061" data-start="{" data-end="}">
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="group___s_p_i.html#gacddb795ecded56fe9f987bf41785a3a2">   61</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group___s_p_i.html#gacddb795ecded56fe9f987bf41785a3a2">SPI_receive</a>(<a class="code hl_struct" href="struct_s_p_i.html">SPI</a> *spi, uint16_t *data) {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="group___s_p_i.html#ga4fbfc141ea14655d6e93aed8ac67aa67">   61</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group___s_p_i.html#ga4fbfc141ea14655d6e93aed8ac67aa67">SPI_receive</a>(<a class="code hl_struct" href="struct_s_p_i.html">SPI</a> *spi, <span class="keyword">volatile</span> uint16_t *data) {</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keywordflow">while</span> ((spi-&gt;<a class="code hl_variable" href="struct_s_p_i.html#acbda99bed92b76328c472ad0e523424e">interface</a>-&gt;SR &amp; (SPI_SR_RXNE)) == 0);</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  *data = spi-&gt;<a class="code hl_variable" href="struct_s_p_i.html#acbda99bed92b76328c472ad0e523424e">interface</a>-&gt;DR;</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
 </div>
 <div class="ttc" id="agroup___s_p_i_html_ga205c59ab72d018c05d33f91e7c7808e7"><div class="ttname"><a href="group___s_p_i.html#ga205c59ab72d018c05d33f91e7c7808e7">SPI_send</a></div><div class="ttdeci">void SPI_send(SPI *spi, uint16_t data)</div><div class="ttdoc">Send data through the SPI interface.</div><div class="ttdef"><b>Definition</b> <a href="#l00048">spi.c:48</a></div></div>
 <div class="ttc" id="agroup___s_p_i_html_ga45245db392649677ce4d93b334f6e0fd"><div class="ttname"><a href="group___s_p_i.html#ga45245db392649677ce4d93b334f6e0fd">SPI_transmit</a></div><div class="ttdeci">uint16_t SPI_transmit(SPI *spi, uint16_t data)</div><div class="ttdoc">Instance method to communicate a SPI transaction with slave device.</div><div class="ttdef"><b>Definition</b> <a href="#l00032">spi.c:32</a></div></div>
+<div class="ttc" id="agroup___s_p_i_html_ga4fbfc141ea14655d6e93aed8ac67aa67"><div class="ttname"><a href="group___s_p_i.html#ga4fbfc141ea14655d6e93aed8ac67aa67">SPI_receive</a></div><div class="ttdeci">void SPI_receive(SPI *spi, volatile uint16_t *data)</div><div class="ttdoc">Receive data through the SPI interface.</div><div class="ttdef"><b>Definition</b> <a href="#l00061">spi.c:61</a></div></div>
 <div class="ttc" id="agroup___s_p_i_html_ga656f7b06a728e76eb9ac0b10e1bd5bb7"><div class="ttname"><a href="group___s_p_i.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7">SPI_init</a></div><div class="ttdeci">void SPI_init(SPI *spi, DeviceType device, SPI_TypeDef *interface, GPIO_TypeDef *port, unsigned long cs)</div><div class="ttdoc">Initialiser for an SPI device interface.</div><div class="ttdef"><b>Definition</b> <a href="#l00014">spi.c:14</a></div></div>
-<div class="ttc" id="agroup___s_p_i_html_gacddb795ecded56fe9f987bf41785a3a2"><div class="ttname"><a href="group___s_p_i.html#gacddb795ecded56fe9f987bf41785a3a2">SPI_receive</a></div><div class="ttdeci">void SPI_receive(SPI *spi, uint16_t *data)</div><div class="ttdoc">Receive data through the SPI interface.</div><div class="ttdef"><b>Definition</b> <a href="#l00061">spi.c:61</a></div></div>
 <div class="ttc" id="agroup___s_p_i_html_gad258d4c51629346fceac4679b3209ad9"><div class="ttname"><a href="group___s_p_i.html#gad258d4c51629346fceac4679b3209ad9">DeviceType</a></div><div class="ttdeci">DeviceType</div><div class="ttdoc">Device type enum Describes the type of peripheral implementing an SPI interface.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00024">spi.h:24</a></div></div>
 <div class="ttc" id="astruct_s_p_i_html"><div class="ttname"><a href="struct_s_p_i.html">SPI</a></div><div class="ttdoc">Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00035">spi.h:35</a></div></div>
 <div class="ttc" id="astruct_s_p_i_html_a194e08b54d45d097bba08a024fb0826e"><div class="ttname"><a href="struct_s_p_i.html#a194e08b54d45d097bba08a024fb0826e">SPI::send</a></div><div class="ttdeci">void(* send)(struct SPI *, uint16_t)</div><div class="ttdoc">SPI send method.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00040">spi.h:40</a></div></div>
@@ -151,14 +151,16 @@ $(function(){initNavTree('spi_8c_source.html',''); initResizable(true); });
 <div class="ttc" id="astruct_s_p_i_html_a54668c3e267dcd01feff6c083a372846"><div class="ttname"><a href="struct_s_p_i.html#a54668c3e267dcd01feff6c083a372846">SPI::transmit</a></div><div class="ttdeci">uint16_t(* transmit)(struct SPI *, uint16_t)</div><div class="ttdoc">SPI transmit method.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00042">spi.h:42</a></div></div>
 <div class="ttc" id="astruct_s_p_i_html_a82241972e0292c7de95ea1e293e11be3"><div class="ttname"><a href="struct_s_p_i.html#a82241972e0292c7de95ea1e293e11be3">SPI::port</a></div><div class="ttdeci">GPIO_TypeDef * port</div><div class="ttdoc">Pointer to GPIO port struct.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00038">spi.h:38</a></div></div>
 <div class="ttc" id="astruct_s_p_i_html_a8f467bedd92cfa29ba7b757711ece04d"><div class="ttname"><a href="struct_s_p_i.html#a8f467bedd92cfa29ba7b757711ece04d">SPI::cs</a></div><div class="ttdeci">unsigned long cs</div><div class="ttdoc">Device chip select address.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00039">spi.h:39</a></div></div>
-<div class="ttc" id="astruct_s_p_i_html_ac4444c9c043175f1ed173040fa123e2e"><div class="ttname"><a href="struct_s_p_i.html#ac4444c9c043175f1ed173040fa123e2e">SPI::receive</a></div><div class="ttdeci">void(* receive)(struct SPI *, uint16_t *)</div><div class="ttdoc">SPI receive method.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00041">spi.h:41</a></div></div>
+<div class="ttc" id="astruct_s_p_i_html_ac67e3827d337ab14c922753d83ecee5e"><div class="ttname"><a href="struct_s_p_i.html#ac67e3827d337ab14c922753d83ecee5e">SPI::receive</a></div><div class="ttdeci">void(* receive)(struct SPI *, volatile uint16_t *)</div><div class="ttdoc">SPI receive method.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00041">spi.h:41</a></div></div>
 <div class="ttc" id="astruct_s_p_i_html_acbda99bed92b76328c472ad0e523424e"><div class="ttname"><a href="struct_s_p_i.html#acbda99bed92b76328c472ad0e523424e">SPI::interface</a></div><div class="ttdeci">SPI_TypeDef * interface</div><div class="ttdoc">Pointer to SPI interface struct.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00037">spi.h:37</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<!-- HTML footer for doxygen 1.11.0-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-	<img id="footer" src="footer.png"/>
+  <ul>
+    <li class="navelem"><a class="el" href="dir_792ef69f7340d1afb8e8d9f9961cfbb5.html">AuroraV-Avionics</a></li><li class="navelem"><a class="el" href="dir_e95d640f443eea16038f928d5971e8b8.html">Core</a></li><li class="navelem"><a class="el" href="dir_3c829084d0ed61b607ff5eab50f9eb46.html">Src</a></li><li class="navelem"><a class="el" href="dir_0424fefe9d160b607d3d0fccc7ed5ca1.html">SPI</a></li><li class="navelem"><b>spi.c</b></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
+  </ul>
 </div>
 </body>
 </html>

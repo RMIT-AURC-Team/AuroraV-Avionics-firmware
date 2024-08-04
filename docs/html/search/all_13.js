@@ -1,28 +1,4 @@
 var searchData=
 [
-  ['satellites_0',['satellites',['../drivers_8h.html#a2bc9af20f07152fb9235a2bcfc009552',1,'GPSData']]],
-  ['sdram_5fbank_5f1_1',['SDRAM_BANK_1',['../config_8h.html#a63bd5dd5f2ddf19de979640ccaca36ca',1,'config.h']]],
-  ['second_2',['second',['../drivers_8h.html#a8459fc4e94de7eefc74991e41779c8fc',1,'GPSData']]],
-  ['send_3',['send',['../group___s_p_i.html#a194e08b54d45d097bba08a024fb0826e',1,'SPI']]],
-  ['send_5fgps_5fmessege_4',['send_GPS_messege',['../drivers_8h.html#ae2ead554365f48e18f2a21f78df7e5b1',1,'drivers.h']]],
-  ['sendvelocityandaltitude_5',['sendVelocityAndAltitude',['../state_8h.html#a82ffb1fef09d973f7a2c75e4fe9df62d',1,'sendVelocityAndAltitude(void):&#160;state.c'],['../state_8c.html#a9b975977db71d6dab75d490779de152e',1,'sendVelocityAndAltitude():&#160;state.c']]],
-  ['sensitivity_6',['sensitivity',['../group___k_x134-1211.html#ac518d2e94791ccc6f84de95271e52c76',1,'KX134_1211::sensitivity'],['../group___a3_g4250_d.html#ac518d2e94791ccc6f84de95271e52c76',1,'A3G4250D::sensitivity']]],
-  ['sensor_5faccel_7',['SENSOR_ACCEL',['../group___s_p_i.html#ggad258d4c51629346fceac4679b3209ad9aa56beb7f0e9c67c156ee802c9f640cc8',1,'spi.h']]],
-  ['sensor_5fbaro_8',['SENSOR_BARO',['../group___s_p_i.html#ggad258d4c51629346fceac4679b3209ad9ad6e973b156c9713198fd43f7eae95f56',1,'spi.h']]],
-  ['sensor_5fgyro_9',['SENSOR_GYRO',['../group___s_p_i.html#ggad258d4c51629346fceac4679b3209ad9a84b967fe10b7c1cfe2f779d99407703a',1,'spi.h']]],
-  ['sensors_10',['Sensors',['../group___sensors.html',1,'']]],
-  ['sensors_2ec_11',['sensors.c',['../sensors_8c.html',1,'']]],
-  ['sensors_2eh_12',['sensors.h',['../sensors_8h.html',1,'']]],
-  ['spi_13',['SPI',['../group___s_p_i.html#struct_s_p_i',1,'SPI'],['../group___s_p_i___a_p_i.html',1,'SPI']]],
-  ['spi_2ec_14',['spi.c',['../spi_8c.html',1,'']]],
-  ['spi_2eh_15',['spi.h',['../spi_8h.html',1,'']]],
-  ['spi_5finit_16',['SPI_init',['../group___s_p_i.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7',1,'SPI_init(SPI *, DeviceType, SPI_TypeDef *, GPIO_TypeDef *, unsigned long):&#160;spi.c'],['../group___s_p_i.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7',1,'SPI_init(SPI *spi, DeviceType device, SPI_TypeDef *interface, GPIO_TypeDef *port, unsigned long cs):&#160;spi.c']]],
-  ['spi_5freceive_17',['SPI_receive',['../group___s_p_i.html#gacddb795ecded56fe9f987bf41785a3a2',1,'SPI_receive(SPI *, uint16_t *):&#160;spi.c'],['../group___s_p_i.html#gacddb795ecded56fe9f987bf41785a3a2',1,'SPI_receive(SPI *spi, uint16_t *data):&#160;spi.c']]],
-  ['spi_5fsend_18',['SPI_send',['../group___s_p_i.html#ga205c59ab72d018c05d33f91e7c7808e7',1,'SPI_send(SPI *, uint16_t):&#160;spi.c'],['../group___s_p_i.html#ga205c59ab72d018c05d33f91e7c7808e7',1,'SPI_send(SPI *spi, uint16_t data):&#160;spi.c']]],
-  ['spi_5ftransmit_19',['SPI_transmit',['../group___s_p_i.html#ga45245db392649677ce4d93b334f6e0fd',1,'SPI_transmit(SPI *, uint16_t):&#160;spi.c'],['../group___s_p_i.html#ga45245db392649677ce4d93b334f6e0fd',1,'SPI_transmit(SPI *spi, uint16_t data):&#160;spi.c']]],
-  ['state_20',['State',['../state_8h.html#a5d74787dedbc4e11c1ab15bf487e61f8',1,'state.h']]],
-  ['state_2ec_21',['state.c',['../state_8c.html',1,'']]],
-  ['state_2eh_22',['state.h',['../state_8h.html',1,'']]],
-  ['stm32f439_23',['STM32F439',['../config_8h.html#a567185c37d506517b180f4bb42dbe38b',1,'config.h']]],
-  ['stm32f439xx_24',['STM32F439xx',['../config_8h.html#a20210f6a3ca8dd1b432680ba7bd786e5',1,'config.h']]]
+  ['v_20avionics_20firmware_0',['Aurora V Avionics Firmware',['../index.html#aurora-v-avionics-firmware',1,'']]]
 ];

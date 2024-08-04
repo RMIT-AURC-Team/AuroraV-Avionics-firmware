@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.11.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>AuroraV-Avionics: Core/Inc/SPI/flash/flash.h Source File</title>
+<title>AuroraV-Avionics: AuroraV-Avionics/Core/Inc/SPI/flash/flash.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,7 +19,7 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
-<link href="customdoxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
        <script type="text/javascript">
@@ -118,14 +118,14 @@ $(function(){initNavTree('flash_8h_source.html',''); initResizable(true); });
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="struct_flash.html">   23</a></span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="struct_flash.html">Flash</a> {</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="struct_flash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">   24</a></span>  <a class="code hl_struct" href="struct_s_p_i.html">SPI</a> <a class="code hl_variable" href="struct_flash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;                                                                                             </div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="struct_flash.html#ac2c453319e521f016b572ecf63a5fe74">   25</a></span>  void (*<a class="code hl_variable" href="struct_flash.html#ac2c453319e521f016b572ecf63a5fe74">erase</a>)(<span class="keyword">struct </span><a class="code hl_struct" href="struct_flash.html">Flash</a> *);                                                    </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="struct_flash.html#a31db821391750f58eb6a306c031698a2">   26</a></span>  void (*<a class="code hl_variable" href="struct_flash.html#a31db821391750f58eb6a306c031698a2">readPage</a>)(<span class="keyword">struct </span><a class="code hl_struct" href="struct_flash.html">Flash</a> *, uint32_t, uint8_t *);    </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="struct_flash.html#abaafab0f2318e98caa5a9dac6daa8113">   26</a></span>  void (*<a class="code hl_variable" href="struct_flash.html#abaafab0f2318e98caa5a9dac6daa8113">readPage</a>)(<span class="keyword">struct </span><a class="code hl_struct" href="struct_flash.html">Flash</a> *, uint32_t, <span class="keyword">volatile</span> uint8_t *);   </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="struct_flash.html#ac94ed56d1714de0eddcf9e61557d7f77">   27</a></span>  void (*<a class="code hl_variable" href="struct_flash.html#ac94ed56d1714de0eddcf9e61557d7f77">writePage</a>)(<span class="keyword">struct </span><a class="code hl_struct" href="struct_flash.html">Flash</a> *, uint32_t, uint8_t *); </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>} <a class="code hl_struct" href="struct_flash.html">Flash</a>;</div>
 </div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keywordtype">void</span> configure_SPI4_Flash();</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keywordtype">void</span> <a class="code hl_function" href="group___flash.html#gac40c1b5246c89d2d625430da01124049">Flash_init</a>(<a class="code hl_struct" href="struct_flash.html">Flash</a> *, GPIO_TypeDef *, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keywordtype">void</span> <a class="code hl_function" href="group___flash.html#gab5de712bbfe5d6c7bcd959337ff02f2b">Flash_readPage</a>(<a class="code hl_struct" href="struct_flash.html">Flash</a> *, uint32_t, uint8_t *);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keywordtype">void</span> <a class="code hl_function" href="group___flash.html#ga5f9bbbbf9efbcaf330d7876905aa470f">Flash_readPage</a>(<a class="code hl_struct" href="struct_flash.html">Flash</a> *, uint32_t, <span class="keyword">volatile</span> uint8_t *);</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keywordtype">void</span> <a class="code hl_function" href="group___flash.html#gab522cee3393b2c9d6be5f85f13b1c12d">Flash_writePage</a>(<a class="code hl_struct" href="struct_flash.html">Flash</a> *, uint32_t, uint8_t *);</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keywordtype">void</span> <a class="code hl_function" href="group___flash.html#gaee89dc3026c93c50415e20cf3b10a303">Flash_erase</a>(<a class="code hl_struct" href="struct_flash.html">Flash</a> *);</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keywordtype">void</span> _Flash_writeEnable(<a class="code hl_struct" href="struct_flash.html">Flash</a> *);</div>
@@ -134,22 +134,24 @@ $(function(){initNavTree('flash_8h_source.html',''); initResizable(true); });
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keywordtype">void</span> _Flash_readStatus3(<a class="code hl_struct" href="struct_flash.html">Flash</a> *, uint8_t *);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="agroup___flash_html_ga5f9bbbbf9efbcaf330d7876905aa470f"><div class="ttname"><a href="group___flash.html#ga5f9bbbbf9efbcaf330d7876905aa470f">Flash_readPage</a></div><div class="ttdeci">void Flash_readPage(Flash *, uint32_t, volatile uint8_t *)</div><div class="ttdoc">Read from flash.</div><div class="ttdef"><b>Definition</b> <a href="flash_8c_source.html#l00175">flash.c:175</a></div></div>
 <div class="ttc" id="agroup___flash_html_gab522cee3393b2c9d6be5f85f13b1c12d"><div class="ttname"><a href="group___flash.html#gab522cee3393b2c9d6be5f85f13b1c12d">Flash_writePage</a></div><div class="ttdeci">void Flash_writePage(Flash *, uint32_t, uint8_t *)</div><div class="ttdoc">Write page to flash.</div><div class="ttdef"><b>Definition</b> <a href="flash_8c_source.html#l00140">flash.c:140</a></div></div>
-<div class="ttc" id="agroup___flash_html_gab5de712bbfe5d6c7bcd959337ff02f2b"><div class="ttname"><a href="group___flash.html#gab5de712bbfe5d6c7bcd959337ff02f2b">Flash_readPage</a></div><div class="ttdeci">void Flash_readPage(Flash *, uint32_t, uint8_t *)</div><div class="ttdoc">Read from flash.</div><div class="ttdef"><b>Definition</b> <a href="flash_8c_source.html#l00175">flash.c:175</a></div></div>
 <div class="ttc" id="agroup___flash_html_gac40c1b5246c89d2d625430da01124049"><div class="ttname"><a href="group___flash.html#gac40c1b5246c89d2d625430da01124049">Flash_init</a></div><div class="ttdeci">void Flash_init(Flash *, GPIO_TypeDef *, unsigned long)</div><div class="ttdoc">Initialise flash struct.</div><div class="ttdef"><b>Definition</b> <a href="flash_8c_source.html#l00023">flash.c:23</a></div></div>
 <div class="ttc" id="agroup___flash_html_gaee89dc3026c93c50415e20cf3b10a303"><div class="ttname"><a href="group___flash.html#gaee89dc3026c93c50415e20cf3b10a303">Flash_erase</a></div><div class="ttdeci">void Flash_erase(Flash *)</div><div class="ttdoc">Erase flash chip.</div><div class="ttdef"><b>Definition</b> <a href="flash_8c_source.html#l00115">flash.c:115</a></div></div>
 <div class="ttc" id="astruct_flash_html"><div class="ttname"><a href="struct_flash.html">Flash</a></div><div class="ttdef"><b>Definition</b> <a href="#l00023">flash.h:23</a></div></div>
-<div class="ttc" id="astruct_flash_html_a31db821391750f58eb6a306c031698a2"><div class="ttname"><a href="struct_flash.html#a31db821391750f58eb6a306c031698a2">Flash::readPage</a></div><div class="ttdeci">void(* readPage)(struct Flash *, uint32_t, uint8_t *)</div><div class="ttdoc">Read page method.</div><div class="ttdef"><b>Definition</b> <a href="#l00026">flash.h:26</a></div></div>
 <div class="ttc" id="astruct_flash_html_a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7"><div class="ttname"><a href="struct_flash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">Flash::base</a></div><div class="ttdeci">SPI base</div><div class="ttdoc">Parent SPI interface.</div><div class="ttdef"><b>Definition</b> <a href="#l00024">flash.h:24</a></div></div>
+<div class="ttc" id="astruct_flash_html_abaafab0f2318e98caa5a9dac6daa8113"><div class="ttname"><a href="struct_flash.html#abaafab0f2318e98caa5a9dac6daa8113">Flash::readPage</a></div><div class="ttdeci">void(* readPage)(struct Flash *, uint32_t, volatile uint8_t *)</div><div class="ttdoc">Read page method.</div><div class="ttdef"><b>Definition</b> <a href="#l00026">flash.h:26</a></div></div>
 <div class="ttc" id="astruct_flash_html_ac2c453319e521f016b572ecf63a5fe74"><div class="ttname"><a href="struct_flash.html#ac2c453319e521f016b572ecf63a5fe74">Flash::erase</a></div><div class="ttdeci">void(* erase)(struct Flash *)</div><div class="ttdoc">Chip erase method.</div><div class="ttdef"><b>Definition</b> <a href="#l00025">flash.h:25</a></div></div>
 <div class="ttc" id="astruct_flash_html_ac94ed56d1714de0eddcf9e61557d7f77"><div class="ttname"><a href="struct_flash.html#ac94ed56d1714de0eddcf9e61557d7f77">Flash::writePage</a></div><div class="ttdeci">void(* writePage)(struct Flash *, uint32_t, uint8_t *)</div><div class="ttdoc">Write page method.</div><div class="ttdef"><b>Definition</b> <a href="#l00027">flash.h:27</a></div></div>
 <div class="ttc" id="astruct_s_p_i_html"><div class="ttname"><a href="struct_s_p_i.html">SPI</a></div><div class="ttdoc">Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00035">spi.h:35</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
-<!-- HTML footer for doxygen 1.11.0-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-	<img id="footer" src="footer.png"/>
+  <ul>
+    <li class="navelem"><a class="el" href="dir_792ef69f7340d1afb8e8d9f9961cfbb5.html">AuroraV-Avionics</a></li><li class="navelem"><a class="el" href="dir_e95d640f443eea16038f928d5971e8b8.html">Core</a></li><li class="navelem"><a class="el" href="dir_961e31984bb214d35b85323bbcf2d8ab.html">Inc</a></li><li class="navelem"><a class="el" href="dir_43443795aafc5830d555096a7c1c3d7f.html">SPI</a></li><li class="navelem"><a class="el" href="dir_4544b79a831cf0fc5d7a1c910967ffcb.html">flash</a></li><li class="navelem"><b>flash.h</b></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
+  </ul>
 </div>
 </body>
 </html>

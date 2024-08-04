@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.11.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>AuroraV-Avionics: Aurora V Avionics Firmware API</title>
+<title>AuroraV-Avionics: AuroraV-Avionics</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,7 +19,7 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
-<link href="customdoxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
        <script type="text/javascript">
@@ -96,24 +96,133 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Aurora V Avionics Firmware API </div></div>
+  <div class="headertitle"><div class="title">AuroraV-Avionics </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Some general info.</p>
-<h2><a class="anchor" id="pages"></a>
-Pages</h2>
-<p>This manual is divided into the following sections:</p><ul>
-<li><a class="el" href="intro.html">Introduction</a></li>
-<li><a class="el" href="advanced.html">Advanced Usage</a> </li>
+<div class="textblock"><p><a class="anchor" id="md__r_e_a_d_m_e"></a></p>
+<h1><a class="anchor" id="aurora-v-avionics-firmware"></a>
+Aurora V Avionics Firmware</h1>
+<p><img src="banner.png" alt="" class="inline" title="HIVE Aurora V banner"/>    </p>
+<h2><a class="anchor" id="table-of-contents"></a>
+Table of Contents</h2>
+<ul>
+<li><a class="el" href="#requirements">Requirements</a><ul>
+<li><a class="el" href="#project-includes">Project Includes</a></li>
 </ul>
-</div></div><!-- PageDoc -->
+</li>
+<li><a class="el" href="#getting-started">Getting Started</a><ul>
+<li><a class="el" href="#using-github">Using GitHub</a></li>
+<li><a class="el" href="#coding-standard">Coding Standard</a><ul>
+<li><a class="el" href="#formatting">Formatting</a></li>
+<li><a class="el" href="#library-naming">Library Naming</a></li>
+<li><a class="el" href="#library-functions">Library Functions</a></li>
+<li><a class="el" href="#struct-encapsulation">Struct Encapsulation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2><a class="anchor" id="requirements"></a>
+Requirements</h2>
+<p>To successfully install and contribute to the project, ensure you have the following prerequisites installed:</p>
+<ul>
+<li>Git</li>
+<li>Keil uVision IDE</li>
+<li><a href="https://developer.arm.com/downloads/-/gnu-rm">GCC for arm (arm-none-eabi-gcc)</a></li>
+<li>Latest version of Aurora V Avionics libraries found <a href="https://github.com/RMIT-AURC-Team/AuroraV-Avionics-lib/releases">here</a></li>
+</ul>
+<h4><a class="anchor" id="project-includes"></a>
+Project Includes</h4>
+<p>In order to build the project you must ensure the correct include paths are added for the compiler to recognise the headers. These are provided as follows:</p>
+<div class="fragment"><div class="line">/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc</div>
+<div class="line">/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/include</div>
+<div class="line">/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F</div>
+<div class="line">/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS</div>
+<div class="line">/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Drivers/CMSIS/Include</div>
+<div class="line">/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Drivers/CMSIS/Device/ST/STM32F4xx/Include</div>
+<div class="line">/path/to/AuroraV-Avionics-lib/inc</div>
+<div class="line">/path/to/AuroraV-Avionics-lib/inc/DSP/Include</div>
+<div class="line">/path/to/AuroraV-Avionics-lib/inc/DSP/PrivateInclude</div>
+<div class="line">/path/to/AuroraV-Avionics-lib/inc/CORE/Include</div>
+</div><!-- fragment --><p>For clangd LSP configuration you can use the following:</p>
+<div class="fragment"><div class="line">CompileFlags:</div>
+<div class="line">  Add: [</div>
+<div class="line">    &quot;-I/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc&quot;,</div>
+<div class="line">    &quot;-I/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/include&quot;,</div>
+<div class="line">    &quot;-I/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F&quot;,</div>
+<div class="line">    &quot;-I/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS&quot;,</div>
+<div class="line">    &quot;-I/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Drivers/CMSIS/Include&quot;,</div>
+<div class="line">    &quot;-I/path/to/AuroraV-Avionics-firmware/AuroraV-Avionics/Drivers/CMSIS/Device/ST/STM32F4xx/Include&quot;,</div>
+<div class="line">    &quot;-I/path/to/AuroraV-Avionics-lib/inc&quot;,</div>
+<div class="line">    &quot;-I/path/to/AuroraV-Avionics-lib/inc/DSP/Include/&quot;,</div>
+<div class="line">    &quot;-I/path/to/AuroraV-Avionics-lib/inc/DSP/PrivateInclude&quot;,</div>
+<div class="line">    &quot;-I/path/to/AuroraV-Avionics-lib/inc/CORE/Include/&quot;</div>
+<div class="line">]</div>
+</div><!-- fragment --><h2><a class="anchor" id="getting-started"></a>
+Getting Started</h2>
+<p>This document provides an introduction to using GitHub for development of Aurora V firmware libraries, as well as their coding standard and conventions.</p>
+<h3><a class="anchor" id="using-github"></a>
+Using GitHub</h3>
+<p><em>Detailed instructions on using GitHub for this project will be provided here.</em> (Content to be added)</p>
+<hr  />
+<h3><a class="anchor" id="coding-standard"></a>
+Coding Standard</h3>
+<p>The specification of this standard exists to document and define the organisation and naming convention of code to create a well structured and cohesive project.</p>
+<p>These standards aren't to be strict and annoying, but to minimise points of failure and ensure a functional codebase with as little resistance as possible. Justification for these standards is provided to help understand their necessity.</p>
+<p>To get started as simply as possible, copy the files located in <code>/src</code> within any library inside the [lib]() repository and follow the conventions you see there.</p>
+<h4><a class="anchor" id="formatting"></a>
+Formatting</h4>
+<p>For formatting the project it is recommended that <code>clang-format</code> is used with the following settings configured in the <code>.clangd</code> project file:</p>
+<div class="fragment"><div class="line">AlignAfterOpenBracket: BlockIndent</div>
+<div class="line">AlignOperands: AlignAfterOperator</div>
+<div class="line">AlignTrailingComments:</div>
+<div class="line">  Kind: Always</div>
+<div class="line">  OverEmptyLines: 4</div>
+<div class="line">AllowAllParametersOfDeclarationOnNextLine: false</div>
+<div class="line">AllowShortLoopsOnASingleLine: true</div>
+<div class="line">BinPackParameters: false</div>
+<div class="line">BraceWrapping:</div>
+<div class="line">  AfterFunction: false</div>
+<div class="line">BreakBeforeBraces: Custom</div>
+<div class="line">BreakBeforeBinaryOperators: NonAssignment</div>
+<div class="line">ColumnLimit: 0</div>
+<div class="line">ReflowComments: true</div>
+</div><!-- fragment --><h4><a class="anchor" id="library-naming"></a>
+Library Naming</h4>
+<blockquote class="doxtable">
+<p>&zwj;<b>Convention:</b> <br  />
+ Library names should be all lower case without spaces, with the naming convention <code>lib&lt;name&gt;</code>. These names should be kept concise, e.g. <code>libcan</code>, <code>libspi</code>. </p>
+</blockquote>
+<p>The <code>gcc</code> toolchain by default expects libraries to be preceeded by <code>lib</code>, so this simplifies the compilation step.</p>
+<h4><a class="anchor" id="library-functions"></a>
+Library Functions</h4>
+<blockquote class="doxtable">
+<p>&zwj;<b>Convention:</b> <br  />
+ Functions should be proceeded by the library name separated by a single underscore. The library name in this case should follow proper capitilisation, particularly in the case of initialisms and acronyms; e.g. <code>MemBuff_append()</code>, <code>LoRa_send()</code>, <code>CAN_init()</code>. </p>
+</blockquote>
+<p>C does not provide functionality for namespacing or mangling, meaning it is possible for name conflicts that would cause failure to compile in the case that two libraries share functions or defintions of the same name.</p>
+<p>Take, for example, a situation where <code>CAN</code> and <code><a class="el" href="struct_s_p_i.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a></code> libraries both implement a function <code>sendData()</code>. Attempting to compile the project will error out when linking these libraries due to name conflict.</p>
+<h4><a class="anchor" id="struct-encapsulation"></a>
+Struct Encapsulation</h4>
+<blockquote class="doxtable">
+<p>&zwj;<b>Convention:</b> <br  />
+ Global variables should <b>not</b> be used within libraries. If a resource is required to be shared across functions, place them within a library struct with appropriate intitialisation. These structs should follow the same naming convention as library functions. It is not necessary, though it is preferred, to include library functions as pointers within these structs. </p>
+</blockquote>
+<p>As mentioned, C does not support namespaces. Global variables can and will cause logic errors when multiple libraries implement globals sharing common names. The compiler may issue a warning however multiple definitions are legal in C and will not throw an error at compile time, this can be quite difficult to debug.</p>
+<p>For an example see the <a href="https://github.com/RMIT-AURC-Team/AuroraV-Avionics-lib/tree/master/membuff/src">MemBuff</a> implementation. An example skeleton of a library struct implementation can be found <a href="https://github.com/RMIT-AURC-Team/AuroraV-Avionics-lib/tree/master/example/src">here</a>; You may find it easier to copy the example directory entirely and simply rename the files and code elements to align with the library you are working on.</p>
+<div class="image">
+<img src="footer.png" alt=""/>
+</div>
+    <hr  />
+ </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"/>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<!-- HTML footer for doxygen 1.11.0-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
-	<img id="footer" src="footer.png"/>
+  <ul>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
+  </ul>
 </div>
 </body>
 </html>
