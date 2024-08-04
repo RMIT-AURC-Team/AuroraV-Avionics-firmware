@@ -142,11 +142,6 @@ void Flash_writePage(Flash *flash, uint32_t address, uint8_t *data) {
   uint8_t status = 0;
   SPI spi        = flash->base;
 
-  // Wait until chip BUSY is clear
-  do {
-    _Flash_readStatus1(flash, &status);
-  } while (status & 0x1);
-
   spi.port->ODR &= ~spi.cs;
 
   // Send Page Program instruction and 24-bit address
@@ -161,6 +156,11 @@ void Flash_writePage(Flash *flash, uint32_t address, uint8_t *data) {
   }
 
   spi.port->ODR |= spi.cs;
+
+  // Wait until chip BUSY is clear
+  do {
+    _Flash_readStatus1(flash, &status);
+  } while (status & 0x1);
 }
 
 /* =============================================================================== */
@@ -172,27 +172,20 @@ void Flash_writePage(Flash *flash, uint32_t address, uint8_t *data) {
  * @return @c NULL.
  **
  * =============================================================================== */
-void Flash_readPage(Flash *flash, uint32_t address, uint8_t *data) {
-  uint8_t status = 0;
+void Flash_readPage(Flash *flash, uint32_t address, volatile uint8_t *data) {
   SPI spi        = flash->base;
 
-  // Wait until chip BUSY is clear
-  do {
-    _Flash_readStatus1(flash, &status);
-  } while (status & 0x1);
-
   spi.port->ODR &= ~spi.cs;
-
-  // Send Read Data instruction and 24-bit address
+  
+	// Send Read Data instruction and 24-bit address
   spi.transmit(&spi, FLASH_READ_DATA);
   spi.transmit(&spi, (address & 0xFF0000) >> 16);
   spi.transmit(&spi, (address & 0xFF00) >> 8);
   spi.transmit(&spi, (address & 0xFF));
 
-  // Receive page data
-  for (int i = 0; i < 255; i++) {
+  for (int i = 0; i < 256; i++) {
     data[i] = spi.transmit(&spi, 0x0F);
   }
-
+	
   spi.port->ODR |= spi.cs;
 }
