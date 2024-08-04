@@ -21,7 +21,7 @@ void configure_RCC_APB2(void) {
   RCC->APB2RSTR |= (RCC_APB2RSTR_SPI1RST | RCC_APB2RSTR_USART6RST | RCC_APB2RSTR_SPI4RST | RCC_APB2RSTR_SYSCFGRST);
   __ASM("NOP");
   __ASM("NOP");
-  RCC->APB2RSTR &= (uint16_t)(~(RCC_APB2RSTR_SPI1RST | RCC_APB2RSTR_SPI4RST | RCC_APB2RSTR_SYSCFGRST));
+  RCC->APB2RSTR &= (uint16_t)(~(RCC_APB2RSTR_SPI1RST | RCC_APB2RSTR_USART6RST | RCC_APB2RSTR_SPI4RST | RCC_APB2RSTR_SYSCFGRST));
   __ASM("NOP");
   __ASM("NOP");
 }
@@ -91,15 +91,6 @@ void configure_UART3_GPS(void) {
 
   // turn reset pin high
   GPIOD->ODR |= GPIO_ODR_OD13;
-}
-
-void configure_UART6_Serial_2_mini_USB(void) {
-  GPIOC->MODER &= (~(GPIO_MODER_MODE6_Msk | GPIO_MODER_MODE7_Msk | GPIO_MODER_MODE8_Msk));
-  GPIOC->MODER |= ((0x2 << GPIO_MODER_MODE6_Pos) | (0x2 << GPIO_MODER_MODE7_Pos) | (0x2 << GPIO_MODER_MODE8_Pos));
-  GPIOC->AFR[0] &= (~(0xFF000000));           // clears AFRL 6 and 7 and
-  GPIOC->AFR[1] &= (uint32_t)(~(0x0000000F)); // clears AFRH 8
-  GPIOC->AFR[0] |= (0x88000000);              // sets PC 6 and 7 to AF8
-  GPIOC->AFR[1] |= (0x00000008);              // sets PC 8 to AF8
 }
 
 // General GPIO Configure for MISC: LED1, LED2, Piezo Buzzer (PD14, PD15, PB15 respectivley)

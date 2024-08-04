@@ -6,6 +6,7 @@ TaskHandle_t xDataAqcquisitionLHandle = NULL;
 TaskHandle_t xFlashBufferHandle       = NULL;
 TaskHandle_t xStateUpdateHandle       = NULL;
 TaskHandle_t xLoRaCommunicateHandle   = NULL;
+//TaskHandle_t xUARTCommunicateHandle   = NULL;
 EventGroupHandle_t xTaskEnableGroup; // 0: FLASH,  1: HIGHRES, 2: LOWRES, 7: IDLE
 
 // Accelerometer
@@ -29,6 +30,7 @@ uint8_t tempRaw[3];
 float temp;
 
 Flash flash;
+UART usb;
 
 // Calculated attitude variables
 Quaternion qRot;                // Global attitude quaternion
@@ -59,7 +61,6 @@ int main(void) {
   configure_RCC_AHB1();
   configure_MISC_GPIO();
   configure_UART3_GPS();
-  configure_UART6_Serial_2_mini_USB();
   configure_SPI1_Sensor_Suite();
   configure_SPI4_Flash();
   configure_SPI3_LoRa();
@@ -72,6 +73,8 @@ int main(void) {
   CANGPIO_config();
   CAN_Peripheral_config();
   configure_LoRa_module();
+	
+	UART_init(&usb, USB_INTERFACE, USB_PORT, USB_BAUD, OVER8);
 
   // Initialise sensors
   BMP581_init(&baro_s, BARO_PORT, BARO_CS, BMP581_TEMP_SENSITIVITY, BMP581_PRESS_SENSITIVITY);
@@ -99,7 +102,8 @@ int main(void) {
   xTaskCreate(vDataAcquisitionL, "LDataAcq", 256, NULL, configMAX_PRIORITIES - 3, &xDataAqcquisitionLHandle);
   xTaskCreate(vStateUpdate, "StateUpdate", 256, NULL, configMAX_PRIORITIES - 4, &xStateUpdateHandle);
   xTaskCreate(vFlashBuffer, "FlashData", 256, NULL, configMAX_PRIORITIES - 1, &xFlashBufferHandle);
-  // xTaskCreate(vLoRaCommunicate, "LoRa", 256, NULL, configMAX_PRIORITIES - 1, &xLoRaCommunicateHandle);
+  xTaskCreate(vLoRaCommunicate, "LoRa", 256, NULL, configMAX_PRIORITIES - 1, &xLoRaCommunicateHandle);
+	//xTaskCreate(vUARTCommunicate, "UART", 256, NULL, configMAX_PRIORITIES - 5, &xUARTCommunicateHandle);
 
   vTaskStartScheduler();
 

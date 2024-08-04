@@ -334,6 +334,11 @@
               <FileType>4</FileType>
               <FilePath>..\Lib\bin\libavionics.a</FilePath>
             </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\uart.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

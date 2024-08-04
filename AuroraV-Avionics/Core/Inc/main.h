@@ -106,4 +106,8 @@ void Error_Handler(void);
 #define FLASH_PORT GPIOE
 #define FLASH_CS   GPIO_ODR_OD11
 
+#define USB_PORT 			GPIOC
+#define USB_INTERFACE	USART6
+#define USB_BAUD 			230400
+
 #endif
