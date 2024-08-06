@@ -13,10 +13,11 @@
  * =============================================================================== */
 void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, uint8_t scale, const uint8_t *axes, const int8_t *sign) {
   SPI_init(&accel->base, SENSOR_ACCEL, SPI1, port, cs);
+  accel->update          = KX134_1211_update;
   accel->readAccel       = KX134_1211_readAccel;
   accel->readRawBytes    = KX134_1211_readRawBytes;
   accel->processRawBytes = KX134_1211_processRawBytes;
-	memcpy(accel->axes, axes, KX134_1211_DATA_COUNT);
+  memcpy(accel->axes, axes, KX134_1211_DATA_COUNT);
   memcpy(accel->sign, sign, KX134_1211_DATA_COUNT);
 
   // Set value of GSEL and sensitivity based on selected scale
@@ -47,9 +48,20 @@ void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, ui
  **
  * =============================================================================== */
 void KX134_1211_readAccel(KX134_1211 *accel, float *out) {
-  uint8_t bytes[KX134_1211_DATA_TOTAL];
-  accel->readRawBytes(accel, bytes);
-  accel->processRawBytes(accel, bytes, out);
+  accel->update(accel);
+  out = accel->accelData;
+}
+
+/* =============================================================================== */
+/**
+ * @brief Updates internally stored acceleration readings.
+ * @param 	*accel 		Pointer to accel struct.
+ * @returns @c NULL.
+ **
+ * =============================================================================== */
+void KX134_1211_update(KX134_1211 *accel) {
+  accel->readRawBytes(accel, accel->rawAccelData);
+  accel->processRawBytes(accel, accel->rawAccelData, accel->accelData);
 }
 
 /* =============================================================================== */
@@ -59,12 +71,13 @@ void KX134_1211_readAccel(KX134_1211 *accel, float *out) {
  * @param 	*bytes 		Raw 3-axis data array.
  * @param 	*out 			Processed 3-axis data array to write.
  * @returns @c NULL.
+ * @todo Add in product of raw data with associated stored sign.
  **
  * =============================================================================== */
 void KX134_1211_processRawBytes(KX134_1211 *accel, uint8_t *bytes, float *out) {
-  out[0] = accel->sensitivity * (int16_t)(((uint16_t)bytes[0] << 8) | bytes[1]); // Accel X
-  out[1] = accel->sensitivity * (int16_t)(((uint16_t)bytes[2] << 8) | bytes[3]); // Accel Y
-  out[2] = accel->sensitivity * (int16_t)(((uint16_t)bytes[4] << 8) | bytes[5]); // Accel Z
+  out[0] = accel->sign[0] * accel->sensitivity * (int16_t)(((uint16_t)bytes[0] << 8) | bytes[1]); // Accel X
+  out[1] = accel->sign[1] * accel->sensitivity * (int16_t)(((uint16_t)bytes[2] << 8) | bytes[3]); // Accel Y
+  out[2] = accel->sign[2] * accel->sensitivity * (int16_t)(((uint16_t)bytes[4] << 8) | bytes[5]); // Accel Z
 }
 
 /* =============================================================================== */
@@ -76,12 +89,15 @@ void KX134_1211_processRawBytes(KX134_1211 *accel, uint8_t *bytes, float *out) {
  **
  * =============================================================================== */
 void KX134_1211_readRawBytes(KX134_1211 *accel, uint8_t *out) {
-  out[0] = KX134_1211_readRegister(accel, KX134_1211_XOUT_H); // Accel X high
-  out[1] = KX134_1211_readRegister(accel, KX134_1211_XOUT_L); // Accel X low
-  out[2] = KX134_1211_readRegister(accel, KX134_1211_YOUT_H); // Accel Y high
-  out[3] = KX134_1211_readRegister(accel, KX134_1211_YOUT_L); // Accel Y low
-  out[4] = KX134_1211_readRegister(accel, KX134_1211_ZOUT_H); // Accel Z high
-  out[5] = KX134_1211_readRegister(accel, KX134_1211_ZOUT_L); // Accel Z low
+// Map raw indices to mounting axis
+#define INDEX_AXES(index, byte) 2 * accel->axes[index] + byte
+  out[INDEX_AXES(0, 0)] = KX134_1211_readRegister(accel, KX134_1211_XOUT_H); // Accel X high
+  out[INDEX_AXES(0, 1)] = KX134_1211_readRegister(accel, KX134_1211_XOUT_L); // Accel X low
+  out[INDEX_AXES(1, 0)] = KX134_1211_readRegister(accel, KX134_1211_YOUT_H); // Accel Y high
+  out[INDEX_AXES(1, 1)] = KX134_1211_readRegister(accel, KX134_1211_YOUT_L); // Accel Y low
+  out[INDEX_AXES(2, 0)] = KX134_1211_readRegister(accel, KX134_1211_ZOUT_H); // Accel Z high
+  out[INDEX_AXES(2, 1)] = KX134_1211_readRegister(accel, KX134_1211_ZOUT_L); // Accel Z low
+#undef INDEX_AXES
 }
 
 /******************************** INTERFACE METHODS ********************************/
