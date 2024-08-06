@@ -61,6 +61,7 @@ void KX134_1211_update(KX134_1211 *);
 void KX134_1211_readAccel(KX134_1211 *, float *);
 void KX134_1211_readRawBytes(KX134_1211 *, uint8_t *);
 void KX134_1211_processRawBytes(KX134_1211 *, uint8_t *, float *);
+
 uint8_t KX134_1211_readRegister(KX134_1211 *, uint8_t);
 void KX134_1211_writeRegister(KX134_1211 *, uint8_t, uint8_t);
 
