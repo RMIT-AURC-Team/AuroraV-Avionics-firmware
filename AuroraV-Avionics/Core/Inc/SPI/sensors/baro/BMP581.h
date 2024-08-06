@@ -34,7 +34,6 @@
  * @ingroup Barometer
  * @defgroup BMP581
  * @addtogroup BMP581
- * @todo Fill in implementation documentation in BMP581.c
  * @todo Document interface in BMP581.h
  * @{
  */
