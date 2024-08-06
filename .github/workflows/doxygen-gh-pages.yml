@@ -15,6 +15,11 @@ jobs:
 
     - name: List directory contents
       run: ls -R
+      
+    - name: Initialise and update submodules
+      run: |
+        git submodule init
+        git submodule update
 
     - name: Doxygen Action
       uses: mattnotmitt/doxygen-action@v1.1.0
@@ -26,4 +31,4 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./documentation/docs
+        publish_dir: ./documentation
