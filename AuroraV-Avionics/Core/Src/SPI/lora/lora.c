@@ -112,9 +112,17 @@ void LoRa_transmit(LoRa *lora, uint8_t *pointerdata) {
 
   _LoRa_setMode(lora, TX);
 
-  while (!(GPIOD->IDR & 0x2));                        // wait for transmit complete
+	/** 
+	 * @todo Implement interrupt on TxComplete
+	 * 
+	 * Polling the pin takes too much time, as a result delay timers on various tasks will
+	 * have expired in the time waiting and CPU will never idle (meaning flashing does not occur).
+	 *
+	 * Implementing interrupt on TxComplete signal should solve this since the handler should only
+	 * run over a few clock cycles.
+	 */
+	//  while (!(GPIOD->IDR & 0x2));
   LoRa_writeRegister(lora, LORA_REG_IRQ_FLAGS, 0x08); // clears the status flags
-  LoRa_writeRegister(lora, LORA_REG_IRQ_FLAGS, 0x00);
 }
 
 /******************************** INTERFACE METHODS ********************************/
