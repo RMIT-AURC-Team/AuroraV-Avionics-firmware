@@ -71,7 +71,6 @@ void KX134_1211_update(KX134_1211 *accel) {
  * @param 	*bytes 		Raw 3-axis data array.
  * @param 	*out 			Processed 3-axis data array to write.
  * @returns @c NULL.
- * @todo Add in product of raw data with associated stored sign.
  **
  * =============================================================================== */
 void KX134_1211_processRawBytes(KX134_1211 *accel, uint8_t *bytes, float *out) {
