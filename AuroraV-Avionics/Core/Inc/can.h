@@ -1,3 +1,9 @@
+/**
+ * @author Matt Ricci
+ * @addtogroup CAN
+ * @file can.h
+ */
+
 #ifndef _CAN_H
 #define _CAN_H
 
@@ -17,4 +23,5 @@ uint8_t find_empty_CAN_TX_mailbox(uint8_t);
 uint8_t CAN_TX(uint8_t, uint8_t, unsigned int, unsigned int, unsigned int);
 uint8_t CAN_RX(struct CAN_RX_data *);
 
+/** @} */
 #endif

@@ -1,29 +1,14 @@
-/* USER CODE BEGIN Header */
 /**
- ******************************************************************************
- * @file           main.h
- * @brief          Header for main.c file.
- *                 This file contains the common defines of the application.
- ******************************************************************************
- * @attention
- *
- * Copyright (c) 2024 STMicroelectronics.
- * All rights reserved.
- *
- * This software is licensed under terms that can be found in the LICENSE file
- * in the root directory of this software component.
- * If no LICENSE file comes with this software, it is provided AS-IS.
- *
- ******************************************************************************
- */
-/* USER CODE END Header */
+ * @author Matt Ricci
+ * @file   main.h
+ **/
 
-/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __MAIN_H
 #define __MAIN_H
 
 #include "FreeRTOS.h"
 #include "event_groups.h"
+#include "message_buffer.h"
 #include "stdint.h"
 #include "stm32f4xx.h"
 #include "task.h"
@@ -35,9 +20,9 @@
 #include "drivers.h"
 #include "flash.h"
 #include "lora.h"
-#include "uart.h"
 #include "sensors.h"
 #include "state.h"
+#include "uart.h"
 
 #include "kalmanfilter.h"
 #include "membuff.h"
@@ -48,6 +33,7 @@ void vDataAcquisitionH(void *pvParameters);
 void vDataAcquisitionL(void *pvParameters);
 void vStateUpdate(void *pvParameters);
 void vLoRaTransmit(void *pvParameters);
+void vUsbTransmit(void *pvParameters);
 
 void Error_Handler(void);
 
@@ -83,7 +69,7 @@ void Error_Handler(void);
  *                           DEVICE DEFINITIONS                          *
  * ===================================================================== */
 
-#define ACCEL_LAUNCH 5
+#define ACCEL_LAUNCH 1.5
 
 #define ACCEL_PORT_1 GPIOA
 #define ACCEL_CS_1   GPIO_ODR_OD1
@@ -106,11 +92,11 @@ void Error_Handler(void);
 #define FLASH_PORT GPIOE
 #define FLASH_CS   GPIO_ODR_OD11
 
-#define USB_PORT 			GPIOC
-#define USB_INTERFACE	USART6
-#define USB_BAUD 			230400
+#define USB_PORT      GPIOC
+#define USB_INTERFACE USART6
+#define USB_BAUD      230400
 
 #define LORA_PORT GPIOC
-#define LORA_CS 	GPIO_ODR_OD0
+#define LORA_CS   GPIO_ODR_OD0
 
 #endif

@@ -3,7 +3,10 @@ AlignConsecutiveAssignments:
   Enabled: true
   AcrossEmptyLines: true
   AcrossComments: false
-AlignConsecutiveMacros: true
+AlignConsecutiveMacros: 
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: false
 AlignOperands: AlignAfterOperator
 AlignTrailingComments:
   Kind: Always

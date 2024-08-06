@@ -1,4 +1,17 @@
+/**
+ * @author Matt Ricci
+ * @addtogroup CAN
+ * @file can.c
+ * @todo Cleanup CAN interface header and implementation.
+ */
+
 #include "can.h"
+
+/**
+ * @addtogroup CAN
+ * @brief CAN interface
+ * @{
+ */
 
 uint8_t CAN_RX(struct CAN_RX_data *CAN) {
   if (CAN->CAN_number == 1) {
