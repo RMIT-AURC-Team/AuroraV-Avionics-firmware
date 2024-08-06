@@ -1,3 +1,9 @@
+/**
+ * @author Matt Ricci
+ * @file BMP581.c
+ * @todo Add altitude calculation method
+ */
+
 #include "BMP581.h"
 
 /* =============================================================================== */
@@ -15,6 +21,7 @@ void BMP581_init(BMP581 *baro, GPIO_TypeDef *port, unsigned long cs, float tempS
   SPI_init(&baro->base, SENSOR_BARO, SPI1, port, cs);
   baro->tempSensitivity  = tempSensitivity;
   baro->pressSensitivity = pressSensitivity;
+  baro->update           = BMP581_update;
   baro->readTemp         = BMP581_readTemp;
   baro->readRawTemp      = BMP581_readRawTemp;
   baro->processRawTemp   = BMP581_processRawTemp;
@@ -25,15 +32,34 @@ void BMP581_init(BMP581 *baro, GPIO_TypeDef *port, unsigned long cs, float tempS
   BMP581_writeRegister(baro, BMP581_ODR_CFG, BMP581_ODR_CFG_PWR | BMP581_ODR_CFG_DEEP_DIS);
   uint8_t OSRCFG = BMP581_readRegister(baro, BMP581_OSR_CFG);
   BMP581_writeRegister(baro, BMP581_OSR_CFG, (BMP581_OSR_CFG_RESERVED & OSRCFG) | BMP581_OSR_CFG_PRESS_EN);
+
+  // Set ground pressure reading on init
+  baro->readPress(baro, &baro->groundPress);
 }
 
 /******************************** DEVICE METHODS ********************************/
 
 /* =============================================================================== */
 /**
- * @brief 
- * @param 	
- * @param 	
+ * @brief
+ * @param
+ * @param
+ * @returns @c NULL.
+ **
+ * =============================================================================== */
+void BMP581_update(BMP581 *baro) {
+  baro->readRawTemp(baro, baro->rawTemp);
+  baro->processRawTemp(baro, baro->rawTemp, &baro->temp);
+
+  baro->readRawPress(baro, baro->rawPress);
+  baro->processRawPress(baro, baro->rawPress, &baro->press);
+}
+
+/* =============================================================================== */
+/**
+ * @brief
+ * @param
+ * @param
  * @returns @c NULL.
  **
  * =============================================================================== */
@@ -45,9 +71,9 @@ void BMP581_readTemp(BMP581 *baro, float *out) {
 
 /* =============================================================================== */
 /**
- * @brief 
- * @param 	
- * @param 
+ * @brief
+ * @param
+ * @param
  * @returns @c NULL.
  **
  * =============================================================================== */
@@ -58,8 +84,8 @@ void BMP581_processRawTemp(BMP581 *baro, uint8_t *bytes, float *out) {
 /* =============================================================================== */
 /**
  * @brief
- * @param 
- * @param 	
+ * @param
+ * @param
  * @returns @c NULL.
  **
  * =============================================================================== */
@@ -71,8 +97,8 @@ void BMP581_readRawTemp(BMP581 *baro, uint8_t *out) {
 
 /* =============================================================================== */
 /**
- * @brief 
- * @param 	
+ * @brief
+ * @param
  * @param
  * @returns @c NULL.
  **
@@ -85,9 +111,9 @@ void BMP581_readPress(BMP581 *baro, float *out) {
 
 /* =============================================================================== */
 /**
- * @brief 
- * @param 
- * @param 
+ * @brief
+ * @param
+ * @param
  * @returns @c NULL.
  **
  * =============================================================================== */
@@ -98,8 +124,8 @@ void BMP581_processRawPress(BMP581 *baro, uint8_t *bytes, float *out) {
 /* =============================================================================== */
 /**
  * @brief
- * @param 	
- * @param 
+ * @param
+ * @param
  * @returns @c NULL.
  **
  * =============================================================================== */

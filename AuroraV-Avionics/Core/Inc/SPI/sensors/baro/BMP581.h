@@ -44,15 +44,22 @@ typedef struct BMP581 {
   SPI base;
   float pressSensitivity;
   float tempSensitivity;
+  void (*update)(struct BMP581 *);
   void (*readTemp)(struct BMP581 *, float *);
   void (*readPress)(struct BMP581 *, float *);
   void (*readRawTemp)(struct BMP581 *, uint8_t *);
   void (*readRawPress)(struct BMP581 *, uint8_t *);
   void (*processRawTemp)(struct BMP581 *, uint8_t *, float *);
   void (*processRawPress)(struct BMP581 *, uint8_t *, float *);
+  uint8_t rawTemp[BMP581_DATA_SIZE];
+  uint8_t rawPress[BMP581_DATA_SIZE];
+  float temp;
+  float press;
+  float groundPress;
 } BMP581;
 
 void BMP581_init(BMP581 *, GPIO_TypeDef *, unsigned long, const float, const float);
+void BMP581_update(BMP581 *);
 void BMP581_readTemp(BMP581 *, float *);
 void BMP581_readPress(BMP581 *, float *);
 void BMP581_readRawTemp(BMP581 *, uint8_t *);
