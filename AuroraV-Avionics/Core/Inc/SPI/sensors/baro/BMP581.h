@@ -3,6 +3,7 @@
  * @ingroup Sensors
  * @addtogroup Barometer
  * @file BMP581.h
+ * @todo Document interface
  */
 
 #ifndef _BMP581_H
@@ -34,7 +35,6 @@
  * @ingroup Barometer
  * @defgroup BMP581
  * @addtogroup BMP581
- * @todo Document interface in BMP581.h
  * @{
  */
 

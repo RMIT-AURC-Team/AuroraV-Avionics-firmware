@@ -1,8 +1,7 @@
 /**
  * @author Matt Ricci
  * @ingroup SPI_API
- * @defgroup LoRa
- * @{
+ * @addtogroup LoRa
  */
 
 #ifndef _LORA_H
@@ -45,6 +44,11 @@
 
 #define LORA_MSG_LENGTH                 0x10
 #define LORA_MSG_PAYLOAD_LENGTH         0x0F
+
+/**
+ * @addtogroup LoRa
+ * @{
+ */
 
 typedef enum {
   BW125,
@@ -100,4 +104,5 @@ LoRa_Packet LoRa_AVD1(uint8_t, uint8_t *, uint8_t);
 
 void _LoRa_setMode(LoRa *, Mode);
 
+/** @} */
 #endif

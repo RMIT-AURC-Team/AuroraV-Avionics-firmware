@@ -1,8 +1,9 @@
 /**
  * @author Matt Ricci
- * @file BMP581.c
+ * @addtogroup BMP581 
  * @todo Add altitude calculation method
- * @todo Document implementation in BMP581.c
+ * @file BMP581.c
+ * @todo Document implementation
  */
 
 #include "BMP581.h"

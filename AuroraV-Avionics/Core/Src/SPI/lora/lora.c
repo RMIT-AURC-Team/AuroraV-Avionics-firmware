@@ -4,7 +4,7 @@
  * @defgroup LoRa
  * @todo Comb LoRa module datasheet and confirm operating procedure.
  * @todo Fix up LoRa code from Will.
- * @todo Implement TxComplete EXTI (initialisation and handler)
+ * @{
  */
 
 #include "lora.h"
@@ -101,6 +101,13 @@ LoRa_Packet LoRa_AVD1(uint8_t id, uint8_t *accelData, uint8_t lenAccel) {
 
 /********************************** DEVICE METHODS *********************************/
 
+/* =============================================================================== */
+/**
+ * @brief
+ * @param lora
+ * @param pointerdata
+ **
+ * =============================================================================== */
 void LoRa_transmit(LoRa *lora, uint8_t *pointerdata) {
   LoRa_writeRegister(lora, LORA_REG_IRQ_FLAGS, 0x08);     // clears the status flags
   LoRa_writeRegister(lora, LORA_REG_FIFO_ADDR_PTR, 0x80); // set pointer adddress to TX
@@ -115,13 +122,13 @@ void LoRa_transmit(LoRa *lora, uint8_t *pointerdata) {
 	/** 
 	 * @todo Implement interrupt on TxComplete
 	 * 
-	 * Polling the pin takes too much time, as a result delay timers on various tasks will
+	 * @attention Polling the pin takes too much time, as a result delay timers on various tasks will
 	 * have expired in the time waiting and CPU will never idle (meaning flashing does not occur).
 	 *
-	 * Implementing interrupt on TxComplete signal should solve this since the handler should only
+	 * @attention Implementing interrupt on TxComplete signal should solve this since the handler should only
 	 * run over a few clock cycles.
 	 */
-	//  while (!(GPIOD->IDR & 0x2));
+	// while (!(GPIOD->IDR & 0x2));
   LoRa_writeRegister(lora, LORA_REG_IRQ_FLAGS, 0x08); // clears the status flags
 }
 
@@ -147,3 +154,5 @@ uint8_t LoRa_readRegister(LoRa *lora, uint8_t address) {
   spi.port->ODR |= spi.cs;                // Raise chip select
   return (uint8_t)response;
 }
+
+/** @} */
