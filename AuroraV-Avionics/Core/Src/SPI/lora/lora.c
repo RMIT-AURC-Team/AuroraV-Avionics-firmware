@@ -71,6 +71,34 @@ void _LoRa_setMode(LoRa *lora, Mode mode) {
   LoRa_writeRegister(lora, LORA_REG_OP_MODE, regOpMode);
 }
 
+/********************************** STATIC METHODS *********************************/
+
+/* =============================================================================== */
+/**
+ * @brief
+ * @param id
+ * @param *accelData
+ * @param lenAccel
+ * @param *gyroData
+ * @param lenGyro
+ * @return LoRa_Packet.
+ **
+ * =============================================================================== */
+LoRa_Packet LoRa_AVD1(uint8_t id, uint8_t *accelData, uint8_t lenAccel) {
+  LoRa_Packet msg;
+
+  // Return error if data extends beyond max payload
+  if ((lenAccel) > LORA_MSG_PAYLOAD_LENGTH) {
+    msg.id = 0xFF;
+    return msg;
+  }
+
+  msg.id = id;
+  memcpy(msg.data, accelData, lenAccel);
+
+  return msg;
+}
+
 /********************************** DEVICE METHODS *********************************/
 
 void LoRa_transmit(LoRa *lora, uint8_t *pointerdata) {
