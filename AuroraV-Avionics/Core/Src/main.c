@@ -74,7 +74,15 @@ int main(void) {
 
   Flash_init(&flash, FLASH_PORT, FLASH_CS);
   UART_init(&usb, USB_INTERFACE, USB_PORT, USB_BAUD, OVER8);
+	
+//	volatile uint8_t readBuff[256];
+//	for(int i = 0; true; i += 0x100) {
+//		flash.readPage(&flash, i, readBuff);
+//	}
+//	flash.erase(&flash);
+//	while(1);
 
+	// Initialise LoRa interface and message buffers
   LoRa_init(&lora, LORA_PORT, LORA_CS, BW250, SF9, CR5);
   xLoRaTxBuff = xMessageBufferCreate(xLoRaBuffSize);
 
@@ -83,8 +91,9 @@ int main(void) {
   A3G4250D_init(&gyro_s, GYRO_PORT, GYRO_CS, A3G4250D_SENSITIVITY, GYRO_AXES, GYRO_SIGN);
   KX134_1211_init(&lAccel_s, ACCEL_PORT_1, ACCEL_CS_1, ACCEL_SCALE_LOW, ACCEL_AXES_1, ACCEL_SIGN_1);
   KX134_1211_init(&hAccel_s, ACCEL_PORT_2, ACCEL_CS_2, ACCEL_SCALE_HIGH, ACCEL_AXES_2, ACCEL_SIGN_2);
-  accel_s              = lAccel_s;
+	accel_s = lAccel_s;
 
+	// Send AB ground test message over CAN
   unsigned int CANHigh = 0;
   unsigned int CANLow  = 0;
   unsigned int id      = 0x603;
@@ -213,7 +222,7 @@ void vStateUpdate(void *argument) {
 // Use idle time to write flash
 void vApplicationIdleHook(void) {
   // Write if a page is available in the buffer
-  if (currentState == LAUNCH && mem.pageReady)
+  if (currentState >= LAUNCH && mem.pageReady)
     xEventGroupSetBits(xTaskEnableGroup, 0x01);
 }
 
@@ -260,11 +269,12 @@ void vLoRaTransmit(void *argument) {
 /* ===================================================================== *
  *                             UART HANDLING                             *
  * ===================================================================== */
+
+/** 
+ * @todo implement USB commands over UART for system control 
+ * (e.g. erase flash) 
+ */
 void vUsbTransmit(void *argument) {
-  TickType_t xLastWakeTime;
-  const TickType_t xFrequency = pdMS_TO_TICKS(500); // 2Hz
-  // Initialise message buffer
-  xUsbTxBuff = xMessageBufferCreate(xUsbBuffSize);
   for (;;) {
   }
 }

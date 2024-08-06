@@ -96,7 +96,7 @@ void Error_Handler(void);
 #define USB_INTERFACE USART6
 #define USB_BAUD      230400
 
-#define LORA_PORT GPIOC
+#define LORA_PORT GPIOD
 #define LORA_CS   GPIO_ODR_OD0
 
 #endif
