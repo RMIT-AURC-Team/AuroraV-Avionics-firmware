@@ -106,6 +106,8 @@ $(function(){initNavTree('group__LoRa.html',''); initResizable(true); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Structures</h2></td></tr>
+<tr class="memitem:structLoRa__Packet" id="r_structLoRa__Packet"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#structLoRa__Packet">LoRa_Packet</a></td></tr>
+<tr class="separator:structLoRa__Packet"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLoRa.html">LoRa</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -113,6 +115,8 @@ Data Structures</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:ga56961a46a2904d9f8b9638f656d401f3" id="r_ga56961a46a2904d9f8b9638f656d401f3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga56961a46a2904d9f8b9638f656d401f3">LoRa_init</a> (<a class="el" href="structLoRa.html">LoRa</a> *, GPIO_TypeDef *, unsigned long, Bandwidth, SpreadingFactor, CodingRate)</td></tr>
 <tr class="separator:ga56961a46a2904d9f8b9638f656d401f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7c3bba6c9d453ac9d1ec134d80a54a9e" id="r_ga7c3bba6c9d453ac9d1ec134d80a54a9e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#structLoRa__Packet">LoRa_Packet</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7c3bba6c9d453ac9d1ec134d80a54a9e">LoRa_AVD1</a> (uint8_t, uint8_t *, uint8_t)</td></tr>
+<tr class="separator:ga7c3bba6c9d453ac9d1ec134d80a54a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -120,13 +124,33 @@ Variables</h2></td></tr>
 <a class="el" href="structSPI.html">SPI</a>&#160;</td><td class="memItemRight" valign="bottom"><b>base</b></td></tr>
 <tr class="memdesc:ga6e3a9ebc712a4a2f4d0d9e4ee0edf2f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parent <a class="el" href="structSPI.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> interface. <br /></td></tr>
 <tr class="separator:ga6e3a9ebc712a4a2f4d0d9e4ee0edf2f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga00f362d8f0bfa02a3b90b758a04decf6" id="r_ga00f362d8f0bfa02a3b90b758a04decf6"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga00f362d8f0bfa02a3b90b758a04decf6">transmit</a> )(struct <a class="el" href="structLoRa.html">LoRa</a> *, uint8_t *)</td></tr>
+<tr class="memdesc:ga00f362d8f0bfa02a3b90b758a04decf6"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structLoRa.html">LoRa</a> transmit method.  <br /></td></tr>
+<tr class="separator:ga00f362d8f0bfa02a3b90b758a04decf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <dl class="section author"><dt>Author</dt><dd>Matt Ricci</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo</a></b></dt><dd><p class="startdd">Comb <a class="el" href="structLoRa.html">LoRa</a> module datasheet and confirm operating procedure. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo</a></b></dt><dd><p class="startdd">Comb <a class="el" href="structLoRa.html">LoRa</a> module datasheet and confirm operating procedure. </p>
 <p class="interdd">Fix up <a class="el" href="structLoRa.html">LoRa</a> code from Will. </p>
 <p class="enddd">Implement TxComplete EXTI (initialisation and handler) </p>
 </dd></dl>
+<hr/><h2 class="groupheader">Data Structure Documentation</h2>
+<a name="structLoRa__Packet" id="structLoRa__Packet"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structLoRa__Packet">&#9670;&#160;</a></span>LoRa_Packet</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct LoRa_Packet</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock">
+<p class="definition">Definition at line <a class="el" href="lora_8h_source.html#l00083">83</a> of file <a class="el" href="lora_8h_source.html">lora.h</a>.</p>
+</div>
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga56961a46a2904d9f8b9638f656d401f3" name="ga56961a46a2904d9f8b9638f656d401f3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga56961a46a2904d9f8b9638f656d401f3">&#9670;&#160;</a></span>LoRa_init()</h2>
@@ -181,6 +205,66 @@ Variables</h2></td></tr>
 <hr  />
  
 <p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00035">35</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
+
+</div>
+</div>
+<a id="ga7c3bba6c9d453ac9d1ec134d80a54a9e" name="ga7c3bba6c9d453ac9d1ec134d80a54a9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7c3bba6c9d453ac9d1ec134d80a54a9e">&#9670;&#160;</a></span>LoRa_AVD1()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#structLoRa__Packet">LoRa_Packet</a> LoRa_AVD1 </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>id</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *</td>          <td class="paramname"><span class="paramname"><em>accelData</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>lenAccel</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td></td></tr>
+    <tr><td class="paramname">*accelData</td><td></td></tr>
+    <tr><td class="paramname">lenAccel</td><td></td></tr>
+    <tr><td class="paramname">*gyroData</td><td></td></tr>
+    <tr><td class="paramname">lenGyro</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="#structLoRa__Packet">LoRa_Packet</a>.</dd></dl>
+<hr  />
+ 
+<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00087">87</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="ga00f362d8f0bfa02a3b90b758a04decf6" name="ga00f362d8f0bfa02a3b90b758a04decf6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga00f362d8f0bfa02a3b90b758a04decf6">&#9670;&#160;</a></span>transmit</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void(* transmit) (struct <a class="el" href="structLoRa.html">LoRa</a> *, uint8_t *)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structLoRa.html">LoRa</a> transmit method. </p>
+<dl class="section see"><dt>See also</dt><dd>LoRa_transmit </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="lora_8h_source.html#l00091">91</a> of file <a class="el" href="lora_8h_source.html">lora.h</a>.</p>
 
 </div>
 </div>

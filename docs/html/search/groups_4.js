@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gyroscope_0',['Gyroscope',['../group__Gyroscope.html',1,'']]]
+  ['flash_0',['Flash',['../group__Flash.html',1,'']]]
 ];

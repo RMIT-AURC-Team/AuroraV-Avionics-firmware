@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['interface_0',['Interface',['../group__SPI.html',1,'']]]
+  ['gyroscope_0',['Gyroscope',['../group__Gyroscope.html',1,'']]]
 ];
