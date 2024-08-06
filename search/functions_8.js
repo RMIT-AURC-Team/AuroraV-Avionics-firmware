@@ -1,0 +1,9 @@
+var searchData=
+[
+  ['isaccelerationabove5gs_0',['isAccelerationAbove5Gs',['../state_8h.html#a01fdbba1899914c94a55da0cebaa25bb',1,'isAccelerationAbove5Gs(float accelZ):&#160;state.c'],['../state_8c.html#a01fdbba1899914c94a55da0cebaa25bb',1,'isAccelerationAbove5Gs(float accelZ):&#160;state.c']]],
+  ['isaltitude1300ft_1',['isAltitude1300ft',['../state_8h.html#a3a069e646da955ab5438a12480a2ab5f',1,'isAltitude1300ft(float altitude):&#160;state.c'],['../state_8c.html#a3a069e646da955ab5438a12480a2ab5f',1,'isAltitude1300ft(float altitude):&#160;state.c']]],
+  ['isaltitudedropping_2',['isAltitudeDropping',['../state_8h.html#a584f944be1ca6accb1410724f2432da4',1,'isAltitudeDropping(float altitude, float previousaltitude, uint8_t altitudedecreasecount):&#160;state.c'],['../state_8c.html#a584f944be1ca6accb1410724f2432da4',1,'isAltitudeDropping(float altitude, float previousaltitude, uint8_t altitudedecreasecount):&#160;state.c']]],
+  ['isnegativevelocity_3',['isNegativeVelocity',['../state_8h.html#ac10ee4bc8238aad188ecd1773af61849',1,'isNegativeVelocity(float velocity):&#160;state.c'],['../state_8c.html#ac10ee4bc8238aad188ecd1773af61849',1,'isNegativeVelocity(float velocity):&#160;state.c']]],
+  ['istiltangleabove90_4',['isTiltAngleAbove90',['../state_8h.html#a1c1aa1d91b1eb596f8f3c021955188d3',1,'isTiltAngleAbove90(float tilt):&#160;state.c'],['../state_8c.html#a1c1aa1d91b1eb596f8f3c021955188d3',1,'isTiltAngleAbove90(float tilt):&#160;state.c']]],
+  ['isvelocitydecreasing_5',['isVelocityDecreasing',['../state_8h.html#a71cd696fb28302a84cc1749e08793f37',1,'isVelocityDecreasing(float velocity, float previousvelocity, uint8_t velocitydecreasecount):&#160;state.c'],['../state_8c.html#a71cd696fb28302a84cc1749e08793f37',1,'isVelocityDecreasing(float velocity, float previousvelocity, uint8_t velocitydecreasecount):&#160;state.c']]]
+];
