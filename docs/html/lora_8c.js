@@ -1,6 +1,6 @@
 var lora_8c =
 [
-    [ "LoRa_init", "group__LoRa.html#ga56961a46a2904d9f8b9638f656d401f3", null ],
-    [ "LoRa_AVD1", "group__LoRa.html#ga7c3bba6c9d453ac9d1ec134d80a54a9e", null ],
-    [ "LoRa_transmit", "group__LoRa.html#gaf5a72437c494fee7c236007f0408c0ab", null ]
+    [ "LoRa_init", "group__LoRa.html#ga1a62293fe572d94b7196ddb6619e2f32", null ],
+    [ "LoRa_AVD1", "group__LoRa.html#ga14d114988f8e46c0f9300f4bad30638b", null ],
+    [ "LoRa_transmit", "group__LoRa.html#gae19b9f0cd6a296c35d492f391278cecd", null ]
 ];

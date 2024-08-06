@@ -1,7 +1,7 @@
 var searchData=
 [
   ['barometer_0',['Barometer',['../group__Barometer.html',1,'']]],
-  ['base_1',['base',['../structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7',1,'Flash::base'],['../group__LoRa.html#ga6e3a9ebc712a4a2f4d0d9e4ee0edf2f7',1,'LoRa::base'],['../structKX134__1211.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7',1,'KX134_1211::base'],['../structA3G4250D.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7',1,'A3G4250D::base']]],
+  ['base_1',['base',['../structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7',1,'Flash::base'],['../structLoRa.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7',1,'LoRa::base'],['../structKX134__1211.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7',1,'KX134_1211::base'],['../structA3G4250D.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7',1,'A3G4250D::base']]],
   ['bmp581_2',['BMP581',['../structBMP581.html',1,'BMP581'],['../group__BMP581.html',1,'BMP581']]],
   ['bmp581_2ec_3',['BMP581.c',['../BMP581_8c.html',1,'']]],
   ['bmp581_2eh_4',['BMP581.h',['../BMP581_8h.html',1,'']]],
