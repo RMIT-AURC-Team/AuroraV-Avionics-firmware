@@ -102,8 +102,9 @@ $(function(){initNavTree('A3G4250D_8h.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">A3G4250D.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;SPI/spi.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;spi.h&quot;</code><br />
 <code>#include &quot;stm32f439xx.h&quot;</code><br />
+<code>#include &quot;string.h&quot;</code><br />
 </div>
 <p><a href="A3G4250D_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -114,9 +115,12 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gabd9827bb607041567765c6a476461d18" id="r_gabd9827bb607041567765c6a476461d18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__A3G4250D.html#gabd9827bb607041567765c6a476461d18">A3G4250D_init</a> (<a class="el" href="structA3G4250D.html">A3G4250D</a> *, GPIO_TypeDef *, unsigned long, const float, const uint8_t *)</td></tr>
-<tr class="memdesc:gabd9827bb607041567765c6a476461d18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialiser for a <a class="el" href="structA3G4250D.html">A3G4250D</a> gyroscope.  <br /></td></tr>
-<tr class="separator:gabd9827bb607041567765c6a476461d18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabdb9d60c4d2622a0a5fdf0aefd227ab6" id="r_gabdb9d60c4d2622a0a5fdf0aefd227ab6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__A3G4250D.html#gabdb9d60c4d2622a0a5fdf0aefd227ab6">A3G4250D_init</a> (<a class="el" href="structA3G4250D.html">A3G4250D</a> *, GPIO_TypeDef *, unsigned long, const float, const uint8_t *, const int8_t *)</td></tr>
+<tr class="memdesc:gabdb9d60c4d2622a0a5fdf0aefd227ab6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialiser for a <a class="el" href="structA3G4250D.html">A3G4250D</a> gyroscope.  <br /></td></tr>
+<tr class="separator:gabdb9d60c4d2622a0a5fdf0aefd227ab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf17ae448137172dc27cc44ff1bbedf56" id="r_gaf17ae448137172dc27cc44ff1bbedf56"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__A3G4250D.html#gaf17ae448137172dc27cc44ff1bbedf56">A3G4250D_update</a> (<a class="el" href="structA3G4250D.html">A3G4250D</a> *)</td></tr>
+<tr class="memdesc:gaf17ae448137172dc27cc44ff1bbedf56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates internally stored gyro readings.  <br /></td></tr>
+<tr class="separator:gaf17ae448137172dc27cc44ff1bbedf56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga312e2655fabf3e10b2f71c90d8e1634d" id="r_ga312e2655fabf3e10b2f71c90d8e1634d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__A3G4250D.html#ga312e2655fabf3e10b2f71c90d8e1634d">A3G4250D_readGyro</a> (<a class="el" href="structA3G4250D.html">A3G4250D</a> *, float *)</td></tr>
 <tr class="memdesc:ga312e2655fabf3e10b2f71c90d8e1634d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read 3-axis floating point gyro rates.  <br /></td></tr>
 <tr class="separator:ga312e2655fabf3e10b2f71c90d8e1634d"><td class="memSeparator" colspan="2">&#160;</td></tr>

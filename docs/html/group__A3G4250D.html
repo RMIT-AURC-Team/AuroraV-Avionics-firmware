@@ -110,9 +110,12 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gabd9827bb607041567765c6a476461d18" id="r_gabd9827bb607041567765c6a476461d18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabd9827bb607041567765c6a476461d18">A3G4250D_init</a> (<a class="el" href="structA3G4250D.html">A3G4250D</a> *, GPIO_TypeDef *, unsigned long, const float, const uint8_t *)</td></tr>
-<tr class="memdesc:gabd9827bb607041567765c6a476461d18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialiser for a <a class="el" href="structA3G4250D.html">A3G4250D</a> gyroscope.  <br /></td></tr>
-<tr class="separator:gabd9827bb607041567765c6a476461d18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabdb9d60c4d2622a0a5fdf0aefd227ab6" id="r_gabdb9d60c4d2622a0a5fdf0aefd227ab6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabdb9d60c4d2622a0a5fdf0aefd227ab6">A3G4250D_init</a> (<a class="el" href="structA3G4250D.html">A3G4250D</a> *, GPIO_TypeDef *, unsigned long, const float, const uint8_t *, const int8_t *)</td></tr>
+<tr class="memdesc:gabdb9d60c4d2622a0a5fdf0aefd227ab6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialiser for a <a class="el" href="structA3G4250D.html">A3G4250D</a> gyroscope.  <br /></td></tr>
+<tr class="separator:gabdb9d60c4d2622a0a5fdf0aefd227ab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf17ae448137172dc27cc44ff1bbedf56" id="r_gaf17ae448137172dc27cc44ff1bbedf56"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf17ae448137172dc27cc44ff1bbedf56">A3G4250D_update</a> (<a class="el" href="structA3G4250D.html">A3G4250D</a> *)</td></tr>
+<tr class="memdesc:gaf17ae448137172dc27cc44ff1bbedf56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates internally stored gyro readings.  <br /></td></tr>
+<tr class="separator:gaf17ae448137172dc27cc44ff1bbedf56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga312e2655fabf3e10b2f71c90d8e1634d" id="r_ga312e2655fabf3e10b2f71c90d8e1634d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga312e2655fabf3e10b2f71c90d8e1634d">A3G4250D_readGyro</a> (<a class="el" href="structA3G4250D.html">A3G4250D</a> *, float *)</td></tr>
 <tr class="memdesc:ga312e2655fabf3e10b2f71c90d8e1634d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read 3-axis floating point gyro rates.  <br /></td></tr>
 <tr class="separator:ga312e2655fabf3e10b2f71c90d8e1634d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -125,8 +128,8 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gabd9827bb607041567765c6a476461d18" name="gabd9827bb607041567765c6a476461d18"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabd9827bb607041567765c6a476461d18">&#9670;&#160;</a></span>A3G4250D_init()</h2>
+<a id="gabdb9d60c4d2622a0a5fdf0aefd227ab6" name="gabdb9d60c4d2622a0a5fdf0aefd227ab6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabdb9d60c4d2622a0a5fdf0aefd227ab6">&#9670;&#160;</a></span>A3G4250D_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -154,7 +157,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em>axes</em></span>&#160;)</td>
+          <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em>axes</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int8_t *</td>          <td class="paramname"><span class="paramname"><em>sign</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -174,6 +182,35 @@ Functions</h2></td></tr>
 <hr  />
  
 <p class="definition">Definition at line <a class="el" href="A3G4250D_8c_source.html#l00019">19</a> of file <a class="el" href="A3G4250D_8c_source.html">A3G4250D.c</a>.</p>
+
+</div>
+</div>
+<a id="gaf17ae448137172dc27cc44ff1bbedf56" name="gaf17ae448137172dc27cc44ff1bbedf56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf17ae448137172dc27cc44ff1bbedf56">&#9670;&#160;</a></span>A3G4250D_update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void A3G4250D_update </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structA3G4250D.html">A3G4250D</a> *</td>          <td class="paramname"><span class="paramname"><em>gyro</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Updates internally stored gyro readings. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">*gyro</td><td>Pointer to gyro struct. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
+<hr  />
+ 
+<p class="definition">Definition at line <a class="el" href="A3G4250D_8c_source.html#l00055">55</a> of file <a class="el" href="A3G4250D_8c_source.html">A3G4250D.c</a>.</p>
 
 </div>
 </div>
@@ -207,7 +244,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="A3G4250D_8c_source.html#l00040">40</a> of file <a class="el" href="A3G4250D_8c_source.html">A3G4250D.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="A3G4250D_8c_source.html#l00042">42</a> of file <a class="el" href="A3G4250D_8c_source.html">A3G4250D.c</a>.</p>
 
 </div>
 </div>
@@ -241,7 +278,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="A3G4250D_8c_source.html#l00069">69</a> of file <a class="el" href="A3G4250D_8c_source.html">A3G4250D.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="A3G4250D_8c_source.html#l00083">83</a> of file <a class="el" href="A3G4250D_8c_source.html">A3G4250D.c</a>.</p>
 
 </div>
 </div>
@@ -281,7 +318,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="A3G4250D_8c_source.html#l00055">55</a> of file <a class="el" href="A3G4250D_8c_source.html">A3G4250D.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="A3G4250D_8c_source.html#l00069">69</a> of file <a class="el" href="A3G4250D_8c_source.html">A3G4250D.c</a>.</p>
 
 </div>
 </div>

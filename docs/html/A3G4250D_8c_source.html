@@ -104,88 +104,101 @@ $(function(){initNavTree('A3G4250D_8c_source.html',''); initResizable(true); });
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">/* =============================================================================== */</span></div>
 <div class="foldopen" id="foldopen00019" data-start="{" data-end="}">
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="group__A3G4250D.html#gabd9827bb607041567765c6a476461d18">   19</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__A3G4250D.html#gabd9827bb607041567765c6a476461d18">A3G4250D_init</a>(<a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> *gyro, GPIO_TypeDef *port, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> cs, <span class="keywordtype">float</span> sensitivity, <span class="keyword">const</span> uint8_t *axes) {</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="group__A3G4250D.html#gabdb9d60c4d2622a0a5fdf0aefd227ab6">   19</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__A3G4250D.html#gabdb9d60c4d2622a0a5fdf0aefd227ab6">A3G4250D_init</a>(<a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> *gyro, GPIO_TypeDef *port, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> cs, <span class="keywordtype">float</span> sensitivity, <span class="keyword">const</span> uint8_t *axes, <span class="keyword">const</span> int8_t *sign) {</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <a class="code hl_function" href="group__SPI.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7">SPI_init</a>(&amp;gyro-&gt;base, <a class="code hl_enumvalue" href="group__SPI.html#ggad258d4c51629346fceac4679b3209ad9a84b967fe10b7c1cfe2f779d99407703a">SENSOR_GYRO</a>, SPI1, port, cs);</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  gyro-&gt;sensitivity     = sensitivity;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  gyro-&gt;axes            = axes;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  gyro-&gt;update          = <a class="code hl_function" href="group__A3G4250D.html#gaf17ae448137172dc27cc44ff1bbedf56">A3G4250D_update</a>;</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  gyro-&gt;readGyro        = <a class="code hl_function" href="group__A3G4250D.html#ga312e2655fabf3e10b2f71c90d8e1634d">A3G4250D_readGyro</a>;</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  gyro-&gt;readRawBytes    = <a class="code hl_function" href="group__A3G4250D.html#gadd64ac77b1a4f0414abc10dd0e8ab8ef">A3G4250D_readRawBytes</a>;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  gyro-&gt;processRawBytes = <a class="code hl_function" href="group__A3G4250D.html#ga0b884ae90373ad5fa4565610707ea198">A3G4250D_processRawBytes</a>;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  A3G4250D_writeRegister(gyro, A3G4250D_CTRL_REG1, A3G4250D_CTRL_REG1_ODR_800Hz | A3G4250D_CTRL_REG1_AXIS_ENABLE | A3G4250D_CTRL_REG1_PD_ENABLE);</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  memcpy(gyro-&gt;axes, axes, A3G4250D_DATA_COUNT);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  memcpy(gyro-&gt;sign, sign, A3G4250D_DATA_COUNT);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  A3G4250D_writeRegister(gyro, A3G4250D_CTRL_REG1, A3G4250D_CTRL_REG1_ODR_800Hz | A3G4250D_CTRL_REG1_AXIS_ENABLE | A3G4250D_CTRL_REG1_PD_ENABLE);</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>}</div>
 </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">/******************************** DEVICE METHODS ********************************/</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="foldopen" id="foldopen00040" data-start="{" data-end="}">
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="group__A3G4250D.html#ga312e2655fabf3e10b2f71c90d8e1634d">   40</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__A3G4250D.html#ga312e2655fabf3e10b2f71c90d8e1634d">A3G4250D_readGyro</a>(<a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> *gyro, <span class="keywordtype">float</span> *out) {</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  uint8_t bytes[A3G4250D_DATA_TOTAL];</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  gyro-&gt;readRawBytes(gyro, bytes);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  gyro-&gt;processRawBytes(gyro, bytes, out);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>}</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">/******************************** DEVICE METHODS ********************************/</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00042" data-start="{" data-end="}">
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="group__A3G4250D.html#ga312e2655fabf3e10b2f71c90d8e1634d">   42</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__A3G4250D.html#ga312e2655fabf3e10b2f71c90d8e1634d">A3G4250D_readGyro</a>(<a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> *gyro, <span class="keywordtype">float</span> *out) {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  uint8_t bytes[A3G4250D_DATA_TOTAL];</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  gyro-&gt;readRawBytes(gyro, bytes);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  gyro-&gt;processRawBytes(gyro, bytes, out);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>}</div>
 </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">/* =============================================================================== */</span></div>
 <div class="foldopen" id="foldopen00055" data-start="{" data-end="}">
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="group__A3G4250D.html#ga0b884ae90373ad5fa4565610707ea198">   55</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__A3G4250D.html#ga0b884ae90373ad5fa4565610707ea198">A3G4250D_processRawBytes</a>(<a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> *gyro, uint8_t *bytes, <span class="keywordtype">float</span> *out) {</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  out[0] = gyro-&gt;sensitivity * (int16_t)(((uint16_t)bytes[0] &lt;&lt; 8) | bytes[1]); <span class="comment">// gyro X</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  out[1] = gyro-&gt;sensitivity * (int16_t)(((uint16_t)bytes[2] &lt;&lt; 8) | bytes[3]); <span class="comment">// gyro Y</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  out[2] = gyro-&gt;sensitivity * (int16_t)(((uint16_t)bytes[4] &lt;&lt; 8) | bytes[5]); <span class="comment">// gyro Z</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>}</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="group__A3G4250D.html#gaf17ae448137172dc27cc44ff1bbedf56">   55</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__A3G4250D.html#gaf17ae448137172dc27cc44ff1bbedf56">A3G4250D_update</a>(<a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> *gyro) {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  gyro-&gt;readRawBytes(gyro, gyro-&gt;rawGyroData);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  gyro-&gt;processRawBytes(gyro, gyro-&gt;rawGyroData, gyro-&gt;gyroData);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}</div>
 </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">/* =============================================================================== */</span></div>
 <div class="foldopen" id="foldopen00069" data-start="{" data-end="}">
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="group__A3G4250D.html#gadd64ac77b1a4f0414abc10dd0e8ab8ef">   69</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__A3G4250D.html#gadd64ac77b1a4f0414abc10dd0e8ab8ef">A3G4250D_readRawBytes</a>(<a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> *gyro, uint8_t *out) {</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  out[0] = A3G4250D_readRegister(gyro, A3G4250D_OUT_X_H); <span class="comment">// gyro X high</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  out[1] = A3G4250D_readRegister(gyro, A3G4250D_OUT_X_L); <span class="comment">// gyro X low</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  out[2] = A3G4250D_readRegister(gyro, A3G4250D_OUT_Y_H); <span class="comment">// gyro Y high</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  out[3] = A3G4250D_readRegister(gyro, A3G4250D_OUT_Y_L); <span class="comment">// gyro Y low</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  out[4] = A3G4250D_readRegister(gyro, A3G4250D_OUT_Z_H); <span class="comment">// gyro Z high</span></div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  out[5] = A3G4250D_readRegister(gyro, A3G4250D_OUT_Z_L); <span class="comment">// gyro Z low</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>}</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="group__A3G4250D.html#ga0b884ae90373ad5fa4565610707ea198">   69</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__A3G4250D.html#ga0b884ae90373ad5fa4565610707ea198">A3G4250D_processRawBytes</a>(<a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> *gyro, uint8_t *bytes, <span class="keywordtype">float</span> *out) {</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  out[0] = gyro-&gt;sign[0] * gyro-&gt;sensitivity * (int16_t)(((uint16_t)bytes[0] &lt;&lt; 8) | bytes[1]); <span class="comment">// gyro X</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  out[1] = gyro-&gt;sign[1] * gyro-&gt;sensitivity * (int16_t)(((uint16_t)bytes[2] &lt;&lt; 8) | bytes[3]); <span class="comment">// gyro Y</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  out[2] = gyro-&gt;sign[2] * gyro-&gt;sensitivity * (int16_t)(((uint16_t)bytes[4] &lt;&lt; 8) | bytes[5]); <span class="comment">// gyro Z</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>}</div>
 </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="comment">/******************************** INTERFACE METHODS ********************************/</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="keywordtype">void</span> A3G4250D_writeRegister(<a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> *gyro, uint8_t address, uint8_t data) {</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  uint16_t response;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = gyro-&gt;base;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="comment">// Send write command with address and data</span></div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  uint16_t payload = (address &lt;&lt; 0x08) | data;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  spi.<a class="code hl_variable" href="structSPI.html#a194e08b54d45d097bba08a024fb0826e">send</a>(&amp;spi, payload);</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="comment">// Read in response from interface</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  spi.<a class="code hl_variable" href="structSPI.html#ac67e3827d337ab14c922753d83ecee5e">receive</a>(&amp;spi, &amp;response);</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00083" data-start="{" data-end="}">
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="group__A3G4250D.html#gadd64ac77b1a4f0414abc10dd0e8ab8ef">   83</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__A3G4250D.html#gadd64ac77b1a4f0414abc10dd0e8ab8ef">A3G4250D_readRawBytes</a>(<a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> *gyro, uint8_t *out) {</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="preprocessor">#define INDEX_AXES(index, byte) 2 * gyro-&gt;axes[index] + byte</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  out[INDEX_AXES(0, 0)] = A3G4250D_readRegister(gyro, A3G4250D_OUT_X_H); <span class="comment">// gyro X high</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  out[INDEX_AXES(0, 1)] = A3G4250D_readRegister(gyro, A3G4250D_OUT_X_L); <span class="comment">// gyro X low</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  out[INDEX_AXES(1, 0)] = A3G4250D_readRegister(gyro, A3G4250D_OUT_Y_H); <span class="comment">// gyro Y high</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  out[INDEX_AXES(1, 1)] = A3G4250D_readRegister(gyro, A3G4250D_OUT_Y_L); <span class="comment">// gyro Y low</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  out[INDEX_AXES(2, 0)] = A3G4250D_readRegister(gyro, A3G4250D_OUT_Z_H); <span class="comment">// gyro Z high</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  out[INDEX_AXES(2, 1)] = A3G4250D_readRegister(gyro, A3G4250D_OUT_Z_L); <span class="comment">// gyro Z low</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="preprocessor">#undef INDEX_AXES</span></div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>}</div>
+</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>uint8_t A3G4250D_readRegister(<a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> *gyro, uint8_t address) {</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  uint16_t response;</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = gyro-&gt;base;</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <span class="comment">// Send write command with address and data</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  uint16_t payload = (address &lt;&lt; 0x08) | 0x8000;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  spi.<a class="code hl_variable" href="structSPI.html#a194e08b54d45d097bba08a024fb0826e">send</a>(&amp;spi, payload);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  <span class="comment">// Read in response from interface</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  spi.<a class="code hl_variable" href="structSPI.html#ac67e3827d337ab14c922753d83ecee5e">receive</a>(&amp;spi, &amp;response);</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  <span class="keywordflow">return</span> (uint8_t)response;</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>}</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment">/******************************** INTERFACE METHODS ********************************/</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="keywordtype">void</span> A3G4250D_writeRegister(<a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> *gyro, uint8_t address, uint8_t data) {</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  uint16_t response;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = gyro-&gt;base;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <span class="comment">// Send write command with address and data</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  uint16_t payload = (address &lt;&lt; 0x08) | data;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  spi.<a class="code hl_variable" href="structSPI.html#a194e08b54d45d097bba08a024fb0826e">send</a>(&amp;spi, payload);</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  <span class="comment">// Read in response from interface</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  spi.<a class="code hl_variable" href="structSPI.html#ac67e3827d337ab14c922753d83ecee5e">receive</a>(&amp;spi, &amp;response);</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>}</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>uint8_t A3G4250D_readRegister(<a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> *gyro, uint8_t address) {</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  uint16_t response;</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = gyro-&gt;base;</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  <span class="comment">// Send write command with address and data</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  uint16_t payload = (address &lt;&lt; 0x08) | 0x8000;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  spi.<a class="code hl_variable" href="structSPI.html#a194e08b54d45d097bba08a024fb0826e">send</a>(&amp;spi, payload);</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  <span class="comment">// Read in response from interface</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  spi.<a class="code hl_variable" href="structSPI.html#ac67e3827d337ab14c922753d83ecee5e">receive</a>(&amp;spi, &amp;response);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  <span class="keywordflow">return</span> (uint8_t)response;</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>}</div>
 <div class="ttc" id="aA3G4250D_8h_html"><div class="ttname"><a href="A3G4250D_8h.html">A3G4250D.h</a></div></div>
-<div class="ttc" id="agroup__A3G4250D_html_ga0b884ae90373ad5fa4565610707ea198"><div class="ttname"><a href="group__A3G4250D.html#ga0b884ae90373ad5fa4565610707ea198">A3G4250D_processRawBytes</a></div><div class="ttdeci">void A3G4250D_processRawBytes(A3G4250D *gyro, uint8_t *bytes, float *out)</div><div class="ttdoc">Process raw 3-axis data to floating point gyro rates.</div><div class="ttdef"><b>Definition</b> <a href="#l00055">A3G4250D.c:55</a></div></div>
-<div class="ttc" id="agroup__A3G4250D_html_ga312e2655fabf3e10b2f71c90d8e1634d"><div class="ttname"><a href="group__A3G4250D.html#ga312e2655fabf3e10b2f71c90d8e1634d">A3G4250D_readGyro</a></div><div class="ttdeci">void A3G4250D_readGyro(A3G4250D *gyro, float *out)</div><div class="ttdoc">Read 3-axis floating point gyro rates.</div><div class="ttdef"><b>Definition</b> <a href="#l00040">A3G4250D.c:40</a></div></div>
-<div class="ttc" id="agroup__A3G4250D_html_gabd9827bb607041567765c6a476461d18"><div class="ttname"><a href="group__A3G4250D.html#gabd9827bb607041567765c6a476461d18">A3G4250D_init</a></div><div class="ttdeci">void A3G4250D_init(A3G4250D *gyro, GPIO_TypeDef *port, unsigned long cs, float sensitivity, const uint8_t *axes)</div><div class="ttdoc">Initialiser for a A3G4250D gyroscope.</div><div class="ttdef"><b>Definition</b> <a href="#l00019">A3G4250D.c:19</a></div></div>
-<div class="ttc" id="agroup__A3G4250D_html_gadd64ac77b1a4f0414abc10dd0e8ab8ef"><div class="ttname"><a href="group__A3G4250D.html#gadd64ac77b1a4f0414abc10dd0e8ab8ef">A3G4250D_readRawBytes</a></div><div class="ttdeci">void A3G4250D_readRawBytes(A3G4250D *gyro, uint8_t *out)</div><div class="ttdoc">Read raw 3-axis data.</div><div class="ttdef"><b>Definition</b> <a href="#l00069">A3G4250D.c:69</a></div></div>
+<div class="ttc" id="agroup__A3G4250D_html_ga0b884ae90373ad5fa4565610707ea198"><div class="ttname"><a href="group__A3G4250D.html#ga0b884ae90373ad5fa4565610707ea198">A3G4250D_processRawBytes</a></div><div class="ttdeci">void A3G4250D_processRawBytes(A3G4250D *gyro, uint8_t *bytes, float *out)</div><div class="ttdoc">Process raw 3-axis data to floating point gyro rates.</div><div class="ttdef"><b>Definition</b> <a href="#l00069">A3G4250D.c:69</a></div></div>
+<div class="ttc" id="agroup__A3G4250D_html_ga312e2655fabf3e10b2f71c90d8e1634d"><div class="ttname"><a href="group__A3G4250D.html#ga312e2655fabf3e10b2f71c90d8e1634d">A3G4250D_readGyro</a></div><div class="ttdeci">void A3G4250D_readGyro(A3G4250D *gyro, float *out)</div><div class="ttdoc">Read 3-axis floating point gyro rates.</div><div class="ttdef"><b>Definition</b> <a href="#l00042">A3G4250D.c:42</a></div></div>
+<div class="ttc" id="agroup__A3G4250D_html_gabdb9d60c4d2622a0a5fdf0aefd227ab6"><div class="ttname"><a href="group__A3G4250D.html#gabdb9d60c4d2622a0a5fdf0aefd227ab6">A3G4250D_init</a></div><div class="ttdeci">void A3G4250D_init(A3G4250D *gyro, GPIO_TypeDef *port, unsigned long cs, float sensitivity, const uint8_t *axes, const int8_t *sign)</div><div class="ttdoc">Initialiser for a A3G4250D gyroscope.</div><div class="ttdef"><b>Definition</b> <a href="#l00019">A3G4250D.c:19</a></div></div>
+<div class="ttc" id="agroup__A3G4250D_html_gadd64ac77b1a4f0414abc10dd0e8ab8ef"><div class="ttname"><a href="group__A3G4250D.html#gadd64ac77b1a4f0414abc10dd0e8ab8ef">A3G4250D_readRawBytes</a></div><div class="ttdeci">void A3G4250D_readRawBytes(A3G4250D *gyro, uint8_t *out)</div><div class="ttdoc">Read raw 3-axis data.</div><div class="ttdef"><b>Definition</b> <a href="#l00083">A3G4250D.c:83</a></div></div>
+<div class="ttc" id="agroup__A3G4250D_html_gaf17ae448137172dc27cc44ff1bbedf56"><div class="ttname"><a href="group__A3G4250D.html#gaf17ae448137172dc27cc44ff1bbedf56">A3G4250D_update</a></div><div class="ttdeci">void A3G4250D_update(A3G4250D *gyro)</div><div class="ttdoc">Updates internally stored gyro readings.</div><div class="ttdef"><b>Definition</b> <a href="#l00055">A3G4250D.c:55</a></div></div>
 <div class="ttc" id="agroup__SPI_html_ga656f7b06a728e76eb9ac0b10e1bd5bb7"><div class="ttname"><a href="group__SPI.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7">SPI_init</a></div><div class="ttdeci">void SPI_init(SPI *, DeviceType, SPI_TypeDef *, GPIO_TypeDef *, unsigned long)</div><div class="ttdoc">Initialiser for an SPI device interface.</div><div class="ttdef"><b>Definition</b> <a href="spi_8c_source.html#l00014">spi.c:14</a></div></div>
 <div class="ttc" id="agroup__SPI_html_ggad258d4c51629346fceac4679b3209ad9a84b967fe10b7c1cfe2f779d99407703a"><div class="ttname"><a href="group__SPI.html#ggad258d4c51629346fceac4679b3209ad9a84b967fe10b7c1cfe2f779d99407703a">SENSOR_GYRO</a></div><div class="ttdeci">@ SENSOR_GYRO</div><div class="ttdoc">Gyroscope.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00026">spi.h:26</a></div></div>
-<div class="ttc" id="astructA3G4250D_html"><div class="ttname"><a href="structA3G4250D.html">A3G4250D</a></div><div class="ttdef"><b>Definition</b> <a href="A3G4250D_8h_source.html#l00037">A3G4250D.h:37</a></div></div>
+<div class="ttc" id="astructA3G4250D_html"><div class="ttname"><a href="structA3G4250D.html">A3G4250D</a></div><div class="ttdef"><b>Definition</b> <a href="A3G4250D_8h_source.html#l00038">A3G4250D.h:38</a></div></div>
 <div class="ttc" id="astructSPI_html"><div class="ttname"><a href="structSPI.html">SPI</a></div><div class="ttdoc">Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00036">spi.h:36</a></div></div>
 <div class="ttc" id="astructSPI_html_a194e08b54d45d097bba08a024fb0826e"><div class="ttname"><a href="structSPI.html#a194e08b54d45d097bba08a024fb0826e">SPI::send</a></div><div class="ttdeci">void(* send)(struct SPI *, uint16_t)</div><div class="ttdoc">SPI send method.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00041">spi.h:41</a></div></div>
 <div class="ttc" id="astructSPI_html_a82241972e0292c7de95ea1e293e11be3"><div class="ttname"><a href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">SPI::port</a></div><div class="ttdeci">GPIO_TypeDef * port</div><div class="ttdoc">Pointer to GPIO port struct.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00039">spi.h:39</a></div></div>

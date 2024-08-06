@@ -99,115 +99,116 @@ $(function(){initNavTree('KX134__1211_8c_source.html',''); initResizable(true); 
   <div class="headertitle"><div class="title">KX134_1211.c</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;<a class="code" href="KX134__1211_8h.html">KX134_1211.h</a>&quot;</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="foldopen" id="foldopen00014" data-start="{" data-end="}">
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="group__KX134-1211.html#gaab0e28a010d78d6e33ccbdb9f47b0096">   14</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__KX134-1211.html#gaab0e28a010d78d6e33ccbdb9f47b0096">KX134_1211_init</a>(<a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *accel, GPIO_TypeDef *port, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> cs, uint8_t scale, <span class="keyword">const</span> uint8_t *axes, <span class="keyword">const</span> int8_t *sign) {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>  <a class="code hl_function" href="group__SPI.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7">SPI_init</a>(&amp;accel-&gt;base, <a class="code hl_enumvalue" href="group__SPI.html#ggad258d4c51629346fceac4679b3209ad9aa56beb7f0e9c67c156ee802c9f640cc8">SENSOR_ACCEL</a>, SPI1, port, cs);</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  accel-&gt;update          = <a class="code hl_function" href="group__KX134-1211.html#gabc14bce3ead2179bab72ea3e5450257b">KX134_1211_update</a>;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  accel-&gt;readAccel       = <a class="code hl_function" href="group__KX134-1211.html#ga0871f31a356a20dde2bd73ba9385658c">KX134_1211_readAccel</a>;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  accel-&gt;readRawBytes    = <a class="code hl_function" href="group__KX134-1211.html#gaa3064f02e75aabcbcae62c16733bc623">KX134_1211_readRawBytes</a>;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  accel-&gt;processRawBytes = <a class="code hl_function" href="group__KX134-1211.html#ga9e1214c9a71e524c3c857c4275be344b">KX134_1211_processRawBytes</a>;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  memcpy(accel-&gt;axes, axes, KX134_1211_DATA_COUNT);</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  memcpy(accel-&gt;sign, sign, KX134_1211_DATA_COUNT);</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  <span class="comment">// Set value of GSEL and sensitivity based on selected scale</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  uint8_t GSEL = 0x00;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="keywordflow">if</span> (scale == 32) {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    GSEL               = KX134_1211_CNTL1_GSEL(32);</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    accel-&gt;sensitivity = KX134_1211_SENSITIVITY(32);</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (scale == 16) {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    GSEL               = KX134_1211_CNTL1_GSEL(16);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    accel-&gt;sensitivity = KX134_1211_SENSITIVITY(16);</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  }</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="comment">// Configure accelerometer registers</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  KX134_1211_writeRegister(accel, KX134_1211_CNTL1, KX134_1211_CNTL1_RES | GSEL);                        <span class="comment">// Accel select, selected sensitivity</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  uint8_t ODCNTL = KX134_1211_readRegister(accel, KX134_1211_ODCNTL);                                    <span class="comment">// Read from register for reserve mask</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  KX134_1211_writeRegister(accel, KX134_1211_ODCNTL, (KX134_1211_ODCNTL_RESERVED &amp; ODCNTL) | 0x2A);      <span class="comment">// No filter, fast startup, 800Hz</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  KX134_1211_writeRegister(accel, KX134_1211_CNTL1, KX134_1211_CNTL1_PC1 | KX134_1211_CNTL1_RES | GSEL); <span class="comment">// Enable PC1</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>}</div>
+<a href="KX134__1211_8c.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="KX134__1211_8h.html">KX134_1211.h</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="}">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="group__KX134-1211.html#gaab0e28a010d78d6e33ccbdb9f47b0096">   19</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__KX134-1211.html#gaab0e28a010d78d6e33ccbdb9f47b0096">KX134_1211_init</a>(<a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *accel, GPIO_TypeDef *port, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> cs, uint8_t scale, <span class="keyword">const</span> uint8_t *axes, <span class="keyword">const</span> int8_t *sign) {</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <a class="code hl_function" href="group__SPI.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7">SPI_init</a>(&amp;accel-&gt;base, <a class="code hl_enumvalue" href="group__SPI.html#ggad258d4c51629346fceac4679b3209ad9aa56beb7f0e9c67c156ee802c9f640cc8">SENSOR_ACCEL</a>, SPI1, port, cs);</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  accel-&gt;update          = <a class="code hl_function" href="group__KX134-1211.html#gabc14bce3ead2179bab72ea3e5450257b">KX134_1211_update</a>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  accel-&gt;readAccel       = <a class="code hl_function" href="group__KX134-1211.html#ga0871f31a356a20dde2bd73ba9385658c">KX134_1211_readAccel</a>;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  accel-&gt;readRawBytes    = <a class="code hl_function" href="group__KX134-1211.html#gaa3064f02e75aabcbcae62c16733bc623">KX134_1211_readRawBytes</a>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  accel-&gt;processRawBytes = <a class="code hl_function" href="group__KX134-1211.html#ga9e1214c9a71e524c3c857c4275be344b">KX134_1211_processRawBytes</a>;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  memcpy(accel-&gt;axes, axes, KX134_1211_DATA_COUNT);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  memcpy(accel-&gt;sign, sign, KX134_1211_DATA_COUNT);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="comment">// Set value of GSEL and sensitivity based on selected scale</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  uint8_t GSEL = 0x00;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keywordflow">if</span> (scale == 32) {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    GSEL               = KX134_1211_CNTL1_GSEL(32);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    accel-&gt;sensitivity = KX134_1211_SENSITIVITY(32);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (scale == 16) {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    GSEL               = KX134_1211_CNTL1_GSEL(16);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    accel-&gt;sensitivity = KX134_1211_SENSITIVITY(16);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  }</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="comment">// Configure accelerometer registers</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  KX134_1211_writeRegister(accel, KX134_1211_CNTL1, KX134_1211_CNTL1_RES | GSEL);                        <span class="comment">// Accel select, selected sensitivity</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  uint8_t ODCNTL = KX134_1211_readRegister(accel, KX134_1211_ODCNTL);                                    <span class="comment">// Read from register for reserve mask</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  KX134_1211_writeRegister(accel, KX134_1211_ODCNTL, (KX134_1211_ODCNTL_RESERVED &amp; ODCNTL) | 0x2A);      <span class="comment">// No filter, fast startup, 800Hz</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  KX134_1211_writeRegister(accel, KX134_1211_CNTL1, KX134_1211_CNTL1_PC1 | KX134_1211_CNTL1_RES | GSEL); <span class="comment">// Enable PC1</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>}</div>
 </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="comment">/********************************** DEVICE METHODS *********************************/</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="foldopen" id="foldopen00050" data-start="{" data-end="}">
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="group__KX134-1211.html#ga0871f31a356a20dde2bd73ba9385658c">   50</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__KX134-1211.html#ga0871f31a356a20dde2bd73ba9385658c">KX134_1211_readAccel</a>(<a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *accel, <span class="keywordtype">float</span> *out) {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  accel-&gt;update(accel);</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  out = accel-&gt;accelData;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>}</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="comment">/********************************** DEVICE METHODS *********************************/</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00055" data-start="{" data-end="}">
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="group__KX134-1211.html#ga0871f31a356a20dde2bd73ba9385658c">   55</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__KX134-1211.html#ga0871f31a356a20dde2bd73ba9385658c">KX134_1211_readAccel</a>(<a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *accel, <span class="keywordtype">float</span> *out) {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  accel-&gt;update(accel);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  out = accel-&gt;accelData;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}</div>
 </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="foldopen" id="foldopen00062" data-start="{" data-end="}">
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="group__KX134-1211.html#gabc14bce3ead2179bab72ea3e5450257b">   62</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__KX134-1211.html#gabc14bce3ead2179bab72ea3e5450257b">KX134_1211_update</a>(<a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *accel) {</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  accel-&gt;readRawBytes(accel, accel-&gt;rawAccelData);</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  accel-&gt;processRawBytes(accel, accel-&gt;rawAccelData, accel-&gt;accelData);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>}</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00067" data-start="{" data-end="}">
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="group__KX134-1211.html#gabc14bce3ead2179bab72ea3e5450257b">   67</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__KX134-1211.html#gabc14bce3ead2179bab72ea3e5450257b">KX134_1211_update</a>(<a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *accel) {</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  accel-&gt;readRawBytes(accel, accel-&gt;rawAccelData);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  accel-&gt;processRawBytes(accel, accel-&gt;rawAccelData, accel-&gt;accelData);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>}</div>
 </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="foldopen" id="foldopen00076" data-start="{" data-end="}">
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="group__KX134-1211.html#ga9e1214c9a71e524c3c857c4275be344b">   76</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__KX134-1211.html#ga9e1214c9a71e524c3c857c4275be344b">KX134_1211_processRawBytes</a>(<a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *accel, uint8_t *bytes, <span class="keywordtype">float</span> *out) {</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  out[0] = accel-&gt;sign[0] * accel-&gt;sensitivity * (int16_t)(((uint16_t)bytes[0] &lt;&lt; 8) | bytes[1]); <span class="comment">// Accel X</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  out[1] = accel-&gt;sign[1] * accel-&gt;sensitivity * (int16_t)(((uint16_t)bytes[2] &lt;&lt; 8) | bytes[3]); <span class="comment">// Accel Y</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  out[2] = accel-&gt;sign[2] * accel-&gt;sensitivity * (int16_t)(((uint16_t)bytes[4] &lt;&lt; 8) | bytes[5]); <span class="comment">// Accel Z</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>}</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00081" data-start="{" data-end="}">
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="group__KX134-1211.html#ga9e1214c9a71e524c3c857c4275be344b">   81</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__KX134-1211.html#ga9e1214c9a71e524c3c857c4275be344b">KX134_1211_processRawBytes</a>(<a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *accel, uint8_t *bytes, <span class="keywordtype">float</span> *out) {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  out[0] = accel-&gt;sign[0] * accel-&gt;sensitivity * (int16_t)(((uint16_t)bytes[0] &lt;&lt; 8) | bytes[1]); <span class="comment">// Accel X</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  out[1] = accel-&gt;sign[1] * accel-&gt;sensitivity * (int16_t)(((uint16_t)bytes[2] &lt;&lt; 8) | bytes[3]); <span class="comment">// Accel Y</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  out[2] = accel-&gt;sign[2] * accel-&gt;sensitivity * (int16_t)(((uint16_t)bytes[4] &lt;&lt; 8) | bytes[5]); <span class="comment">// Accel Z</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>}</div>
 </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="foldopen" id="foldopen00090" data-start="{" data-end="}">
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="group__KX134-1211.html#gaa3064f02e75aabcbcae62c16733bc623">   90</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__KX134-1211.html#gaa3064f02e75aabcbcae62c16733bc623">KX134_1211_readRawBytes</a>(<a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *accel, uint8_t *out) {</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="comment">// Map raw indices to mounting axis</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="preprocessor">#define INDEX_AXES(index, byte) 2 * accel-&gt;axes[index] + byte</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  out[INDEX_AXES(0, 0)] = KX134_1211_readRegister(accel, KX134_1211_XOUT_H); <span class="comment">// Accel X high</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  out[INDEX_AXES(0, 1)] = KX134_1211_readRegister(accel, KX134_1211_XOUT_L); <span class="comment">// Accel X low</span></div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  out[INDEX_AXES(1, 0)] = KX134_1211_readRegister(accel, KX134_1211_YOUT_H); <span class="comment">// Accel Y high</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  out[INDEX_AXES(1, 1)] = KX134_1211_readRegister(accel, KX134_1211_YOUT_L); <span class="comment">// Accel Y low</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  out[INDEX_AXES(2, 0)] = KX134_1211_readRegister(accel, KX134_1211_ZOUT_H); <span class="comment">// Accel Z high</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  out[INDEX_AXES(2, 1)] = KX134_1211_readRegister(accel, KX134_1211_ZOUT_L); <span class="comment">// Accel Z low</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="preprocessor">#undef INDEX_AXES</span></div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>}</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00095" data-start="{" data-end="}">
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="group__KX134-1211.html#gaa3064f02e75aabcbcae62c16733bc623">   95</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__KX134-1211.html#gaa3064f02e75aabcbcae62c16733bc623">KX134_1211_readRawBytes</a>(<a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *accel, uint8_t *out) {</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="comment">// Map raw indices to mounting axis</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="preprocessor">#define INDEX_AXES(index, byte) 2 * accel-&gt;axes[index] + byte</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  out[INDEX_AXES(0, 0)] = KX134_1211_readRegister(accel, KX134_1211_XOUT_H); <span class="comment">// Accel X high</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  out[INDEX_AXES(0, 1)] = KX134_1211_readRegister(accel, KX134_1211_XOUT_L); <span class="comment">// Accel X low</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  out[INDEX_AXES(1, 0)] = KX134_1211_readRegister(accel, KX134_1211_YOUT_H); <span class="comment">// Accel Y high</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  out[INDEX_AXES(1, 1)] = KX134_1211_readRegister(accel, KX134_1211_YOUT_L); <span class="comment">// Accel Y low</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  out[INDEX_AXES(2, 0)] = KX134_1211_readRegister(accel, KX134_1211_ZOUT_H); <span class="comment">// Accel Z high</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  out[INDEX_AXES(2, 1)] = KX134_1211_readRegister(accel, KX134_1211_ZOUT_L); <span class="comment">// Accel Z low</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="preprocessor">#undef INDEX_AXES</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>}</div>
 </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment">/******************************** INTERFACE METHODS ********************************/</span></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="keywordtype">void</span> KX134_1211_writeRegister(<a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *accel, uint8_t address, uint8_t data) {</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  uint16_t response;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = accel-&gt;base;</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="comment">// Send write command with address and data</span></div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  uint16_t payload = (address &lt;&lt; 0x08) | data; <span class="comment">// Load payload with address and data</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;                    <span class="comment">// Lower chip select</span></div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  spi.<a class="code hl_variable" href="structSPI.html#a194e08b54d45d097bba08a024fb0826e">send</a>(&amp;spi, payload);                     <span class="comment">// Send payload</span></div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="comment">/******************************** INTERFACE METHODS ********************************/</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="keywordtype">void</span> KX134_1211_writeRegister(<a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *accel, uint8_t address, uint8_t data) {</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  uint16_t response;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = accel-&gt;base;</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  <span class="comment">// Read in response from interface</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  spi.<a class="code hl_variable" href="structSPI.html#ac67e3827d337ab14c922753d83ecee5e">receive</a>(&amp;spi, &amp;response); <span class="comment">// Read in response from receive buffer</span></div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;      <span class="comment">// Raise chip select</span></div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>}</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  <span class="comment">// Send write command with address and data</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  uint16_t payload = (address &lt;&lt; 0x08) | data; <span class="comment">// Load payload with address and data</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;                    <span class="comment">// Lower chip select</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  spi.<a class="code hl_variable" href="structSPI.html#a194e08b54d45d097bba08a024fb0826e">send</a>(&amp;spi, payload);                     <span class="comment">// Send payload</span></div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>uint8_t KX134_1211_readRegister(<a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *accel, uint8_t address) {</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  uint16_t response;</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = accel-&gt;base;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  <span class="comment">// Send read command and address</span></div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  uint16_t payload = (address &lt;&lt; 0x08) | 0x8000; <span class="comment">// Load payload with address and read command</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;                      <span class="comment">// Lower chip select</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  spi.<a class="code hl_variable" href="structSPI.html#a194e08b54d45d097bba08a024fb0826e">send</a>(&amp;spi, payload);                       <span class="comment">// Send payload</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  <span class="comment">// Read in response from interface</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  spi.<a class="code hl_variable" href="structSPI.html#ac67e3827d337ab14c922753d83ecee5e">receive</a>(&amp;spi, &amp;response); <span class="comment">// Read in response from receive buffer</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;      <span class="comment">// Raise chip select</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>}</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>uint8_t KX134_1211_readRegister(<a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *accel, uint8_t address) {</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  uint16_t response;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = accel-&gt;base;</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  <span class="comment">// Read in response from interface</span></div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  spi.<a class="code hl_variable" href="structSPI.html#ac67e3827d337ab14c922753d83ecee5e">receive</a>(&amp;spi, &amp;response); <span class="comment">// Read in response from receive buffer</span></div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;      <span class="comment">// Raise chip select</span></div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  <span class="keywordflow">return</span> (uint8_t)response;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>}</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  <span class="comment">// Send read command and address</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  uint16_t payload = (address &lt;&lt; 0x08) | 0x8000; <span class="comment">// Load payload with address and read command</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;                      <span class="comment">// Lower chip select</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  spi.<a class="code hl_variable" href="structSPI.html#a194e08b54d45d097bba08a024fb0826e">send</a>(&amp;spi, payload);                       <span class="comment">// Send payload</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>  <span class="comment">// Read in response from interface</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  spi.<a class="code hl_variable" href="structSPI.html#ac67e3827d337ab14c922753d83ecee5e">receive</a>(&amp;spi, &amp;response); <span class="comment">// Read in response from receive buffer</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;      <span class="comment">// Raise chip select</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>  <span class="keywordflow">return</span> (uint8_t)response;</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>}</div>
 <div class="ttc" id="aKX134__1211_8h_html"><div class="ttname"><a href="KX134__1211_8h.html">KX134_1211.h</a></div></div>
-<div class="ttc" id="agroup__KX134-1211_html_ga0871f31a356a20dde2bd73ba9385658c"><div class="ttname"><a href="group__KX134-1211.html#ga0871f31a356a20dde2bd73ba9385658c">KX134_1211_readAccel</a></div><div class="ttdeci">void KX134_1211_readAccel(KX134_1211 *accel, float *out)</div><div class="ttdoc">Read 3-axis floating point accelerations.</div><div class="ttdef"><b>Definition</b> <a href="#l00050">KX134_1211.c:50</a></div></div>
-<div class="ttc" id="agroup__KX134-1211_html_ga9e1214c9a71e524c3c857c4275be344b"><div class="ttname"><a href="group__KX134-1211.html#ga9e1214c9a71e524c3c857c4275be344b">KX134_1211_processRawBytes</a></div><div class="ttdeci">void KX134_1211_processRawBytes(KX134_1211 *accel, uint8_t *bytes, float *out)</div><div class="ttdoc">Process raw 3-axis data to floating point accelerations.</div><div class="ttdef"><b>Definition</b> <a href="#l00076">KX134_1211.c:76</a></div></div>
-<div class="ttc" id="agroup__KX134-1211_html_gaa3064f02e75aabcbcae62c16733bc623"><div class="ttname"><a href="group__KX134-1211.html#gaa3064f02e75aabcbcae62c16733bc623">KX134_1211_readRawBytes</a></div><div class="ttdeci">void KX134_1211_readRawBytes(KX134_1211 *accel, uint8_t *out)</div><div class="ttdoc">Read raw 3-axis data.</div><div class="ttdef"><b>Definition</b> <a href="#l00090">KX134_1211.c:90</a></div></div>
-<div class="ttc" id="agroup__KX134-1211_html_gaab0e28a010d78d6e33ccbdb9f47b0096"><div class="ttname"><a href="group__KX134-1211.html#gaab0e28a010d78d6e33ccbdb9f47b0096">KX134_1211_init</a></div><div class="ttdeci">void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, uint8_t scale, const uint8_t *axes, const int8_t *sign)</div><div class="ttdoc">Initialiser for a KX134-1211 accelerometer.</div><div class="ttdef"><b>Definition</b> <a href="#l00014">KX134_1211.c:14</a></div></div>
-<div class="ttc" id="agroup__KX134-1211_html_gabc14bce3ead2179bab72ea3e5450257b"><div class="ttname"><a href="group__KX134-1211.html#gabc14bce3ead2179bab72ea3e5450257b">KX134_1211_update</a></div><div class="ttdeci">void KX134_1211_update(KX134_1211 *accel)</div><div class="ttdoc">Updates internally stored acceleration readings.</div><div class="ttdef"><b>Definition</b> <a href="#l00062">KX134_1211.c:62</a></div></div>
+<div class="ttc" id="agroup__KX134-1211_html_ga0871f31a356a20dde2bd73ba9385658c"><div class="ttname"><a href="group__KX134-1211.html#ga0871f31a356a20dde2bd73ba9385658c">KX134_1211_readAccel</a></div><div class="ttdeci">void KX134_1211_readAccel(KX134_1211 *accel, float *out)</div><div class="ttdoc">Read 3-axis floating point accelerations.</div><div class="ttdef"><b>Definition</b> <a href="#l00055">KX134_1211.c:55</a></div></div>
+<div class="ttc" id="agroup__KX134-1211_html_ga9e1214c9a71e524c3c857c4275be344b"><div class="ttname"><a href="group__KX134-1211.html#ga9e1214c9a71e524c3c857c4275be344b">KX134_1211_processRawBytes</a></div><div class="ttdeci">void KX134_1211_processRawBytes(KX134_1211 *accel, uint8_t *bytes, float *out)</div><div class="ttdoc">Process raw 3-axis data to floating point accelerations.</div><div class="ttdef"><b>Definition</b> <a href="#l00081">KX134_1211.c:81</a></div></div>
+<div class="ttc" id="agroup__KX134-1211_html_gaa3064f02e75aabcbcae62c16733bc623"><div class="ttname"><a href="group__KX134-1211.html#gaa3064f02e75aabcbcae62c16733bc623">KX134_1211_readRawBytes</a></div><div class="ttdeci">void KX134_1211_readRawBytes(KX134_1211 *accel, uint8_t *out)</div><div class="ttdoc">Read raw 3-axis data.</div><div class="ttdef"><b>Definition</b> <a href="#l00095">KX134_1211.c:95</a></div></div>
+<div class="ttc" id="agroup__KX134-1211_html_gaab0e28a010d78d6e33ccbdb9f47b0096"><div class="ttname"><a href="group__KX134-1211.html#gaab0e28a010d78d6e33ccbdb9f47b0096">KX134_1211_init</a></div><div class="ttdeci">void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, uint8_t scale, const uint8_t *axes, const int8_t *sign)</div><div class="ttdoc">Initialiser for a KX134-1211 accelerometer.</div><div class="ttdef"><b>Definition</b> <a href="#l00019">KX134_1211.c:19</a></div></div>
+<div class="ttc" id="agroup__KX134-1211_html_gabc14bce3ead2179bab72ea3e5450257b"><div class="ttname"><a href="group__KX134-1211.html#gabc14bce3ead2179bab72ea3e5450257b">KX134_1211_update</a></div><div class="ttdeci">void KX134_1211_update(KX134_1211 *accel)</div><div class="ttdoc">Updates internally stored acceleration readings.</div><div class="ttdef"><b>Definition</b> <a href="#l00067">KX134_1211.c:67</a></div></div>
 <div class="ttc" id="agroup__SPI_html_ga656f7b06a728e76eb9ac0b10e1bd5bb7"><div class="ttname"><a href="group__SPI.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7">SPI_init</a></div><div class="ttdeci">void SPI_init(SPI *, DeviceType, SPI_TypeDef *, GPIO_TypeDef *, unsigned long)</div><div class="ttdoc">Initialiser for an SPI device interface.</div><div class="ttdef"><b>Definition</b> <a href="spi_8c_source.html#l00014">spi.c:14</a></div></div>
 <div class="ttc" id="agroup__SPI_html_ggad258d4c51629346fceac4679b3209ad9aa56beb7f0e9c67c156ee802c9f640cc8"><div class="ttname"><a href="group__SPI.html#ggad258d4c51629346fceac4679b3209ad9aa56beb7f0e9c67c156ee802c9f640cc8">SENSOR_ACCEL</a></div><div class="ttdeci">@ SENSOR_ACCEL</div><div class="ttdoc">Accelerometer.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00025">spi.h:25</a></div></div>
 <div class="ttc" id="astructKX134__1211_html"><div class="ttname"><a href="structKX134__1211.html">KX134_1211</a></div><div class="ttdef"><b>Definition</b> <a href="KX134__1211_8h_source.html#l00046">KX134_1211.h:46</a></div></div>
@@ -221,7 +222,7 @@ $(function(){initNavTree('KX134__1211_8c_source.html',''); initResizable(true); 
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_792ef69f7340d1afb8e8d9f9961cfbb5.html">AuroraV-Avionics</a></li><li class="navelem"><a class="el" href="dir_e95d640f443eea16038f928d5971e8b8.html">Core</a></li><li class="navelem"><a class="el" href="dir_3c829084d0ed61b607ff5eab50f9eb46.html">Src</a></li><li class="navelem"><a class="el" href="dir_0424fefe9d160b607d3d0fccc7ed5ca1.html">SPI</a></li><li class="navelem"><a class="el" href="dir_10e83a849a6fab390609621cf6b5872a.html">sensors</a></li><li class="navelem"><a class="el" href="dir_b6c50471e1815464d4ac26cdd24ee868.html">accel</a></li><li class="navelem"><b>KX134_1211.c</b></li>
+    <li class="navelem"><a class="el" href="dir_792ef69f7340d1afb8e8d9f9961cfbb5.html">AuroraV-Avionics</a></li><li class="navelem"><a class="el" href="dir_e95d640f443eea16038f928d5971e8b8.html">Core</a></li><li class="navelem"><a class="el" href="dir_3c829084d0ed61b607ff5eab50f9eb46.html">Src</a></li><li class="navelem"><a class="el" href="dir_0424fefe9d160b607d3d0fccc7ed5ca1.html">SPI</a></li><li class="navelem"><a class="el" href="dir_10e83a849a6fab390609621cf6b5872a.html">sensors</a></li><li class="navelem"><a class="el" href="dir_b6c50471e1815464d4ac26cdd24ee868.html">accel</a></li><li class="navelem"><a class="el" href="KX134__1211_8c.html">KX134_1211.c</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
   </ul>
 </div>

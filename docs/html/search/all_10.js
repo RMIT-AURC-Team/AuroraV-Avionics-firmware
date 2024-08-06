@@ -7,7 +7,7 @@ var searchData=
   ['sensor_5fbaro_4',['SENSOR_BARO',['../group__SPI.html#ggad258d4c51629346fceac4679b3209ad9ad6e973b156c9713198fd43f7eae95f56',1,'spi.h']]],
   ['sensor_5fgyro_5',['SENSOR_GYRO',['../group__SPI.html#ggad258d4c51629346fceac4679b3209ad9a84b967fe10b7c1cfe2f779d99407703a',1,'spi.h']]],
   ['sensors_6',['Sensors',['../group__Sensors.html',1,'']]],
-  ['sign_7',['sign',['../structKX134__1211.html#abbe171ba2a436082a36e79a5a6dd827f',1,'KX134_1211']]],
+  ['sign_7',['sign',['../structKX134__1211.html#abbe171ba2a436082a36e79a5a6dd827f',1,'KX134_1211::sign'],['../structA3G4250D.html#a9137b29648431cf8a64a162582c0594a',1,'A3G4250D::sign']]],
   ['spi_8',['SPI',['../structSPI.html',1,'SPI'],['../group__SPI__API.html',1,'SPI']]],
   ['spi_5finit_9',['SPI_init',['../group__SPI.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7',1,'SPI_init(SPI *, DeviceType, SPI_TypeDef *, GPIO_TypeDef *, unsigned long):&#160;spi.c'],['../group__SPI.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7',1,'SPI_init(SPI *spi, DeviceType device, SPI_TypeDef *interface, GPIO_TypeDef *port, unsigned long cs):&#160;spi.c']]],
   ['spi_5freceive_10',['SPI_receive',['../group__SPI.html#ga4fbfc141ea14655d6e93aed8ac67aa67',1,'SPI_receive(SPI *, volatile uint16_t *):&#160;spi.c'],['../group__SPI.html#ga4fbfc141ea14655d6e93aed8ac67aa67',1,'SPI_receive(SPI *spi, volatile uint16_t *data):&#160;spi.c']]],

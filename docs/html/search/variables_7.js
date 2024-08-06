@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['rawacceldata_0',['rawAccelData',['../structKX134__1211.html#aaf3a5ea7b40d1adb100c867c71834891',1,'KX134_1211']]],
-  ['readaccel_1',['readAccel',['../structKX134__1211.html#adad3b941aa2429dc185df9f146c65855',1,'KX134_1211']]],
-  ['readgyro_2',['readGyro',['../structA3G4250D.html#aa3bf290ab0e2eb28414b726a6e0b9fe4',1,'A3G4250D']]],
-  ['readpage_3',['readPage',['../structFlash.html#abaafab0f2318e98caa5a9dac6daa8113',1,'Flash']]],
-  ['readrawbytes_4',['readRawBytes',['../structKX134__1211.html#a8ba468b59f15c029417609e4789b5579',1,'KX134_1211::readRawBytes'],['../structA3G4250D.html#a7d5c1b1d70094a6beb695a586ad0057f',1,'A3G4250D::readRawBytes']]],
-  ['receive_5',['receive',['../structSPI.html#ac67e3827d337ab14c922753d83ecee5e',1,'SPI::receive'],['../group__UART.html#aa840a20e8d2993f71105848364b08998',1,'UART::receive']]]
+  ['port_0',['port',['../structSPI.html#a82241972e0292c7de95ea1e293e11be3',1,'SPI']]],
+  ['processrawbytes_1',['processRawBytes',['../structKX134__1211.html#a7faa59e7e683aee9ea95fee44035dc76',1,'KX134_1211::processRawBytes'],['../structA3G4250D.html#adc07467e77b3bb604af33435a5af1bd1',1,'A3G4250D::processRawBytes']]]
 ];
