@@ -13,7 +13,7 @@ TaskHandle_t xStateUpdateHandle       = NULL;
 TaskHandle_t xLoRaTransmitHandle      = NULL;
 TaskHandle_t xUsbTransmitHandle       = NULL;
 
-EventGroupHandle_t xTaskEnableGroup; // 0: FLASH,  1: HIGHRES, 2: LOWRES, 7: IDLE
+EventGroupHandle_t xTaskEnableGroup; // 0: FLASH,  1: HIGHRES, 2: LOWRES, 3: LORA, 7: IDLE
 
 KX134_1211 lAccel_s;
 KX134_1211 hAccel_s;
@@ -52,6 +52,7 @@ float velocity          = 0;         // Current vertical velocity
 
 enum State currentState = PRELAUNCH; // Boot in prelaunch
 
+uint8_t interrupt = 0;
 
 int main(void) {
   // Bring up RCC
@@ -63,6 +64,8 @@ int main(void) {
   configure_SPI1_Sensor_Suite();
   configure_SPI3_LoRa();
   configure_SPI4_Flash();
+	
+	//configure_interrupts();
 
   // Initialise timers
   TIM6init();
@@ -83,7 +86,7 @@ int main(void) {
 //	while(1);
 
 	// Initialise LoRa interface and message buffers
-  LoRa_init(&lora, LORA_PORT, LORA_CS, BW250, SF9, CR5);
+  LoRa_init(&lora, LORA_PORT, LORA_CS, BW500, SF9, CR5);
   xLoRaTxBuff = xMessageBufferCreate(xLoRaBuffSize);
 
   // Initialise sensors
@@ -109,7 +112,7 @@ int main(void) {
   xTaskCreate(vDataAcquisitionH, "HDataAcq", 256, NULL, configMAX_PRIORITIES - 2, &xDataAqcquisitionHHandle);
   xTaskCreate(vDataAcquisitionL, "LDataAcq", 256, NULL, configMAX_PRIORITIES - 3, &xDataAqcquisitionLHandle);
   xTaskCreate(vStateUpdate, "StateUpdate", 256, NULL, configMAX_PRIORITIES - 4, &xStateUpdateHandle);
-  xTaskCreate(vFlashBuffer, "FlashData", 256, NULL, configMAX_PRIORITIES - 1, &xFlashBufferHandle);
+  //xTaskCreate(vFlashBuffer, "FlashData", 256, NULL, configMAX_PRIORITIES - 1, &xFlashBufferHandle);
   xTaskCreate(vLoRaTransmit, "LoRaTx", 256, NULL, configMAX_PRIORITIES - 5, &xLoRaTransmitHandle);
   // xTaskCreate(vUsbTransmit, "USB Rx", 256, NULL, configMAX_PRIORITIES - 6, &xUsbTransmitHandle);
 
@@ -205,9 +208,26 @@ void vStateUpdate(void *argument) {
       break;
     }
 		
-		if(currentState >= LAUNCH) {
-			LoRa_Packet packet = LoRa_AVD1(LORA_HEADER_AVD1, accel_s.rawAccelData, KX134_1211_DATA_TOTAL);
-			xMessageBufferSend(xLoRaTxBuff, (void *) &packet, sizeof(packet), 0);
+		if(currentState >= PRELAUNCH) {
+			
+			LoRa_Packet packet1 = LoRa_AVD1(
+				LORA_HEADER_AVD1, 
+				lAccel_s.rawAccelData, 
+				hAccel_s.rawAccelData, 
+				KX134_1211_DATA_TOTAL, 
+				velocity
+			);
+			
+			LoRa_Packet packet2 = LoRa_AVD2(
+				LORA_HEADER_AVD2, 
+				gyro_s.rawGyroData, 
+				A3G4250D_DATA_TOTAL,
+				baro_s.press
+			);
+			
+			LoRa_Packet msg[2] = {packet1, packet2};
+			lora.transmit(&lora, (uint8_t *) msg);
+		
 		}
 		
     ms += 2;
@@ -222,7 +242,7 @@ void vStateUpdate(void *argument) {
 // Use idle time to write flash
 void vApplicationIdleHook(void) {
   // Write if a page is available in the buffer
-  if (currentState >= LAUNCH && mem.pageReady)
+  if (currentState >= PRELAUNCH && mem.pageReady)
     xEventGroupSetBits(xTaskEnableGroup, 0x01);
 }
 
@@ -236,7 +256,6 @@ void vFlashBuffer(void *argument) {
       bool success = mem.readPage(&mem, outBuff); // Flush data to output buffer
       if (success) {
         // Write data to flash memory
-        // Flash_Page_Program(flashAddress, outBuff, sizeof(outBuff));
         flash.writePage(&flash, pageAddr, outBuff);
         pageAddr += 0x100;
       }
@@ -249,20 +268,23 @@ void vFlashBuffer(void *argument) {
  * ===================================================================== */
 
 void vLoRaTransmit(void *argument) {
-  const TickType_t timeout = pdMS_TO_TICKS(500);
+  const TickType_t timeout = pdMS_TO_TICKS(20);
   uint8_t rxData[16];
   size_t xReceivedBytes;
 
   for (;;) {
-    xReceivedBytes = xMessageBufferReceive(
-        xLoRaTxBuff,
-        (void *)rxData,
-        sizeof(rxData),
-        timeout
-    );
-
-    if (xReceivedBytes)
-      lora.transmit(&lora, rxData);
+			taskENTER_CRITICAL();
+		
+			xReceivedBytes = xMessageBufferReceive(
+					xLoRaTxBuff,
+					(void *)rxData,
+					sizeof(rxData),
+					timeout
+			);
+			if (xReceivedBytes)
+				lora.transmit(&lora, rxData);
+			
+			taskEXIT_CRITICAL();
   }
 }
 
@@ -396,9 +418,28 @@ void vDataAcquisitionL(void *argument) {
       z.pData[0] = altitude;
       z.pData[1] = (cosine * 9.81 * accel_s.accelData[ZINDEX] - 9.81); // Acceleration measured in m/s^2
       kf.update(&kf, &z);
+			velocity = kf.x.pData[1];
     }
   }
 }
+
+void configure_interrupts() {
+	__disable_irq();
+	NVIC_SetPriority(EXTI1_IRQn, 2);
+	NVIC_EnableIRQ(EXTI1_IRQn);
+	EXTI->RTSR |= 0X2;
+	EXTI->IMR |= 0x2;
+	SYSCFG->EXTICR[0] &= (~(0XF0));
+	SYSCFG->EXTICR[0] = 0x30;
+	__enable_irq();
+}
+
+//void EXTI1_IRQHandler(void) {
+//	interrupt++;
+//	EXTI->PR |= (0x02);
+//	__asm("NOP");
+//	__asm("NOP");
+//}
 
 // Unsure of actual fix for linker error
 // temporary (lol) solution

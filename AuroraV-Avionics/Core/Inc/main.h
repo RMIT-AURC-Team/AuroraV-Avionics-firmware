@@ -35,6 +35,7 @@ void vStateUpdate(void *pvParameters);
 void vLoRaTransmit(void *pvParameters);
 void vUsbTransmit(void *pvParameters);
 
+void configure_interrupts();
 void Error_Handler(void);
 
 #define LORA_HEADER_AVD1 0x04
@@ -78,8 +79,8 @@ void Error_Handler(void);
 
 #define ACCEL_PORT_2 GPIOB
 #define ACCEL_CS_2   GPIO_ODR_OD0
-#define ACCEL_AXES_2 ((const uint8_t[]){0, 1, 2})
-#define ACCEL_SIGN_2 ((const int8_t[]){1, 1, 1})
+#define ACCEL_AXES_2 ((const uint8_t[]){0, 2, 1})
+#define ACCEL_SIGN_2 ((const int8_t[]){1, -1, 1})
 
 #define GYRO_PORT GPIOA
 #define GYRO_CS   GPIO_ODR_OD2

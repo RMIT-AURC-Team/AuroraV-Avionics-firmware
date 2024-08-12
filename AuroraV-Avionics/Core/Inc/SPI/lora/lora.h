@@ -100,7 +100,8 @@ void LoRa_transmit(LoRa *, uint8_t *);
 void LoRa_writeRegister(LoRa *, uint8_t, uint8_t);
 uint8_t LoRa_readRegister(LoRa *, uint8_t);
 
-LoRa_Packet LoRa_AVD1(uint8_t, uint8_t *, uint8_t);
+LoRa_Packet LoRa_AVD1(uint8_t, uint8_t *, uint8_t *, uint8_t, float);
+LoRa_Packet LoRa_AVD2(uint8_t, uint8_t *, uint8_t, float);
 
 void _LoRa_setMode(LoRa *, Mode);
 

@@ -4,6 +4,7 @@
  * @defgroup LoRa
  * @todo Comb LoRa module datasheet and confirm operating procedure.
  * @todo Fix up LoRa code from Will.
+ * @todo Implement adjustable packet size
  * @{
  */
 
@@ -49,15 +50,16 @@ void LoRa_init(LoRa *lora, GPIO_TypeDef *port, unsigned long cs, Bandwidth bw, S
   LoRa_writeRegister(lora, LORA_REG_MODEM_CONFIG1, 
     bw   << LORA_REG_MODEM_CONFIG1_BW_Pos     // Set bandwidth
   | cr   << LORA_REG_MODEM_CONFIG1_CR_Pos     // Set coding rate
-  | 0x01 << LORA_REG_MODEM_CONFIG1_CRC_Pos    // Enable CRC
+  | 0x00 << LORA_REG_MODEM_CONFIG1_CRC_Pos    // Enable CRC
   );
   /* clang-format on */
 
+	/** @todo set spreading factor */	
   LoRa_writeRegister(lora, LORA_REG_MODEM_CONFIG2, 0x94);
 
   // Set payload length
-  LoRa_writeRegister(lora, LORA_REG_PAYLOAD_LENGTH, 0x10);
-  LoRa_writeRegister(lora, LORA_REG_MAX_PAYLOAD_LENGTH, 0x10);
+  LoRa_writeRegister(lora, LORA_REG_PAYLOAD_LENGTH, 0x20);
+  LoRa_writeRegister(lora, LORA_REG_MAX_PAYLOAD_LENGTH, 0x20);
 
   _LoRa_setMode(lora, STDBY); // Set mode to standby
 }
@@ -79,12 +81,10 @@ void _LoRa_setMode(LoRa *lora, Mode mode) {
  * @param id
  * @param *accelData
  * @param lenAccel
- * @param *gyroData
- * @param lenGyro
  * @return LoRa_Packet.
  **
  * =============================================================================== */
-LoRa_Packet LoRa_AVD1(uint8_t id, uint8_t *accelData, uint8_t lenAccel) {
+LoRa_Packet LoRa_AVD1(uint8_t id, uint8_t *lAccelData, uint8_t *hAccelData, uint8_t lenAccel, float velocity) {
   LoRa_Packet msg;
 
   // Return error if data extends beyond max payload
@@ -92,9 +92,52 @@ LoRa_Packet LoRa_AVD1(uint8_t id, uint8_t *accelData, uint8_t lenAccel) {
     msg.id = 0xFF;
     return msg;
   }
+	
+	// Convert pressure float to byte array
+	union {
+		float f;
+		uint8_t b[4];
+	} u;
+	u.f = velocity;
 
   msg.id = id;
-  memcpy(msg.data, accelData, lenAccel);
+  // Append to struct data array
+	memcpy(msg.data, lAccelData, lenAccel);
+	memcpy(&msg.data[lenAccel], hAccelData, lenAccel);
+	memcpy(&msg.data[lenAccel+4], u.b, sizeof(float));
+
+  return msg;
+}
+
+/* =============================================================================== */
+/**
+ * @brief
+ * @param id
+ * @param *gyroData
+ * @param lenGyro
+ * @return LoRa_Packet.
+ **
+ * =============================================================================== */
+LoRa_Packet LoRa_AVD2(uint8_t id, uint8_t *gyroData, uint8_t lenGyro, float pressure) {
+  LoRa_Packet msg;
+
+  // Return error if data extends beyond max payload
+  if ((lenGyro) > LORA_MSG_PAYLOAD_LENGTH) {
+    msg.id = 0xFF;
+    return msg;
+  }
+	
+	// Convert pressure float to byte array
+	union {
+		float f;
+		uint8_t b[4];
+	} u;
+	u.f = pressure;
+
+  msg.id = id;
+	// Append to struct data array
+  memcpy(msg.data, gyroData, lenGyro);
+  memcpy(&msg.data[lenGyro], u.b, sizeof(float));
 
   return msg;
 }
@@ -113,7 +156,7 @@ void LoRa_transmit(LoRa *lora, uint8_t *pointerdata) {
   LoRa_writeRegister(lora, LORA_REG_FIFO_ADDR_PTR, 0x80); // set pointer adddress to TX
 
   // Load data into transmit FIFO
-  for (int i = 0; i < 16; i++) {
+  for (int i = 0; i < 32; i++) {
     LoRa_writeRegister(lora, LORA_REG_FIFO, pointerdata[i]);
   }
 
