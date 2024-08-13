@@ -52,7 +52,7 @@
   #include <stdint.h>
   extern uint32_t SystemCoreClock;
 #endif
-#define configENABLE_FPU                         0
+#define configENABLE_FPU                         1
 #define configENABLE_MPU                         0
 
 #define configUSE_PREEMPTION                     1
@@ -71,6 +71,7 @@
 #define configQUEUE_REGISTRY_SIZE                8
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION  1
 #define configCHECK_FOR_STACK_OVERFLOW  				 0 
+#define configUSE_TRACE_FACILITY								 1
 
 
 /* USER CODE BEGIN MESSAGE_BUFFER_LENGTH_TYPE */
@@ -136,12 +137,31 @@ standard names. */
 
 #define xPortSysTickHandler SysTick_Handler
 
-/* USER CODE BEGIN Defines */
 /* Section where parameter definitions can be added (for instance, to override default ones in FreeRTOS.h) */
 #define traceISR_ENTER();
 #define traceISR_EXIT();
 #define traceISR_EXIT_TO_SCHEDULER();
-/* USER CODE END Defines */
+
+ /* Integrates the Tracealyzer recorder with FreeRTOS */
+ #if ( configUSE_TRACE_FACILITY == 1 )
+     #include "trcRecorder.h"
+ #endif
+
+ /* Note: Since FreeRTOSConfig.h is also included from some FreeRTOS assembly files,
+ depending on your IDE you may need to use a conditional include, like in the examples below.*/
+
+ /* IAR Embedded Workbench */
+ #ifndef __IASMARM__
+     #if ( configUSE_TRACE_FACILITY == 1 )
+             #include "trcRecorder.h"
+     #endif
+ #endif
+ /* Microchip MPLAB X IDE */
+ #ifndef __LANGUAGE_ASSEMBLY
+     #if ( configUSE_TRACE_FACILITY == 1 )
+             #include "trcRecorder.h"
+     #endif
+ #endif
 
 #endif /* FREERTOS_CONFIG_H */
 
