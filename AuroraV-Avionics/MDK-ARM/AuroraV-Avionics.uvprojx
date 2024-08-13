@@ -246,7 +246,7 @@
               <MiscControls>-mfloat-abi=hard -ffast-math -mfpu=fpv4-sp-d16</MiscControls>
               <Define>__TARGET_FPU_VFP</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core\Inc;..\Core\Inc\SPI;..\Core\Inc\SPI\flash;..\Core\Inc\SPI\lora;..\Core\Inc\SPI\sensors;..\Core\Inc\SPI\sensors\accel;..\Core\Inc\SPI\sensors\baro;..\Core\Inc\SPI\sensors\gyro;..\Lib\inc;..\Lib\inc\CORE;..\Lib\inc\CORE\Include;..\Lib\inc\DSP;..\Lib\inc\DSP\Include;..\Lib\inc\DSP\Include\dsp;..\Lib\inc\DSP\PrivateInclude;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc</IncludePath>
+              <IncludePath>..\Core\Inc;..\Core\Inc\SPI;..\Core\Inc\SPI\flash;..\Core\Inc\SPI\lora;..\Core\Inc\SPI\sensors;..\Core\Inc\SPI\sensors\accel;..\Core\Inc\SPI\sensors\baro;..\Core\Inc\SPI\sensors\gyro;..\Lib\inc;..\Lib\inc\CORE;..\Lib\inc\CORE\Include;..\Lib\inc\DSP;..\Lib\inc\DSP\Include;..\Lib\inc\DSP\Include\dsp;..\Lib\inc\DSP\PrivateInclude;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Middlewares\Third_Party\TraceRecorder\include;..\Middlewares\Third_Party\TraceRecorder\config</IncludePath>
             </VariousControls>
           </Carm>
           <Aarm>
@@ -290,19 +290,14 @@
           <GroupName>Source</GroupName>
           <Files>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/main.c</FilePath>
-            </File>
-            <File>
               <FileName>freertos.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/freertos.c</FilePath>
             </File>
             <File>
-              <FileName>state.c</FileName>
+              <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Src\state.c</FilePath>
+              <FilePath>../Core/Src/main.c</FilePath>
             </File>
             <File>
               <FileName>drivers.c</FileName>
@@ -315,14 +310,14 @@
               <FilePath>..\Core\Src\can.c</FilePath>
             </File>
             <File>
-              <FileName>lora.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\SPI\lora\lora.c</FilePath>
-            </File>
-            <File>
               <FileName>spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\SPI\spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>lora.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\SPI\lora\lora.c</FilePath>
             </File>
             <File>
               <FileName>flash.c</FileName>
@@ -330,14 +325,14 @@
               <FilePath>..\Core\Src\SPI\flash\flash.c</FilePath>
             </File>
             <File>
-              <FileName>libavionics.a</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\Lib\bin\libavionics.a</FilePath>
-            </File>
-            <File>
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>libavionics.a</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\Lib\bin\libavionics.a</FilePath>
             </File>
           </Files>
         </Group>
@@ -423,6 +418,156 @@
               <FileName>event_groups.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Middlewares\Third_Party\FreeRTOS\Source\event_groups.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/Tracealyzer</GroupName>
+          <Files>
+            <File>
+              <FileName>SEGGER_RTT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\SEGGER_RTT.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcAssert.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcAssert.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcCounter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcCounter.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcDependency.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcDependency.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcDiagnostics.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcDiagnostics.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcEntryTable.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcEntryTable.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcError.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcError.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcEvent.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcEvent.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcEventBuffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcEventBuffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcExtension.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcExtension.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcHardwarePort.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcHardwarePort.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcHeap.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcHeap.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcInternalEventBuffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcInternalEventBuffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcInterval.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcInterval.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcISR.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcISR.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcKernelPort.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcKernelPort.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcMultiCoreEventBuffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcMultiCoreEventBuffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcObject.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcObject.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcPrint.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcPrint.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcRunnable.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcRunnable.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcSnapshotRecorder.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcSnapshotRecorder.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcStackMonitor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcStackMonitor.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcStateMachine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcStateMachine.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcStaticBuffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcStaticBuffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcStreamingRecorder.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcStreamingRecorder.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcStreamPort.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcStreamPort.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcString.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcString.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcTask.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcTask.c</FilePath>
+            </File>
+            <File>
+              <FileName>trcTimestamp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Middlewares\Third_Party\TraceRecorder\trcTimestamp.c</FilePath>
             </File>
           </Files>
         </Group>

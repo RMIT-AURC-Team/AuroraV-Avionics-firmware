@@ -34,6 +34,7 @@ void vDataAcquisitionL(void *pvParameters);
 void vStateUpdate(void *pvParameters);
 void vLoRaTransmit(void *pvParameters);
 void vUsbTransmit(void *pvParameters);
+void vUsbReceive(void *pvParameters);
 
 void configure_interrupts();
 void Error_Handler(void);
@@ -47,12 +48,12 @@ void Error_Handler(void);
 #define HEADER_LENGTH_Pos       0x00
 #define HEADER_EVENT_SUB_ID_Pos 0x04
 
-#define HEADER_HIGHRES_ID     0x01
-#define HEADER_HIGHRES_LENGTH 0x14
-#define HEADER_HIGHRES        (HEADER_HIGHRES_ID << HEADER_ID_Pos) | HEADER_HIGHRES_LENGTH
-#define HEADER_LOWRES_ID      0x02
-#define HEADER_LOWRES_LENGTH  0x0A
-#define HEADER_LOWRES         (HEADER_LOWRES_ID << HEADER_ID_Pos) | HEADER_LOWRES_LENGTH
+#define HEADER_HIGHRES_ID       0x01
+#define HEADER_HIGHRES_LENGTH   0x14
+#define HEADER_HIGHRES          (HEADER_HIGHRES_ID << HEADER_ID_Pos) | HEADER_HIGHRES_LENGTH
+#define HEADER_LOWRES_ID        0x02
+#define HEADER_LOWRES_LENGTH    0x0A
+#define HEADER_LOWRES           (HEADER_LOWRES_ID << HEADER_ID_Pos) | HEADER_LOWRES_LENGTH
 
 #define HEADER_EVENT_ID         0x03
 #define HEADER_EVENT_LENGTH     0x02
@@ -61,43 +62,63 @@ void Error_Handler(void);
 #define HEADER_EVENT_APOGEE_ID  0x02
 #define HEADER_EVENT_DESCENT_ID 0x03
 
-#define HEADER_EVENT_LAUNCH  (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_LAUNCH_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
-#define HEADER_EVENT_COAST   (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_COAST_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
-#define HEADER_EVENT_APOGEE  (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_APOGEE_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
-#define HEADER_EVENT_DESCENT (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_DESCENT_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
+#define HEADER_EVENT_LAUNCH     (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_LAUNCH_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
+#define HEADER_EVENT_COAST      (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_COAST_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
+#define HEADER_EVENT_APOGEE     (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_APOGEE_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
+#define HEADER_EVENT_DESCENT    (HEADER_EVENT_ID << HEADER_ID_Pos | HEADER_EVENT_DESCENT_ID << HEADER_EVENT_SUB_ID_Pos | HEADER_EVENT_LENGTH)
 
 /* ===================================================================== *
  *                           DEVICE DEFINITIONS                          *
  * ===================================================================== */
 
-#define ACCEL_LAUNCH 1.5
+#define ACCEL_PORT_1  GPIOA
+#define ACCEL_CS_1    GPIO_ODR_OD1
+#define ACCEL_AXES_1  ((const uint8_t[]){0, 2, 1})
+#define ACCEL_SIGN_1  ((const int8_t[]){1, 1, -1})
 
-#define ACCEL_PORT_1 GPIOA
-#define ACCEL_CS_1   GPIO_ODR_OD1
-#define ACCEL_AXES_1 ((const uint8_t[]){0, 2, 1})
-#define ACCEL_SIGN_1 ((const int8_t[]){1, 1, -1})
+#define ACCEL_PORT_2  GPIOB
+#define ACCEL_CS_2    GPIO_ODR_OD0
+#define ACCEL_AXES_2  ((const uint8_t[]){0, 2, 1})
+#define ACCEL_SIGN_2  ((const int8_t[]){1, -1, 1})
 
-#define ACCEL_PORT_2 GPIOB
-#define ACCEL_CS_2   GPIO_ODR_OD0
-#define ACCEL_AXES_2 ((const uint8_t[]){0, 2, 1})
-#define ACCEL_SIGN_2 ((const int8_t[]){1, -1, 1})
+#define GYRO_PORT     GPIOA
+#define GYRO_CS       GPIO_ODR_OD2
+#define GYRO_AXES     ((const uint8_t[]){0, 2, 1})
+#define GYRO_SIGN     ((const int8_t[]){1, 1, 1})
 
-#define GYRO_PORT GPIOA
-#define GYRO_CS   GPIO_ODR_OD2
-#define GYRO_AXES ((const uint8_t[]){0, 2, 1})
-#define GYRO_SIGN ((const int8_t[]){1, 1, 1})
+#define BARO_PORT     GPIOA
+#define BARO_CS       GPIO_ODR_OD3
 
-#define BARO_PORT GPIOA
-#define BARO_CS   GPIO_ODR_OD3
-
-#define FLASH_PORT GPIOE
-#define FLASH_CS   GPIO_ODR_OD11
+#define FLASH_PORT    GPIOE
+#define FLASH_CS      GPIO_ODR_OD11
 
 #define USB_PORT      GPIOC
 #define USB_INTERFACE USART6
 #define USB_BAUD      230400
 
-#define LORA_PORT GPIOD
-#define LORA_CS   GPIO_ODR_OD0
+#define LORA_PORT     GPIOD
+#define LORA_CS       GPIO_ODR_OD0
+
+/* ===================================================================== *
+ *                         EVENT GROUP DEFINITIONS                       *
+ * ===================================================================== */
+
+#define GROUP_MESSAGE_READY_LORA  0x01
+#define GROUP_MESSAGE_READY_USB   0x02
+
+#define GROUP_TASK_ENABLE_FLASH   0x01
+#define GROUP_TASK_ENABLE_HIGHRES 0x02
+#define GROUP_TASK_ENABLE_LOWRES  0x04
+#define GROUP_TASK_ENABLE_LORA    0x08
+#define GROUP_TASK_ENABLE_IDLE    0x80
+
+/* ===================================================================== *
+ *                            MISC DEFINITIONS                           *
+ * ===================================================================== */
+
+#define ACCEL_LAUNCH         1.5f
+#define MAIN_ALTITUDE_METERS 396.0f
+
+#define CARRIAGE_RETURN      0x0D
 
 #endif

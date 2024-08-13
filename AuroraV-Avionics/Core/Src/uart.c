@@ -32,6 +32,15 @@ void UART_init(UART *uart, USART_TypeDef *interface, GPIO_TypeDef *port, uint32_
 
 /********************************** PRIVATE METHODS *********************************/
 
+#ifndef DOXYGEN_PRIVATE
+
+/* =============================================================================== */
+/**
+ * @brief 
+ * @param *UART			Pointer to UART struct.
+ * @return @c NULL.
+ **
+ * =============================================================================== */
 void _UART_setup(UART *uart) {
   GPIO_TypeDef *port       = uart->port;
   USART_TypeDef *interface = uart->interface;
@@ -52,8 +61,10 @@ void _UART_setup(UART *uart) {
   interface->CR1 &= ~0x400;     // disable parity
   interface->CR2 &= ~0xE00;     // disable synchrnous mode
   interface->CR3 &= ~0x300;     // disable flow control
-  interface->CR1 |= 0x200C;     // enable usart, enable receive and transmitt
+  interface->CR1 |= 0x202C;     // enable usart, enable receive and transmitt
 }
+
+#endif
 
 /********************************** INTERFACE METHODS ********************************/
 
