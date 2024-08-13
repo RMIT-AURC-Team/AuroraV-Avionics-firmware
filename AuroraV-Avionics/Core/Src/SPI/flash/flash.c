@@ -1,3 +1,10 @@
+/**
+ * @author Matt Ricci
+ * @file flash.c
+ * @addtogroup Flash
+ * @{
+ */
+
 #include "flash.h"
 
 /* SPI4 FLASH
@@ -29,10 +36,10 @@ void Flash_init(Flash *flash, GPIO_TypeDef *port, unsigned long cs) {
 
 /********************************* PRIVATE METHODS *********************************/
 
+#ifndef DOXYGEN_PRIVATE
+
 /* =============================================================================== */
 /**
- * @private
- * @memberof Flash
  * @brief Send Write Enable instruction to the flash device.
  * @param *flash			Pointer to Flash struct.
  * @return @c NULL.
@@ -48,8 +55,6 @@ void _Flash_writeEnable(Flash *flash) {
 
 /* =============================================================================== */
 /**
- * @private
- * @memberof Flash
  * @brief Read from Status Register 1.
  * @param *flash		Pointer to Flash struct.
  * @param *status 	Pointer to status output variable.
@@ -67,8 +72,6 @@ void _Flash_readStatus1(Flash *flash, uint8_t *status) {
 
 /* =============================================================================== */
 /**
- * @private
- * @memberof Flash
  * @brief Read from Status Register 2.
  * @param *flash		Pointer to Flash struct.
  * @param *status 	Pointer to status output variable.
@@ -86,8 +89,6 @@ void _Flash_readStatus2(Flash *flash, uint8_t *status) {
 
 /* =============================================================================== */
 /**
- * @private
- * @memberof Flash
  * @brief Read from Status Register 3.
  * @param *flash		Pointer to Flash struct.
  * @param *status 	Pointer to status output variable.
@@ -102,6 +103,8 @@ void _Flash_readStatus3(Flash *flash, uint8_t *status) {
   *status = spi.transmit(&spi, 0x0F);
   spi.port->ODR |= spi.cs;
 }
+
+#endif
 
 /********************************* DEVICE METHODS **********************************/
 
@@ -189,3 +192,5 @@ void Flash_readPage(Flash *flash, uint32_t address, volatile uint8_t *data) {
 	
   spi.port->ODR |= spi.cs;
 }
+
+/** @} */

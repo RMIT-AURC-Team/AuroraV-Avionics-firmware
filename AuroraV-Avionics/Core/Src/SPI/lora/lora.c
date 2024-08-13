@@ -1,7 +1,7 @@
 /**
  * @author Matt Ricci
  * @file lora.c
- * @defgroup LoRa
+ * @addtogroup LoRa
  * @todo Comb LoRa module datasheet and confirm operating procedure.
  * @todo Fix up LoRa code from Will.
  * @todo Implement adjustable packet size
@@ -66,12 +66,24 @@ void LoRa_init(LoRa *lora, GPIO_TypeDef *port, unsigned long cs, Bandwidth bw, S
 
 /********************************** PRIVATE METHODS ********************************/
 
+#ifndef DOXYGEN_PRIVATE
+
+/* =============================================================================== */
+/**
+ * @brief
+ * @param *LoRa			Pointer to LoRa struct.
+ * @param Mode
+ * @return @c NULL.
+ **
+ * =============================================================================== */
 void _LoRa_setMode(LoRa *lora, Mode mode) {
   uint8_t regOpMode = LoRa_readRegister(lora, LORA_REG_OP_MODE);
   regOpMode &= ~0x07; // Mask to mode bits
   regOpMode |= mode;  // Set mode
   LoRa_writeRegister(lora, LORA_REG_OP_MODE, regOpMode);
 }
+
+#endif
 
 /********************************** STATIC METHODS *********************************/
 

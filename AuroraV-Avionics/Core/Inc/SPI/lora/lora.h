@@ -85,8 +85,8 @@ typedef enum {
 } Mode;
 
 typedef struct {
-  uint8_t id;
-  uint8_t data[LORA_MSG_PAYLOAD_LENGTH];
+  uint8_t id;															//!< Packet header ID
+  uint8_t data[LORA_MSG_PAYLOAD_LENGTH];	//!< Packet payload
 } LoRa_Packet;
 
 /** @extends SPI */

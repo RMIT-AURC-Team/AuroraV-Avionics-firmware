@@ -33,7 +33,6 @@
 
 /**
  * @ingroup Barometer
- * @defgroup BMP581
  * @addtogroup BMP581
  * @{
  */

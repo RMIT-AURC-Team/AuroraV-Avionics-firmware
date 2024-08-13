@@ -1,7 +1,5 @@
-<!-- \mainpage --> 
 # Aurora V Avionics Firmware
 ![HIVE Aurora V banner](./img/banner.png)
-
 
 ## Table of Contents
 <!-- mtoc-start -->
