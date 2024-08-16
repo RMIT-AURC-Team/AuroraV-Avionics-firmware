@@ -26,13 +26,15 @@
 /** @extends SPI */
 typedef struct Flash {
   SPI base; 																											//!< Parent SPI interface
+	int pageSize;
+	long pageCount;
   void (*erase)(struct Flash *);																	//!< Chip erase method. @see Flash_erase
   void (*readPage)(struct Flash *, uint32_t, volatile uint8_t *);	//!< Read page method. 	@see Flash_readPage
   void (*writePage)(struct Flash *, uint32_t, uint8_t *); 				//!< Write page method. @see Flash_writePage
 } Flash;
 
 void configure_SPI4_Flash();
-void Flash_init(Flash *, GPIO_TypeDef *, unsigned long);
+void Flash_init(Flash *, GPIO_TypeDef *, unsigned long, int, long);
 void Flash_readPage(Flash *, uint32_t, volatile uint8_t *);
 void Flash_writePage(Flash *, uint32_t, uint8_t *);
 void Flash_erase(Flash *);

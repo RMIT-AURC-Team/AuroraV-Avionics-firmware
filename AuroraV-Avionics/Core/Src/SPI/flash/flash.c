@@ -27,9 +27,11 @@
  * @return @c NULL.
  **
  * =============================================================================== */
-void Flash_init(Flash *flash, GPIO_TypeDef *port, unsigned long cs) {
+void Flash_init(Flash *flash, GPIO_TypeDef *port, unsigned long cs, int pageSize, long pageCount) {
   SPI_init(&flash->base, MEMORY_FLASH, SPI4, port, cs);
-  flash->erase     = Flash_erase;
+  flash->pageSize  = pageSize;
+	flash->pageCount = pageCount;
+	flash->erase     = Flash_erase;
   flash->readPage  = Flash_readPage;
   flash->writePage = Flash_writePage;
 }
@@ -154,8 +156,8 @@ void Flash_writePage(Flash *flash, uint32_t address, uint8_t *data) {
   spi.transmit(&spi, (address & 0xFF));
 
   // Send page data
-  for (int x = 0; x < 255; x++) {
-    spi.transmit(&spi, data[x]);
+  for (int i = 0; i < 256; i++) {
+    spi.transmit(&spi, data[i]);
   }
 
   spi.port->ODR |= spi.cs;
