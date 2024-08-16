@@ -60,7 +60,7 @@ uint8_t CAN_TX(uint8_t CAN, uint8_t data_length, unsigned int dataH, unsigned in
     CAN1->sTxMailBox[mailbox].TIR = (address << 21); // enters in the CAN identifer
                                                      // CAN1->sTxMailBox[mailbox].TIR |= CAN_TIR;
     CAN1->sTxMailBox[mailbox].TIR |= (1 << 0);       // requested transmission
-    while (1)                                        /// add timer in here for timeout
+    while (1)                                        // add timer in here for timeout
     {
       if ((CAN1->TSR & (1 << (1))))
         return 0;                                    // successful
@@ -77,7 +77,7 @@ uint8_t CAN_TX(uint8_t CAN, uint8_t data_length, unsigned int dataH, unsigned in
     CAN2->sTxMailBox[mailbox].TDTR  = data_length;
     CAN2->sTxMailBox[mailbox].TIR   = address << 21;
     CAN2->sTxMailBox[mailbox].TIR  |= (1 << 0); // requested transmission
-    while (1)                                   /// add timer in here for timeout
+    while (1)                                   // add timer in here for timeout
     {
       if ((CAN2->TSR & (1 << (1))))
         return 0;                               // successful

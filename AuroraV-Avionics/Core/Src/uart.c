@@ -21,6 +21,7 @@
 void UART_init(UART *uart, USART_TypeDef *interface, GPIO_TypeDef *port, uint32_t baud, OversampleMode over8) {
   uart->send      = UART_send;
   uart->sendBytes = UART_sendBytes;
+	uart->print 		= UART_print;
   uart->receive   = UART_receive;
   uart->interface = interface;
   uart->port      = port;
@@ -78,6 +79,12 @@ void UART_send(UART *uart, uint8_t data) {
 void UART_sendBytes(UART *uart, uint8_t *data, int length) {
   for (int i = 0; i < length; i++)
     UART_send(uart, data[i]);
+}
+
+void UART_print(UART *uart, char *data) {
+	int i = 0;
+  while(data[i] != '\0')
+    UART_send(uart, data[i++]);
 }
 
 uint8_t UART_receive(UART *uart) {

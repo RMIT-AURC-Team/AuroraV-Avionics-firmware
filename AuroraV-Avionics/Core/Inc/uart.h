@@ -31,6 +31,7 @@ typedef struct UART {
   OversampleMode over8;
   void (*send)(struct UART *, uint8_t);             //!< UART send method.   	             @see UART_send
   void (*sendBytes)(struct UART *, uint8_t *, int); //!< UART send multiple bytes method.  @see UART_sendBytes
+  void (*print)(struct UART *, char * ); 						//!< UART print string method.  			 @see UART_print
   uint8_t (*receive)(struct UART *);                //!< UART receive method.              @see UART_receive
 } UART;
 
@@ -39,6 +40,7 @@ void _UART_setup(UART *);
 
 void UART_send(UART *, uint8_t data);
 void UART_sendBytes(UART *, uint8_t *data, int length);
+void UART_print(UART *, char *data);
 uint8_t UART_receive(UART *);
 
 /** @} */

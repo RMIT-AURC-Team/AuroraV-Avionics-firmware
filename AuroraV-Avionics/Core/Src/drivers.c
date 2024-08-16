@@ -60,7 +60,7 @@ void configure_SPI4_Flash(void) {
   SPI4->CR1 &= (~(SPI_CR1_LSBFIRST_Msk)); // MSB FIRST
   SPI4->CR1 &= ~(SPI_CR1_BIDIMODE | SPI_CR1_RXONLY);
   SPI4->CR1 &= (~(SPI_CR1_BR_Msk));
-  SPI4->CR1 |= ((0x01 << SPI_CR1_BR_Pos));
+  SPI4->CR1 |= ((0x00 << SPI_CR1_BR_Pos));
   SPI4->CR1 |= (0x1 << SPI_CR1_SPE_Pos);
 }
 

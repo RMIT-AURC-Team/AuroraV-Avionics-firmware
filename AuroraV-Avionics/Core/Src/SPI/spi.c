@@ -33,7 +33,7 @@ uint16_t SPI_transmit(SPI *spi, uint16_t data) {
   volatile uint16_t response;
   SPI_send(spi, data);
   SPI_receive(spi, &response);
-  while ((spi->interface->SR & SPI_SR_BSY) == SPI_SR_BSY);
+  while (spi->interface->SR & SPI_SR_BSY);
   return response;
 }
 
@@ -46,7 +46,7 @@ uint16_t SPI_transmit(SPI *spi, uint16_t data) {
  **
  * =============================================================================== */
 void SPI_send(SPI *spi, uint16_t data) {
-  while ((spi->interface->SR & SPI_SR_TXE) == 0);
+  while (!(spi->interface->SR & SPI_SR_TXE));
   spi->interface->DR = data;
 }
 
@@ -59,6 +59,6 @@ void SPI_send(SPI *spi, uint16_t data) {
  **
  * =============================================================================== */
 void SPI_receive(SPI *spi, volatile uint16_t *data) {
-  while ((spi->interface->SR & (SPI_SR_RXNE)) == 0);
+  while (!(spi->interface->SR & SPI_SR_RXNE));
   *data = spi->interface->DR;
 }
