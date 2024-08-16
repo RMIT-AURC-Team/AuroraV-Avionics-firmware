@@ -277,19 +277,23 @@ void vFlashBuffer(void *argument) {
  * ===================================================================== */
 
 void vLoRaTransmit(void *argument) {
-  const TickType_t timeout = pdMS_TO_TICKS(20);
+  const TickType_t blockTime = pdMS_TO_TICKS(250);
   uint8_t rxData[16];
-  size_t xReceivedBytes;
 
   for (;;) {
-    xReceivedBytes = xMessageBufferReceive(
-        xLoRaTxBuff,
-        (void *)rxData,
-        sizeof(rxData),
-        timeout
-    );
-    if (xReceivedBytes)
-      lora.transmit(&lora, rxData);
+		EventBits_t uxBits = xEventGroupWaitBits(xMsgReadyGroup, GROUP_MESSAGE_READY_LORA, pdTRUE, pdFALSE, blockTime);
+    
+		if ((uxBits & GROUP_MESSAGE_READY_LORA)) {		
+			size_t xReceivedBytes = xMessageBufferReceive(
+				xLoRaTxBuff,
+				(void *)rxData,
+				sizeof(rxData),
+				blockTime
+			);		
+				
+			if (xReceivedBytes)
+				lora.transmit(&lora, rxData);				
+		}
   }
 }
 
@@ -301,26 +305,22 @@ void vLoRaSample(void *argument) {
 	uint8_t counter = 0;
 	
 	for(;;) {
-		// Block until 200ms interval
+		// Block until 250ms interval
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
+	
+		LoRa_Packet packet1 = LoRa_AVD1(
+			LORA_HEADER_AVD1, 
+			&counter, 0x00, 1, 0.0f
+		);
+		xMessageBufferSend(xLoRaTxBuff, &packet1, sizeof(packet1), blockTime);
+		counter++;
 		
-		EventBits_t uxBits = xEventGroupWaitBits(xMsgReadyGroup, GROUP_MESSAGE_READY_LORA, pdTRUE, pdFALSE, blockTime);
-    if (uxBits & GROUP_MESSAGE_READY_LORA) {
-			LoRa_Packet packet1 = LoRa_AVD1(
-				LORA_HEADER_AVD1, 
-				&counter, 0x00, 1, 0.0f
-			);
-			xMessageBufferSend(xLoRaTxBuff, &packet1, sizeof(packet1), blockTime);
-			counter++;
-			
-			LoRa_Packet packet2 = LoRa_AVD2(
-				LORA_HEADER_AVD2, 
-				&counter, 1, 0.0f
-			);
-			xMessageBufferSend(xLoRaTxBuff, &packet2, sizeof(packet2), blockTime);
-			counter++;	
-		}
-		
+		LoRa_Packet packet2 = LoRa_AVD2(
+			LORA_HEADER_AVD2, 
+			&counter, 1, 0.0f
+		);
+		xMessageBufferSend(xLoRaTxBuff, &packet2, sizeof(packet2), blockTime);
+		counter++;			
 	}
 }
 
