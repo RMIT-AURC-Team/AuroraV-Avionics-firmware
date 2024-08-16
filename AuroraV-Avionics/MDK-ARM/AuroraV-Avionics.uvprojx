@@ -148,7 +148,7 @@
         </Utilities>
         <TargetArm>
           <ArmMisc>
-            <asLst>0</asLst>
+            <asLst>1</asLst>
             <asHll>1</asHll>
             <asAsm>1</asAsm>
             <asMacX>1</asMacX>
@@ -156,7 +156,7 @@
             <asFals>1</asFals>
             <asDbgD>1</asDbgD>
             <asForm>1</asForm>
-            <ldLst>0</ldLst>
+            <ldLst>1</ldLst>
             <ldmm>1</ldmm>
             <ldXref>1</ldXref>
             <BigEnd>0</BigEnd>
@@ -244,9 +244,9 @@
             <uThumb>1</uThumb>
             <VariousControls>
               <MiscControls>-mfloat-abi=hard -ffast-math -mfpu=fpv4-sp-d16</MiscControls>
-              <Define>__TARGET_FPU_VFP</Define>
+              <Define>__TARGET_FPU_VFP, DUMMY, TRACE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core\Inc;..\Core\Inc\SPI;..\Core\Inc\SPI\flash;..\Core\Inc\SPI\lora;..\Core\Inc\SPI\sensors;..\Core\Inc\SPI\sensors\accel;..\Core\Inc\SPI\sensors\baro;..\Core\Inc\SPI\sensors\gyro;..\Lib\inc;..\Lib\inc\CORE;..\Lib\inc\CORE\Include;..\Lib\inc\DSP;..\Lib\inc\DSP\Include;..\Lib\inc\DSP\Include\dsp;..\Lib\inc\DSP\PrivateInclude;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Middlewares\Third_Party\TraceRecorder\include;..\Middlewares\Third_Party\TraceRecorder\config</IncludePath>
+              <IncludePath>..\Core\Inc;..\Core\Inc\SPI;..\Core\Inc\SPI\flash;..\Core\Inc\SPI\lora;..\Core\Inc\SPI\sensors;..\Core\Inc\SPI\sensors\accel;..\Core\Inc\SPI\sensors\baro;..\Core\Inc\SPI\sensors\gyro;..\Lib\inc;..\Lib\inc\CORE;..\Lib\inc\CORE\Include;..\Lib\inc\DSP;..\Lib\inc\DSP\Include;..\Lib\inc\DSP\Include\dsp;..\Lib\inc\DSP\PrivateInclude;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Middlewares\Third_Party\TraceRecorder\include;..\Middlewares\Third_Party\TraceRecorder\config;..\Data</IncludePath>
             </VariousControls>
           </Carm>
           <Aarm>
@@ -254,7 +254,7 @@
             <interw>1</interw>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>TRACE</Define>
               <Undefine></Undefine>
               <IncludePath>..\Core\Inc</IncludePath>
             </VariousControls>
@@ -328,6 +328,11 @@
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\control.c</FilePath>
             </File>
             <File>
               <FileName>libavionics.a</FileName>
@@ -423,6 +428,53 @@
         </Group>
         <Group>
           <GroupName>Middlewares/Tracealyzer</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>1</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArm>
+              <Carm>
+                <arpcs>2</arpcs>
+                <stkchk>2</stkchk>
+                <reentr>2</reentr>
+                <interw>2</interw>
+                <bigend>2</bigend>
+                <Strict>0</Strict>
+                <Optim>0</Optim>
+                <wLevel>0</wLevel>
+                <uThumb>1</uThumb>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Carm>
+              <Aarm>
+                <bBE>2</bBE>
+                <interw>2</interw>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aarm>
+            </GroupArm>
+          </GroupOption>
           <Files>
             <File>
               <FileName>SEGGER_RTT.c</FileName>
@@ -580,9 +632,19 @@
               <FilePath>..\Data\accelX.c</FilePath>
             </File>
             <File>
-              <FileName>baro.c</FileName>
+              <FileName>accelY.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Data\baro.c</FilePath>
+              <FilePath>..\Data\accelY.c</FilePath>
+            </File>
+            <File>
+              <FileName>accelZ.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Data\accelZ.c</FilePath>
+            </File>
+            <File>
+              <FileName>press.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Data\press.c</FilePath>
             </File>
             <File>
               <FileName>gyroX.c</FileName>

@@ -7,5 +7,6 @@
 *.htm
 *bak
 *orig
+*.lst
 *~
 documentation/docs/html
