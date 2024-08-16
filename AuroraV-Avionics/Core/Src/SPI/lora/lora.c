@@ -2,8 +2,6 @@
  * @author Matt Ricci
  * @file lora.c
  * @addtogroup LoRa
- * @todo Comb LoRa module datasheet and confirm operating procedure.
- * @todo Fix up LoRa code from Will.
  * @todo Implement adjustable packet size
  * @{
  */
@@ -183,7 +181,7 @@ void LoRa_transmit(LoRa *lora, uint8_t *pointerdata) {
 	 * @attention Implementing interrupt on TxComplete signal should solve this since the handler should only
 	 * run over a few clock cycles.
 	 */
-	// while (!(GPIOD->IDR & 0x2));
+	//while (!(GPIOD->IDR & 0x2));
   LoRa_writeRegister(lora, LORA_REG_IRQ_FLAGS, 0x08); // clears the status flags
 }
 
