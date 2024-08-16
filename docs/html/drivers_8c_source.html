@@ -161,7 +161,7 @@ $(function(){initNavTree('drivers_8c_source.html',''); initResizable(true); });
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  SPI4-&gt;CR1 &amp;= (~(SPI_CR1_LSBFIRST_Msk)); <span class="comment">// MSB FIRST</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  SPI4-&gt;CR1 &amp;= ~(SPI_CR1_BIDIMODE | SPI_CR1_RXONLY);</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  SPI4-&gt;CR1 &amp;= (~(SPI_CR1_BR_Msk));</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  SPI4-&gt;CR1 |= ((0x01 &lt;&lt; SPI_CR1_BR_Pos));</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  SPI4-&gt;CR1 |= ((0x00 &lt;&lt; SPI_CR1_BR_Pos));</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  SPI4-&gt;CR1 |= (0x1 &lt;&lt; SPI_CR1_SPE_Pos);</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>}</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>

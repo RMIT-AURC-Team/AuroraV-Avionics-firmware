@@ -1,16 +1,16 @@
 var searchData=
 [
-  ['barometer_0',['Barometer',['../group__Barometer.html',1,'']]],
-  ['base_1',['base',['../structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7',1,'Flash::base'],['../structLoRa.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7',1,'LoRa::base'],['../structKX134__1211.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7',1,'KX134_1211::base'],['../structA3G4250D.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7',1,'A3G4250D::base']]],
-  ['bmp581_2',['BMP581',['../structBMP581.html',1,'BMP581'],['../group__BMP581.html',1,'BMP581']]],
-  ['bmp581_2ec_3',['BMP581.c',['../BMP581_8c.html',1,'']]],
-  ['bmp581_2eh_4',['BMP581.h',['../BMP581_8h.html',1,'']]],
-  ['bmp581_5finit_5',['BMP581_init',['../group__BMP581.html#gaf0ef88ff81506d372b4e1d514da63f0a',1,'BMP581_init(BMP581 *, GPIO_TypeDef *, unsigned long, const float, const float):&#160;BMP581.c'],['../group__BMP581.html#gaf0ef88ff81506d372b4e1d514da63f0a',1,'BMP581_init(BMP581 *baro, GPIO_TypeDef *port, unsigned long cs, float tempSensitivity, float pressSensitivity):&#160;BMP581.c']]],
-  ['bmp581_5fprocessrawpress_6',['BMP581_processRawPress',['../group__BMP581.html#ga79cd0b07111850e9da010a032a9f0c67',1,'BMP581_processRawPress(BMP581 *, uint8_t *, float *):&#160;BMP581.c'],['../group__BMP581.html#ga79cd0b07111850e9da010a032a9f0c67',1,'BMP581_processRawPress(BMP581 *baro, uint8_t *bytes, float *out):&#160;BMP581.c']]],
-  ['bmp581_5fprocessrawtemp_7',['BMP581_processRawTemp',['../group__BMP581.html#ga30620996a5c54f9347152c6c1a9ffe3f',1,'BMP581_processRawTemp(BMP581 *, uint8_t *, float *):&#160;BMP581.c'],['../group__BMP581.html#ga30620996a5c54f9347152c6c1a9ffe3f',1,'BMP581_processRawTemp(BMP581 *baro, uint8_t *bytes, float *out):&#160;BMP581.c']]],
-  ['bmp581_5freadpress_8',['BMP581_readPress',['../group__BMP581.html#gad4cdc3fdf15ff84bf27f0fbd44a864cb',1,'BMP581_readPress(BMP581 *, float *):&#160;BMP581.c'],['../group__BMP581.html#gad4cdc3fdf15ff84bf27f0fbd44a864cb',1,'BMP581_readPress(BMP581 *baro, float *out):&#160;BMP581.c']]],
-  ['bmp581_5freadrawpress_9',['BMP581_readRawPress',['../group__BMP581.html#ga079e56e39011d47394cd00238096b832',1,'BMP581_readRawPress(BMP581 *, uint8_t *):&#160;BMP581.c'],['../group__BMP581.html#ga079e56e39011d47394cd00238096b832',1,'BMP581_readRawPress(BMP581 *baro, uint8_t *out):&#160;BMP581.c']]],
-  ['bmp581_5freadrawtemp_10',['BMP581_readRawTemp',['../group__BMP581.html#ga5c2001e8ffdfedb9ba2114e3200a0163',1,'BMP581_readRawTemp(BMP581 *, uint8_t *):&#160;BMP581.c'],['../group__BMP581.html#ga5c2001e8ffdfedb9ba2114e3200a0163',1,'BMP581_readRawTemp(BMP581 *baro, uint8_t *out):&#160;BMP581.c']]],
-  ['bmp581_5freadtemp_11',['BMP581_readTemp',['../group__BMP581.html#ga13a6eced2f99e5f6b059c16eb3fdaf34',1,'BMP581_readTemp(BMP581 *, float *):&#160;BMP581.c'],['../group__BMP581.html#ga13a6eced2f99e5f6b059c16eb3fdaf34',1,'BMP581_readTemp(BMP581 *baro, float *out):&#160;BMP581.c']]],
-  ['bmp581_5fupdate_12',['BMP581_update',['../group__BMP581.html#ga938d6c33bc75406aa2b8a18d7e722473',1,'BMP581_update(BMP581 *):&#160;BMP581.c'],['../group__BMP581.html#ga938d6c33bc75406aa2b8a18d7e722473',1,'BMP581_update(BMP581 *baro):&#160;BMP581.c']]]
+  ['a3g4250d_0',['A3G4250D',['../structA3G4250D.html',1,'A3G4250D'],['../group__A3G4250D.html',1,'A3G4250D']]],
+  ['a3g4250d_2ec_1',['A3G4250D.c',['../A3G4250D_8c.html',1,'']]],
+  ['a3g4250d_2eh_2',['A3G4250D.h',['../A3G4250D_8h.html',1,'']]],
+  ['a3g4250d_5finit_3',['A3G4250D_init',['../group__A3G4250D.html#gabdb9d60c4d2622a0a5fdf0aefd227ab6',1,'A3G4250D_init(A3G4250D *, GPIO_TypeDef *, unsigned long, const float, const uint8_t *, const int8_t *):&#160;A3G4250D.c'],['../group__A3G4250D.html#gabdb9d60c4d2622a0a5fdf0aefd227ab6',1,'A3G4250D_init(A3G4250D *gyro, GPIO_TypeDef *port, unsigned long cs, float sensitivity, const uint8_t *axes, const int8_t *sign):&#160;A3G4250D.c']]],
+  ['a3g4250d_5fprocessrawbytes_4',['A3G4250D_processRawBytes',['../group__A3G4250D.html#ga0b884ae90373ad5fa4565610707ea198',1,'A3G4250D_processRawBytes(A3G4250D *, uint8_t *, float *):&#160;A3G4250D.c'],['../group__A3G4250D.html#ga0b884ae90373ad5fa4565610707ea198',1,'A3G4250D_processRawBytes(A3G4250D *gyro, uint8_t *bytes, float *out):&#160;A3G4250D.c']]],
+  ['a3g4250d_5freadgyro_5',['A3G4250D_readGyro',['../group__A3G4250D.html#ga312e2655fabf3e10b2f71c90d8e1634d',1,'A3G4250D_readGyro(A3G4250D *, float *):&#160;A3G4250D.c'],['../group__A3G4250D.html#ga312e2655fabf3e10b2f71c90d8e1634d',1,'A3G4250D_readGyro(A3G4250D *gyro, float *out):&#160;A3G4250D.c']]],
+  ['a3g4250d_5freadrawbytes_6',['A3G4250D_readRawBytes',['../group__A3G4250D.html#gadd64ac77b1a4f0414abc10dd0e8ab8ef',1,'A3G4250D_readRawBytes(A3G4250D *, uint8_t *):&#160;A3G4250D.c'],['../group__A3G4250D.html#gadd64ac77b1a4f0414abc10dd0e8ab8ef',1,'A3G4250D_readRawBytes(A3G4250D *gyro, uint8_t *out):&#160;A3G4250D.c']]],
+  ['a3g4250d_5fupdate_7',['A3G4250D_update',['../group__A3G4250D.html#gaf17ae448137172dc27cc44ff1bbedf56',1,'A3G4250D_update(A3G4250D *):&#160;A3G4250D.c'],['../group__A3G4250D.html#gaf17ae448137172dc27cc44ff1bbedf56',1,'A3G4250D_update(A3G4250D *gyro):&#160;A3G4250D.c']]],
+  ['acceldata_8',['accelData',['../structKX134__1211.html#a94a8f289851f3977d5fcb13ed2978e9f',1,'KX134_1211']]],
+  ['accelerometer_9',['Accelerometer',['../group__Accelerometer.html',1,'']]],
+  ['aurora_20v_20avionics_20firmware_10',['Aurora V Avionics Firmware',['../index.html',1,'']]],
+  ['avionics_20firmware_11',['Aurora V Avionics Firmware',['../index.html',1,'']]],
+  ['axes_12',['axes',['../structKX134__1211.html#a16ca4e4dac4a37edf3a3a5e841b12229',1,'KX134_1211::axes'],['../structA3G4250D.html#a99daca74f4873d6aff1b8f5b44e82c2b',1,'A3G4250D::axes']]]
 ];

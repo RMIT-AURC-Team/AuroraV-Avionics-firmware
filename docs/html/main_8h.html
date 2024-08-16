@@ -106,11 +106,11 @@ $(function(){initNavTree('main_8h.html',''); initResizable(true); });
 <code>#include &quot;message_buffer.h&quot;</code><br />
 <code>#include &quot;stdint.h&quot;</code><br />
 <code>#include &quot;stm32f4xx.h&quot;</code><br />
-<code>#include &quot;task.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="A3G4250D_8h_source.html">A3G4250D.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="BMP581_8h_source.html">BMP581.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="KX134__1211_8h_source.html">KX134_1211.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="can_8h_source.html">can.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="control_8h_source.html">control.h</a>&quot;</code><br />
 <code>#include &quot;drivers.h&quot;</code><br />
 <code>#include &quot;flash.h&quot;</code><br />
 <code>#include &quot;lora.h&quot;</code><br />
@@ -120,36 +120,48 @@ $(function(){initNavTree('main_8h.html',''); initResizable(true); });
 <code>#include &quot;kalmanfilter.h&quot;</code><br />
 <code>#include &quot;membuff.h&quot;</code><br />
 <code>#include &quot;quaternion.h&quot;</code><br />
+<code>#include &quot;slidingwindow.h&quot;</code><br />
+<code>#include &quot;accelX.h&quot;</code><br />
+<code>#include &quot;accelY.h&quot;</code><br />
+<code>#include &quot;accelZ.h&quot;</code><br />
+<code>#include &quot;gyroX.h&quot;</code><br />
+<code>#include &quot;gyroY.h&quot;</code><br />
+<code>#include &quot;gyroZ.h&quot;</code><br />
+<code>#include &quot;press.h&quot;</code><br />
 </div>
 <p><a href="main_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a5aa3747f571a0bfb473eed21380a3c3e" id="r_a5aa3747f571a0bfb473eed21380a3c3e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5aa3747f571a0bfb473eed21380a3c3e">vUsbTransmit</a> (void *pvParameters)</td></tr>
-<tr class="separator:a5aa3747f571a0bfb473eed21380a3c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad4a12c2eef5102e1c4a42a88d94fc58" id="r_aad4a12c2eef5102e1c4a42a88d94fc58"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad4a12c2eef5102e1c4a42a88d94fc58">vUsbReceive</a> (void *pvParameters)</td></tr>
+<tr class="memdesc:aad4a12c2eef5102e1c4a42a88d94fc58"><td class="mdescLeft">&#160;</td><td class="mdescRight">USB receive task.  <br /></td></tr>
+<tr class="separator:aad4a12c2eef5102e1c4a42a88d94fc58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Matt Ricci </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="main_8h_source.html">main.h</a>.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a5aa3747f571a0bfb473eed21380a3c3e" name="a5aa3747f571a0bfb473eed21380a3c3e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5aa3747f571a0bfb473eed21380a3c3e">&#9670;&#160;</a></span>vUsbTransmit()</h2>
+<a id="aad4a12c2eef5102e1c4a42a88d94fc58" name="aad4a12c2eef5102e1c4a42a88d94fc58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad4a12c2eef5102e1c4a42a88d94fc58">&#9670;&#160;</a></span>vUsbReceive()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void vUsbTransmit </td>
+          <td class="memname">void vUsbReceive </td>
           <td>(</td>
           <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>argument</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo</a></b></dt><dd>implement USB commands over <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface foobar.">UART</a> for system control (e.g. erase flash) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00299">299</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<p>USB receive task. </p>
+<p>Reads data from <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface foobar.">UART</a> Rx buffer and sends back to host for display.</p>
+<p>On receiving carriage return, processes command stored in buffer and resets. </p>
+
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00348">348</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 
 </div>
 </div>

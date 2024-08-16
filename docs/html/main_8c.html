@@ -107,31 +107,61 @@ $(function(){initNavTree('main_8c.html',''); initResizable(true); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a618550cc751c6284f0aba35734653ba3" id="r_a618550cc751c6284f0aba35734653ba3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a618550cc751c6284f0aba35734653ba3">vUsbTransmit</a> (void *argument)</td></tr>
-<tr class="separator:a618550cc751c6284f0aba35734653ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07b096ae45055b89f8883fe5209cf02b" id="r_a07b096ae45055b89f8883fe5209cf02b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07b096ae45055b89f8883fe5209cf02b">vUsbReceive</a> (void *argument)</td></tr>
+<tr class="memdesc:a07b096ae45055b89f8883fe5209cf02b"><td class="mdescLeft">&#160;</td><td class="mdescRight">USB receive task.  <br /></td></tr>
+<tr class="separator:a07b096ae45055b89f8883fe5209cf02b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e20e4eb45c71ba81845ebfa564ecca4" id="r_a9e20e4eb45c71ba81845ebfa564ecca4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e20e4eb45c71ba81845ebfa564ecca4">USART6_IRQHandler</a> ()</td></tr>
+<tr class="memdesc:a9e20e4eb45c71ba81845ebfa564ecca4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interrupt handler for USB <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface foobar.">UART</a> receive.  <br /></td></tr>
+<tr class="separator:a9e20e4eb45c71ba81845ebfa564ecca4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><dl class="section author"><dt>Author</dt><dd>Matt Ricci </dd></dl>
+<div class="textblock"><dl class="section author"><dt>Author</dt><dd>Matt Ricci</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo</a></b></dt><dd>Implement globals as context struct to pass to external functions. e.g. passing context of flash, uart, etc. to control functions. </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a618550cc751c6284f0aba35734653ba3" name="a618550cc751c6284f0aba35734653ba3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a618550cc751c6284f0aba35734653ba3">&#9670;&#160;</a></span>vUsbTransmit()</h2>
+<a id="a07b096ae45055b89f8883fe5209cf02b" name="a07b096ae45055b89f8883fe5209cf02b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07b096ae45055b89f8883fe5209cf02b">&#9670;&#160;</a></span>vUsbReceive()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void vUsbTransmit </td>
+          <td class="memname">void vUsbReceive </td>
           <td>(</td>
           <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>argument</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo</a></b></dt><dd>implement USB commands over <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface foobar.">UART</a> for system control (e.g. erase flash) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00299">299</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<p>USB receive task. </p>
+<p>Reads data from <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface foobar.">UART</a> Rx buffer and sends back to host for display.</p>
+<p>On receiving carriage return, processes command stored in buffer and resets. </p>
+
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00348">348</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="a9e20e4eb45c71ba81845ebfa564ecca4" name="a9e20e4eb45c71ba81845ebfa564ecca4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e20e4eb45c71ba81845ebfa564ecca4">&#9670;&#160;</a></span>USART6_IRQHandler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void USART6_IRQHandler </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Interrupt handler for USB <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface foobar.">UART</a> receive. </p>
+<p>Circular append received byte to buffer and send byte to stream buffer for processing in the Rx task. </p>
+
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00389">389</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 
 </div>
 </div>

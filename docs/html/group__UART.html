@@ -117,11 +117,13 @@ Functions</h2></td></tr>
 <tr class="memitem:gaf0a352f75cf3d16ecdad901da017b8de" id="r_gaf0a352f75cf3d16ecdad901da017b8de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf0a352f75cf3d16ecdad901da017b8de">UART_init</a> (<a class="el" href="#structUART">UART</a> *, USART_TypeDef *, GPIO_TypeDef *, uint32_t, OversampleMode)</td></tr>
 <tr class="memdesc:gaf0a352f75cf3d16ecdad901da017b8de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialiser for a <a class="el" href="#structUART" title="Struct definition for UART interface foobar.">UART</a> device interface.  <br /></td></tr>
 <tr class="separator:gaf0a352f75cf3d16ecdad901da017b8de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga96307cc6bea951396f9466e48cc8f90b" id="r_ga96307cc6bea951396f9466e48cc8f90b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga96307cc6bea951396f9466e48cc8f90b">_UART_setup</a> (<a class="el" href="#structUART">UART</a> *)</td></tr>
+<tr class="separator:ga96307cc6bea951396f9466e48cc8f90b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p><a class="el" href="#structUART" title="Struct definition for UART interface foobar.">UART</a> interface. </p>
 <dl class="section author"><dt>Author</dt><dd>Matt Ricci  </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000010">Todo</a></b></dt><dd>Tidy up <code>_UART_setup</code> </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000012">Todo</a></b></dt><dd>Tidy up <code>_UART_setup</code> </dd></dl>
 <hr/><h2 class="groupheader">Data Structure Documentation</h2>
 <a name="structUART" id="structUART"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#structUART">&#9670;&#160;</a></span>UART</h2>
@@ -176,6 +178,13 @@ send</td>
 sendBytes</td>
 <td class="fielddoc">
 <a class="el" href="#structUART" title="Struct definition for UART interface foobar.">UART</a> send multiple bytes method. <dl class="section see"><dt>See also</dt><dd>UART_sendBytes </dd></dl>
+</td></tr>
+<tr><td class="fieldtype">
+<a id="a0e134833354e46f1a556b7787375300e" name="a0e134833354e46f1a556b7787375300e"></a>void(*)(struct <a class="el" href="#structUART">UART</a> *, char *)</td>
+<td class="fieldname">
+print</td>
+<td class="fielddoc">
+<a class="el" href="#structUART" title="Struct definition for UART interface foobar.">UART</a> print string method. <dl class="section see"><dt>See also</dt><dd>UART_print </dd></dl>
 </td></tr>
 <tr><td class="fieldtype">
 <a id="aa840a20e8d2993f71105848364b08998" name="aa840a20e8d2993f71105848364b08998"></a>uint8_t(*)(struct <a class="el" href="#structUART">UART</a> *)</td>
@@ -238,6 +247,33 @@ receive</td>
 <hr  />
  
 <p class="definition">Definition at line <a class="el" href="uart_8c_source.html#l00021">21</a> of file <a class="el" href="uart_8c_source.html">uart.c</a>.</p>
+
+</div>
+</div>
+<a id="ga96307cc6bea951396f9466e48cc8f90b" name="ga96307cc6bea951396f9466e48cc8f90b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga96307cc6bea951396f9466e48cc8f90b">&#9670;&#160;</a></span>_UART_setup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void _UART_setup </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#structUART">UART</a> *</td>          <td class="paramname"><span class="paramname"><em>uart</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">*UART</td><td>Pointer to <a class="el" href="#structUART" title="Struct definition for UART interface foobar.">UART</a> struct. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
+<hr  />
+ 
+<p class="definition">Definition at line <a class="el" href="uart_8c_source.html#l00045">45</a> of file <a class="el" href="uart_8c_source.html">uart.c</a>.</p>
 
 </div>
 </div>

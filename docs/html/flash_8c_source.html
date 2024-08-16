@@ -99,151 +99,171 @@ $(function(){initNavTree('flash_8c_source.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">flash.c</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#include &quot;flash.h&quot;</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">/* SPI4 FLASH</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * ---------------------------------------------</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * Flash Pin       | MCU GPIO Pin  | SIGNAL TYPE</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * ----------------|---------------|------------</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> * SDI             | PE14          | DATA</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * SDO             | PE13          | DATA</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * SCLK            | PE12          | DATA</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> * CS              | PE11          | CONTROL</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> * Memory Hold     | PE10          | CONTROL</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> * Write Protect   | PE9           | CONTROL    */</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="foldopen" id="foldopen00023" data-start="{" data-end="}">
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="group__Flash.html#gac40c1b5246c89d2d625430da01124049">   23</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__Flash.html#gac40c1b5246c89d2d625430da01124049">Flash_init</a>(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash, GPIO_TypeDef *port, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> cs) {</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <a class="code hl_function" href="group__SPI.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7">SPI_init</a>(&amp;flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>, <a class="code hl_enumvalue" href="group__SPI.html#ggad258d4c51629346fceac4679b3209ad9aa44a4f1581ee02974dadb5d5d553b27b">MEMORY_FLASH</a>, SPI4, port, cs);</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  flash-&gt;<a class="code hl_variable" href="structFlash.html#ac2c453319e521f016b572ecf63a5fe74">erase</a>     = <a class="code hl_function" href="group__Flash.html#gaee89dc3026c93c50415e20cf3b10a303">Flash_erase</a>;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  flash-&gt;<a class="code hl_variable" href="structFlash.html#abaafab0f2318e98caa5a9dac6daa8113">readPage</a>  = <a class="code hl_function" href="group__Flash.html#ga5f9bbbbf9efbcaf330d7876905aa470f">Flash_readPage</a>;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  flash-&gt;<a class="code hl_variable" href="structFlash.html#ac94ed56d1714de0eddcf9e61557d7f77">writePage</a> = <a class="code hl_function" href="group__Flash.html#gab522cee3393b2c9d6be5f85f13b1c12d">Flash_writePage</a>;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}</div>
+<a href="flash_8c.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;flash.h&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">/* SPI4 FLASH</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> * ---------------------------------------------</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> * Flash Pin       | MCU GPIO Pin  | SIGNAL TYPE</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> * ----------------|---------------|------------</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment"> * SDI             | PE14          | DATA</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment"> * SDO             | PE13          | DATA</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> * SCLK            | PE12          | DATA</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> * CS              | PE11          | CONTROL</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment"> * Memory Hold     | PE10          | CONTROL</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment"> * Write Protect   | PE9           | CONTROL    */</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00030" data-start="{" data-end="}">
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="group__Flash.html#gadbd466d7ecb063949f078c2480192cf9">   30</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__Flash.html#gadbd466d7ecb063949f078c2480192cf9">Flash_init</a>(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash, GPIO_TypeDef *port, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> cs, <span class="keywordtype">int</span> pageSize, <span class="keywordtype">long</span> pageCount) {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <a class="code hl_function" href="group__SPI.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7">SPI_init</a>(&amp;flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>, <a class="code hl_enumvalue" href="group__SPI.html#ggad258d4c51629346fceac4679b3209ad9aa44a4f1581ee02974dadb5d5d553b27b">MEMORY_FLASH</a>, SPI4, port, cs);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  flash-&gt;pageSize  = pageSize;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    flash-&gt;pageCount = pageCount;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    flash-&gt;<a class="code hl_variable" href="structFlash.html#ac2c453319e521f016b572ecf63a5fe74">erase</a>     = <a class="code hl_function" href="group__Flash.html#ga00729be27e7be3604f188a66638f7cdc">Flash_erase</a>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  flash-&gt;<a class="code hl_variable" href="structFlash.html#abaafab0f2318e98caa5a9dac6daa8113">readPage</a>  = <a class="code hl_function" href="group__Flash.html#ga5682d8c6ddea2f7c5e56c481366f6c15">Flash_readPage</a>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  flash-&gt;<a class="code hl_variable" href="structFlash.html#ac94ed56d1714de0eddcf9e61557d7f77">writePage</a> = <a class="code hl_function" href="group__Flash.html#ga844666cc047adf8a6ebfe58cfb02dfbc">Flash_writePage</a>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>}</div>
 </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="comment">/********************************* PRIVATE METHODS *********************************/</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keywordtype">void</span> _Flash_writeEnable(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash) {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, FLASH_WRITE_ENABLE);</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keywordtype">void</span> _Flash_readStatus1(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash, uint8_t *status) {</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  *status = spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, FLASH_READ_STATUS_REGISTER_1);</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  *status = spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, 0x0F);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>}</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keywordtype">void</span> _Flash_readStatus2(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash, uint8_t *status) {</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  *status = spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, FLASH_READ_STATUS_REGISTER_2);</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  *status = spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, 0x0F);</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>}</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="keywordtype">void</span> _Flash_readStatus3(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash, uint8_t *status) {</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  *status = spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, FLASH_READ_STATUS_REGISTER_3);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  *status = spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, 0x0F);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>}</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="comment">/********************************* DEVICE METHODS **********************************/</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="foldopen" id="foldopen00115" data-start="{" data-end="}">
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="group__Flash.html#gaee89dc3026c93c50415e20cf3b10a303">  115</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__Flash.html#gaee89dc3026c93c50415e20cf3b10a303">Flash_erase</a>(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash) {</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  _Flash_writeEnable(flash);</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi        = flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  uint8_t status = 0;</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <span class="comment">// Send Erase Chip instruction</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, FLASH_ERASE_CHIP);</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="comment">/********************************* PRIVATE METHODS *********************************/</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#ifndef DOXYGEN_PRIVATE</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00050" data-start="{" data-end="}">
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="group__Flash.html#ga98a614bd09fe5fd3a9adb05478c100c4">   50</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__Flash.html#ga98a614bd09fe5fd3a9adb05478c100c4">_Flash_writeEnable</a>(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash) {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, FLASH_WRITE_ENABLE);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
+</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00066" data-start="{" data-end="}">
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="group__Flash.html#gae37e74b62701ec0cac24afde386d12c4">   66</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__Flash.html#gae37e74b62701ec0cac24afde386d12c4">_Flash_readStatus1</a>(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash, uint8_t *status) {</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  *status = spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, FLASH_READ_STATUS_REGISTER_1);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  *status = spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, 0x0F);</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>}</div>
+</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00083" data-start="{" data-end="}">
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="group__Flash.html#gae64ff1bc3f9a083e361792733f6a6081">   83</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__Flash.html#gae64ff1bc3f9a083e361792733f6a6081">_Flash_readStatus2</a>(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash, uint8_t *status) {</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  *status = spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, FLASH_READ_STATUS_REGISTER_2);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  *status = spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, 0x0F);</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>}</div>
+</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00100" data-start="{" data-end="}">
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="group__Flash.html#ga9a0948cf30de239d6a8e301209ae51a3">  100</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__Flash.html#ga9a0948cf30de239d6a8e301209ae51a3">_Flash_readStatus3</a>(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash, uint8_t *status) {</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi = flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  *status = spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, FLASH_READ_STATUS_REGISTER_3);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  *status = spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, 0x0F);</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>}</div>
+</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="comment">/********************************* DEVICE METHODS **********************************/</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00120" data-start="{" data-end="}">
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="group__Flash.html#ga00729be27e7be3604f188a66638f7cdc">  120</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__Flash.html#ga00729be27e7be3604f188a66638f7cdc">Flash_erase</a>(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash) {</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <a class="code hl_function" href="group__Flash.html#ga98a614bd09fe5fd3a9adb05478c100c4">_Flash_writeEnable</a>(flash);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi        = flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  uint8_t status = 0;</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  <span class="comment">// Wait until chip BUSY is clear</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  <span class="keywordflow">do</span> {</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>    _Flash_readStatus1(flash, &amp;status);</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  } <span class="keywordflow">while</span> (status &amp; 0x01);</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>}</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  <span class="comment">// Send Erase Chip instruction</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, FLASH_ERASE_CHIP);</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  <span class="comment">// Wait until chip BUSY is clear</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>  <span class="keywordflow">do</span> {</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <a class="code hl_function" href="group__Flash.html#gae37e74b62701ec0cac24afde386d12c4">_Flash_readStatus1</a>(flash, &amp;status);</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  } <span class="keywordflow">while</span> (status &amp; 0x01);</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>}</div>
 </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="foldopen" id="foldopen00140" data-start="{" data-end="}">
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno"><a class="line" href="group__Flash.html#gab522cee3393b2c9d6be5f85f13b1c12d">  140</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__Flash.html#gab522cee3393b2c9d6be5f85f13b1c12d">Flash_writePage</a>(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash, uint32_t address, uint8_t *data) {</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>  _Flash_writeEnable(flash);</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  uint8_t status = 0;</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi        = flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  <span class="comment">// Send Page Program instruction and 24-bit address</span></div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, FLASH_PAGE_PROGRAM);</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, (address &amp; 0xFF0000) &gt;&gt; 16);</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, (address &amp; 0xFF00) &gt;&gt; 8);</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, (address &amp; 0xFF));</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>  <span class="comment">// Send page data</span></div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> x = 0; x &lt; 255; x++) {</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, data[x]);</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  }</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span> </div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00145" data-start="{" data-end="}">
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno"><a class="line" href="group__Flash.html#ga844666cc047adf8a6ebfe58cfb02dfbc">  145</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__Flash.html#ga844666cc047adf8a6ebfe58cfb02dfbc">Flash_writePage</a>(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash, uint32_t address, uint8_t *data) {</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  <a class="code hl_function" href="group__Flash.html#ga98a614bd09fe5fd3a9adb05478c100c4">_Flash_writeEnable</a>(flash);</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  uint8_t status = 0;</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi        = flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  <span class="comment">// Send Page Program instruction and 24-bit address</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, FLASH_PAGE_PROGRAM);</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, (address &amp; 0xFF0000) &gt;&gt; 16);</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, (address &amp; 0xFF00) &gt;&gt; 8);</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, (address &amp; 0xFF));</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="comment">// Wait until chip BUSY is clear</span></div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keywordflow">do</span> {</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    _Flash_readStatus1(flash, &amp;status);</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  } <span class="keywordflow">while</span> (status &amp; 0x1);</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>}</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  <span class="comment">// Send page data</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 256; i++) {</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, data[i]);</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  }</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  <span class="comment">// Wait until chip BUSY is clear</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  <span class="keywordflow">do</span> {</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <a class="code hl_function" href="group__Flash.html#gae37e74b62701ec0cac24afde386d12c4">_Flash_readStatus1</a>(flash, &amp;status);</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  } <span class="keywordflow">while</span> (status &amp; 0x1);</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>}</div>
 </div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="foldopen" id="foldopen00175" data-start="{" data-end="}">
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno"><a class="line" href="group__Flash.html#ga5f9bbbbf9efbcaf330d7876905aa470f">  175</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__Flash.html#ga5f9bbbbf9efbcaf330d7876905aa470f">Flash_readPage</a>(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash, uint32_t address, <span class="keyword">volatile</span> uint8_t *data) {</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi        = flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  </div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    <span class="comment">// Send Read Data instruction and 24-bit address</span></div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, FLASH_READ_DATA);</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, (address &amp; 0xFF0000) &gt;&gt; 16);</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, (address &amp; 0xFF00) &gt;&gt; 8);</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, (address &amp; 0xFF));</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 256; i++) {</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    data[i] = spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, 0x0F);</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>  }</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>    </div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>}</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00180" data-start="{" data-end="}">
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno"><a class="line" href="group__Flash.html#ga5682d8c6ddea2f7c5e56c481366f6c15">  180</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="group__Flash.html#ga5682d8c6ddea2f7c5e56c481366f6c15">Flash_readPage</a>(<a class="code hl_struct" href="structFlash.html">Flash</a> *flash, uint32_t address, <span class="keyword">volatile</span> uint8_t *data) {</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>  <a class="code hl_struct" href="structSPI.html">SPI</a> spi        = flash-&gt;<a class="code hl_variable" href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">base</a>;</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR &amp;= ~spi.cs;</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>  </div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    <span class="comment">// Send Read Data instruction and 24-bit address</span></div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, FLASH_READ_DATA);</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, (address &amp; 0xFF0000) &gt;&gt; 16);</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, (address &amp; 0xFF00) &gt;&gt; 8);</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, (address &amp; 0xFF));</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 256; i++) {</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    data[i] = spi.<a class="code hl_variable" href="structSPI.html#a54668c3e267dcd01feff6c083a372846">transmit</a>(&amp;spi, 0x0F);</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  }</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    </div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>  spi.<a class="code hl_variable" href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">port</a>-&gt;ODR |= spi.<a class="code hl_variable" href="structSPI.html#a8f467bedd92cfa29ba7b757711ece04d">cs</a>;</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>}</div>
 </div>
-<div class="ttc" id="agroup__Flash_html_ga5f9bbbbf9efbcaf330d7876905aa470f"><div class="ttname"><a href="group__Flash.html#ga5f9bbbbf9efbcaf330d7876905aa470f">Flash_readPage</a></div><div class="ttdeci">void Flash_readPage(Flash *flash, uint32_t address, volatile uint8_t *data)</div><div class="ttdoc">Read from flash.</div><div class="ttdef"><b>Definition</b> <a href="#l00175">flash.c:175</a></div></div>
-<div class="ttc" id="agroup__Flash_html_gab522cee3393b2c9d6be5f85f13b1c12d"><div class="ttname"><a href="group__Flash.html#gab522cee3393b2c9d6be5f85f13b1c12d">Flash_writePage</a></div><div class="ttdeci">void Flash_writePage(Flash *flash, uint32_t address, uint8_t *data)</div><div class="ttdoc">Write page to flash.</div><div class="ttdef"><b>Definition</b> <a href="#l00140">flash.c:140</a></div></div>
-<div class="ttc" id="agroup__Flash_html_gac40c1b5246c89d2d625430da01124049"><div class="ttname"><a href="group__Flash.html#gac40c1b5246c89d2d625430da01124049">Flash_init</a></div><div class="ttdeci">void Flash_init(Flash *flash, GPIO_TypeDef *port, unsigned long cs)</div><div class="ttdoc">Initialise flash struct.</div><div class="ttdef"><b>Definition</b> <a href="#l00023">flash.c:23</a></div></div>
-<div class="ttc" id="agroup__Flash_html_gaee89dc3026c93c50415e20cf3b10a303"><div class="ttname"><a href="group__Flash.html#gaee89dc3026c93c50415e20cf3b10a303">Flash_erase</a></div><div class="ttdeci">void Flash_erase(Flash *flash)</div><div class="ttdoc">Erase flash chip.</div><div class="ttdef"><b>Definition</b> <a href="#l00115">flash.c:115</a></div></div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
+<div class="ttc" id="agroup__Flash_html_ga00729be27e7be3604f188a66638f7cdc"><div class="ttname"><a href="group__Flash.html#ga00729be27e7be3604f188a66638f7cdc">Flash_erase</a></div><div class="ttdeci">void Flash_erase(Flash *)</div><div class="ttdoc">Erase flash chip.</div><div class="ttdef"><b>Definition</b> <a href="#l00120">flash.c:120</a></div></div>
+<div class="ttc" id="agroup__Flash_html_ga5682d8c6ddea2f7c5e56c481366f6c15"><div class="ttname"><a href="group__Flash.html#ga5682d8c6ddea2f7c5e56c481366f6c15">Flash_readPage</a></div><div class="ttdeci">void Flash_readPage(Flash *, uint32_t, volatile uint8_t *)</div><div class="ttdoc">Read from flash.</div><div class="ttdef"><b>Definition</b> <a href="#l00180">flash.c:180</a></div></div>
+<div class="ttc" id="agroup__Flash_html_ga844666cc047adf8a6ebfe58cfb02dfbc"><div class="ttname"><a href="group__Flash.html#ga844666cc047adf8a6ebfe58cfb02dfbc">Flash_writePage</a></div><div class="ttdeci">void Flash_writePage(Flash *, uint32_t, uint8_t *)</div><div class="ttdoc">Write page to flash.</div><div class="ttdef"><b>Definition</b> <a href="#l00145">flash.c:145</a></div></div>
+<div class="ttc" id="agroup__Flash_html_ga98a614bd09fe5fd3a9adb05478c100c4"><div class="ttname"><a href="group__Flash.html#ga98a614bd09fe5fd3a9adb05478c100c4">_Flash_writeEnable</a></div><div class="ttdeci">void _Flash_writeEnable(Flash *)</div><div class="ttdoc">Send Write Enable instruction to the flash device.</div><div class="ttdef"><b>Definition</b> <a href="#l00050">flash.c:50</a></div></div>
+<div class="ttc" id="agroup__Flash_html_ga9a0948cf30de239d6a8e301209ae51a3"><div class="ttname"><a href="group__Flash.html#ga9a0948cf30de239d6a8e301209ae51a3">_Flash_readStatus3</a></div><div class="ttdeci">void _Flash_readStatus3(Flash *, uint8_t *)</div><div class="ttdoc">Read from Status Register 3.</div><div class="ttdef"><b>Definition</b> <a href="#l00100">flash.c:100</a></div></div>
+<div class="ttc" id="agroup__Flash_html_gadbd466d7ecb063949f078c2480192cf9"><div class="ttname"><a href="group__Flash.html#gadbd466d7ecb063949f078c2480192cf9">Flash_init</a></div><div class="ttdeci">void Flash_init(Flash *, GPIO_TypeDef *, unsigned long, int, long)</div><div class="ttdoc">Initialise flash struct.</div><div class="ttdef"><b>Definition</b> <a href="#l00030">flash.c:30</a></div></div>
+<div class="ttc" id="agroup__Flash_html_gae37e74b62701ec0cac24afde386d12c4"><div class="ttname"><a href="group__Flash.html#gae37e74b62701ec0cac24afde386d12c4">_Flash_readStatus1</a></div><div class="ttdeci">void _Flash_readStatus1(Flash *, uint8_t *)</div><div class="ttdoc">Read from Status Register 1.</div><div class="ttdef"><b>Definition</b> <a href="#l00066">flash.c:66</a></div></div>
+<div class="ttc" id="agroup__Flash_html_gae64ff1bc3f9a083e361792733f6a6081"><div class="ttname"><a href="group__Flash.html#gae64ff1bc3f9a083e361792733f6a6081">_Flash_readStatus2</a></div><div class="ttdeci">void _Flash_readStatus2(Flash *, uint8_t *)</div><div class="ttdoc">Read from Status Register 2.</div><div class="ttdef"><b>Definition</b> <a href="#l00083">flash.c:83</a></div></div>
 <div class="ttc" id="agroup__SPI_html_ga656f7b06a728e76eb9ac0b10e1bd5bb7"><div class="ttname"><a href="group__SPI.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7">SPI_init</a></div><div class="ttdeci">void SPI_init(SPI *, DeviceType, SPI_TypeDef *, GPIO_TypeDef *, unsigned long)</div><div class="ttdoc">Initialiser for an SPI device interface.</div><div class="ttdef"><b>Definition</b> <a href="spi_8c_source.html#l00014">spi.c:14</a></div></div>
 <div class="ttc" id="agroup__SPI_html_ggad258d4c51629346fceac4679b3209ad9aa44a4f1581ee02974dadb5d5d553b27b"><div class="ttname"><a href="group__SPI.html#ggad258d4c51629346fceac4679b3209ad9aa44a4f1581ee02974dadb5d5d553b27b">MEMORY_FLASH</a></div><div class="ttdeci">@ MEMORY_FLASH</div><div class="ttdoc">Flash memory.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00028">spi.h:28</a></div></div>
-<div class="ttc" id="astructFlash_html"><div class="ttname"><a href="structFlash.html">Flash</a></div><div class="ttdef"><b>Definition</b> <a href="flash_8h_source.html#l00023">flash.h:23</a></div></div>
-<div class="ttc" id="astructFlash_html_a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7"><div class="ttname"><a href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">Flash::base</a></div><div class="ttdeci">SPI base</div><div class="ttdoc">Parent SPI interface.</div><div class="ttdef"><b>Definition</b> <a href="flash_8h_source.html#l00024">flash.h:24</a></div></div>
-<div class="ttc" id="astructFlash_html_abaafab0f2318e98caa5a9dac6daa8113"><div class="ttname"><a href="structFlash.html#abaafab0f2318e98caa5a9dac6daa8113">Flash::readPage</a></div><div class="ttdeci">void(* readPage)(struct Flash *, uint32_t, volatile uint8_t *)</div><div class="ttdoc">Read page method.</div><div class="ttdef"><b>Definition</b> <a href="flash_8h_source.html#l00026">flash.h:26</a></div></div>
-<div class="ttc" id="astructFlash_html_ac2c453319e521f016b572ecf63a5fe74"><div class="ttname"><a href="structFlash.html#ac2c453319e521f016b572ecf63a5fe74">Flash::erase</a></div><div class="ttdeci">void(* erase)(struct Flash *)</div><div class="ttdoc">Chip erase method.</div><div class="ttdef"><b>Definition</b> <a href="flash_8h_source.html#l00025">flash.h:25</a></div></div>
-<div class="ttc" id="astructFlash_html_ac94ed56d1714de0eddcf9e61557d7f77"><div class="ttname"><a href="structFlash.html#ac94ed56d1714de0eddcf9e61557d7f77">Flash::writePage</a></div><div class="ttdeci">void(* writePage)(struct Flash *, uint32_t, uint8_t *)</div><div class="ttdoc">Write page method.</div><div class="ttdef"><b>Definition</b> <a href="flash_8h_source.html#l00027">flash.h:27</a></div></div>
+<div class="ttc" id="astructFlash_html"><div class="ttname"><a href="structFlash.html">Flash</a></div><div class="ttdef"><b>Definition</b> <a href="flash_8h_source.html#l00027">flash.h:27</a></div></div>
+<div class="ttc" id="astructFlash_html_a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7"><div class="ttname"><a href="structFlash.html#a6e3a9ebc712a4a2f4d0d9e4ee0edf2f7">Flash::base</a></div><div class="ttdeci">SPI base</div><div class="ttdoc">Parent SPI interface.</div><div class="ttdef"><b>Definition</b> <a href="flash_8h_source.html#l00028">flash.h:28</a></div></div>
+<div class="ttc" id="astructFlash_html_abaafab0f2318e98caa5a9dac6daa8113"><div class="ttname"><a href="structFlash.html#abaafab0f2318e98caa5a9dac6daa8113">Flash::readPage</a></div><div class="ttdeci">void(* readPage)(struct Flash *, uint32_t, volatile uint8_t *)</div><div class="ttdoc">Read page method.</div><div class="ttdef"><b>Definition</b> <a href="flash_8h_source.html#l00032">flash.h:32</a></div></div>
+<div class="ttc" id="astructFlash_html_ac2c453319e521f016b572ecf63a5fe74"><div class="ttname"><a href="structFlash.html#ac2c453319e521f016b572ecf63a5fe74">Flash::erase</a></div><div class="ttdeci">void(* erase)(struct Flash *)</div><div class="ttdoc">Chip erase method.</div><div class="ttdef"><b>Definition</b> <a href="flash_8h_source.html#l00031">flash.h:31</a></div></div>
+<div class="ttc" id="astructFlash_html_ac94ed56d1714de0eddcf9e61557d7f77"><div class="ttname"><a href="structFlash.html#ac94ed56d1714de0eddcf9e61557d7f77">Flash::writePage</a></div><div class="ttdeci">void(* writePage)(struct Flash *, uint32_t, uint8_t *)</div><div class="ttdoc">Write page method.</div><div class="ttdef"><b>Definition</b> <a href="flash_8h_source.html#l00033">flash.h:33</a></div></div>
 <div class="ttc" id="astructSPI_html"><div class="ttname"><a href="structSPI.html">SPI</a></div><div class="ttdoc">Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00036">spi.h:36</a></div></div>
 <div class="ttc" id="astructSPI_html_a54668c3e267dcd01feff6c083a372846"><div class="ttname"><a href="structSPI.html#a54668c3e267dcd01feff6c083a372846">SPI::transmit</a></div><div class="ttdeci">uint16_t(* transmit)(struct SPI *, uint16_t)</div><div class="ttdoc">SPI transmit method.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00043">spi.h:43</a></div></div>
 <div class="ttc" id="astructSPI_html_a82241972e0292c7de95ea1e293e11be3"><div class="ttname"><a href="structSPI.html#a82241972e0292c7de95ea1e293e11be3">SPI::port</a></div><div class="ttdeci">GPIO_TypeDef * port</div><div class="ttdoc">Pointer to GPIO port struct.</div><div class="ttdef"><b>Definition</b> <a href="spi_8h_source.html#l00039">spi.h:39</a></div></div>
@@ -253,7 +273,7 @@ $(function(){initNavTree('flash_8c_source.html',''); initResizable(true); });
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_792ef69f7340d1afb8e8d9f9961cfbb5.html">AuroraV-Avionics</a></li><li class="navelem"><a class="el" href="dir_e95d640f443eea16038f928d5971e8b8.html">Core</a></li><li class="navelem"><a class="el" href="dir_3c829084d0ed61b607ff5eab50f9eb46.html">Src</a></li><li class="navelem"><a class="el" href="dir_0424fefe9d160b607d3d0fccc7ed5ca1.html">SPI</a></li><li class="navelem"><a class="el" href="dir_fa41c26cf7e00bf1072445c2e57dd55a.html">flash</a></li><li class="navelem"><b>flash.c</b></li>
+    <li class="navelem"><a class="el" href="dir_792ef69f7340d1afb8e8d9f9961cfbb5.html">AuroraV-Avionics</a></li><li class="navelem"><a class="el" href="dir_e95d640f443eea16038f928d5971e8b8.html">Core</a></li><li class="navelem"><a class="el" href="dir_3c829084d0ed61b607ff5eab50f9eb46.html">Src</a></li><li class="navelem"><a class="el" href="dir_0424fefe9d160b607d3d0fccc7ed5ca1.html">SPI</a></li><li class="navelem"><a class="el" href="dir_fa41c26cf7e00bf1072445c2e57dd55a.html">flash</a></li><li class="navelem"><a class="el" href="flash_8c.html">flash.c</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>

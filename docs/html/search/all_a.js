@@ -1,13 +1,12 @@
 var searchData=
 [
-  ['library_20functions_0',['Library Functions',['../index.html#library-functions',1,'']]],
-  ['library_20naming_1',['Library Naming',['../index.html#library-naming',1,'']]],
-  ['list_2',['Todo List',['../todo.html',1,'']]],
-  ['lora_3',['LoRa',['../structLoRa.html',1,'LoRa'],['../group__LoRa.html',1,'LoRa']]],
-  ['lora_2ec_4',['lora.c',['../lora_8c.html',1,'']]],
-  ['lora_5favd1_5',['LoRa_AVD1',['../group__LoRa.html#ga7e837a74df47b88a7064df74650176ae',1,'lora.c']]],
-  ['lora_5favd2_6',['LoRa_AVD2',['../group__LoRa.html#ga4811652f4eab94cc6063d3eb68bf21e3',1,'lora.c']]],
-  ['lora_5finit_7',['LoRa_init',['../group__LoRa.html#ga1a62293fe572d94b7196ddb6619e2f32',1,'lora.c']]],
-  ['lora_5fpacket_8',['LoRa_Packet',['../group__LoRa.html#structLoRa__Packet',1,'']]],
-  ['lora_5ftransmit_9',['LoRa_transmit',['../group__LoRa.html#gae19b9f0cd6a296c35d492f391278cecd',1,'lora.c']]]
+  ['kx134_201211_0',['KX134-1211',['../group__KX134-1211.html',1,'']]],
+  ['kx134_5f1211_1',['KX134_1211',['../structKX134__1211.html',1,'']]],
+  ['kx134_5f1211_2ec_2',['KX134_1211.c',['../KX134__1211_8c.html',1,'']]],
+  ['kx134_5f1211_2eh_3',['KX134_1211.h',['../KX134__1211_8h.html',1,'']]],
+  ['kx134_5f1211_5finit_4',['KX134_1211_init',['../group__KX134-1211.html#gaab0e28a010d78d6e33ccbdb9f47b0096',1,'KX134_1211_init(KX134_1211 *, GPIO_TypeDef *, unsigned long, const uint8_t, const uint8_t *, const int8_t *):&#160;KX134_1211.c'],['../group__KX134-1211.html#gaab0e28a010d78d6e33ccbdb9f47b0096',1,'KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, uint8_t scale, const uint8_t *axes, const int8_t *sign):&#160;KX134_1211.c']]],
+  ['kx134_5f1211_5fprocessrawbytes_5',['KX134_1211_processRawBytes',['../group__KX134-1211.html#ga9e1214c9a71e524c3c857c4275be344b',1,'KX134_1211_processRawBytes(KX134_1211 *, uint8_t *, float *):&#160;KX134_1211.c'],['../group__KX134-1211.html#ga9e1214c9a71e524c3c857c4275be344b',1,'KX134_1211_processRawBytes(KX134_1211 *accel, uint8_t *bytes, float *out):&#160;KX134_1211.c']]],
+  ['kx134_5f1211_5freadaccel_6',['KX134_1211_readAccel',['../group__KX134-1211.html#ga0871f31a356a20dde2bd73ba9385658c',1,'KX134_1211_readAccel(KX134_1211 *, float *):&#160;KX134_1211.c'],['../group__KX134-1211.html#ga0871f31a356a20dde2bd73ba9385658c',1,'KX134_1211_readAccel(KX134_1211 *accel, float *out):&#160;KX134_1211.c']]],
+  ['kx134_5f1211_5freadrawbytes_7',['KX134_1211_readRawBytes',['../group__KX134-1211.html#gaa3064f02e75aabcbcae62c16733bc623',1,'KX134_1211_readRawBytes(KX134_1211 *, uint8_t *):&#160;KX134_1211.c'],['../group__KX134-1211.html#gaa3064f02e75aabcbcae62c16733bc623',1,'KX134_1211_readRawBytes(KX134_1211 *accel, uint8_t *out):&#160;KX134_1211.c']]],
+  ['kx134_5f1211_5fupdate_8',['KX134_1211_update',['../group__KX134-1211.html#gabc14bce3ead2179bab72ea3e5450257b',1,'KX134_1211_update(KX134_1211 *):&#160;KX134_1211.c'],['../group__KX134-1211.html#gabc14bce3ead2179bab72ea3e5450257b',1,'KX134_1211_update(KX134_1211 *accel):&#160;KX134_1211.c']]]
 ];

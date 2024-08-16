@@ -131,8 +131,7 @@ $(function(){initNavTree('can_8c_source.html',''); initResizable(true); });
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordflow">return</span> 255;</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>}</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="foldopen" id="foldopen00045" data-start="{" data-end="}">
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="group__CAN.html#gacde6d9195302b33fd3d0edb5cd50e6c8">   45</a></span>uint8_t <a class="code hl_function" href="group__CAN.html#gacde6d9195302b33fd3d0edb5cd50e6c8">CAN_TX</a>(uint8_t CAN, uint8_t data_length, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> dataH, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> dataL, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> address) {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>uint8_t CAN_TX(uint8_t CAN, uint8_t data_length, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> dataH, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> dataL, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> address) {</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  uint8_t mailbox = find_empty_CAN_TX_mailbox(CAN);</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordflow">if</span> (mailbox == 255)</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordflow">return</span> 250;</div>
@@ -150,7 +149,7 @@ $(function(){initNavTree('can_8c_source.html',''); initResizable(true); });
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    CAN1-&gt;sTxMailBox[mailbox].TIR = (address &lt;&lt; 21); <span class="comment">// enters in the CAN identifer</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                                                     <span class="comment">// CAN1-&gt;sTxMailBox[mailbox].TIR |= CAN_TIR;</span></div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    CAN1-&gt;sTxMailBox[mailbox].TIR |= (1 &lt;&lt; 0);       <span class="comment">// requested transmission</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">while</span> (1)                                        </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">while</span> (1)                                        <span class="comment">// add timer in here for timeout</span></div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    {</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>      <span class="keywordflow">if</span> ((CAN1-&gt;TSR &amp; (1 &lt;&lt; (1))))</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        <span class="keywordflow">return</span> 0;                                    <span class="comment">// successful</span></div>
@@ -167,7 +166,7 @@ $(function(){initNavTree('can_8c_source.html',''); initResizable(true); });
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    CAN2-&gt;sTxMailBox[mailbox].TDTR  = data_length;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    CAN2-&gt;sTxMailBox[mailbox].TIR   = address &lt;&lt; 21;</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    CAN2-&gt;sTxMailBox[mailbox].TIR  |= (1 &lt;&lt; 0); <span class="comment">// requested transmission</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordflow">while</span> (1)                                   </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordflow">while</span> (1)                                   <span class="comment">// add timer in here for timeout</span></div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    {</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>      <span class="keywordflow">if</span> ((CAN2-&gt;TSR &amp; (1 &lt;&lt; (1))))</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keywordflow">return</span> 0;                               <span class="comment">// successful</span></div>
@@ -180,7 +179,6 @@ $(function(){initNavTree('can_8c_source.html',''); initResizable(true); });
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  } <span class="keywordflow">else</span></div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keywordflow">return</span> 100;</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>}</div>
-</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>uint8_t find_empty_CAN_TX_mailbox(uint8_t CAN) {</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="keywordflow">return</span> 0; <span class="comment">// it is simply going to reload to the single mailbox and send</span></div>
@@ -282,7 +280,6 @@ $(function(){initNavTree('can_8c_source.html',''); initResizable(true); });
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>}</div>
 <div class="ttc" id="acan_8h_html"><div class="ttname"><a href="can_8h.html">can.h</a></div></div>
 <div class="ttc" id="acan_8h_html_structCAN__RX__data"><div class="ttname"><a href="can_8h.html#structCAN__RX__data">CAN_RX_data</a></div><div class="ttdef"><b>Definition</b> <a href="can_8h_source.html#l00013">can.h:13</a></div></div>
-<div class="ttc" id="agroup__CAN_html_gacde6d9195302b33fd3d0edb5cd50e6c8"><div class="ttname"><a href="group__CAN.html#gacde6d9195302b33fd3d0edb5cd50e6c8">CAN_TX</a></div><div class="ttdeci">uint8_t CAN_TX(uint8_t CAN, uint8_t data_length, unsigned int dataH, unsigned int dataL, unsigned int address)</div><div class="ttdef"><b>Definition</b> <a href="#l00045">can.c:45</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
