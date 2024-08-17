@@ -1,6 +1,6 @@
 #include "gps.h"
 
- uint8_t GPS_byte(){
+uint8_t GPS_byte() {
   while((USART3->SR & USART_SR_RXNE) == 0);
   uint8_t a =(uint8_t)((0X000000FF)&(USART3->DR));
 	return a;

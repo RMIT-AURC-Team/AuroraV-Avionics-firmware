@@ -8,6 +8,7 @@
 #ifndef _GPS_H
 #define _GPS_H
 
+#include "stm32f4xx.h"
 #include "stdint.h"
 
 struct GPSData {
@@ -28,9 +29,9 @@ struct GPSData {
  uint8_t lock; // 0 = no lock, 1 = lock
 };
 
-uint8_t GPS_byte()
+uint8_t GPS_byte();
 void GPS_message(char *);
-void DecodeGPS(char*, struct GPSData*) {
+void DecodeGPS(char*, struct GPSData*);
 
 
 #endif

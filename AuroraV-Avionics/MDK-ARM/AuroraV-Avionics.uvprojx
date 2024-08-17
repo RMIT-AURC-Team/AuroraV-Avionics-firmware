@@ -244,7 +244,7 @@
             <uThumb>1</uThumb>
             <VariousControls>
               <MiscControls>-mfloat-abi=hard -ffast-math -mfpu=fpv4-sp-d16</MiscControls>
-              <Define>__TARGET_FPU_VFP, DUMMY, TRACE</Define>
+              <Define>__TARGET_FPU_VFP, DUMMY</Define>
               <Undefine></Undefine>
               <IncludePath>..\Core\Inc;..\Core\Inc\SPI;..\Core\Inc\SPI\flash;..\Core\Inc\SPI\lora;..\Core\Inc\SPI\sensors;..\Core\Inc\SPI\sensors\accel;..\Core\Inc\SPI\sensors\baro;..\Core\Inc\SPI\sensors\gyro;..\Lib\inc;..\Lib\inc\CORE;..\Lib\inc\CORE\Include;..\Lib\inc\DSP;..\Lib\inc\DSP\Include;..\Lib\inc\DSP\Include\dsp;..\Lib\inc\DSP\PrivateInclude;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Middlewares\Third_Party\TraceRecorder\include;..\Middlewares\Third_Party\TraceRecorder\config;..\Data</IncludePath>
             </VariousControls>
@@ -254,7 +254,7 @@
             <interw>1</interw>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>TRACE</Define>
+              <Define></Define>
               <Undefine></Undefine>
               <IncludePath>..\Core\Inc</IncludePath>
             </VariousControls>
@@ -338,6 +338,11 @@
               <FileName>libavionics.a</FileName>
               <FileType>4</FileType>
               <FilePath>..\Lib\bin\libavionics.a</FilePath>
+            </File>
+            <File>
+              <FileName>gps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\gps.c</FilePath>
             </File>
           </Files>
         </Group>
