@@ -7,8 +7,8 @@
 #ifndef _LORA_H
 #define _LORA_H
 
-#include "spi.h"
 #include "stm32f439xx.h"
+#include "spi.h"
 #include "string.h"
 
 #define LORA_REG_FIFO                   0x00
@@ -42,8 +42,8 @@
 #define RegDioMapping1                  0x40
 #define RegDioMapping2                  0x41
 
-#define LORA_MSG_LENGTH                 0x10
-#define LORA_MSG_PAYLOAD_LENGTH         0x0F
+#define LORA_MSG_LENGTH                 0x20
+#define LORA_MSG_PAYLOAD_LENGTH         (LORA_MSG_LENGTH - 1)
 
 /**
  * @addtogroup LoRa
@@ -100,8 +100,17 @@ void LoRa_transmit(LoRa *, uint8_t *);
 void LoRa_writeRegister(LoRa *, uint8_t, uint8_t);
 uint8_t LoRa_readRegister(LoRa *, uint8_t);
 
-LoRa_Packet LoRa_AVD1(uint8_t, uint8_t *, uint8_t *, uint8_t, float);
-LoRa_Packet LoRa_AVD2(uint8_t, uint8_t *, uint8_t, float);
+LoRa_Packet LoRa_AVData(
+	uint8_t,
+	uint8_t, 
+	uint8_t *, 
+	uint8_t *, 
+	uint8_t, 
+  uint8_t *,
+	uint8_t,
+	float,
+	float
+);
 
 void _LoRa_setMode(LoRa *, Mode);
 

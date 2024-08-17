@@ -48,9 +48,10 @@ void vUsbReceive(void *pvParameters);
 void configure_interrupts();
 void Error_Handler(void);
 
-#define LORA_HEADER_AVD1 0x04
-#define LORA_HEADER_AVD2 0x05
-#define LORA_HEADER_AVD3 0x06
+#define LORA_HEADER_AV_DATA 0x04
+
+#define CAN_HEADER_AEROBRAKES_RETRACT 0x602
+#define CAN_HEADER_AEROBRAKES_DATA 		0x601
 
 // Dataframe header definitions
 #define HEADER_ID_Pos           0x06

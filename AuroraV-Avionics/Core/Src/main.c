@@ -30,7 +30,7 @@ EventGroupHandle_t xMsgReadyGroup;   // 0: LORA, 1: USB
 
 KX134_1211 lAccel_s;
 KX134_1211 hAccel_s;
-KX134_1211 accel_s;
+KX134_1211 *pAccel_s;
 A3G4250D gyro_s;
 BMP581 baro_s;
 
@@ -131,7 +131,7 @@ int main(void) {
   A3G4250D_init(&gyro_s, GYRO_PORT, GYRO_CS, A3G4250D_SENSITIVITY, GYRO_AXES, GYRO_SIGN);
   KX134_1211_init(&lAccel_s, ACCEL_PORT_1, ACCEL_CS_1, ACCEL_SCALE_LOW, ACCEL_AXES_1, ACCEL_SIGN_1);
   KX134_1211_init(&hAccel_s, ACCEL_PORT_2, ACCEL_CS_2, ACCEL_SCALE_HIGH, ACCEL_AXES_2, ACCEL_SIGN_2);
-  accel_s = lAccel_s;
+  pAccel_s = &lAccel_s;
 	
 	// Initialise sliding window average buffers
 	SlidingWindow_init(&avgVel, avgVelBuff, AVG_BUFF_SIZE);
@@ -173,8 +173,6 @@ void vStateUpdate(void *argument) {
   unsigned int CANHigh        = 0;
   unsigned int CANLow         = 0;
   unsigned int id             = 0;
-	
-	uint8_t counter = 0;
 
   for (;;) {
     // Block until 20ms interval
@@ -185,58 +183,76 @@ void vStateUpdate(void *argument) {
       // CAN payload for aerobrakes retract
       CANHigh = 0x00000000;
       CANLow  = 0x00000000;
-      id      = 0x602;
+      id      = CAN_HEADER_AEROBRAKES_RETRACT;
       CAN_TX(1, 8, CANHigh, CANLow, id);
     }
 		
     switch (currentState) {
     case PRELAUNCH:
-      if (accel_s.accelData[ZINDEX] >= ACCEL_LAUNCH) {
-				GPIOB->ODR ^= 0X8000;
-				vTaskDelete(xUsbReceiveHandle);
+      if (pAccel_s->accelData[ZINDEX] >= ACCEL_LAUNCH) {
+				#ifdef FLIGHT_TEST 
+					GPIOB->ODR ^= 0X8000; 
+				#endif
+				vTaskDelete(xUsbReceiveHandle);																	 // Ignore all USB communications
         xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_FLASH);   // Enable flash
 				xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_HIGHRES); // Enable high resolution data acquisition
         xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_LOWRES);  // Enable low resolution data acquisition
         currentState = LAUNCH;
       }
       break;
+			
     case LAUNCH:
 			avgVel.calculateMovingAverage(&avgVel, &avgVelCurrent);
       // Send altitude to aerobrakes via CAN
       CANHigh = 0x00000000;
       CANLow  = (unsigned int)altitude;
-      id      = 0x601;
+      id      = CAN_HEADER_AEROBRAKES_DATA;
       CAN_TX(1, 8, CANHigh, CANLow, id);
       // Transition to motor burnout state on velocity decrease
       if ((avgVelCurrent - avgVelPrevious) < 0) {
-				GPIOB->ODR ^= 0X8000;
+				#ifdef FLIGHT_TEST 
+					GPIOB->ODR ^= 0X8000; 
+				#endif
         currentState = COAST;
       }
 			avgVelPrevious = avgVelCurrent;
       break;
+			
     case COAST:
 			avgPress.calculateMovingAverage(&avgPress, &avgPressCurrent);
       // Send altitude to aerobrakes via CAN
       CANHigh = 0x00000000;
       CANLow  = (unsigned int) altitude;
-      id      = 0x601;
+      id      = CAN_HEADER_AEROBRAKES_DATA;
       CAN_TX(1, 8, CANHigh, CANLow, id);
       // Transition to apogee state on three way vote of altitude, velocity, and tilt
       // apogee is determined as two of three conditions evaluating true
       if ((((avgPressCurrent - avgPressPrevious) > 0) + (tilt >= 90) + (velocity < 0.0f)) >= 2) {
-				GPIOB->ODR ^= 0X8000;
+				#ifdef FLIGHT_TEST 
+					GPIOB->ODR ^= 0X8000; 
+				#endif
         currentState = APOGEE;
         // Send transmission to trigger apogee E-matches
       }
 			avgPressPrevious = avgPressCurrent;
       break;
+			
     case APOGEE:
-			GPIOB->ODR &= 0x8000;
+			// Retract aerobrakes
+		  CANHigh = 0x00000000;
+      CANLow  = 0x00000000;
+      id      = CAN_HEADER_AEROBRAKES_RETRACT;
+      CAN_TX(1, 8, CANHigh, CANLow, id);
+			// Transition to descent state when below main deployment altitude
       if (altitude <= MAIN_ALTITUDE_METERS) {
+				#ifdef FLIGHT_TEST 
+					GPIOB->ODR ^= 0X8000; 
+				#endif
         currentState = DESCENT;
         // Add descent event dataframe to buffer
       }
       break;
+			
     case DESCENT:
       // Handle descent state actions
       break;
@@ -272,18 +288,27 @@ void vFlashBuffer(void *argument) {
   }
 }
 
+
 /* ===================================================================== *
  *                             LORA HANDLING                             *
  * ===================================================================== */
 
+/**
+ * @brief LoRa transmit task
+ *
+ * @details Reads data from LoRa Tx buffer and sends to SX1272 for 
+ * transmit.
+ */
 void vLoRaTransmit(void *argument) {
   const TickType_t blockTime = pdMS_TO_TICKS(250);
-  uint8_t rxData[16];
+  uint8_t rxData[LORA_MSG_LENGTH];
 
   for (;;) {
-		EventBits_t uxBits = xEventGroupWaitBits(xMsgReadyGroup, GROUP_MESSAGE_READY_LORA, pdTRUE, pdFALSE, blockTime);
-    
-		if ((uxBits & GROUP_MESSAGE_READY_LORA)) {		
+		// Wait for SX1272 to be ready for transmission
+		EventBits_t uxBits = xEventGroupWaitBits(xMsgReadyGroup, GROUP_MESSAGE_READY_LORA, pdFALSE, pdFALSE, blockTime);
+		if ((uxBits & GROUP_MESSAGE_READY_LORA)) {
+			
+			// Wait to receive message in buffer
 			size_t xReceivedBytes = xMessageBufferReceive(
 				xLoRaTxBuff,
 				(void *)rxData,
@@ -291,44 +316,64 @@ void vLoRaTransmit(void *argument) {
 				blockTime
 			);		
 				
-			if (xReceivedBytes)
-				lora.transmit(&lora, rxData);				
-		}
+			// Transmit if message is available
+			if (xReceivedBytes) {
+				lora.transmit(&lora, rxData);	
+				xEventGroupClearBits(xMsgReadyGroup, GROUP_MESSAGE_READY_LORA);
+			}				
+		}	
   }
+	
 }
 
+/**
+ * @brief LoRa sample task
+ *
+ * @details Samples current sensor data from RAM every 250ms and
+ * queues it to be handled by vLoRaTransmit.
+ */
 void vLoRaSample(void *argument) {
 	TickType_t xLastWakeTime;
 	const TickType_t blockTime = pdMS_TO_TICKS(0);
 	const TickType_t xFrequency = pdMS_TO_TICKS(250);
-	
-	uint8_t counter = 0;
-	
+
 	for(;;) {
 		// Block until 250ms interval
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 	
-		LoRa_Packet packet1 = LoRa_AVD1(
-			LORA_HEADER_AVD1, 
-			&counter, 0x00, 1, 0.0f
+		// Create AVData packet and send to buffer
+		LoRa_Packet avData = LoRa_AVData(
+			LORA_HEADER_AV_DATA, 
+			currentState,
+			lAccel_s.rawAccelData, 
+			hAccel_s.rawAccelData, 
+			KX134_1211_DATA_TOTAL, 
+			gyro_s.rawGyroData,
+			A3G4250D_DATA_TOTAL,
+			altitude,
+			velocity
 		);
-		xMessageBufferSend(xLoRaTxBuff, &packet1, sizeof(packet1), blockTime);
-		counter++;
 		
-		LoRa_Packet packet2 = LoRa_AVD2(
-			LORA_HEADER_AVD2, 
-			&counter, 1, 0.0f
-		);
-		xMessageBufferSend(xLoRaTxBuff, &packet2, sizeof(packet2), blockTime);
-		counter++;			
+		xMessageBufferSend(xLoRaTxBuff, &avData, LORA_MSG_LENGTH, blockTime);
 	}
 }
 
+/**
+ * @brief LoRa Tx complete interrupt handler
+ *
+ * @details External interrupt on Tx complete signal from SX1272
+ * tranceiver. 
+ * @details On interrupt the LoRa ready flag is set in xMsgReadyGroup.
+ */
 void EXTI1_IRQHandler(void) {
   EXTI->PR |= (0x02);
   BaseType_t xHigherPriorityTaskWoken = pdFALSE, xResult;
 
-	xResult = xEventGroupSetBitsFromISR(xMsgReadyGroup, GROUP_MESSAGE_READY_LORA, &xHigherPriorityTaskWoken);
+	xResult = xEventGroupSetBitsFromISR(
+		xMsgReadyGroup, 
+		GROUP_MESSAGE_READY_LORA, 
+		&xHigherPriorityTaskWoken
+	);
 
 	if( xResult != pdFAIL )
 		portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
@@ -341,9 +386,10 @@ void EXTI1_IRQHandler(void) {
 /**
  * @brief USB receive task
  *
- * @details Reads data from UART Rx buffer and sends back to host for display.
- * @details On receiving carriage return, processes command stored in buffer
- * and resets.
+ * @details Reads data from UART Rx buffer and sends back to host 
+ * for display.
+ * @details On receiving carriage return, processes command stored 
+ * in buffer and resets.
  */
 void vUsbReceive(void *argument) {
   const TickType_t timeout = pdMS_TO_TICKS(20);
@@ -366,11 +412,13 @@ void vUsbReceive(void *argument) {
       taskEXIT_CRITICAL();
 			usbRxBuffIdx = 0;               	// Reset buffer
     } 
+		
 		// Clear terminal on <Ctrl-c> input
 		else if (rxData == SIGINT) {
 			usbCommandParse((uint8_t *) "clear");    	 
 			usbRxBuffIdx = 0;
 		}
+		
 		// Erase character and move cursor backwards on <BS> input
 		else if (rxData == BACKSPACE) {
 			usb.print(&usb, " \b");
@@ -414,34 +462,45 @@ void vDataAcquisitionH(void *argument) {
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
     // Select which accelerometer to use
-    accel_s = (accel_s.accelData[ZINDEX] < 15) ? lAccel_s : hAccel_s;
-	
-    // Update sensor data 
+    pAccel_s = (pAccel_s->accelData[ZINDEX] < 15) ? &lAccel_s : &hAccel_s;
+   
 		#ifdef DUMMY
 			const unsigned long accelX_length = 0x00007568;	// Load bearing definition???
+		
+		  /* 
+		   * Update sensor data with dummy values 
+		   * These arrays are defined in the files under /Data and are generated from 
+		   * past flight data binaries with srec_cat.
+		   */
 			if(hDummyIdx < ACCELX_LENGTH - 1) {
+				// Shift in floating point values and add to processed accelerometer array
 				uint32_t tempX = (uint32_t)accelX[hDummyIdx+1] << 16 | accelX[hDummyIdx];
 				uint32_t tempY = (uint32_t)accelY[hDummyIdx+1] << 16 | accelY[hDummyIdx];
 				uint32_t tempZ = (uint32_t)accelZ[hDummyIdx+1] << 16 | accelZ[hDummyIdx];
-				memcpy(&accel_s.accelData[0], &tempX, sizeof(float));
-				memcpy(&accel_s.accelData[1], &tempY, sizeof(float));
-				memcpy(&accel_s.accelData[2], &tempZ, sizeof(float));
-				uint16_t xRaw = (short)(accel_s.accelData[0]/accel_s.sensitivity);
-				uint16_t yRaw = (short)(accel_s.accelData[1]/accel_s.sensitivity);
-				uint16_t zRaw = (short)(accel_s.accelData[2]/accel_s.sensitivity);
-				accel_s.rawAccelData[0] = xRaw >> 8;
-				accel_s.rawAccelData[1] = xRaw;
-				accel_s.rawAccelData[2] = yRaw >> 8;
-				accel_s.rawAccelData[3] = yRaw;
-				accel_s.rawAccelData[4] = zRaw >> 8;
-				accel_s.rawAccelData[5] = zRaw;
+				memcpy(&pAccel_s->accelData[0], &tempX, sizeof(float));
+				memcpy(&pAccel_s->accelData[1], &tempY, sizeof(float));
+				memcpy(&pAccel_s->accelData[2], &tempZ, sizeof(float));
 				
+				// Back convert to raw data 
+				uint16_t xRaw = (short)(pAccel_s->accelData[0] / pAccel_s->sensitivity);
+				uint16_t yRaw = (short)(pAccel_s->accelData[1] / pAccel_s->sensitivity);
+				uint16_t zRaw = (short)(pAccel_s->accelData[2] / pAccel_s->sensitivity);
+				pAccel_s->rawAccelData[0] = xRaw >> 8;
+				pAccel_s->rawAccelData[1] = xRaw;
+				pAccel_s->rawAccelData[2] = yRaw >> 8;
+				pAccel_s->rawAccelData[3] = yRaw;
+				pAccel_s->rawAccelData[4] = zRaw >> 8;
+				pAccel_s->rawAccelData[5] = zRaw;
+				
+				// Shift in floating point values and add to processed gyroscope array
 				tempX = (uint32_t)gyroX[hDummyIdx+1] << 16 | gyroX[hDummyIdx];
 				tempY = (uint32_t)gyroY[hDummyIdx+1] << 16 | gyroY[hDummyIdx];
 				tempZ = (uint32_t)gyroZ[hDummyIdx+1] << 16 | gyroZ[hDummyIdx];
 				memcpy(&gyro_s.gyroData[0], &tempX, sizeof(float));
 				memcpy(&gyro_s.gyroData[1], &tempY, sizeof(float));
 				memcpy(&gyro_s.gyroData[2], &tempZ, sizeof(float));
+				
+				// Back convert to raw data 
 				xRaw = (short)(gyro_s.gyroData[0]/gyro_s.sensitivity);
 				yRaw = (short)(gyro_s.gyroData[1]/gyro_s.sensitivity);
 				zRaw = (short)(gyro_s.gyroData[2]/gyro_s.sensitivity);
@@ -455,13 +514,14 @@ void vDataAcquisitionH(void *argument) {
 				hDummyIdx += 2;
 			}
 		#else
-			accel_s.update(&accel_s);
+			lAccel_s.update(&lAccel_s);
+			hAccel_s.update(&hAccel_s);
 			gyro_s.update(&gyro_s);
 		#endif
 		
     // Add sensor data to dataframe
     mem.append(&mem, HEADER_HIGHRES);
-    mem.appendBytes(&mem, accel_s.rawAccelData, KX134_1211_DATA_TOTAL);
+    mem.appendBytes(&mem, pAccel_s->rawAccelData, KX134_1211_DATA_TOTAL);
     mem.appendBytes(&mem, gyro_s.rawGyroData, A3G4250D_DATA_TOTAL);
 		
     // Only run calculations when enabled
@@ -562,7 +622,7 @@ void vDataAcquisitionL(void *argument) {
     if (uxBits & GROUP_TASK_ENABLE_LOWRES) {
       // Calculate state
       z.pData[0] = altitude;
-      z.pData[1] = (cosine * 9.81 * accel_s.accelData[ZINDEX] - 9.81); // Acceleration measured in m/s^2
+      z.pData[1] = (cosine * 9.81 * pAccel_s->accelData[ZINDEX] - 9.81); // Acceleration measured in m/s^2
       kf.update(&kf, &z);
       velocity = kf.x.pData[1];
 			
