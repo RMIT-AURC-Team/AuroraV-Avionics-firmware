@@ -103,8 +103,8 @@ $(function(){initNavTree('lora_8h_source.html',''); initResizable(true); });
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#ifndef _LORA_H</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#define _LORA_H</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;spi.h&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;stm32f439xx.h&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;stm32f439xx.h&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;spi.h&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;string.h&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#define LORA_REG_FIFO                   0x00</span></div>
@@ -138,8 +138,8 @@ $(function(){initNavTree('lora_8h_source.html',''); initResizable(true); });
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#define RegDioMapping1                  0x40</span></div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#define RegDioMapping2                  0x41</span></div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#define LORA_MSG_LENGTH                 0x10</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#define LORA_MSG_PAYLOAD_LENGTH         0x0F</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#define LORA_MSG_LENGTH                 0x20</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#define LORA_MSG_PAYLOAD_LENGTH         (LORA_MSG_LENGTH - 1)</span></div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">typedef</span> <span class="keyword">enum</span> {</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  BW125,</div>
@@ -194,18 +194,26 @@ $(function(){initNavTree('lora_8h_source.html',''); initResizable(true); });
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="keywordtype">void</span> LoRa_writeRegister(<a class="code hl_struct" href="structLoRa.html">LoRa</a> *, uint8_t, uint8_t);</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>uint8_t LoRa_readRegister(<a class="code hl_struct" href="structLoRa.html">LoRa</a> *, uint8_t);</div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><a class="code hl_struct" href="group__LoRa.html#structLoRa__Packet">LoRa_Packet</a> <a class="code hl_function" href="group__LoRa.html#ga7e837a74df47b88a7064df74650176ae">LoRa_AVD1</a>(uint8_t, uint8_t *, uint8_t *, uint8_t, <span class="keywordtype">float</span>);</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><a class="code hl_struct" href="group__LoRa.html#structLoRa__Packet">LoRa_Packet</a> <a class="code hl_function" href="group__LoRa.html#ga4811652f4eab94cc6063d3eb68bf21e3">LoRa_AVD2</a>(uint8_t, uint8_t *, uint8_t, <span class="keywordtype">float</span>);</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="keywordtype">void</span> <a class="code hl_function" href="group__LoRa.html#ga49a9b9fcd8aaad9aa6e3586389b829e9">_LoRa_setMode</a>(<a class="code hl_struct" href="structLoRa.html">LoRa</a> *, Mode);</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><a class="code hl_struct" href="group__LoRa.html#structLoRa__Packet">LoRa_Packet</a> <a class="code hl_function" href="group__LoRa.html#ga73a85bfd9b4677eca96f7f3ca1573bdf">LoRa_AVData</a>(</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    uint8_t,</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    uint8_t, </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    uint8_t *, </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    uint8_t *, </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    uint8_t, </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  uint8_t *,</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    uint8_t,</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keywordtype">float</span>,</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keywordtype">float</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>);</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span><span class="keywordtype">void</span> <a class="code hl_function" href="group__LoRa.html#ga49a9b9fcd8aaad9aa6e3586389b829e9">_LoRa_setMode</a>(<a class="code hl_struct" href="structLoRa.html">LoRa</a> *, Mode);</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="agroup__LoRa_html_a1e6927fa1486224044e568f9c370519b"><div class="ttname"><a href="group__LoRa.html#a1e6927fa1486224044e568f9c370519b">LoRa_Packet::id</a></div><div class="ttdeci">uint8_t id</div><div class="ttdoc">Packet header ID.</div><div class="ttdef"><b>Definition</b> <a href="#l00088">lora.h:88</a></div></div>
 <div class="ttc" id="agroup__LoRa_html_ga1a62293fe572d94b7196ddb6619e2f32"><div class="ttname"><a href="group__LoRa.html#ga1a62293fe572d94b7196ddb6619e2f32">LoRa_init</a></div><div class="ttdeci">void LoRa_init(LoRa *, GPIO_TypeDef *, unsigned long, Bandwidth, SpreadingFactor, CodingRate)</div><div class="ttdef"><b>Definition</b> <a href="lora_8c_source.html#l00034">lora.c:34</a></div></div>
-<div class="ttc" id="agroup__LoRa_html_ga4811652f4eab94cc6063d3eb68bf21e3"><div class="ttname"><a href="group__LoRa.html#ga4811652f4eab94cc6063d3eb68bf21e3">LoRa_AVD2</a></div><div class="ttdeci">LoRa_Packet LoRa_AVD2(uint8_t, uint8_t *, uint8_t, float)</div><div class="ttdef"><b>Definition</b> <a href="lora_8c_source.html#l00131">lora.c:131</a></div></div>
 <div class="ttc" id="agroup__LoRa_html_ga49a9b9fcd8aaad9aa6e3586389b829e9"><div class="ttname"><a href="group__LoRa.html#ga49a9b9fcd8aaad9aa6e3586389b829e9">_LoRa_setMode</a></div><div class="ttdeci">void _LoRa_setMode(LoRa *, Mode)</div><div class="ttdef"><b>Definition</b> <a href="lora_8c_source.html#l00077">lora.c:77</a></div></div>
-<div class="ttc" id="agroup__LoRa_html_ga7e837a74df47b88a7064df74650176ae"><div class="ttname"><a href="group__LoRa.html#ga7e837a74df47b88a7064df74650176ae">LoRa_AVD1</a></div><div class="ttdeci">LoRa_Packet LoRa_AVD1(uint8_t, uint8_t *, uint8_t *, uint8_t, float)</div><div class="ttdef"><b>Definition</b> <a href="lora_8c_source.html#l00097">lora.c:97</a></div></div>
-<div class="ttc" id="agroup__LoRa_html_gae19b9f0cd6a296c35d492f391278cecd"><div class="ttname"><a href="group__LoRa.html#gae19b9f0cd6a296c35d492f391278cecd">LoRa_transmit</a></div><div class="ttdeci">void LoRa_transmit(LoRa *, uint8_t *)</div><div class="ttdef"><b>Definition</b> <a href="lora_8c_source.html#l00164">lora.c:164</a></div></div>
+<div class="ttc" id="agroup__LoRa_html_ga73a85bfd9b4677eca96f7f3ca1573bdf"><div class="ttname"><a href="group__LoRa.html#ga73a85bfd9b4677eca96f7f3ca1573bdf">LoRa_AVData</a></div><div class="ttdeci">LoRa_Packet LoRa_AVData(uint8_t, uint8_t, uint8_t *, uint8_t *, uint8_t, uint8_t *, uint8_t, float, float)</div><div class="ttdef"><b>Definition</b> <a href="lora_8c_source.html#l00097">lora.c:97</a></div></div>
+<div class="ttc" id="agroup__LoRa_html_gae19b9f0cd6a296c35d492f391278cecd"><div class="ttname"><a href="group__LoRa.html#gae19b9f0cd6a296c35d492f391278cecd">LoRa_transmit</a></div><div class="ttdeci">void LoRa_transmit(LoRa *, uint8_t *)</div><div class="ttdef"><b>Definition</b> <a href="lora_8c_source.html#l00146">lora.c:146</a></div></div>
 <div class="ttc" id="agroup__LoRa_html_structLoRa__Packet"><div class="ttname"><a href="group__LoRa.html#structLoRa__Packet">LoRa_Packet</a></div><div class="ttdef"><b>Definition</b> <a href="#l00087">lora.h:87</a></div></div>
 <div class="ttc" id="astructLoRa_html"><div class="ttname"><a href="structLoRa.html">LoRa</a></div><div class="ttdef"><b>Definition</b> <a href="#l00093">lora.h:93</a></div></div>
 <div class="ttc" id="astructLoRa_html_a00f362d8f0bfa02a3b90b758a04decf6"><div class="ttname"><a href="structLoRa.html#a00f362d8f0bfa02a3b90b758a04decf6">LoRa::transmit</a></div><div class="ttdeci">void(* transmit)(struct LoRa *, uint8_t *)</div><div class="ttdoc">LoRa transmit method.</div><div class="ttdef"><b>Definition</b> <a href="#l00095">lora.h:95</a></div></div>

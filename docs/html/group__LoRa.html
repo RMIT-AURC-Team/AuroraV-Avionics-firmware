@@ -116,10 +116,8 @@ Functions</h2></td></tr>
 <tr class="separator:ga1a62293fe572d94b7196ddb6619e2f32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae19b9f0cd6a296c35d492f391278cecd" id="r_gae19b9f0cd6a296c35d492f391278cecd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae19b9f0cd6a296c35d492f391278cecd">LoRa_transmit</a> (<a class="el" href="structLoRa.html">LoRa</a> *lora, uint8_t *pointerdata)</td></tr>
 <tr class="separator:gae19b9f0cd6a296c35d492f391278cecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7e837a74df47b88a7064df74650176ae" id="r_ga7e837a74df47b88a7064df74650176ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#structLoRa__Packet">LoRa_Packet</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7e837a74df47b88a7064df74650176ae">LoRa_AVD1</a> (uint8_t id, uint8_t *lAccelData, uint8_t *hAccelData, uint8_t lenAccel, float velocity)</td></tr>
-<tr class="separator:ga7e837a74df47b88a7064df74650176ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4811652f4eab94cc6063d3eb68bf21e3" id="r_ga4811652f4eab94cc6063d3eb68bf21e3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#structLoRa__Packet">LoRa_Packet</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4811652f4eab94cc6063d3eb68bf21e3">LoRa_AVD2</a> (uint8_t id, uint8_t *gyroData, uint8_t lenGyro, float pressure)</td></tr>
-<tr class="separator:ga4811652f4eab94cc6063d3eb68bf21e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga73a85bfd9b4677eca96f7f3ca1573bdf" id="r_ga73a85bfd9b4677eca96f7f3ca1573bdf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#structLoRa__Packet">LoRa_Packet</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga73a85bfd9b4677eca96f7f3ca1573bdf">LoRa_AVData</a> (uint8_t id, uint8_t currentState, uint8_t *lAccelData, uint8_t *hAccelData, uint8_t lenAccel, uint8_t *gyroData, uint8_t lenGyro, float altitude, float velocity)</td></tr>
+<tr class="separator:ga73a85bfd9b4677eca96f7f3ca1573bdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga49a9b9fcd8aaad9aa6e3586389b829e9" id="r_ga49a9b9fcd8aaad9aa6e3586389b829e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga49a9b9fcd8aaad9aa6e3586389b829e9">_LoRa_setMode</a> (<a class="el" href="structLoRa.html">LoRa</a> *lora, Mode mode)</td></tr>
 <tr class="separator:ga49a9b9fcd8aaad9aa6e3586389b829e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -247,20 +245,25 @@ Packet payload. </td></tr>
 <dd>
 Implementing interrupt on TxComplete signal should solve this since the handler should only run over a few clock cycles.</dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00164">164</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00146">146</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
 
 </div>
 </div>
-<a id="ga7e837a74df47b88a7064df74650176ae" name="ga7e837a74df47b88a7064df74650176ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7e837a74df47b88a7064df74650176ae">&#9670;&#160;</a></span>LoRa_AVD1()</h2>
+<a id="ga73a85bfd9b4677eca96f7f3ca1573bdf" name="ga73a85bfd9b4677eca96f7f3ca1573bdf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga73a85bfd9b4677eca96f7f3ca1573bdf">&#9670;&#160;</a></span>LoRa_AVData()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#structLoRa__Packet">LoRa_Packet</a> LoRa_AVD1 </td>
+          <td class="memname"><a class="el" href="#structLoRa__Packet">LoRa_Packet</a> LoRa_AVData </td>
           <td>(</td>
           <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>id</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>currentState</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -276,6 +279,21 @@ Implementing interrupt on TxComplete signal should solve this since the handler 
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>lenAccel</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *</td>          <td class="paramname"><span class="paramname"><em>gyroData</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>lenGyro</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>altitude</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -296,49 +314,6 @@ Implementing interrupt on TxComplete signal should solve this since the handler 
 <hr  />
  
 <p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00097">97</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
-
-</div>
-</div>
-<a id="ga4811652f4eab94cc6063d3eb68bf21e3" name="ga4811652f4eab94cc6063d3eb68bf21e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4811652f4eab94cc6063d3eb68bf21e3">&#9670;&#160;</a></span>LoRa_AVD2()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#structLoRa__Packet">LoRa_Packet</a> LoRa_AVD2 </td>
-          <td>(</td>
-          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>id</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t *</td>          <td class="paramname"><span class="paramname"><em>gyroData</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>lenGyro</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>pressure</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">id</td><td></td></tr>
-    <tr><td class="paramname">*gyroData</td><td></td></tr>
-    <tr><td class="paramname">lenGyro</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="#structLoRa__Packet">LoRa_Packet</a>.</dd></dl>
-<hr  />
- 
-<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00131">131</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
 
 </div>
 </div>

@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['spi_5finit_0',['SPI_init',['../group__SPI.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7',1,'SPI_init(SPI *, DeviceType, SPI_TypeDef *, GPIO_TypeDef *, unsigned long):&#160;spi.c'],['../group__SPI.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7',1,'SPI_init(SPI *spi, DeviceType device, SPI_TypeDef *interface, GPIO_TypeDef *port, unsigned long cs):&#160;spi.c']]],
-  ['spi_5freceive_1',['SPI_receive',['../group__SPI.html#ga4fbfc141ea14655d6e93aed8ac67aa67',1,'SPI_receive(SPI *, volatile uint16_t *):&#160;spi.c'],['../group__SPI.html#ga4fbfc141ea14655d6e93aed8ac67aa67',1,'SPI_receive(SPI *spi, volatile uint16_t *data):&#160;spi.c']]],
-  ['spi_5fsend_2',['SPI_send',['../group__SPI.html#ga205c59ab72d018c05d33f91e7c7808e7',1,'SPI_send(SPI *, uint16_t):&#160;spi.c'],['../group__SPI.html#ga205c59ab72d018c05d33f91e7c7808e7',1,'SPI_send(SPI *spi, uint16_t data):&#160;spi.c']]],
-  ['spi_5ftransmit_3',['SPI_transmit',['../group__SPI.html#ga45245db392649677ce4d93b334f6e0fd',1,'SPI_transmit(SPI *, uint16_t):&#160;spi.c'],['../group__SPI.html#ga45245db392649677ce4d93b334f6e0fd',1,'SPI_transmit(SPI *spi, uint16_t data):&#160;spi.c']]]
+  ['lora_5favdata_0',['LoRa_AVData',['../group__LoRa.html#ga73a85bfd9b4677eca96f7f3ca1573bdf',1,'lora.c']]],
+  ['lora_5finit_1',['LoRa_init',['../group__LoRa.html#ga1a62293fe572d94b7196ddb6619e2f32',1,'lora.c']]],
+  ['lora_5ftransmit_2',['LoRa_transmit',['../group__LoRa.html#gae19b9f0cd6a296c35d492f391278cecd',1,'lora.c']]]
 ];

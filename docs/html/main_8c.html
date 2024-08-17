@@ -107,6 +107,15 @@ $(function(){initNavTree('main_8c.html',''); initResizable(true); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a28155a4377ea0018f4400ddcc3f1b652" id="r_a28155a4377ea0018f4400ddcc3f1b652"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a28155a4377ea0018f4400ddcc3f1b652">vLoRaTransmit</a> (void *argument)</td></tr>
+<tr class="memdesc:a28155a4377ea0018f4400ddcc3f1b652"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structLoRa.html">LoRa</a> transmit task.  <br /></td></tr>
+<tr class="separator:a28155a4377ea0018f4400ddcc3f1b652"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa00a5719953da79a0c70019bce2f30bb" id="r_aa00a5719953da79a0c70019bce2f30bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa00a5719953da79a0c70019bce2f30bb">vLoRaSample</a> (void *argument)</td></tr>
+<tr class="memdesc:aa00a5719953da79a0c70019bce2f30bb"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structLoRa.html">LoRa</a> sample task.  <br /></td></tr>
+<tr class="separator:aa00a5719953da79a0c70019bce2f30bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49cfdd46eb8d0ef3e1987514aa9343dc" id="r_a49cfdd46eb8d0ef3e1987514aa9343dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a49cfdd46eb8d0ef3e1987514aa9343dc">EXTI1_IRQHandler</a> (void)</td></tr>
+<tr class="memdesc:a49cfdd46eb8d0ef3e1987514aa9343dc"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structLoRa.html">LoRa</a> Tx complete interrupt handler.  <br /></td></tr>
+<tr class="separator:a49cfdd46eb8d0ef3e1987514aa9343dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07b096ae45055b89f8883fe5209cf02b" id="r_a07b096ae45055b89f8883fe5209cf02b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07b096ae45055b89f8883fe5209cf02b">vUsbReceive</a> (void *argument)</td></tr>
 <tr class="memdesc:a07b096ae45055b89f8883fe5209cf02b"><td class="mdescLeft">&#160;</td><td class="mdescRight">USB receive task.  <br /></td></tr>
 <tr class="separator:a07b096ae45055b89f8883fe5209cf02b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -120,6 +129,73 @@ Functions</h2></td></tr>
 
 <p class="definition">Definition in file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a28155a4377ea0018f4400ddcc3f1b652" name="a28155a4377ea0018f4400ddcc3f1b652"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28155a4377ea0018f4400ddcc3f1b652">&#9670;&#160;</a></span>vLoRaTransmit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vLoRaTransmit </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>argument</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structLoRa.html">LoRa</a> transmit task. </p>
+<p>Reads data from <a class="el" href="structLoRa.html">LoRa</a> Tx buffer and sends to SX1272 for transmit. </p>
+
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00302">302</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="aa00a5719953da79a0c70019bce2f30bb" name="aa00a5719953da79a0c70019bce2f30bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa00a5719953da79a0c70019bce2f30bb">&#9670;&#160;</a></span>vLoRaSample()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vLoRaSample </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>argument</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structLoRa.html">LoRa</a> sample task. </p>
+<p>Samples current sensor data from RAM every 250ms and queues it to be handled by vLoRaTransmit. </p>
+
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00335">335</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="a49cfdd46eb8d0ef3e1987514aa9343dc" name="a49cfdd46eb8d0ef3e1987514aa9343dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49cfdd46eb8d0ef3e1987514aa9343dc">&#9670;&#160;</a></span>EXTI1_IRQHandler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void EXTI1_IRQHandler </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structLoRa.html">LoRa</a> Tx complete interrupt handler. </p>
+<p>External interrupt on Tx complete signal from SX1272 tranceiver.</p>
+<p>On interrupt the <a class="el" href="structLoRa.html">LoRa</a> ready flag is set in xMsgReadyGroup. </p>
+
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00368">368</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
 <a id="a07b096ae45055b89f8883fe5209cf02b" name="a07b096ae45055b89f8883fe5209cf02b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a07b096ae45055b89f8883fe5209cf02b">&#9670;&#160;</a></span>vUsbReceive()</h2>
 
@@ -139,7 +215,7 @@ Functions</h2></td></tr>
 <p>Reads data from <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface foobar.">UART</a> Rx buffer and sends back to host for display.</p>
 <p>On receiving carriage return, processes command stored in buffer and resets. </p>
 
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00348">348</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00394">394</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 
 </div>
 </div>
@@ -161,7 +237,7 @@ Functions</h2></td></tr>
 <p>Interrupt handler for USB <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface foobar.">UART</a> receive. </p>
 <p>Circular append received byte to buffer and send byte to stream buffer for processing in the Rx task. </p>
 
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00389">389</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00437">437</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 
 </div>
 </div>
