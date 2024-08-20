@@ -6,9 +6,6 @@
  * @todo Implement globals as context struct to pass to external functions.        *
  *       e.g. passing context of flash, uart, etc. to control functions.           *
  *                                                                                 *
- * @todo Implement definition and ifdef guards for system debug, provides          *
- *       system debug information printed to USB UART interface if defined.        *
- *                                                                                 *
  * @todo Implement startup task to isolate initialisations from main.              *
  ***********************************************************************************/
 
@@ -130,7 +127,10 @@ int main(void) {
 		xTraceEnable(TRC_START);
 	#endif
 	
-	GPIOB->ODR |= 0X8000;
+//	#ifdef FLIGHT_TEST 
+//		GPIOB->ODR ^= 0X8000; 
+//		GPIOD->ODR ^= 0X8000;
+//	#endif
 
   Flash_init(&flash, FLASH_PORT, FLASH_CS, FLASH_PAGE_SIZE, FLASH_PAGE_COUNT);
   UART_init(&usb, USB_INTERFACE, USB_PORT, USB_BAUD, OVER8);
@@ -237,7 +237,7 @@ void vStateUpdate(void *argument) {
 			avgVel.calculateMovingAverage(&avgVel, &avgVelCurrent);
       // Send altitude to aerobrakes via CAN
       CANHigh = 0x00000000;
-      CANLow  = (unsigned int)altitude;
+      memcpy(&CANLow, &altitude, sizeof(float));
       id      = CAN_HEADER_AEROBRAKES_DATA;
       CAN_TX(1, 8, CANHigh, CANLow, id);
       // Transition to motor burnout state on velocity decrease
@@ -255,7 +255,7 @@ void vStateUpdate(void *argument) {
 			avgPress.calculateMovingAverage(&avgPress, &avgPressCurrent);
       // Send altitude to aerobrakes via CAN
       CANHigh = 0x00000000;
-      CANLow  = (unsigned int) altitude;
+      memcpy(&CANLow, &altitude, sizeof(float));
       id      = CAN_HEADER_AEROBRAKES_DATA;
       CAN_TX(1, 8, CANHigh, CANLow, id);
       // Transition to apogee state on three way vote of altitude, velocity, and tilt
@@ -778,7 +778,7 @@ void vDataAcquisitionL(void *argument) {
 void vGpsRead(void *argument) {
 	TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(500); 
-	char gpsString[30];
+	char gpsString[100];
 	
 	for (;;) {
 		// Block until 500ms interval

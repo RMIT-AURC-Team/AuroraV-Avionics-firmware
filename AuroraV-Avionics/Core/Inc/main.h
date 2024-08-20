@@ -95,6 +95,7 @@ void Error_Handler(void);
 // ACCELEROMETER
 #define ACCEL_PORT_1  GPIOA
 #define ACCEL_CS_1    GPIO_ODR_OD1
+// FLIGHT AXES
 #define ACCEL_AXES_1  ((const uint8_t[]){0, 2, 1})
 #define ACCEL_SIGN_1  ((const int8_t[]){1, 1, -1})
 // DRONE AXES
@@ -148,7 +149,7 @@ void Error_Handler(void);
  *                            MISC DEFINITIONS                           *
  * ===================================================================== */
 
-#define ACCEL_LAUNCH         1.5f
+#define ACCEL_LAUNCH         1.25f
 #define MAIN_ALTITUDE_METERS 396.0f
 
 #define SIGINT 					 	   0x03
