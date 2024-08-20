@@ -244,9 +244,9 @@
             <uThumb>1</uThumb>
             <VariousControls>
               <MiscControls>-mfloat-abi=hard -ffast-math -mfpu=fpv4-sp-d16</MiscControls>
-              <Define>__TARGET_FPU_VFP, DUMMY</Define>
+              <Define>__TARGET_FPU_VFP, FLIGHT_TEST</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core\Inc;..\Core\Inc\SPI;..\Core\Inc\SPI\flash;..\Core\Inc\SPI\lora;..\Core\Inc\SPI\sensors;..\Core\Inc\SPI\sensors\accel;..\Core\Inc\SPI\sensors\baro;..\Core\Inc\SPI\sensors\gyro;..\Lib\inc;..\Lib\inc\CORE;..\Lib\inc\CORE\Include;..\Lib\inc\DSP;..\Lib\inc\DSP\Include;..\Lib\inc\DSP\Include\dsp;..\Lib\inc\DSP\PrivateInclude;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Middlewares\Third_Party\TraceRecorder\include;..\Middlewares\Third_Party\TraceRecorder\config;..\Data</IncludePath>
+              <IncludePath>..\Core\Inc;..\Core\Inc\SPI;..\Core\Inc\SPI\flash;..\Core\Inc\SPI\lora;..\Core\Inc\SPI\sensors;..\Core\Inc\SPI\sensors\accel;..\Core\Inc\SPI\sensors\baro;..\Core\Inc\SPI\sensors\gyro;..\Lib\inc;..\Lib\inc\CORE;..\Lib\inc\CORE\Include;..\Lib\inc\DSP;..\Lib\inc\DSP\Include;..\Lib\inc\DSP\Include\dsp;..\Lib\inc\DSP\PrivateInclude;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Middlewares\Third_Party\TraceRecorder\include;..\Middlewares\Third_Party\TraceRecorder\config;..\Data;.\System</IncludePath>
             </VariousControls>
           </Carm>
           <Aarm>
@@ -256,7 +256,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core\Inc</IncludePath>
+              <IncludePath>..\Core\Inc;.\System</IncludePath>
             </VariousControls>
           </Aarm>
           <LDarm>
@@ -270,19 +270,74 @@
             <BSSAddressRange></BSSAddressRange>
             <IncludeLibs></IncludeLibs>
             <IncludeDir>..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F</IncludeDir>
-            <Misc>-mfloat-abi=hard -ffast-math -mfpu=fpv4-sp-d16</Misc>
+            <Misc>-mfloat-abi=hard -ffast-math -mfpu=fpv4-sp-d16 --specs=nosys.specs</Misc>
             <ScatterFile>..\Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\stm32_flash.ld</ScatterFile>
           </LDarm>
         </TargetArm>
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>Application/MDK-ARM</GroupName>
+          <GroupName>System</GroupName>
           <Files>
             <File>
               <FileName>startup_stm32f4xx.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\startup_stm32f4xx.s</FilePath>
+              <FilePath>.\System\startup_stm32f4xx.s</FilePath>
+            </File>
+            <File>
+              <FileName>startup_stm32f439xx.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\System\startup_stm32f439xx.s</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArm>
+                  <Aarm>
+                    <bBE>2</bBE>
+                    <interw>2</interw>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Aarm>
+                </FileArm>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>system_stm32f4xx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>../Core/Src/system_stm32f4xx.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_hal_conf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\stm32f4xx_hal_conf.h</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_it.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\stm32f4xx_it.h</FilePath>
+            </File>
+            <File>
+              <FileName>config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\config.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -372,16 +427,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Drivers/CMSIS</GroupName>
-          <Files>
-            <File>
-              <FileName>system_stm32f4xx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../Core/Src/system_stm32f4xx.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Middlewares/FreeRTOS</GroupName>
           <Files>
             <File>
@@ -440,7 +485,7 @@
               <RVCTZI>0</RVCTZI>
               <RVCTOtherData>0</RVCTOtherData>
               <ModuleSelection>0</ModuleSelection>
-              <IncludeInBuild>1</IncludeInBuild>
+              <IncludeInBuild>0</IncludeInBuild>
               <AlwaysBuild>2</AlwaysBuild>
               <GenerateAssemblyFile>2</GenerateAssemblyFile>
               <AssembleAssemblyFile>2</AssembleAssemblyFile>

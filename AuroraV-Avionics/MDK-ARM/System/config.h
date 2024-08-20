@@ -7,8 +7,8 @@
 ********************************************/
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-//#ifndef __MISC_CONFIG_H__
-//#define __MISC_CONFIG_H__
+#ifndef __MISC_CONFIG_H__
+#define __MISC_CONFIG_H__
 
 // External Memory Interface
 #define DATA_IN_ExtSDRAM					// Uncomment this line if an external memory interface is required (SDRAM).
@@ -49,4 +49,4 @@
 // Configuration for real-time clock
 // #define RTC_ENABLE			0
 
-
+#endif
