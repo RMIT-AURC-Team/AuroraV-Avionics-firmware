@@ -103,12 +103,15 @@ $(function(){initNavTree('main_8h.html',''); initResizable(true); });
 <div class="contents">
 <div class="textblock"><code>#include &quot;FreeRTOS.h&quot;</code><br />
 <code>#include &quot;event_groups.h&quot;</code><br />
+<code>#include &quot;semphr.h&quot;</code><br />
 <code>#include &quot;message_buffer.h&quot;</code><br />
 <code>#include &quot;stdint.h&quot;</code><br />
+<code>#include &quot;stdio.h&quot;</code><br />
 <code>#include &quot;stm32f4xx.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="A3G4250D_8h_source.html">A3G4250D.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="BMP581_8h_source.html">BMP581.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="KX134__1211_8h_source.html">KX134_1211.h</a>&quot;</code><br />
+<code>#include &quot;gps.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="can_8h_source.html">can.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="control_8h_source.html">control.h</a>&quot;</code><br />
 <code>#include &quot;drivers.h&quot;</code><br />
@@ -133,6 +136,18 @@ $(function(){initNavTree('main_8h.html',''); initResizable(true); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a9ac16aac1ff95911ff046f4c12fc79f0" id="r_a9ac16aac1ff95911ff046f4c12fc79f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9ac16aac1ff95911ff046f4c12fc79f0">vFlashBuffer</a> (void *pvParameters)</td></tr>
+<tr class="memdesc:a9ac16aac1ff95911ff046f4c12fc79f0"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structFlash.html">Flash</a> buffer write task.  <br /></td></tr>
+<tr class="separator:a9ac16aac1ff95911ff046f4c12fc79f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4b3086ed950c28a12c4284658791b38" id="r_ab4b3086ed950c28a12c4284658791b38"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4b3086ed950c28a12c4284658791b38">vDataAcquisitionH</a> (void *pvParameters)</td></tr>
+<tr class="memdesc:ab4b3086ed950c28a12c4284658791b38"><td class="mdescLeft">&#160;</td><td class="mdescRight">High-frequency data acquisition task.  <br /></td></tr>
+<tr class="separator:ab4b3086ed950c28a12c4284658791b38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d6bb459e9a8fe1217ca277b92447f06" id="r_a9d6bb459e9a8fe1217ca277b92447f06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d6bb459e9a8fe1217ca277b92447f06">vDataAcquisitionL</a> (void *pvParameters)</td></tr>
+<tr class="memdesc:a9d6bb459e9a8fe1217ca277b92447f06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Low-frequency data acquisition and altitude estimation function.  <br /></td></tr>
+<tr class="separator:a9d6bb459e9a8fe1217ca277b92447f06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4baa4df22fc51c96768bc4ecb062c49" id="r_ab4baa4df22fc51c96768bc4ecb062c49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4baa4df22fc51c96768bc4ecb062c49">vStateUpdate</a> (void *pvParameters)</td></tr>
+<tr class="memdesc:ab4baa4df22fc51c96768bc4ecb062c49"><td class="mdescLeft">&#160;</td><td class="mdescRight">State update task.  <br /></td></tr>
+<tr class="separator:ab4baa4df22fc51c96768bc4ecb062c49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad225e2392a63173a1ab8f9000f044da7" id="r_ad225e2392a63173a1ab8f9000f044da7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad225e2392a63173a1ab8f9000f044da7">vLoRaTransmit</a> (void *pvParameters)</td></tr>
 <tr class="memdesc:ad225e2392a63173a1ab8f9000f044da7"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structLoRa.html">LoRa</a> transmit task.  <br /></td></tr>
 <tr class="separator:ad225e2392a63173a1ab8f9000f044da7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -140,14 +155,115 @@ Functions</h2></td></tr>
 <tr class="memdesc:a516b0f13ea1c8631ad6e715d57f006ed"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structLoRa.html">LoRa</a> sample task.  <br /></td></tr>
 <tr class="separator:a516b0f13ea1c8631ad6e715d57f006ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad4a12c2eef5102e1c4a42a88d94fc58" id="r_aad4a12c2eef5102e1c4a42a88d94fc58"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad4a12c2eef5102e1c4a42a88d94fc58">vUsbReceive</a> (void *pvParameters)</td></tr>
-<tr class="memdesc:aad4a12c2eef5102e1c4a42a88d94fc58"><td class="mdescLeft">&#160;</td><td class="mdescRight">USB receive task.  <br /></td></tr>
+<tr class="memdesc:aad4a12c2eef5102e1c4a42a88d94fc58"><td class="mdescLeft">&#160;</td><td class="mdescRight">USB receive task for handling <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface.">UART</a> input.  <br /></td></tr>
 <tr class="separator:aad4a12c2eef5102e1c4a42a88d94fc58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5aa3747f571a0bfb473eed21380a3c3e" id="r_a5aa3747f571a0bfb473eed21380a3c3e"><td class="memItemLeft" align="right" valign="top"><a id="a5aa3747f571a0bfb473eed21380a3c3e" name="a5aa3747f571a0bfb473eed21380a3c3e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>vUsbTransmit</b> (void *pvParameters)</td></tr>
+<tr class="memdesc:a5aa3747f571a0bfb473eed21380a3c3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">USB transmit task for handling <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface.">UART</a> output. <br /></td></tr>
+<tr class="separator:a5aa3747f571a0bfb473eed21380a3c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b1cad70588b5e19409823a2df39af7b" id="r_a5b1cad70588b5e19409823a2df39af7b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b1cad70588b5e19409823a2df39af7b">configure_interrupts</a> ()</td></tr>
+<tr class="separator:a5b1cad70588b5e19409823a2df39af7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Matt Ricci </dd></dl>
 
 <p class="definition">Definition in file <a class="el" href="main_8h_source.html">main.h</a>.</p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a9ac16aac1ff95911ff046f4c12fc79f0" name="a9ac16aac1ff95911ff046f4c12fc79f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ac16aac1ff95911ff046f4c12fc79f0">&#9670;&#160;</a></span>vFlashBuffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vFlashBuffer </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>argument</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="structFlash.html">Flash</a> buffer write task. </p>
+<p>Monitors flash enable flag to determine when to flush data from the memory buffer to flash memory. The task waits for the flag to be set, reads data into a buffer, writes the data to flash, and then updates the page address.</p>
+<dl class="bug"><dt><b><a class="el" href="bug.html#_bug000001">Bug</a></b></dt><dd>Data written to flash currently shows signs of corruption, potentially due to issues with buffering. <b>This is a critical error.</b> </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00329">329</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="ab4b3086ed950c28a12c4284658791b38" name="ab4b3086ed950c28a12c4284658791b38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4b3086ed950c28a12c4284658791b38">&#9670;&#160;</a></span>vDataAcquisitionH()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vDataAcquisitionH </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>argument</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>High-frequency data acquisition task. </p>
+<p>Acquires sensor data at a 500Hz rate. It selects the appropriate accelerometer based on current data, processes sensor data and appends the processed data to a dataframe. Optionally, dummy data can be used for testing if the <code>DUMMY</code> macro is defined.</p>
+<p>Quaternion integration and tilt angle calculations are performed if enabled.</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo</a></b></dt><dd>Add definition for sample period and replace assignments for dt and frequency (e.g. dt = 1/SAMPLE_PERIOD_HIGH;). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00545">545</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="a9d6bb459e9a8fe1217ca277b92447f06" name="a9d6bb459e9a8fe1217ca277b92447f06"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d6bb459e9a8fe1217ca277b92447f06">&#9670;&#160;</a></span>vDataAcquisitionL()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vDataAcquisitionL </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>argument</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Low-frequency data acquisition and altitude estimation function. </p>
+<p>Performs data acquisition for barometric pressure at a 50Hz rate. Altitude is calculated from barometric pressure using the hypsometric formula Kalman filter state matrices (A, Q, R, P) are initialized within the function. Optionally, dummy data can be used for testing if the <code>DUMMY</code> macro is defined.</p>
+<p>Velocity and altitude state estimates are calculated with the Kalman filter if enabled.</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo</a></b></dt><dd>Add definition for sample period and replace assignments for dt and frequency (e.g. dt = 1/SAMPLE_PERIOD_LOW;). </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo</a></b></dt><dd>Move kalman filter matrices into context struct </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00685">685</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="ab4baa4df22fc51c96768bc4ecb062c49" name="ab4baa4df22fc51c96768bc4ecb062c49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4baa4df22fc51c96768bc4ecb062c49">&#9670;&#160;</a></span>vStateUpdate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void vStateUpdate </td>
+          <td>(</td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>argument</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>State update task. </p>
+<p>Handles transitions between different flight states, sends CAN messages for aerobrakes and altitude data, and enables or disables various data acquisition tasks based on the current state.</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo</a></b></dt><dd>Add definition for update period and replace assignments for frequency (e.g. xFrequency = pdMS_TO_TICKS(STATE_UPDATE_PERIOD);). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00197">197</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
 <a id="ad225e2392a63173a1ab8f9000f044da7" name="ad225e2392a63173a1ab8f9000f044da7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad225e2392a63173a1ab8f9000f044da7">&#9670;&#160;</a></span>vLoRaTransmit()</h2>
 
@@ -164,9 +280,9 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="structLoRa.html">LoRa</a> transmit task. </p>
-<p>Reads data from <a class="el" href="structLoRa.html">LoRa</a> Tx buffer and sends to SX1272 for transmit. </p>
+<p>Handles transmission of data to the SX1272 transceiver. It waits for the <a class="el" href="structLoRa.html">LoRa</a> module to be ready, then reads a message from the <a class="el" href="structLoRa.html">LoRa</a> transmit buffer and sends it via the SX1272. The ready flag is cleared after transmission. </p>
 
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00302">302</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00358">358</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 
 </div>
 </div>
@@ -186,9 +302,9 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="structLoRa.html">LoRa</a> sample task. </p>
-<p>Samples current sensor data from RAM every 250ms and queues it to be handled by vLoRaTransmit. </p>
+<p>Samples current sensor data from RAM every 250ms and queues it to be transmitted by <code>vLoRaTransmit</code>. The task creates a <a class="el" href="structLoRa.html">LoRa</a> packet containing accelerometer, gyroscope, altitude, and velocity data, which is then appended to the transmission queue. </p>
 
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00335">335</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00393">393</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 
 </div>
 </div>
@@ -207,11 +323,34 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>USB receive task. </p>
-<p>Reads data from <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface foobar.">UART</a> Rx buffer and sends back to host for display.</p>
-<p>On receiving carriage return, processes command stored in buffer and resets. </p>
+<p>USB receive task for handling <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface.">UART</a> input. </p>
+<p>This task continuously reads data from the <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface.">UART</a> receive buffer. Each byte is sent back to the host for display. On detecting a carriage return (<code>&lt;Enter&gt;</code>), the task processes the command stored in the buffer, sends a newline character for display, and resets the buffer for the next command.</p>
+<p>This task additionally handles specific control characters:</p><ul>
+<li><code>&lt;Ctrl-C&gt;</code> clears the terminal.</li>
+<li><code>&lt;Backspace&gt;</code> erases the last character. </li>
+</ul>
 
-<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00394">394</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00475">475</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
+
+</div>
+</div>
+<a id="a5b1cad70588b5e19409823a2df39af7b" name="a5b1cad70588b5e19409823a2df39af7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b1cad70588b5e19409823a2df39af7b">&#9670;&#160;</a></span>configure_interrupts()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void configure_interrupts </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo</a></b></dt><dd>Refactor and document </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="main_8c_source.html#l00810">810</a> of file <a class="el" href="main_8c_source.html">main.c</a>.</p>
 
 </div>
 </div>

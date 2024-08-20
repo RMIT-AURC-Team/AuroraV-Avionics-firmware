@@ -7,5 +7,9 @@ var group__UART =
       [ "receive", "group__UART.html#aa840a20e8d2993f71105848364b08998", null ]
     ] ],
     [ "UART_init", "group__UART.html#gaf0a352f75cf3d16ecdad901da017b8de", null ],
-    [ "_UART_setup", "group__UART.html#ga96307cc6bea951396f9466e48cc8f90b", null ]
+    [ "_UART_setup", "group__UART.html#ga96307cc6bea951396f9466e48cc8f90b", null ],
+    [ "UART_send", "group__UART.html#ga0788352ce7267476fe0ca17e79c1626b", null ],
+    [ "UART_sendBytes", "group__UART.html#ga83c1260cc51182b0b1926e8509f7ccdc", null ],
+    [ "UART_print", "group__UART.html#ga10ec3be6507f9fda679cd87162ad9f3d", null ],
+    [ "UART_receive", "group__UART.html#gad1be1da51a4a5588d81c155a2d41c4c1", null ]
 ];

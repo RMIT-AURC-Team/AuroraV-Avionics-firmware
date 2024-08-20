@@ -112,18 +112,21 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga1a62293fe572d94b7196ddb6619e2f32" id="r_ga1a62293fe572d94b7196ddb6619e2f32"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1a62293fe572d94b7196ddb6619e2f32">LoRa_init</a> (<a class="el" href="structLoRa.html">LoRa</a> *lora, GPIO_TypeDef *port, unsigned long cs, Bandwidth bw, SpreadingFactor sf, CodingRate cr)</td></tr>
-<tr class="separator:ga1a62293fe572d94b7196ddb6619e2f32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae19b9f0cd6a296c35d492f391278cecd" id="r_gae19b9f0cd6a296c35d492f391278cecd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae19b9f0cd6a296c35d492f391278cecd">LoRa_transmit</a> (<a class="el" href="structLoRa.html">LoRa</a> *lora, uint8_t *pointerdata)</td></tr>
-<tr class="separator:gae19b9f0cd6a296c35d492f391278cecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga73a85bfd9b4677eca96f7f3ca1573bdf" id="r_ga73a85bfd9b4677eca96f7f3ca1573bdf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#structLoRa__Packet">LoRa_Packet</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga73a85bfd9b4677eca96f7f3ca1573bdf">LoRa_AVData</a> (uint8_t id, uint8_t currentState, uint8_t *lAccelData, uint8_t *hAccelData, uint8_t lenAccel, uint8_t *gyroData, uint8_t lenGyro, float altitude, float velocity)</td></tr>
-<tr class="separator:ga73a85bfd9b4677eca96f7f3ca1573bdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga49a9b9fcd8aaad9aa6e3586389b829e9" id="r_ga49a9b9fcd8aaad9aa6e3586389b829e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga49a9b9fcd8aaad9aa6e3586389b829e9">_LoRa_setMode</a> (<a class="el" href="structLoRa.html">LoRa</a> *lora, Mode mode)</td></tr>
-<tr class="separator:ga49a9b9fcd8aaad9aa6e3586389b829e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga56961a46a2904d9f8b9638f656d401f3" id="r_ga56961a46a2904d9f8b9638f656d401f3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga56961a46a2904d9f8b9638f656d401f3">LoRa_init</a> (<a class="el" href="structLoRa.html">LoRa</a> *, GPIO_TypeDef *, unsigned long, Bandwidth, SpreadingFactor, CodingRate)</td></tr>
+<tr class="memdesc:ga56961a46a2904d9f8b9638f656d401f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the <a class="el" href="structLoRa.html">LoRa</a> module with specified configuration parameters.  <br /></td></tr>
+<tr class="separator:ga56961a46a2904d9f8b9638f656d401f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf5a72437c494fee7c236007f0408c0ab" id="r_gaf5a72437c494fee7c236007f0408c0ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf5a72437c494fee7c236007f0408c0ab">LoRa_transmit</a> (<a class="el" href="structLoRa.html">LoRa</a> *, uint8_t *)</td></tr>
+<tr class="memdesc:gaf5a72437c494fee7c236007f0408c0ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transmits data using the <a class="el" href="structLoRa.html">LoRa</a> module.  <br /></td></tr>
+<tr class="separator:gaf5a72437c494fee7c236007f0408c0ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacb326fcdf46738a11045fdc6473a3557" id="r_gacb326fcdf46738a11045fdc6473a3557"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#structLoRa__Packet">LoRa_Packet</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacb326fcdf46738a11045fdc6473a3557">LoRa_AVData</a> (uint8_t, uint8_t, uint8_t *, uint8_t *, uint8_t, uint8_t *, uint8_t, float, float)</td></tr>
+<tr class="memdesc:gacb326fcdf46738a11045fdc6473a3557"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="structLoRa.html">LoRa</a> packet with accelerometer and gyroscope data, altitude, and velocity for transmission.  <br /></td></tr>
+<tr class="separator:gacb326fcdf46738a11045fdc6473a3557"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac6bd010c730b2fee518dacb8c27d3e03" id="r_gac6bd010c730b2fee518dacb8c27d3e03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac6bd010c730b2fee518dacb8c27d3e03">_LoRa_setMode</a> (<a class="el" href="structLoRa.html">LoRa</a> *, Mode)</td></tr>
+<tr class="memdesc:gac6bd010c730b2fee518dacb8c27d3e03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the operational mode of the <a class="el" href="structLoRa.html">LoRa</a> module.  <br /></td></tr>
+<tr class="separator:gac6bd010c730b2fee518dacb8c27d3e03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <dl class="section author"><dt>Author</dt><dd>Matt Ricci</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo</a></b></dt><dd>Implement adjustable packet size</dd></dl>
 <hr/><h2 class="groupheader">Data Structure Documentation</h2>
 <a name="structLoRa__Packet" id="structLoRa__Packet"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#structLoRa__Packet">&#9670;&#160;</a></span>LoRa_Packet</h2>
@@ -157,8 +160,8 @@ Packet payload. </td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga1a62293fe572d94b7196ddb6619e2f32" name="ga1a62293fe572d94b7196ddb6619e2f32"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1a62293fe572d94b7196ddb6619e2f32">&#9670;&#160;</a></span>LoRa_init()</h2>
+<a id="ga56961a46a2904d9f8b9638f656d401f3" name="ga56961a46a2904d9f8b9638f656d401f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga56961a46a2904d9f8b9638f656d401f3">&#9670;&#160;</a></span>LoRa_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -195,27 +198,30 @@ Packet payload. </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Initializes the <a class="el" href="structLoRa.html">LoRa</a> module with specified configuration parameters. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">*lora</td><td>Pointer to <a class="el" href="structLoRa.html">LoRa</a> struct to be initialised. </td></tr>
     <tr><td class="paramname">*port</td><td>Pointer to GPIO port struct. </td></tr>
     <tr><td class="paramname">cs</td><td>Device chip select address. </td></tr>
-    <tr><td class="paramname">bw</td><td></td></tr>
-    <tr><td class="paramname">sf</td><td></td></tr>
-    <tr><td class="paramname">cr</td><td></td></tr>
+    <tr><td class="paramname">bw</td><td>Bandwidth setting for the <a class="el" href="structLoRa.html">LoRa</a> module. </td></tr>
+    <tr><td class="paramname">sf</td><td>Spreading factor for the <a class="el" href="structLoRa.html">LoRa</a> module. </td></tr>
+    <tr><td class="paramname">cr</td><td>Coding rate for the <a class="el" href="structLoRa.html">LoRa</a> module. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>NULL</code>. <br  />
+</dd></dl>
 <hr  />
- <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo</a></b></dt><dd>set spreading factor </dd></dl>
+ <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000009">Todo</a></b></dt><dd>set spreading factor </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00034">34</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00037">37</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
 
 </div>
 </div>
-<a id="gae19b9f0cd6a296c35d492f391278cecd" name="gae19b9f0cd6a296c35d492f391278cecd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae19b9f0cd6a296c35d492f391278cecd">&#9670;&#160;</a></span>LoRa_transmit()</h2>
+<a id="gaf5a72437c494fee7c236007f0408c0ab" name="gaf5a72437c494fee7c236007f0408c0ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf5a72437c494fee7c236007f0408c0ab">&#9670;&#160;</a></span>LoRa_transmit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -232,25 +238,23 @@ Packet payload. </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Transmits data using the <a class="el" href="structLoRa.html">LoRa</a> module. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">lora</td><td></td></tr>
-    <tr><td class="paramname">pointerdata</td><td></td></tr>
+    <tr><td class="paramname">lora</td><td>Pointer to <a class="el" href="structLoRa.html">LoRa</a> struct. </td></tr>
+    <tr><td class="paramname">pointerdata</td><td>Pointer to the data to be transmitted.</td></tr>
   </table>
   </dd>
 </dl>
 <hr  />
- <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000009">Todo</a></b></dt><dd>Implement interrupt on TxComplete</dd></dl>
-<dl class="section attention"><dt>Attention</dt><dd>Polling the pin takes too much time, as a result delay timers on various tasks will have expired in the time waiting and CPU will never idle (meaning flashing does not occur).</dd>
-<dd>
-Implementing interrupt on TxComplete signal should solve this since the handler should only run over a few clock cycles.</dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00146">146</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
+ 
+<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00159">159</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
 
 </div>
 </div>
-<a id="ga73a85bfd9b4677eca96f7f3ca1573bdf" name="ga73a85bfd9b4677eca96f7f3ca1573bdf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga73a85bfd9b4677eca96f7f3ca1573bdf">&#9670;&#160;</a></span>LoRa_AVData()</h2>
+<a id="gacb326fcdf46738a11045fdc6473a3557" name="gacb326fcdf46738a11045fdc6473a3557"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gacb326fcdf46738a11045fdc6473a3557">&#9670;&#160;</a></span>LoRa_AVData()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -302,23 +306,31 @@ Implementing interrupt on TxComplete signal should solve this since the handler 
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Constructs a <a class="el" href="structLoRa.html">LoRa</a> packet with accelerometer and gyroscope data, altitude, and velocity for transmission. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">id</td><td></td></tr>
-    <tr><td class="paramname">*accelData</td><td></td></tr>
-    <tr><td class="paramname">lenAccel</td><td></td></tr>
+    <tr><td class="paramname">id</td><td>Identifier for the packet. </td></tr>
+    <tr><td class="paramname">currentState</td><td>Current state to be included in the packet. </td></tr>
+    <tr><td class="paramname">*lAccelData</td><td>Pointer to low byte accelerometer data. </td></tr>
+    <tr><td class="paramname">*hAccelData</td><td>Pointer to high byte accelerometer data. </td></tr>
+    <tr><td class="paramname">lenAccel</td><td>Length of the accelerometer data. </td></tr>
+    <tr><td class="paramname">*gyroData</td><td>Pointer to gyroscope data. </td></tr>
+    <tr><td class="paramname">lenGyro</td><td>Length of the gyroscope data. </td></tr>
+    <tr><td class="paramname">altitude</td><td>Altitude value to be included in the packet. </td></tr>
+    <tr><td class="paramname">velocity</td><td>Velocity value to be included in the packet. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="#structLoRa__Packet">LoRa_Packet</a>.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Constructed <a class="el" href="structLoRa.html">LoRa</a> packet containing the provided data.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00097">97</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00109">109</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
 
 </div>
 </div>
-<a id="ga49a9b9fcd8aaad9aa6e3586389b829e9" name="ga49a9b9fcd8aaad9aa6e3586389b829e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga49a9b9fcd8aaad9aa6e3586389b829e9">&#9670;&#160;</a></span>_LoRa_setMode()</h2>
+<a id="gac6bd010c730b2fee518dacb8c27d3e03" name="gac6bd010c730b2fee518dacb8c27d3e03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac6bd010c730b2fee518dacb8c27d3e03">&#9670;&#160;</a></span>_LoRa_setMode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -335,17 +347,20 @@ Implementing interrupt on TxComplete signal should solve this since the handler 
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Sets the operational mode of the <a class="el" href="structLoRa.html">LoRa</a> module. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">*LoRa</td><td>Pointer to <a class="el" href="structLoRa.html">LoRa</a> struct. </td></tr>
-    <tr><td class="paramname">Mode</td><td></td></tr>
+    <tr><td class="paramname">*lora</td><td>Pointer to <a class="el" href="structLoRa.html">LoRa</a> struct. </td></tr>
+    <tr><td class="paramname">mode</td><td>Desired operational mode to be set. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>NULL</code>. <br  />
+</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00077">77</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00081">81</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
 
 </div>
 </div>

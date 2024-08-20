@@ -99,62 +99,66 @@ $(function(){initNavTree('control_8c_source.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">control.c</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="control_8c.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="control_8h.html">control.h</a>&quot;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keywordtype">bool</span> usbCommandParse(uint8_t *cmd) {</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keywordtype">bool</span> ret;</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    uint8_t *token = strtok(cmd, <span class="stringliteral">&quot; &quot;</span>);</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    uint8_t *flags = strchr(token, <span class="charliteral">&#39;\0&#39;</span>) + 1;</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keywordflow">if</span> (!strcmp(token, CMD_CLEAR))</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    ret = <a class="code hl_function" href="control_8c.html#acf41b240757b9fafca1069d21b141b16">usbClearCommandExecute</a>();</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!strcmp(token, CMD_FLASH))</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    ret = <a class="code hl_function" href="control_8c.html#afda79a64457b58e845a6006c3815eb41">usbFlashCommandExecute</a>(flags);</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>}</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="foldopen" id="foldopen00031" data-start="{" data-end="}">
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="control_8h.html#acf41b240757b9fafca1069d21b141b16">   31</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="control_8c.html#acf41b240757b9fafca1069d21b141b16">usbClearCommandExecute</a>() {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    usb.<a class="code hl_variable" href="group__UART.html#a1e20204fa13a0de0604ae8eeb6014be2">sendBytes</a>(&amp;usb, (uint8_t *) <span class="stringliteral">&quot;\033[3J\033[H\033[2J&quot;</span>, 11);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>}</div>
+<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/***********************************************************************************</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * @file        control.c                                                          *</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * @author      Matt Ricci                                                         *</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> ***********************************************************************************/</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="control_8h.html">control.h</a>&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keywordtype">bool</span> usbCommandParse(uint8_t *cmd) {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <span class="keywordtype">bool</span> ret;</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    <span class="keywordtype">char</span> *token = strtok((<span class="keywordtype">char</span> *)cmd, <span class="stringliteral">&quot; &quot;</span>);</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keywordtype">char</span> *flags = strchr(token, <span class="charliteral">&#39;\0&#39;</span>) + 1;</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="keywordflow">if</span> (!strcmp(token, CMD_CLEAR))</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    ret = <a class="code hl_function" href="control_8h.html#acf41b240757b9fafca1069d21b141b16">usbClearCommandExecute</a>();</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!strcmp(token, CMD_FLASH))</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    ret = <a class="code hl_function" href="control_8h.html#ab0aea62b859ed55511b380d5745ddf4a">usbFlashCommandExecute</a>(flags);</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keywordflow">return</span> ret;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>}</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00030" data-start="{" data-end="}">
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="control_8h.html#acf41b240757b9fafca1069d21b141b16">   30</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="control_8h.html#acf41b240757b9fafca1069d21b141b16">usbClearCommandExecute</a>() {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    usb.<a class="code hl_variable" href="group__UART.html#a1e20204fa13a0de0604ae8eeb6014be2">sendBytes</a>(&amp;usb, (uint8_t *) <span class="stringliteral">&quot;\033[3J\033[H\033[2J&quot;</span>, 11);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>}</div>
 </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="comment">/* =============================================================================== */</span></div>
-<div class="foldopen" id="foldopen00047" data-start="{" data-end="}">
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="control_8h.html#af9c7fe8ce9d16e8ff44c441ad900389a">   47</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="control_8c.html#afda79a64457b58e845a6006c3815eb41">usbFlashCommandExecute</a>(uint8_t *flags) {</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keywordflow">if</span> (flags == NULL)</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="comment">// flash erase</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keywordflow">if</span> (!strcmp(flags, CMD_FLASH_ERASE)) {</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        usb.<a class="code hl_variable" href="group__UART.html#a0e134833354e46f1a556b7787375300e">print</a>(&amp;usb, <span class="stringliteral">&quot;Clearing flash... &quot;</span> );</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    flash.<a class="code hl_variable" href="structFlash.html#ac2c453319e521f016b572ecf63a5fe74">erase</a>(&amp;flash);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        usb.<a class="code hl_variable" href="group__UART.html#a0e134833354e46f1a556b7787375300e">print</a>(&amp;usb, <span class="stringliteral">&quot;Done.\n\r&quot;</span>);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  }</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="comment">// flash read all</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!strcmp(flags, CMD_FLASH_READ_ALL)) {</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keyword">volatile</span> uint8_t pageData[256];</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keywordflow">for</span> (<span class="keywordtype">long</span> i = 0; i &lt; flash.pageCount; i++) {</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            flash.<a class="code hl_variable" href="structFlash.html#abaafab0f2318e98caa5a9dac6daa8113">readPage</a>(&amp;flash, i, pageData);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; flash.pageSize; j++)</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>                usb.<a class="code hl_variable" href="group__UART.html#a644dec84b3e77056e1d3af46b7b03868">send</a>(&amp;usb, pageData[j]);</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        }       </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    }</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>}</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="comment">/* =============================================================================== */</span></div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="}">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="control_8h.html#ab0aea62b859ed55511b380d5745ddf4a">   46</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="control_8h.html#ab0aea62b859ed55511b380d5745ddf4a">usbFlashCommandExecute</a>(<span class="keywordtype">char</span> *flags) {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordflow">if</span> (flags == NULL)</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">// flash erase</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <span class="keywordflow">if</span> (!strcmp(flags, CMD_FLASH_ERASE)) {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        usb.<a class="code hl_variable" href="group__UART.html#a0e134833354e46f1a556b7787375300e">print</a>(&amp;usb, <span class="stringliteral">&quot;Clearing flash... &quot;</span> );</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    flash.<a class="code hl_variable" href="structFlash.html#ac2c453319e521f016b572ecf63a5fe74">erase</a>(&amp;flash);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        usb.<a class="code hl_variable" href="group__UART.html#a0e134833354e46f1a556b7787375300e">print</a>(&amp;usb, <span class="stringliteral">&quot;Done.\n\r&quot;</span>);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  }</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="comment">// flash read all</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!strcmp(flags, CMD_FLASH_READ_ALL)) {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keyword">volatile</span> uint8_t pageData[256];</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keywordflow">for</span> (<span class="keywordtype">long</span> i = 0; i &lt; flash.pageCount; i += 0x100) {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>            flash.<a class="code hl_variable" href="structFlash.html#abaafab0f2318e98caa5a9dac6daa8113">readPage</a>(&amp;flash, i, pageData);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = 0; j &lt; flash.pageSize; j++)</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>                usb.<a class="code hl_variable" href="group__UART.html#a644dec84b3e77056e1d3af46b7b03868">send</a>(&amp;usb, pageData[j]);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        }       </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    }</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}</div>
 </div>
-<div class="ttc" id="acontrol_8c_html_acf41b240757b9fafca1069d21b141b16"><div class="ttname"><a href="control_8c.html#acf41b240757b9fafca1069d21b141b16">usbClearCommandExecute</a></div><div class="ttdeci">bool usbClearCommandExecute()</div><div class="ttdoc">Send clear sequence to host terminal.</div><div class="ttdef"><b>Definition</b> <a href="#l00031">control.c:31</a></div></div>
-<div class="ttc" id="acontrol_8c_html_afda79a64457b58e845a6006c3815eb41"><div class="ttname"><a href="control_8c.html#afda79a64457b58e845a6006c3815eb41">usbFlashCommandExecute</a></div><div class="ttdeci">bool usbFlashCommandExecute(uint8_t *flags)</div><div class="ttdoc">Execute flash commands on target.</div><div class="ttdef"><b>Definition</b> <a href="#l00047">control.c:47</a></div></div>
 <div class="ttc" id="acontrol_8h_html"><div class="ttname"><a href="control_8h.html">control.h</a></div></div>
-<div class="ttc" id="agroup__UART_html_a0e134833354e46f1a556b7787375300e"><div class="ttname"><a href="group__UART.html#a0e134833354e46f1a556b7787375300e">UART::print</a></div><div class="ttdeci">void(* print)(struct UART *, char *)</div><div class="ttdoc">UART print string method.</div><div class="ttdef"><b>Definition</b> <a href="uart_8h_source.html#l00034">uart.h:34</a></div></div>
-<div class="ttc" id="agroup__UART_html_a1e20204fa13a0de0604ae8eeb6014be2"><div class="ttname"><a href="group__UART.html#a1e20204fa13a0de0604ae8eeb6014be2">UART::sendBytes</a></div><div class="ttdeci">void(* sendBytes)(struct UART *, uint8_t *, int)</div><div class="ttdoc">UART send multiple bytes method.</div><div class="ttdef"><b>Definition</b> <a href="uart_8h_source.html#l00033">uart.h:33</a></div></div>
-<div class="ttc" id="agroup__UART_html_a644dec84b3e77056e1d3af46b7b03868"><div class="ttname"><a href="group__UART.html#a644dec84b3e77056e1d3af46b7b03868">UART::send</a></div><div class="ttdeci">void(* send)(struct UART *, uint8_t)</div><div class="ttdoc">UART send method.</div><div class="ttdef"><b>Definition</b> <a href="uart_8h_source.html#l00032">uart.h:32</a></div></div>
+<div class="ttc" id="acontrol_8h_html_ab0aea62b859ed55511b380d5745ddf4a"><div class="ttname"><a href="control_8h.html#ab0aea62b859ed55511b380d5745ddf4a">usbFlashCommandExecute</a></div><div class="ttdeci">bool usbFlashCommandExecute(char *)</div><div class="ttdoc">Execute flash commands on target.</div><div class="ttdef"><b>Definition</b> <a href="#l00046">control.c:46</a></div></div>
+<div class="ttc" id="acontrol_8h_html_acf41b240757b9fafca1069d21b141b16"><div class="ttname"><a href="control_8h.html#acf41b240757b9fafca1069d21b141b16">usbClearCommandExecute</a></div><div class="ttdeci">bool usbClearCommandExecute()</div><div class="ttdoc">Send clear sequence to host terminal.</div><div class="ttdef"><b>Definition</b> <a href="#l00030">control.c:30</a></div></div>
+<div class="ttc" id="agroup__UART_html_a0e134833354e46f1a556b7787375300e"><div class="ttname"><a href="group__UART.html#a0e134833354e46f1a556b7787375300e">UART::print</a></div><div class="ttdeci">void(* print)(struct UART *, char *)</div><div class="ttdoc">UART print string method.</div><div class="ttdef"><b>Definition</b> <a href="uart_8h_source.html#l00035">uart.h:35</a></div></div>
+<div class="ttc" id="agroup__UART_html_a1e20204fa13a0de0604ae8eeb6014be2"><div class="ttname"><a href="group__UART.html#a1e20204fa13a0de0604ae8eeb6014be2">UART::sendBytes</a></div><div class="ttdeci">void(* sendBytes)(struct UART *, uint8_t *, int)</div><div class="ttdoc">UART send multiple bytes method.</div><div class="ttdef"><b>Definition</b> <a href="uart_8h_source.html#l00034">uart.h:34</a></div></div>
+<div class="ttc" id="agroup__UART_html_a644dec84b3e77056e1d3af46b7b03868"><div class="ttname"><a href="group__UART.html#a644dec84b3e77056e1d3af46b7b03868">UART::send</a></div><div class="ttdeci">void(* send)(struct UART *, uint8_t)</div><div class="ttdoc">UART send method.</div><div class="ttdef"><b>Definition</b> <a href="uart_8h_source.html#l00033">uart.h:33</a></div></div>
 <div class="ttc" id="astructFlash_html_abaafab0f2318e98caa5a9dac6daa8113"><div class="ttname"><a href="structFlash.html#abaafab0f2318e98caa5a9dac6daa8113">Flash::readPage</a></div><div class="ttdeci">void(* readPage)(struct Flash *, uint32_t, volatile uint8_t *)</div><div class="ttdoc">Read page method.</div><div class="ttdef"><b>Definition</b> <a href="flash_8h_source.html#l00032">flash.h:32</a></div></div>
 <div class="ttc" id="astructFlash_html_ac2c453319e521f016b572ecf63a5fe74"><div class="ttname"><a href="structFlash.html#ac2c453319e521f016b572ecf63a5fe74">Flash::erase</a></div><div class="ttdeci">void(* erase)(struct Flash *)</div><div class="ttdoc">Chip erase method.</div><div class="ttdef"><b>Definition</b> <a href="flash_8h_source.html#l00031">flash.h:31</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -162,7 +166,7 @@ $(function(){initNavTree('control_8c_source.html',''); initResizable(true); });
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_792ef69f7340d1afb8e8d9f9961cfbb5.html">AuroraV-Avionics</a></li><li class="navelem"><a class="el" href="dir_e95d640f443eea16038f928d5971e8b8.html">Core</a></li><li class="navelem"><a class="el" href="dir_3c829084d0ed61b607ff5eab50f9eb46.html">Src</a></li><li class="navelem"><a class="el" href="control_8c.html">control.c</a></li>
+    <li class="navelem"><a class="el" href="dir_792ef69f7340d1afb8e8d9f9961cfbb5.html">AuroraV-Avionics</a></li><li class="navelem"><a class="el" href="dir_e95d640f443eea16038f928d5971e8b8.html">Core</a></li><li class="navelem"><a class="el" href="dir_3c829084d0ed61b607ff5eab50f9eb46.html">Src</a></li><li class="navelem"><b>control.c</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>

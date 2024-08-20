@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gpsdata_0',['GPSData',['../gps_8h.html#structGPSData',1,'']]]
+  ['gpsdata_0',['GPSData',['../group__GPS.html#structGPSData',1,'']]]
 ];

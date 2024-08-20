@@ -27,6 +27,7 @@ var NAVTREE =
   [ "AuroraV-Avionics", "index.html", [
     [ "Aurora V Avionics Firmware", "index.html", "index" ],
     [ "Todo List", "todo.html", null ],
+    [ "Bug List", "bug.html", null ],
     [ "Topics", "topics.html", "topics" ],
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
@@ -49,7 +50,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"A3G4250D_8c.html"
+"A3G4250D_8c_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

@@ -116,9 +116,9 @@ Functions</h2></td></tr>
 <tr class="memitem:acf41b240757b9fafca1069d21b141b16" id="r_acf41b240757b9fafca1069d21b141b16"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf41b240757b9fafca1069d21b141b16">usbClearCommandExecute</a> ()</td></tr>
 <tr class="memdesc:acf41b240757b9fafca1069d21b141b16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send clear sequence to host terminal.  <br /></td></tr>
 <tr class="separator:acf41b240757b9fafca1069d21b141b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9c7fe8ce9d16e8ff44c441ad900389a" id="r_af9c7fe8ce9d16e8ff44c441ad900389a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9c7fe8ce9d16e8ff44c441ad900389a">usbFlashCommandExecute</a> (uint8_t *)</td></tr>
-<tr class="memdesc:af9c7fe8ce9d16e8ff44c441ad900389a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute flash commands on target.  <br /></td></tr>
-<tr class="separator:af9c7fe8ce9d16e8ff44c441ad900389a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0aea62b859ed55511b380d5745ddf4a" id="r_ab0aea62b859ed55511b380d5745ddf4a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0aea62b859ed55511b380d5745ddf4a">usbFlashCommandExecute</a> (char *)</td></tr>
+<tr class="memdesc:ab0aea62b859ed55511b380d5745ddf4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute flash commands on target.  <br /></td></tr>
+<tr class="separator:ab0aea62b859ed55511b380d5745ddf4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><dl class="section author"><dt>Author</dt><dd>Matt Ricci </dd></dl>
@@ -141,15 +141,15 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Send clear sequence to host terminal. </p>
-<p><code>usbClearCommandExecute</code> transmits over <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface foobar.">UART</a> an ANSI control sequence for clearing the host terminal window.</p>
+<p><code>usbClearCommandExecute</code> transmits over <a class="el" href="group__UART.html#structUART" title="Struct definition for UART interface.">UART</a> an ANSI control sequence for clearing the host terminal window.</p>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="control_8c_source.html#l00031">31</a> of file <a class="el" href="control_8c_source.html">control.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="control_8c_source.html#l00030">30</a> of file <a class="el" href="control_8c_source.html">control.c</a>.</p>
 
 </div>
 </div>
-<a id="af9c7fe8ce9d16e8ff44c441ad900389a" name="af9c7fe8ce9d16e8ff44c441ad900389a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af9c7fe8ce9d16e8ff44c441ad900389a">&#9670;&#160;</a></span>usbFlashCommandExecute()</h2>
+<a id="ab0aea62b859ed55511b380d5745ddf4a" name="ab0aea62b859ed55511b380d5745ddf4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab0aea62b859ed55511b380d5745ddf4a">&#9670;&#160;</a></span>usbFlashCommandExecute()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -157,7 +157,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">bool usbFlashCommandExecute </td>
           <td>(</td>
-          <td class="paramtype">uint8_t *</td>          <td class="paramname"><span class="paramname"><em>flags</em></span></td><td>)</td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>flags</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -171,7 +171,7 @@ Functions</h2></td></tr>
 </ul>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="control_8c_source.html#l00047">47</a> of file <a class="el" href="control_8c_source.html">control.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="control_8c_source.html#l00046">46</a> of file <a class="el" href="control_8c_source.html">control.c</a>.</p>
 
 </div>
 </div>

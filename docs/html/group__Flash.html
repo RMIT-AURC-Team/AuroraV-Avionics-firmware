@@ -110,36 +110,36 @@ Data Structures</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gadbd466d7ecb063949f078c2480192cf9" id="r_gadbd466d7ecb063949f078c2480192cf9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gadbd466d7ecb063949f078c2480192cf9">Flash_init</a> (<a class="el" href="structFlash.html">Flash</a> *flash, GPIO_TypeDef *port, unsigned long cs, int pageSize, long pageCount)</td></tr>
-<tr class="memdesc:gadbd466d7ecb063949f078c2480192cf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise flash struct.  <br /></td></tr>
-<tr class="separator:gadbd466d7ecb063949f078c2480192cf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5682d8c6ddea2f7c5e56c481366f6c15" id="r_ga5682d8c6ddea2f7c5e56c481366f6c15"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5682d8c6ddea2f7c5e56c481366f6c15">Flash_readPage</a> (<a class="el" href="structFlash.html">Flash</a> *flash, uint32_t address, volatile uint8_t *data)</td></tr>
-<tr class="memdesc:ga5682d8c6ddea2f7c5e56c481366f6c15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read from flash.  <br /></td></tr>
-<tr class="separator:ga5682d8c6ddea2f7c5e56c481366f6c15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga844666cc047adf8a6ebfe58cfb02dfbc" id="r_ga844666cc047adf8a6ebfe58cfb02dfbc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga844666cc047adf8a6ebfe58cfb02dfbc">Flash_writePage</a> (<a class="el" href="structFlash.html">Flash</a> *flash, uint32_t address, uint8_t *data)</td></tr>
-<tr class="memdesc:ga844666cc047adf8a6ebfe58cfb02dfbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write page to flash.  <br /></td></tr>
-<tr class="separator:ga844666cc047adf8a6ebfe58cfb02dfbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga00729be27e7be3604f188a66638f7cdc" id="r_ga00729be27e7be3604f188a66638f7cdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga00729be27e7be3604f188a66638f7cdc">Flash_erase</a> (<a class="el" href="structFlash.html">Flash</a> *flash)</td></tr>
-<tr class="memdesc:ga00729be27e7be3604f188a66638f7cdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erase flash chip.  <br /></td></tr>
-<tr class="separator:ga00729be27e7be3604f188a66638f7cdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga98a614bd09fe5fd3a9adb05478c100c4" id="r_ga98a614bd09fe5fd3a9adb05478c100c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga98a614bd09fe5fd3a9adb05478c100c4">_Flash_writeEnable</a> (<a class="el" href="structFlash.html">Flash</a> *flash)</td></tr>
-<tr class="memdesc:ga98a614bd09fe5fd3a9adb05478c100c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send Write Enable instruction to the flash device.  <br /></td></tr>
-<tr class="separator:ga98a614bd09fe5fd3a9adb05478c100c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae37e74b62701ec0cac24afde386d12c4" id="r_gae37e74b62701ec0cac24afde386d12c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae37e74b62701ec0cac24afde386d12c4">_Flash_readStatus1</a> (<a class="el" href="structFlash.html">Flash</a> *flash, uint8_t *status)</td></tr>
-<tr class="memdesc:gae37e74b62701ec0cac24afde386d12c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read from Status Register 1.  <br /></td></tr>
-<tr class="separator:gae37e74b62701ec0cac24afde386d12c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae64ff1bc3f9a083e361792733f6a6081" id="r_gae64ff1bc3f9a083e361792733f6a6081"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae64ff1bc3f9a083e361792733f6a6081">_Flash_readStatus2</a> (<a class="el" href="structFlash.html">Flash</a> *flash, uint8_t *status)</td></tr>
-<tr class="memdesc:gae64ff1bc3f9a083e361792733f6a6081"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read from Status Register 2.  <br /></td></tr>
-<tr class="separator:gae64ff1bc3f9a083e361792733f6a6081"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9a0948cf30de239d6a8e301209ae51a3" id="r_ga9a0948cf30de239d6a8e301209ae51a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9a0948cf30de239d6a8e301209ae51a3">_Flash_readStatus3</a> (<a class="el" href="structFlash.html">Flash</a> *flash, uint8_t *status)</td></tr>
-<tr class="memdesc:ga9a0948cf30de239d6a8e301209ae51a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read from Status Register 3.  <br /></td></tr>
-<tr class="separator:ga9a0948cf30de239d6a8e301209ae51a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaea3658eaa9d17f7c33f0dddf478dc727" id="r_gaea3658eaa9d17f7c33f0dddf478dc727"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaea3658eaa9d17f7c33f0dddf478dc727">Flash_init</a> (<a class="el" href="structFlash.html">Flash</a> *, GPIO_TypeDef *, unsigned long, int, long)</td></tr>
+<tr class="memdesc:gaea3658eaa9d17f7c33f0dddf478dc727"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise flash struct.  <br /></td></tr>
+<tr class="separator:gaea3658eaa9d17f7c33f0dddf478dc727"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5f9bbbbf9efbcaf330d7876905aa470f" id="r_ga5f9bbbbf9efbcaf330d7876905aa470f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5f9bbbbf9efbcaf330d7876905aa470f">Flash_readPage</a> (<a class="el" href="structFlash.html">Flash</a> *, uint32_t, volatile uint8_t *)</td></tr>
+<tr class="memdesc:ga5f9bbbbf9efbcaf330d7876905aa470f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read from flash.  <br /></td></tr>
+<tr class="separator:ga5f9bbbbf9efbcaf330d7876905aa470f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab522cee3393b2c9d6be5f85f13b1c12d" id="r_gab522cee3393b2c9d6be5f85f13b1c12d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab522cee3393b2c9d6be5f85f13b1c12d">Flash_writePage</a> (<a class="el" href="structFlash.html">Flash</a> *, uint32_t, uint8_t *)</td></tr>
+<tr class="memdesc:gab522cee3393b2c9d6be5f85f13b1c12d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write page to flash.  <br /></td></tr>
+<tr class="separator:gab522cee3393b2c9d6be5f85f13b1c12d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaee89dc3026c93c50415e20cf3b10a303" id="r_gaee89dc3026c93c50415e20cf3b10a303"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaee89dc3026c93c50415e20cf3b10a303">Flash_erase</a> (<a class="el" href="structFlash.html">Flash</a> *)</td></tr>
+<tr class="memdesc:gaee89dc3026c93c50415e20cf3b10a303"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erase flash chip.  <br /></td></tr>
+<tr class="separator:gaee89dc3026c93c50415e20cf3b10a303"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad9cd1f3e0356d77482277c39d67b5773" id="r_gad9cd1f3e0356d77482277c39d67b5773"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad9cd1f3e0356d77482277c39d67b5773">_Flash_writeEnable</a> (<a class="el" href="structFlash.html">Flash</a> *)</td></tr>
+<tr class="memdesc:gad9cd1f3e0356d77482277c39d67b5773"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send Write Enable instruction to the flash device.  <br /></td></tr>
+<tr class="separator:gad9cd1f3e0356d77482277c39d67b5773"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga73950265865b16a6cab61eaf6d7f1f70" id="r_ga73950265865b16a6cab61eaf6d7f1f70"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga73950265865b16a6cab61eaf6d7f1f70">_Flash_readStatus1</a> (<a class="el" href="structFlash.html">Flash</a> *, uint8_t *)</td></tr>
+<tr class="memdesc:ga73950265865b16a6cab61eaf6d7f1f70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read from Status Register 1.  <br /></td></tr>
+<tr class="separator:ga73950265865b16a6cab61eaf6d7f1f70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2c793189c4cb30a3548467c95c15d56d" id="r_ga2c793189c4cb30a3548467c95c15d56d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2c793189c4cb30a3548467c95c15d56d">_Flash_readStatus2</a> (<a class="el" href="structFlash.html">Flash</a> *, uint8_t *)</td></tr>
+<tr class="memdesc:ga2c793189c4cb30a3548467c95c15d56d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read from Status Register 2.  <br /></td></tr>
+<tr class="separator:ga2c793189c4cb30a3548467c95c15d56d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaac90082a4208c49157bae75e00e643b1" id="r_gaac90082a4208c49157bae75e00e643b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaac90082a4208c49157bae75e00e643b1">_Flash_readStatus3</a> (<a class="el" href="structFlash.html">Flash</a> *, uint8_t *)</td></tr>
+<tr class="memdesc:gaac90082a4208c49157bae75e00e643b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read from Status Register 3.  <br /></td></tr>
+<tr class="separator:gaac90082a4208c49157bae75e00e643b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <dl class="section author"><dt>Author</dt><dd>Matt Ricci</dd></dl>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gadbd466d7ecb063949f078c2480192cf9" name="gadbd466d7ecb063949f078c2480192cf9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gadbd466d7ecb063949f078c2480192cf9">&#9670;&#160;</a></span>Flash_init()</h2>
+<a id="gaea3658eaa9d17f7c33f0dddf478dc727" name="gaea3658eaa9d17f7c33f0dddf478dc727"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaea3658eaa9d17f7c33f0dddf478dc727">&#9670;&#160;</a></span>Flash_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -184,12 +184,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00030">30</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00033">33</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
 
 </div>
 </div>
-<a id="ga5682d8c6ddea2f7c5e56c481366f6c15" name="ga5682d8c6ddea2f7c5e56c481366f6c15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5682d8c6ddea2f7c5e56c481366f6c15">&#9670;&#160;</a></span>Flash_readPage()</h2>
+<a id="ga5f9bbbbf9efbcaf330d7876905aa470f" name="ga5f9bbbbf9efbcaf330d7876905aa470f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5f9bbbbf9efbcaf330d7876905aa470f">&#9670;&#160;</a></span>Flash_readPage()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -224,12 +224,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00180">180</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00190">190</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
 
 </div>
 </div>
-<a id="ga844666cc047adf8a6ebfe58cfb02dfbc" name="ga844666cc047adf8a6ebfe58cfb02dfbc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga844666cc047adf8a6ebfe58cfb02dfbc">&#9670;&#160;</a></span>Flash_writePage()</h2>
+<a id="gab522cee3393b2c9d6be5f85f13b1c12d" name="gab522cee3393b2c9d6be5f85f13b1c12d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab522cee3393b2c9d6be5f85f13b1c12d">&#9670;&#160;</a></span>Flash_writePage()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -264,12 +264,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00145">145</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00154">154</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
 
 </div>
 </div>
-<a id="ga00729be27e7be3604f188a66638f7cdc" name="ga00729be27e7be3604f188a66638f7cdc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga00729be27e7be3604f188a66638f7cdc">&#9670;&#160;</a></span>Flash_erase()</h2>
+<a id="gaee89dc3026c93c50415e20cf3b10a303" name="gaee89dc3026c93c50415e20cf3b10a303"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaee89dc3026c93c50415e20cf3b10a303">&#9670;&#160;</a></span>Flash_erase()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,12 +293,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00120">120</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00128">128</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
 
 </div>
 </div>
-<a id="ga98a614bd09fe5fd3a9adb05478c100c4" name="ga98a614bd09fe5fd3a9adb05478c100c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga98a614bd09fe5fd3a9adb05478c100c4">&#9670;&#160;</a></span>_Flash_writeEnable()</h2>
+<a id="gad9cd1f3e0356d77482277c39d67b5773" name="gad9cd1f3e0356d77482277c39d67b5773"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad9cd1f3e0356d77482277c39d67b5773">&#9670;&#160;</a></span>_Flash_writeEnable()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -322,12 +322,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00050">50</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00054">54</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
 
 </div>
 </div>
-<a id="gae37e74b62701ec0cac24afde386d12c4" name="gae37e74b62701ec0cac24afde386d12c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae37e74b62701ec0cac24afde386d12c4">&#9670;&#160;</a></span>_Flash_readStatus1()</h2>
+<a id="ga73950265865b16a6cab61eaf6d7f1f70" name="ga73950265865b16a6cab61eaf6d7f1f70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga73950265865b16a6cab61eaf6d7f1f70">&#9670;&#160;</a></span>_Flash_readStatus1()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -356,12 +356,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00066">66</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00071">71</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
 
 </div>
 </div>
-<a id="gae64ff1bc3f9a083e361792733f6a6081" name="gae64ff1bc3f9a083e361792733f6a6081"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae64ff1bc3f9a083e361792733f6a6081">&#9670;&#160;</a></span>_Flash_readStatus2()</h2>
+<a id="ga2c793189c4cb30a3548467c95c15d56d" name="ga2c793189c4cb30a3548467c95c15d56d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2c793189c4cb30a3548467c95c15d56d">&#9670;&#160;</a></span>_Flash_readStatus2()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -390,12 +390,12 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00083">83</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00089">89</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
 
 </div>
 </div>
-<a id="ga9a0948cf30de239d6a8e301209ae51a3" name="ga9a0948cf30de239d6a8e301209ae51a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9a0948cf30de239d6a8e301209ae51a3">&#9670;&#160;</a></span>_Flash_readStatus3()</h2>
+<a id="gaac90082a4208c49157bae75e00e643b1" name="gaac90082a4208c49157bae75e00e643b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaac90082a4208c49157bae75e00e643b1">&#9670;&#160;</a></span>_Flash_readStatus3()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -424,7 +424,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00100">100</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="flash_8c_source.html#l00107">107</a> of file <a class="el" href="flash_8c_source.html">flash.c</a>.</p>
 
 </div>
 </div>
