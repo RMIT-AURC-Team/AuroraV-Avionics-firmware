@@ -1,17 +1,19 @@
 /**
  * @author Matt Ricci
- * @defgroup UART
+ * @defgroup UART_API UART
  */
 
 #ifndef _UART_H
 #define _UART_H
 
+#include "string.h"
 #include "stdbool.h"
 #include "stm32f439xx.h"
 
 /**
- * @addtogroup UART
- * @brief UART interface
+ * @ingroup UART_API
+ * @addtogroup UART Interface
+ * @brief UART interface from which external peripherals inherit
  * @{
  */
 
@@ -22,7 +24,6 @@ typedef enum {
 
 /**
  * @brief Struct definition for \ref UART "UART interface"
- * foobar
  */
 typedef struct UART {
   USART_TypeDef *interface;

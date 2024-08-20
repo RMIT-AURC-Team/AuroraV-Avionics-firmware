@@ -1,10 +1,12 @@
-/**
- * @author Matt Ricci
- * @addtogroup BMP581 
- * @todo Add altitude calculation method
- * @file BMP581.c
- * @todo Document implementation
- */
+/***********************************************************************************
+ * @file        BMP581.c                                                           *
+ * @author      Matt Ricci                                                         *
+ * @addtogroup  BMP581                                                             *
+ *                                                                                 *
+ * @todo Add altitude calculation method                                           *
+ * @todo Document implementation                                                   *
+ * @{                                                                              *
+ ***********************************************************************************/
 
 #include "BMP581.h"
 
@@ -167,3 +169,5 @@ uint8_t BMP581_readRegister(BMP581 *baro, uint8_t address) {
   spi.port->ODR |= spi.cs;
   return (uint8_t)response;
 }
+
+/** @} */

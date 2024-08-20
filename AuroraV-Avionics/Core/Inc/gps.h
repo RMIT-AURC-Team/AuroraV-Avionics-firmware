@@ -1,7 +1,7 @@
 /**
  * @author Matt Ricci
+ * @ingroup UART_API
  * @addtogroup GPS
- * @file gps.h
  * @todo Add to UART group
  */
 
@@ -10,6 +10,11 @@
 
 #include "stm32f4xx.h"
 #include "stdint.h"
+
+/**
+ * @addtogroup GPS
+ * @{
+ */
 
 struct GPSData {
  char time[15];
@@ -33,5 +38,5 @@ uint8_t GPS_byte();
 void GPS_message(char *);
 void DecodeGPS(char*, struct GPSData*);
 
-
+/** @} */
 #endif

@@ -1,8 +1,20 @@
+/***********************************************************************************
+ * @file        spi.c                                                              *
+ * @author      Matt Ricci                                                         *
+ * @addtogroup  SPI                                                                *
+ * @brief       Implements functions for SPI device interface initialization and   *
+ *              communication.                                                     *
+ *                                                                                 *
+ * @todo        Review and refactor SPI functions for better readability and error *
+ *              handling.                                                          *
+ ***********************************************************************************/
+
 #include "spi.h"
 
 /* =============================================================================== */
 /**
  * @brief Initialiser for an SPI device interface.
+ *
  * @param *spi 				Pointer to SPI struct to be initialised.
  * @param device 			Enum specifier for device type.
  * @param *interface 	Pointer to SPI interface struct.
@@ -24,6 +36,7 @@ void SPI_init(SPI *spi, DeviceType device, SPI_TypeDef *interface, GPIO_TypeDef 
 /* =============================================================================== */
 /**
  * @brief Instance method to communicate a SPI transaction with slave device.
+ *
  * @param 	*spi 			Pointer to SPI struct.
  * @param 	data 			Data payload to be sent to slave device.
  * @retval 	response 	Returns the slave device response from the transaction.
@@ -40,6 +53,7 @@ uint16_t SPI_transmit(SPI *spi, uint16_t data) {
 /* =============================================================================== */
 /**
  * @brief Send data through the SPI interface.
+ *
  * @param 	*spi 			Pointer to SPI struct.
  * @param   data      The data to send.
  * @return @c NULL.
@@ -53,6 +67,7 @@ void SPI_send(SPI *spi, uint16_t data) {
 /* =============================================================================== */
 /**
  * @brief Receive data through the SPI interface.
+ *
  * @param 	*spi 			Pointer to SPI struct.
  * @param   data      Pointer to variable to receive data into.
  * @return @c NULL.

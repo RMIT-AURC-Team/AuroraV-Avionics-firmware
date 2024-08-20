@@ -1,9 +1,11 @@
-/**
- * @author Matt Ricci
- * @file flash.c
- * @addtogroup Flash
- * @{
- */
+/***********************************************************************************
+ * @file        flash.c                                                            *
+ * @author      Matt Ricci                                                         *
+ * @addtogroup  Flash                                                              *
+ * @brief       Brief description of the file’s purpose.                           *
+ *                                                                                 *
+ * @{                                                                              *
+ ***********************************************************************************/
 
 #include "flash.h"
 
@@ -21,6 +23,7 @@
 /* =============================================================================== */
 /**
  * @brief Initialise flash struct.
+ *
  * @param *flash	Pointer to Flash struct.
  * @param *port   Pointer to GPIO port.
  * @param cs      Address to flash chip select.
@@ -43,6 +46,7 @@ void Flash_init(Flash *flash, GPIO_TypeDef *port, unsigned long cs, int pageSize
 /* =============================================================================== */
 /**
  * @brief Send Write Enable instruction to the flash device.
+ *
  * @param *flash			Pointer to Flash struct.
  * @return @c NULL.
  **
@@ -58,6 +62,7 @@ void _Flash_writeEnable(Flash *flash) {
 /* =============================================================================== */
 /**
  * @brief Read from Status Register 1.
+ *
  * @param *flash		Pointer to Flash struct.
  * @param *status 	Pointer to status output variable.
  * @return @c NULL.
@@ -75,6 +80,7 @@ void _Flash_readStatus1(Flash *flash, uint8_t *status) {
 /* =============================================================================== */
 /**
  * @brief Read from Status Register 2.
+ *
  * @param *flash		Pointer to Flash struct.
  * @param *status 	Pointer to status output variable.
  * @return @c NULL.
@@ -92,6 +98,7 @@ void _Flash_readStatus2(Flash *flash, uint8_t *status) {
 /* =============================================================================== */
 /**
  * @brief Read from Status Register 3.
+ *
  * @param *flash		Pointer to Flash struct.
  * @param *status 	Pointer to status output variable.
  * @return @c NULL.
@@ -113,6 +120,7 @@ void _Flash_readStatus3(Flash *flash, uint8_t *status) {
 /* =============================================================================== */
 /**
  * @brief Erase flash chip.
+ *
  * @param *flash		Pointer to Flash struct.
  * @return @c NULL.
  **
@@ -136,6 +144,7 @@ void Flash_erase(Flash *flash) {
 /* =============================================================================== */
 /**
  * @brief Write page to flash.
+ *
  * @param *flash		Pointer to Flash struct.
  * @param address 	Address in memory to write to.
  * @param *data 		Pointer to start of page buffer to write.
@@ -171,6 +180,7 @@ void Flash_writePage(Flash *flash, uint32_t address, uint8_t *data) {
 /* =============================================================================== */
 /**
  * @brief Read from flash.
+ *
  * @param *flash		Pointer to Flash struct.
  * @param address 	Address in memory to write to.
  * @param *data 		Pointer to start of page buffer to read to.

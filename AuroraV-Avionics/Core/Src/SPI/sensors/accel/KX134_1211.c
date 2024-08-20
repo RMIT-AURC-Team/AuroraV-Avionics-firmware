@@ -1,13 +1,17 @@
-/**
- * @author Matt Ricci
- * @file KX134_1211.c
- */
+/***********************************************************************************
+ * @file        KX134_1211.c                                                       *
+ * @author      Matt Ricci                                                         *
+ * @addtogroup  KX134_1211                                                         *
+ *                                                                                 *
+ * @{                                                                              *
+ ***********************************************************************************/
 
 #include "KX134_1211.h"
 
 /* =============================================================================== */
 /**
  * @brief Initialiser for a KX134-1211 accelerometer.
+ *
  * @param *accel 			Pointer to KX134-1211 struct to be initialised.
  * @param *port 			Pointer to GPIO port struct.
  * @param cs 					Device chip select address.
@@ -47,6 +51,7 @@ void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, ui
 /* =============================================================================== */
 /**
  * @brief Read 3-axis floating point accelerations.
+ *
  * @param 	*accel 		Pointer to accel struct.
  * @param 	*out 		  Floating point acceleration array.
  * @returns @c NULL.
@@ -60,6 +65,7 @@ void KX134_1211_readAccel(KX134_1211 *accel, float *out) {
 /* =============================================================================== */
 /**
  * @brief Updates internally stored acceleration readings.
+ *
  * @param 	*accel 		Pointer to accel struct.
  * @returns @c NULL.
  **
@@ -72,6 +78,7 @@ void KX134_1211_update(KX134_1211 *accel) {
 /* =============================================================================== */
 /**
  * @brief Process raw 3-axis data to floating point accelerations.
+ *
  * @param 	*accel 		Pointer to accel struct.
  * @param 	*bytes 		Raw 3-axis data array.
  * @param 	*out 			Processed 3-axis data array to write.
@@ -87,6 +94,7 @@ void KX134_1211_processRawBytes(KX134_1211 *accel, uint8_t *bytes, float *out) {
 /* =============================================================================== */
 /**
  * @brief Read raw 3-axis data.
+ *
  * @param 	*accel 		Pointer to accel struct.
  * @param 	*out 			Raw 3-axis data array to write.
  * @returns @c NULL.
@@ -134,3 +142,5 @@ uint8_t KX134_1211_readRegister(KX134_1211 *accel, uint8_t address) {
   spi.port->ODR |= spi.cs;      // Raise chip select
   return (uint8_t)response;
 }
+
+/** @} */

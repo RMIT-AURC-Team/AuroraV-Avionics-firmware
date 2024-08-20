@@ -1,17 +1,16 @@
-/**
- * @author Matt Ricci
- * @file control.c
- * @todo Fix warnings in strtok
- */
+/***********************************************************************************
+ * @file        control.c                                                          *
+ * @author      Matt Ricci                                                         *
+ ***********************************************************************************/
 
 #include "control.h"
 
 bool usbCommandParse(uint8_t *cmd) {
 	bool ret;
 
-	uint8_t *token = strtok(cmd, " ");
-	uint8_t *flags = strchr(token, '\0') + 1;
-	
+	char *token = strtok((char *)cmd, " ");
+	char *flags = strchr(token, '\0') + 1;
+		
 	if (!strcmp(token, CMD_CLEAR))
     ret = usbClearCommandExecute();
   else if (!strcmp(token, CMD_FLASH))
@@ -26,7 +25,7 @@ bool usbCommandParse(uint8_t *cmd) {
  *
  * @details `usbClearCommandExecute` transmits over UART an ANSI control sequence for 
  * clearing the host terminal window.
- *
+ **
  * =============================================================================== */
 bool usbClearCommandExecute() {
 	usb.sendBytes(&usb, (uint8_t *) "\033[3J\033[H\033[2J", 11);
@@ -37,14 +36,14 @@ bool usbClearCommandExecute() {
 /**
  * @brief Execute flash commands on target
  *
- * @details `usbFlashCommandExecute` parses and executes flash related commands according 
- * to the flags passed in by the top level command parser. 
+ * @details `usbFlashCommandExecute` parses and executes flash related commands 
+ * according to the flags passed in by the top level command parser. 
  * @details Currently implemented commands include:
  * 	- Erase
  * 	- Read all
- *
+ **
  * =============================================================================== */
-bool usbFlashCommandExecute(uint8_t *flags) {
+bool usbFlashCommandExecute(char *flags) {
   if (flags == NULL)
     return false;
 
@@ -57,7 +56,7 @@ bool usbFlashCommandExecute(uint8_t *flags) {
 	// flash read all
 	else if (!strcmp(flags, CMD_FLASH_READ_ALL)) {
 		volatile uint8_t pageData[256];
-		for (long i = 0; i < flash.pageCount; i++) {
+		for (long i = 0; i < flash.pageCount; i += 0x100) {
 			flash.readPage(&flash, i, pageData);
 			for (int j = 0; j < flash.pageSize; j++)
 				usb.send(&usb, pageData[j]);

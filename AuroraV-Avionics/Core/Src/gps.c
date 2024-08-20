@@ -1,3 +1,12 @@
+/***********************************************************************************
+ * @file        gps.c                                                              *
+ * @author      Matt Ricci                                                         *
+ * @addtogroup  GPS                                                                *
+ * @brief       Brief description of the file’s purpose.                           *
+ *                                                                                 *
+ * @{                                                                              *
+ ***********************************************************************************/
+
 #include "gps.h"
 
 uint8_t GPS_byte() {
@@ -67,3 +76,5 @@ void DecodeGPS(char* GPS, struct GPSData* data) {
 	data->minute = (data->time[2] - '0') * 10 + (data->time[3] - '0');
 	data->second = (data->time[4] - '0') * 10 + (data->time[5] - '0');
 }
+
+/** @} */

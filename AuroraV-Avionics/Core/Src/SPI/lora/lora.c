@@ -1,10 +1,12 @@
-/**
- * @author Matt Ricci
- * @file lora.c
- * @addtogroup LoRa
- * @todo Implement adjustable packet size
- * @{
- */
+/***********************************************************************************
+ * @file        lora.c                                                             *
+ * @author      Matt Ricci                                                         *
+ * @addtogroup  LoRa                                                               *
+ * @brief       Brief description of the file’s purpose.                           *
+ *                                                                                 *
+ * @todo Implement adjustable packet size                                          *
+ * @{                                                                              *
+ ***********************************************************************************/
 
 #include "lora.h"
 
@@ -21,14 +23,15 @@
 
 /* =============================================================================== */
 /**
- * @brief
- * @param *lora 			Pointer to LoRa struct to be initialised.
- * @param *port 			Pointer to GPIO port struct.
- * @param cs 					Device chip select address.
- * @param bw
- * @param sf
- * @param cr
- * @return @c NULL.
+ * @brief Initializes the LoRa module with specified configuration parameters.
+ *
+ * @param *lora        Pointer to LoRa struct to be initialised.
+ * @param *port        Pointer to GPIO port struct.
+ * @param cs           Device chip select address.
+ * @param bw           Bandwidth setting for the LoRa module.
+ * @param sf           Spreading factor for the LoRa module.
+ * @param cr           Coding rate for the LoRa module.
+ * @return @c NULL.    
  **
  * =============================================================================== */
 void LoRa_init(LoRa *lora, GPIO_TypeDef *port, unsigned long cs, Bandwidth bw, SpreadingFactor sf, CodingRate cr) {
@@ -68,10 +71,11 @@ void LoRa_init(LoRa *lora, GPIO_TypeDef *port, unsigned long cs, Bandwidth bw, S
 
 /* =============================================================================== */
 /**
- * @brief
- * @param *LoRa			Pointer to LoRa struct.
- * @param Mode
- * @return @c NULL.
+ * @brief Sets the operational mode of the LoRa module.
+ *
+ * @param *lora        Pointer to LoRa struct.
+ * @param mode         Desired operational mode to be set.
+ * @return @c NULL.    
  **
  * =============================================================================== */
 void _LoRa_setMode(LoRa *lora, Mode mode) {
@@ -87,11 +91,19 @@ void _LoRa_setMode(LoRa *lora, Mode mode) {
 
 /* =============================================================================== */
 /**
- * @brief
- * @param id
- * @param *accelData
- * @param lenAccel
- * @return LoRa_Packet.
+ * @brief Constructs a LoRa packet with accelerometer and gyroscope data, altitude, 
+ *        and velocity for transmission.
+ *
+ * @param id           Identifier for the packet.
+ * @param currentState Current state to be included in the packet.
+ * @param *lAccelData  Pointer to low byte accelerometer data.
+ * @param *hAccelData  Pointer to high byte accelerometer data.
+ * @param lenAccel     Length of the accelerometer data.
+ * @param *gyroData    Pointer to gyroscope data.
+ * @param lenGyro      Length of the gyroscope data.
+ * @param altitude     Altitude value to be included in the packet.
+ * @param velocity     Velocity value to be included in the packet.
+ * @return             Constructed LoRa packet containing the provided data.
  **
  * =============================================================================== */
 LoRa_Packet LoRa_AVData(
@@ -138,9 +150,10 @@ LoRa_Packet LoRa_AVData(
 
 /* =============================================================================== */
 /**
- * @brief
- * @param lora
- * @param pointerdata
+ * @brief Transmits data using the LoRa module.
+ * 
+ * @param lora         Pointer to LoRa struct.
+ * @param pointerdata  Pointer to the data to be transmitted.
  **
  * =============================================================================== */
 void LoRa_transmit(LoRa *lora, uint8_t *pointerdata) {
@@ -152,19 +165,11 @@ void LoRa_transmit(LoRa *lora, uint8_t *pointerdata) {
     LoRa_writeRegister(lora, LORA_REG_FIFO, pointerdata[i]);
   }
 
+	// Set device to transmit
   _LoRa_setMode(lora, TX);
 
-	/** 
-	 * @todo Implement interrupt on TxComplete
-	 * 
-	 * @attention Polling the pin takes too much time, as a result delay timers on various tasks will
-	 * have expired in the time waiting and CPU will never idle (meaning flashing does not occur).
-	 *
-	 * @attention Implementing interrupt on TxComplete signal should solve this since the handler should only
-	 * run over a few clock cycles.
-	 */
-	//while (!(GPIOD->IDR & 0x2));
-  LoRa_writeRegister(lora, LORA_REG_IRQ_FLAGS, 0x08); // clears the status flags
+	// Clear the status flags
+  LoRa_writeRegister(lora, LORA_REG_IRQ_FLAGS, 0x08); 
 }
 
 /******************************** INTERFACE METHODS ********************************/

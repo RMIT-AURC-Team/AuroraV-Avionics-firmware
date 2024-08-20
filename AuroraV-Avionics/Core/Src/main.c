@@ -1,9 +1,16 @@
-/**
- * @author Matt Ricci
- * @file main.c
- * @todo Implement globals as context struct to pass to external functions.
- * e.g. passing context of flash, uart, etc. to control functions.
- **/
+/***********************************************************************************
+ * @file        main.c                                                             *
+ * @author      Matt Ricci                                                         *
+ * @brief                                                                          *
+ *                                                                                 *
+ * @todo Implement globals as context struct to pass to external functions.        *
+ *       e.g. passing context of flash, uart, etc. to control functions.           *
+ *                                                                                 *
+ * @todo Implement definition and ifdef guards for system debug, provides          *
+ *       system debug information printed to USB UART interface if defined.        *
+ *                                                                                 *
+ * @todo Implement startup task to isolate initialisations from main.              *
+ ***********************************************************************************/
 
 #include "main.h"
 
@@ -24,6 +31,8 @@ TaskHandle_t xStateUpdateHandle       = NULL;
 TaskHandle_t xLoRaTransmitHandle      = NULL;
 TaskHandle_t xLoRaSampleHandle 				= NULL;
 TaskHandle_t xUsbReceiveHandle        = NULL;
+TaskHandle_t xUsbTransmitHandle       = NULL;
+TaskHandle_t xGpsReadHandle						= NULL;
 
 EventGroupHandle_t xTaskEnableGroup; // 0: FLASH,  1: HIGHRES, 2: LOWRES, 3: LORA, 7: IDLE
 EventGroupHandle_t xMsgReadyGroup;   // 0: LORA, 1: USB
@@ -42,28 +51,30 @@ Flash flash;
 //          BUFFERS
 // ============================
 
-#define AVG_BUFF_SIZE 15
-#define MSG_BUFF_SIZE 128
-#define MEM_BUFF_SIZE 20992
-
 // USB
-const size_t xUsbBuffSize = MSG_BUFF_SIZE;
+#define USB_TX_SIZE 4096
+#define USB_RX_SIZE 128
+const size_t xUsbTxBuffSize = USB_TX_SIZE;
+const size_t xUsbRxBuffSize = USB_RX_SIZE;
 MessageBufferHandle_t xUsbTxBuff;
 StreamBufferHandle_t xUsbRxBuff;
-uint8_t usbRxBuff[MSG_BUFF_SIZE];
+uint8_t usbRxBuff[USB_RX_SIZE];
 uint8_t usbRxBuffIdx = 0;
 
 // LoRa
-const size_t xLoRaBuffSize = MSG_BUFF_SIZE;
+#define LORA_BUFF_SIZE 128
+const size_t xLoRaBuffSize = LORA_BUFF_SIZE;
 MessageBufferHandle_t xLoRaTxBuff;
 MessageBufferHandle_t xLoRaRxBuff;
 
 // Flash
+#define MEM_BUFF_SIZE 20992
 MemBuff mem;
 uint8_t buff[MEM_BUFF_SIZE];
 uint8_t outBuff[FLASH_PAGE_SIZE];
 
 // Averages
+#define AVG_BUFF_SIZE 15
 float avgPressCurrent  = 0;
 float avgPressPrevious = 0;
 SlidingWindow avgPress;
@@ -90,6 +101,9 @@ float altitude          = 0;         // Current altitude
 float velocity          = 0;         // Current vertical velocity
 
 enum State currentState = PRELAUNCH; // Boot in prelaunch
+
+SemaphoreHandle_t xUsbMutex;
+struct GPSData gps;
 
 int main(void) {
   // Bring up RCC
@@ -120,7 +134,8 @@ int main(void) {
 
   Flash_init(&flash, FLASH_PORT, FLASH_CS, FLASH_PAGE_SIZE, FLASH_PAGE_COUNT);
   UART_init(&usb, USB_INTERFACE, USB_PORT, USB_BAUD, OVER8);
-  xUsbRxBuff = xStreamBufferCreate(xUsbBuffSize, 1);
+  xUsbRxBuff = xStreamBufferCreate(xUsbRxBuffSize, 1);
+	xUsbTxBuff = xMessageBufferCreate(xUsbTxBuffSize);
 
   // Initialise LoRa interface and message buffers
   LoRa_init(&lora, LORA_PORT, LORA_CS, BW500, SF9, CR5);
@@ -151,13 +166,16 @@ int main(void) {
 	xEventGroupSetBits(xMsgReadyGroup, GROUP_MESSAGE_READY_LORA);
 
   // Create task handles
-  xTaskCreate(vDataAcquisitionH, "HDataAcq", 256, NULL, configMAX_PRIORITIES - 2, &xDataAqcquisitionHHandle);
-  xTaskCreate(vDataAcquisitionL, "LDataAcq", 256, NULL, configMAX_PRIORITIES - 3, &xDataAqcquisitionLHandle);
-  xTaskCreate(vStateUpdate, "StateUpdate", 256, NULL, configMAX_PRIORITIES - 4, &xStateUpdateHandle);
-  xTaskCreate(vFlashBuffer, "FlashData", 256, NULL, configMAX_PRIORITIES - 1, &xFlashBufferHandle);
-  xTaskCreate(vLoRaTransmit, "LoRaTx", 256, NULL, configMAX_PRIORITIES - 5, &xLoRaTransmitHandle);
-	xTaskCreate(vLoRaSample, "LoRaSample", 256, NULL, configMAX_PRIORITIES - 6, &xLoRaSampleHandle);
+  xTaskCreate(vDataAcquisitionH, "HDataAcq", 512, NULL, configMAX_PRIORITIES - 2, &xDataAqcquisitionHHandle);
+  xTaskCreate(vDataAcquisitionL, "LDataAcq", 512, NULL, configMAX_PRIORITIES - 3, &xDataAqcquisitionLHandle);
+  xTaskCreate(vStateUpdate, "StateUpdate", 128, NULL, configMAX_PRIORITIES - 4, &xStateUpdateHandle);
+  xTaskCreate(vFlashBuffer, "FlashData", 128, NULL, configMAX_PRIORITIES - 1, &xFlashBufferHandle);
+  xTaskCreate(vLoRaTransmit, "LoRaTx", 128, NULL, configMAX_PRIORITIES - 5, &xLoRaTransmitHandle);
+	xTaskCreate(vLoRaSample, "LoRaSample", 128, NULL, configMAX_PRIORITIES - 6, &xLoRaSampleHandle);
   xTaskCreate(vUsbReceive, "UsbRx", 256, NULL, configMAX_PRIORITIES - 6, &xUsbReceiveHandle);
+	xTaskCreate(vUsbTransmit, "UsbTx", 256, NULL, configMAX_PRIORITIES - 6, &xUsbTransmitHandle);
+
+	xUsbMutex = xSemaphoreCreateMutex();
 
   vTaskStartScheduler();
 }
@@ -166,6 +184,16 @@ int main(void) {
  *                            STATE MANAGEMENT                           *
  * ===================================================================== */
 
+/**
+ * @brief State update task.
+ *
+ * Handles transitions between different flight states, sends CAN messages
+ * for aerobrakes and altitude data, and enables or disables various data
+ * acquisition tasks based on the current state.
+ *
+ * @todo Add definition for update period and replace assignments for frequency
+ *       (e.g. xFrequency = pdMS_TO_TICKS(STATE_UPDATE_PERIOD);).
+ */
 void vStateUpdate(void *argument) {
   TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(20); // 50Hz
@@ -192,8 +220,12 @@ void vStateUpdate(void *argument) {
       if (pAccel_s->accelData[ZINDEX] >= ACCEL_LAUNCH) {
 				#ifdef FLIGHT_TEST 
 					GPIOB->ODR ^= 0X8000; 
+					GPIOD->ODR ^= 0X8000;
 				#endif
-				vTaskDelete(xUsbReceiveHandle);																	 // Ignore all USB communications
+				#ifndef DEBUG
+					vTaskDelete(xUsbTransmitHandle);
+					vTaskDelete(xUsbReceiveHandle);																	 
+				#endif
         xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_FLASH);   // Enable flash
 				xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_HIGHRES); // Enable high resolution data acquisition
         xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_LOWRES);  // Enable low resolution data acquisition
@@ -212,6 +244,7 @@ void vStateUpdate(void *argument) {
       if ((avgVelCurrent - avgVelPrevious) < 0) {
 				#ifdef FLIGHT_TEST 
 					GPIOB->ODR ^= 0X8000; 
+					GPIOD->ODR ^= 0X8000;
 				#endif
         currentState = COAST;
       }
@@ -230,7 +263,12 @@ void vStateUpdate(void *argument) {
       if ((((avgPressCurrent - avgPressPrevious) > 0) + (tilt >= 90) + (velocity < 0.0f)) >= 2) {
 				#ifdef FLIGHT_TEST 
 					GPIOB->ODR ^= 0X8000; 
+					GPIOD->ODR ^= 0X8000; 
 				#endif
+				vTaskDelete(xDataAqcquisitionHHandle);
+				vTaskDelete(xDataAqcquisitionLHandle);	
+				vTaskDelete(xLoRaSampleHandle);				
+				xTaskCreate(vGpsRead, "GpsRead", 512, NULL, configMAX_PRIORITIES - 6, &xGpsReadHandle);				
         currentState = APOGEE;
         // Send transmission to trigger apogee E-matches
       }
@@ -247,6 +285,7 @@ void vStateUpdate(void *argument) {
       if (altitude <= MAIN_ALTITUDE_METERS) {
 				#ifdef FLIGHT_TEST 
 					GPIOB->ODR ^= 0X8000; 
+					GPIOD->ODR ^= 0X8000;
 				#endif
         currentState = DESCENT;
         // Add descent event dataframe to buffer
@@ -264,13 +303,29 @@ void vStateUpdate(void *argument) {
  *                            FLASH HANDLING                             *
  * ===================================================================== */
 
-// Use idle time to write flash
+/**
+ * @brief Idle hook for writing to flash.
+ *
+ * Uses idle time to check if there is a page available in the buffer. If a page
+ * is available and the rocket state is past `LAUNCH`, it sets the flash write 
+ * flag to trigger the flash buffer task.
+ */
 void vApplicationIdleHook(void) {
   // Write if a page is available in the buffer
   if (currentState >= LAUNCH && mem.pageReady)
     xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_FLASH);
 }
 
+/**
+ * @brief Flash buffer write task.
+ *
+ * Monitors flash enable flag to determine when to flush data from the memory buffer to 
+ * flash memory. The task waits for the flag to be set, reads data into a buffer, writes
+ * the data to flash, and then updates the page address. 
+ *
+ * @bug Data written to flash currently shows signs of corruption, potentially due 
+ *      to issues with buffering. <b>This is a critical error.</b>
+ */
 void vFlashBuffer(void *argument) {
   const TickType_t timeout = pdMS_TO_TICKS(1);
   uint32_t pageAddr        = 0;
@@ -294,10 +349,11 @@ void vFlashBuffer(void *argument) {
  * ===================================================================== */
 
 /**
- * @brief LoRa transmit task
+ * @brief LoRa transmit task.
  *
- * @details Reads data from LoRa Tx buffer and sends to SX1272 for 
- * transmit.
+ * Handles transmission of data to the SX1272 transceiver. It waits for the LoRa 
+ * module to be ready, then reads a message from the LoRa transmit buffer and 
+ * sends it via the SX1272. The ready flag is cleared after transmission.
  */
 void vLoRaTransmit(void *argument) {
   const TickType_t blockTime = pdMS_TO_TICKS(250);
@@ -327,10 +383,12 @@ void vLoRaTransmit(void *argument) {
 }
 
 /**
- * @brief LoRa sample task
+ * @brief LoRa sample task.
  *
- * @details Samples current sensor data from RAM every 250ms and
- * queues it to be handled by vLoRaTransmit.
+ * Samples current sensor data from RAM every 250ms and queues it to be transmitted 
+ * by `vLoRaTransmit`. The task creates a LoRa packet containing accelerometer, 
+ * gyroscope, altitude, and velocity data, which is then appended to the transmission 
+ * queue.
  */
 void vLoRaSample(void *argument) {
 	TickType_t xLastWakeTime;
@@ -341,7 +399,7 @@ void vLoRaSample(void *argument) {
 		// Block until 250ms interval
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 	
-		// Create AVData packet and send to buffer
+		// Create AVData packet with current data
 		LoRa_Packet avData = LoRa_AVData(
 			LORA_HEADER_AV_DATA, 
 			currentState,
@@ -354,16 +412,17 @@ void vLoRaSample(void *argument) {
 			velocity
 		);
 		
+		// Add packet to queue
 		xMessageBufferSend(xLoRaTxBuff, &avData, LORA_MSG_LENGTH, blockTime);
 	}
 }
 
 /**
- * @brief LoRa Tx complete interrupt handler
+ * @brief LoRa Tx complete interrupt handler.
  *
- * @details External interrupt on Tx complete signal from SX1272
- * tranceiver. 
- * @details On interrupt the LoRa ready flag is set in xMsgReadyGroup.
+ * Handles the external interrupt triggered by the Tx complete signal from the 
+ * SX1272 transceiver. Upon interrupt, the LoRa ready flag is set in 
+ * `xMsgReadyGroup`.
  */
 void EXTI1_IRQHandler(void) {
   EXTI->PR |= (0x02);
@@ -384,12 +443,34 @@ void EXTI1_IRQHandler(void) {
  * ===================================================================== */
 
 /**
- * @brief USB receive task
+ * @brief USB transmit task for handling UART output.
  *
- * @details Reads data from UART Rx buffer and sends back to host 
- * for display.
- * @details On receiving carriage return, processes command stored 
- * in buffer and resets.
+ */
+void vUsbTransmit(void *argument) {
+  const TickType_t timeout = pdMS_TO_TICKS(0);
+  uint8_t rxData[100];
+
+  for (;;) {    
+		// Read byte from UART Tx buffer, skip loop if empty
+		if (!xMessageBufferReceive(xUsbTxBuff, (void *) rxData, 100, timeout))
+			continue;
+	
+		usb.print(&usb, (char *)rxData);
+  }
+}
+
+/**
+ * @brief USB receive task for handling UART input.
+ *
+ * This task continuously reads data from the UART receive buffer. 
+ * Each byte is sent back to the host for display. On detecting a 
+ * carriage return (`<Enter>`), the task processes the command stored 
+ * in the buffer, sends a newline character for display, and resets 
+ * the buffer for the next command. 
+ *
+ * This task additionally handles specific control characters: 
+ * 	 - `<Ctrl-C>` clears the terminal.
+ * 	 - `<Backspace>` erases the last character.
  */
 void vUsbReceive(void *argument) {
   const TickType_t timeout = pdMS_TO_TICKS(20);
@@ -407,9 +488,7 @@ void vUsbReceive(void *argument) {
     if (rxData == CARRIAGE_RETURN) {
 			usb.print(&usb, "\n");           	// Send newline back for display
       usbRxBuff[usbRxBuffIdx-1] = '\0'; // Replace carriage return with null terminator
-			taskENTER_CRITICAL();
       usbCommandParse(usbRxBuff);    	 	// Parse and execute command
-      taskEXIT_CRITICAL();
 			usbRxBuffIdx = 0;               	// Reset buffer
     } 
 		
@@ -429,17 +508,18 @@ void vUsbReceive(void *argument) {
 }
 
 /**
- * @brief Interrupt handler for USB UART receive
+ * @brief Interrupt handler for USB UART receive.
  *
- * @details Circular append received byte to buffer and send byte to stream buffer
- * for processing in the Rx task.
+ * This handler is triggered when data is received via USB UART. It appends the 
+ * received byte to a circular buffer and sends it to a stream buffer for 
+ * processing by the USB receive task.
  */
 void USART6_IRQHandler() {
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
   uint8_t rxData                      = usb.receive(&usb);
   usbRxBuff[usbRxBuffIdx++]           = rxData;
-  usbRxBuffIdx %= MSG_BUFF_SIZE;
+  usbRxBuffIdx %= USB_RX_SIZE;
 
   xStreamBufferSendFromISR(xUsbRxBuff, (void *)&rxData, 1, &xHigherPriorityTaskWoken);
   portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
@@ -449,6 +529,19 @@ void USART6_IRQHandler() {
  *                  HIGH RESOLUTION DATA ACQUISITION                     *
  * ===================================================================== */
 
+/**
+ * @brief High-frequency data acquisition task.
+ *
+ * Acquires sensor data at a 500Hz rate. It selects the appropriate accelerometer 
+ * based on current data, processes sensor data and appends the processed data 
+ * to a dataframe. Optionally, dummy data can be used for testing if the `DUMMY` 
+ * macro is defined. 
+ *
+ * Quaternion integration and tilt angle calculations are performed if enabled.
+ *
+ * @todo Add definition for sample period and replace assignments for dt and 
+ *       frequency (e.g. dt = 1/SAMPLE_PERIOD_HIGH;).
+ */
 void vDataAcquisitionH(void *argument) {
   float dt = 0.002;
 
@@ -456,7 +549,6 @@ void vDataAcquisitionH(void *argument) {
   const TickType_t xFrequency = pdMS_TO_TICKS(2); // 500Hz
   const TickType_t blockTime  = pdMS_TO_TICKS(0);
 	
-
   for (;;) {
     // Block until 2ms interval
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
@@ -466,7 +558,6 @@ void vDataAcquisitionH(void *argument) {
    
 		#ifdef DUMMY
 			const unsigned long accelX_length = 0x00007568;	// Load bearing definition???
-		
 		  /* 
 		   * Update sensor data with dummy values 
 		   * These arrays are defined in the files under /Data and are generated from 
@@ -547,6 +638,29 @@ void vDataAcquisitionH(void *argument) {
       cosine = zUnit[0] * vAttitude[0] + zUnit[1] * vAttitude[1] + zUnit[2] * vAttitude[2];
       tilt   = acos(cosine) * 180 / M_PI;
     }
+					
+		#ifdef DEBUG
+		  //! @todo extract debug print to function
+		  //! @todo move debug function to new source file with context as parameter
+			if ((xSemaphoreTake(xUsbMutex, pdMS_TO_TICKS(0))) == pdTRUE) {
+				char debugStr[100];
+				snprintf(debugStr, 100, "[HDataAcq] %d\tAccel\tX: %.3f\tY: %.3f\tZ: %.3f\n\r", 
+					hDummyIdx/2,
+					pAccel_s->accelData[0], 
+					pAccel_s->accelData[1], 
+					pAccel_s->accelData[2]
+				);
+				xMessageBufferSend(xUsbTxBuff, (void *) debugStr, 100, pdMS_TO_TICKS(0));
+				snprintf(debugStr, 100, "[HDataAcq] %d\tGyro\tX: %.3f\tY: %.3f\tZ: %.3f\n\r", 
+					hDummyIdx/2,
+					gyro_s.gyroData[0], 
+					gyro_s.gyroData[1], 
+					gyro_s.gyroData[2]
+				);
+				xMessageBufferSend(xUsbTxBuff, (void *) debugStr, 100, pdMS_TO_TICKS(0));
+				xSemaphoreGive(xUsbMutex);
+			}
+		#endif 
   }
 }
 
@@ -554,11 +668,26 @@ void vDataAcquisitionH(void *argument) {
  *                    LOW RESOLUTION DATA ACQUISITION                    *
  * ===================================================================== */
 
+/**
+ * @brief Low-frequency data acquisition and altitude estimation function.
+ *
+ * Performs data acquisition for barometric pressure at a 50Hz rate. 
+ * Altitude is calculated from barometric pressure using the hypsometric formula 
+ * Kalman filter state matrices (A, Q, R, P) are initialized within the function. 
+ * Optionally, dummy data can be used for testing if the `DUMMY` macro is defined. 
+ * 
+ * Velocity and altitude state estimates are calculated with the Kalman filter 
+ * if enabled.
+ *
+ * @todo Add definition for sample period and replace assignments for dt and 
+ *       frequency (e.g. dt = 1/SAMPLE_PERIOD_LOW;).
+ */
 void vDataAcquisitionL(void *argument) {
   float dt = 0.020;
   KalmanFilter kf;
   KalmanFilter_init(&kf);
 
+	//! @todo Move kalman filter matrices into context struct
   // Initialise filter parameters
   float A[9] = {
       1.0, dt, 0.5 * (dt * dt),
@@ -608,7 +737,7 @@ void vDataAcquisitionL(void *argument) {
 		#else
 			baro_s.update(&baro_s);
 		#endif
-
+			
     // Calculate altitude
     altitude = 44330 * (1.0 - pow(baro_s.press / baro_s.groundPress, 0.1903));
 
@@ -629,9 +758,55 @@ void vDataAcquisitionL(void *argument) {
 			avgPress.append(&avgPress, baro_s.press);
 			avgVel.append(&avgVel, velocity);
     }
+		
+		#ifdef DEBUG
+			//! @todo extract debug print to function
+		  //! @todo move debug function to new source file with context as parameter
+			if ((xSemaphoreTake(xUsbMutex, pdMS_TO_TICKS(0))) == pdTRUE) {
+				char debugStr[100];
+				snprintf(debugStr, 100, "[LDataAcq] %d\tBaro\tPressure: %.0f\n\r", 
+					lDummyIdx/2,
+					baro_s.press
+				);
+				xMessageBufferSend(xUsbTxBuff, (void *) debugStr, 100, 0);
+				xSemaphoreGive(xUsbMutex);
+			}
+		#endif 
   }
 }
 
+void vGpsRead(void *argument) {
+	TickType_t xLastWakeTime;
+  const TickType_t xFrequency = pdMS_TO_TICKS(500); 
+	char gpsString[30];
+	
+	for (;;) {
+		// Block until 500ms interval
+		vTaskDelayUntil(&xLastWakeTime, xFrequency);
+		
+		GPS_message(gpsString);
+		DecodeGPS(gpsString, &gps);
+		
+		#ifdef DEBUG
+			//! @todo extract debug print to function
+		  //! @todo move debug function to new source file with context as parameter
+			if ((xSemaphoreTake(xUsbMutex, pdMS_TO_TICKS(0))) == pdTRUE) {
+				char debugStr[100];
+				snprintf(debugStr, 100, "[GPS] %d:%d:%d\n\r", 
+					gps.hour,
+					gps.minute,
+					gps.second
+				);
+				xMessageBufferSend(xUsbTxBuff, (void *) debugStr, 100, 0);
+				xSemaphoreGive(xUsbMutex);
+			}
+		#endif 
+	}
+}
+
+/**
+ * @todo Refactor and document
+ */
 void configure_interrupts() {
   __disable_irq();
   NVIC_SetPriority(EXTI1_IRQn, 9);

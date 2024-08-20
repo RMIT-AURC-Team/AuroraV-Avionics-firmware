@@ -1,9 +1,12 @@
-/**
- * @author Matt Ricci
- * @addtogroup CAN
- * @file can.c
- * @todo Cleanup CAN interface header and implementation.
- */
+/***********************************************************************************
+ * @file        can.c                                                              *
+ * @author      Matt Ricci                                                         *
+ * @addtogroup  CAN                                                                *
+ * @brief       Brief description of the file’s purpose.                           *
+ *                                                                                 *
+ * @todo Cleanup CAN interface header and implementation.                          *
+ ***********************************************************************************/
+
 
 #include "can.h"
 

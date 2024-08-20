@@ -1,13 +1,17 @@
-/**
- * @author Matt Ricci
- * @file A3G4250D.c
- */
+/***********************************************************************************
+ * @file        A3G4250D.c                                                         *
+ * @author      Matt Ricci                                                         *
+ * @addtogroup  A3G4250D                                                           *
+ *                                                                                 *
+ * @{                                                                              *
+ ***********************************************************************************/
 
 #include "A3G4250D.h"
 
 /* =============================================================================== */
 /**
  * @brief Initialiser for a A3G4250D gyroscope.
+ *
  * @param *gyro 			Pointer to A3G4250D struct to be initialised.
  * @param *port 			Pointer to GPIO port struct.
  * @param cs 					Device chip select address.
@@ -34,6 +38,7 @@ void A3G4250D_init(A3G4250D *gyro, GPIO_TypeDef *port, unsigned long cs, float s
 /* =============================================================================== */
 /**
  * @brief Read 3-axis floating point gyro rates.
+ *
  * @param 	*gyro 		Pointer to gyro struct.
  * @param 	*out 		  Floating point gyro rate array.
  * @returns @c NULL.
@@ -48,6 +53,7 @@ void A3G4250D_readGyro(A3G4250D *gyro, float *out) {
 /* =============================================================================== */
 /**
  * @brief Updates internally stored gyro readings.
+ *
  * @param 	*gyro 		Pointer to gyro struct.
  * @returns @c NULL.
  **
@@ -60,6 +66,7 @@ void A3G4250D_update(A3G4250D *gyro) {
 /* =============================================================================== */
 /**
  * @brief Process raw 3-axis data to floating point gyro rates.
+ *
  * @param 	*gyro 		Pointer to gyro struct.
  * @param 	*bytes 		Raw 3-axis data array.
  * @param 	*out 			Processed 3-axis data array to write.
@@ -75,6 +82,7 @@ void A3G4250D_processRawBytes(A3G4250D *gyro, uint8_t *bytes, float *out) {
 /* =============================================================================== */
 /**
  * @brief Read raw 3-axis data.
+ *
  * @param 	*gyro 		Pointer to gyro struct.
  * @param 	*out 			Raw 3-axis data array to write.
  * @returns @c NULL.
@@ -121,3 +129,5 @@ uint8_t A3G4250D_readRegister(A3G4250D *gyro, uint8_t address) {
   spi.port->ODR |= spi.cs;
   return (uint8_t)response;
 }
+
+/** @} */

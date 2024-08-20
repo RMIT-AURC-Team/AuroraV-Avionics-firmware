@@ -27,6 +27,6 @@ extern UART usb;
 bool usbCommandParse(uint8_t *);
 
 bool usbClearCommandExecute();
-bool usbFlashCommandExecute(uint8_t *);
+bool usbFlashCommandExecute(char *);
 
 #endif
