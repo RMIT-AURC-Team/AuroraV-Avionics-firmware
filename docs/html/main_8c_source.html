@@ -107,131 +107,131 @@ $(function(){initNavTree('main_8c_source.html',''); initResizable(true); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * @todo Implement globals as context struct to pass to external functions.        *</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *       e.g. passing context of flash, uart, etc. to control functions.           *</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> *                                                                                 *</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * @todo Implement definition and ifdef guards for system debug, provides          *</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> *       system debug information printed to USB UART interface if defined.        *</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> *                                                                                 *</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> * @todo Implement startup task to isolate initialisations from main.              *</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> ***********************************************************************************/</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="main_8h.html">main.h</a>&quot;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#ifdef DUMMY</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keywordtype">long</span> hDummyIdx = 0;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keywordtype">long</span> lDummyIdx = 0;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">// ============================</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">//           HANDLES</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">// ============================</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment">// Task Handles</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>TaskHandle_t xDataAqcquisitionHHandle = NULL;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>TaskHandle_t xDataAqcquisitionLHandle = NULL;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>TaskHandle_t xFlashBufferHandle       = NULL;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>TaskHandle_t xStateUpdateHandle       = NULL;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>TaskHandle_t xLoRaTransmitHandle      = NULL;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>TaskHandle_t xLoRaSampleHandle              = NULL;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>TaskHandle_t xUsbReceiveHandle        = NULL;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>TaskHandle_t xUsbTransmitHandle       = NULL;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>TaskHandle_t xGpsReadHandle                     = NULL;</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * @todo Implement startup task to isolate initialisations from main.              *</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> ***********************************************************************************/</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="main_8h.html">main.h</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#ifdef DUMMY</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keywordtype">long</span> hDummyIdx = 0;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keywordtype">long</span> lDummyIdx = 0;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">// ============================</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">//           HANDLES</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment">// ============================</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">// Task Handles</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>TaskHandle_t xDataAqcquisitionHHandle = NULL;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>TaskHandle_t xDataAqcquisitionLHandle = NULL;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>TaskHandle_t xFlashBufferHandle       = NULL;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>TaskHandle_t xStateUpdateHandle       = NULL;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>TaskHandle_t xLoRaTransmitHandle      = NULL;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>TaskHandle_t xLoRaSampleHandle              = NULL;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>TaskHandle_t xUsbReceiveHandle        = NULL;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>TaskHandle_t xUsbTransmitHandle       = NULL;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>TaskHandle_t xGpsReadHandle                     = NULL;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>EventGroupHandle_t xTaskEnableGroup; <span class="comment">// 0: FLASH,  1: HIGHRES, 2: LOWRES, 3: LORA, 7: IDLE</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>EventGroupHandle_t xMsgReadyGroup;   <span class="comment">// 0: LORA, 1: USB</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>EventGroupHandle_t xTaskEnableGroup; <span class="comment">// 0: FLASH,  1: HIGHRES, 2: LOWRES, 3: LORA, 7: IDLE</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>EventGroupHandle_t xMsgReadyGroup;   <span class="comment">// 0: LORA, 1: USB</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> lAccel_s;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> hAccel_s;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *pAccel_s;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> gyro_s;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><a class="code hl_struct" href="structBMP581.html">BMP581</a> baro_s;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><a class="code hl_struct" href="group__UART.html#structUART">UART</a> usb;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><a class="code hl_struct" href="structLoRa.html">LoRa</a> lora;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><a class="code hl_struct" href="structFlash.html">Flash</a> flash;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="comment">// ============================</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment">//          BUFFERS</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">// ============================</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="comment">// USB</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#define USB_TX_SIZE 4096</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="preprocessor">#define USB_RX_SIZE 128</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="keyword">const</span> <span class="keywordtype">size_t</span> xUsbTxBuffSize = USB_TX_SIZE;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="keyword">const</span> <span class="keywordtype">size_t</span> xUsbRxBuffSize = USB_RX_SIZE;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>MessageBufferHandle_t xUsbTxBuff;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>StreamBufferHandle_t xUsbRxBuff;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>uint8_t usbRxBuff[USB_RX_SIZE];</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>uint8_t usbRxBuffIdx = 0;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">// LoRa</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#define LORA_BUFF_SIZE 128</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keyword">const</span> <span class="keywordtype">size_t</span> xLoRaBuffSize = LORA_BUFF_SIZE;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>MessageBufferHandle_t xLoRaTxBuff;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>MessageBufferHandle_t xLoRaRxBuff;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="comment">// Flash</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="preprocessor">#define MEM_BUFF_SIZE 20992</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>MemBuff mem;</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>uint8_t buff[MEM_BUFF_SIZE];</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>uint8_t outBuff[FLASH_PAGE_SIZE];</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="comment">// Averages</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#define AVG_BUFF_SIZE 15</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keywordtype">float</span> avgPressCurrent  = 0;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="keywordtype">float</span> avgPressPrevious = 0;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>SlidingWindow avgPress;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="keywordtype">float</span> avgPressBuff[AVG_BUFF_SIZE];</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keywordtype">float</span> avgVelCurrent  = 0;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="keywordtype">float</span> avgVelPrevious = 0;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>SlidingWindow avgVel;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="keywordtype">float</span> avgVelBuff[AVG_BUFF_SIZE];</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="comment">// ============================</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="comment">//           DATA</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="comment">// ============================</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="comment">// Calculated attitude variables</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>Quaternion qRot;                <span class="comment">// Global attitude quaternion</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="keywordtype">float</span> vAttitude[3] = {0, 0, 1}; <span class="comment">// Attitude vector</span></div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="keywordtype">float</span> zUnit[3]     = {0, 0, 1}; <span class="comment">// Z unit vector</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="keywordtype">float</span> cosine       = 0;         <span class="comment">// Tilt angle cosine</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="keywordtype">float</span> tilt         = 0;         <span class="comment">// Tilt angle</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="comment">// Flight dynamics state variables</span></div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="keywordtype">float</span> altitude          = 0;         <span class="comment">// Current altitude</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="keywordtype">float</span> velocity          = 0;         <span class="comment">// Current vertical velocity</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="keyword">enum</span> State currentState = PRELAUNCH; <span class="comment">// Boot in prelaunch</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> lAccel_s;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> hAccel_s;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><a class="code hl_struct" href="structKX134__1211.html">KX134_1211</a> *pAccel_s;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><a class="code hl_struct" href="structA3G4250D.html">A3G4250D</a> gyro_s;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><a class="code hl_struct" href="structBMP581.html">BMP581</a> baro_s;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><a class="code hl_struct" href="group__UART.html#structUART">UART</a> usb;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><a class="code hl_struct" href="structLoRa.html">LoRa</a> lora;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><a class="code hl_struct" href="structFlash.html">Flash</a> flash;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="comment">// ============================</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="comment">//          BUFFERS</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="comment">// ============================</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment">// USB</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">#define USB_TX_SIZE 4096</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">#define USB_RX_SIZE 128</span></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">const</span> <span class="keywordtype">size_t</span> xUsbTxBuffSize = USB_TX_SIZE;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">const</span> <span class="keywordtype">size_t</span> xUsbRxBuffSize = USB_RX_SIZE;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>MessageBufferHandle_t xUsbTxBuff;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>StreamBufferHandle_t xUsbRxBuff;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>uint8_t usbRxBuff[USB_RX_SIZE];</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>uint8_t usbRxBuffIdx = 0;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">// LoRa</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#define LORA_BUFF_SIZE 128</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keyword">const</span> <span class="keywordtype">size_t</span> xLoRaBuffSize = LORA_BUFF_SIZE;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>MessageBufferHandle_t xLoRaTxBuff;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>MessageBufferHandle_t xLoRaRxBuff;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="comment">// Flash</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="preprocessor">#define MEM_BUFF_SIZE 20992</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>MemBuff mem;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>uint8_t buff[MEM_BUFF_SIZE];</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>uint8_t outBuff[FLASH_PAGE_SIZE];</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment">// Averages</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="preprocessor">#define AVG_BUFF_SIZE 15</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="keywordtype">float</span> avgPressCurrent  = 0;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="keywordtype">float</span> avgPressPrevious = 0;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>SlidingWindow avgPress;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keywordtype">float</span> avgPressBuff[AVG_BUFF_SIZE];</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="keywordtype">float</span> avgVelCurrent  = 0;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="keywordtype">float</span> avgVelPrevious = 0;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>SlidingWindow avgVel;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keywordtype">float</span> avgVelBuff[AVG_BUFF_SIZE];</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="comment">// ============================</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="comment">//           DATA</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="comment">// ============================</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="comment">// Calculated attitude variables</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>Quaternion qRot;                <span class="comment">// Global attitude quaternion</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="keywordtype">float</span> vAttitude[3] = {0, 0, 1}; <span class="comment">// Attitude vector</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="keywordtype">float</span> zUnit[3]     = {0, 0, 1}; <span class="comment">// Z unit vector</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="keywordtype">float</span> cosine       = 0;         <span class="comment">// Tilt angle cosine</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="keywordtype">float</span> tilt         = 0;         <span class="comment">// Tilt angle</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="comment">// Flight dynamics state variables</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="keywordtype">float</span> altitude          = 0;         <span class="comment">// Current altitude</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="keywordtype">float</span> velocity          = 0;         <span class="comment">// Current vertical velocity</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="keyword">enum</span> State currentState = PRELAUNCH; <span class="comment">// Boot in prelaunch</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>SemaphoreHandle_t xUsbMutex;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="keyword">struct </span><a class="code hl_struct" href="group__GPS.html#structGPSData">GPSData</a> gps;</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>SemaphoreHandle_t xUsbMutex;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="keyword">struct </span><a class="code hl_struct" href="group__GPS.html#structGPSData">GPSData</a> gps;</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>) {</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <span class="comment">// Bring up RCC</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  configure_RCC_APB1();</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  configure_RCC_APB2();</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  configure_RCC_AHB1();</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  configure_MISC_GPIO();</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  configure_UART3_GPS();</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  configure_SPI1_Sensor_Suite();</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  configure_SPI3_LoRa();</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  configure_SPI4_Flash();</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  <a class="code hl_function" href="main_8h.html#a5b1cad70588b5e19409823a2df39af7b">configure_interrupts</a>();</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <span class="comment">// Initialise timers</span></div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  TIM6init();</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  TIM7init();</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  <span class="comment">// Configure peripherals</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  CANGPIO_config();</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  CAN_Peripheral_config();</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="preprocessor">    #ifdef TRACE</span></div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        xTraceEnable(TRC_START);</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="preprocessor">    #endif</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    </div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    GPIOB-&gt;ODR |= 0X8000;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>) {</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  <span class="comment">// Bring up RCC</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  configure_RCC_APB1();</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  configure_RCC_APB2();</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  configure_RCC_AHB1();</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  configure_MISC_GPIO();</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  configure_UART3_GPS();</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  configure_SPI1_Sensor_Suite();</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  configure_SPI3_LoRa();</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  configure_SPI4_Flash();</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  <a class="code hl_function" href="main_8h.html#a5b1cad70588b5e19409823a2df39af7b">configure_interrupts</a>();</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  <span class="comment">// Initialise timers</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  TIM6init();</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  TIM7init();</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  <span class="comment">// Configure peripherals</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  CANGPIO_config();</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  CAN_Peripheral_config();</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="preprocessor">    #ifdef TRACE</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        xTraceEnable(TRC_START);</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="preprocessor">    #endif</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="comment">//  #ifdef FLIGHT_TEST </span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="comment">//      GPIOB-&gt;ODR ^= 0X8000; </span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="comment">//      GPIOD-&gt;ODR ^= 0X8000;</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="comment">//  #endif</span></div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>  <a class="code hl_function" href="group__Flash.html#gaea3658eaa9d17f7c33f0dddf478dc727">Flash_init</a>(&amp;flash, FLASH_PORT, FLASH_CS, FLASH_PAGE_SIZE, FLASH_PAGE_COUNT);</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>  <a class="code hl_function" href="group__UART.html#gaf0a352f75cf3d16ecdad901da017b8de">UART_init</a>(&amp;usb, USB_INTERFACE, USB_PORT, USB_BAUD, OVER8);</div>
@@ -329,7 +329,7 @@ $(function(){initNavTree('main_8c_source.html',''); initResizable(true); });
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>            avgVel.calculateMovingAverage(&amp;avgVel, &amp;avgVelCurrent);</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>      <span class="comment">// Send altitude to aerobrakes via CAN</span></div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>      CANHigh = 0x00000000;</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>      CANLow  = (<span class="keywordtype">unsigned</span> int)altitude;</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>      memcpy(&amp;CANLow, &amp;altitude, <span class="keyword">sizeof</span>(<span class="keywordtype">float</span>));</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>      <span class="keywordtype">id</span>      = CAN_HEADER_AEROBRAKES_DATA;</div>
 <div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>      CAN_TX(1, 8, CANHigh, CANLow, <span class="keywordtype">id</span>);</div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>      <span class="comment">// Transition to motor burnout state on velocity decrease</span></div>
@@ -347,7 +347,7 @@ $(function(){initNavTree('main_8c_source.html',''); initResizable(true); });
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>            avgPress.calculateMovingAverage(&amp;avgPress, &amp;avgPressCurrent);</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>      <span class="comment">// Send altitude to aerobrakes via CAN</span></div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>      CANHigh = 0x00000000;</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>      CANLow  = (<span class="keywordtype">unsigned</span> int) altitude;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>      memcpy(&amp;CANLow, &amp;altitude, <span class="keyword">sizeof</span>(<span class="keywordtype">float</span>));</div>
 <div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>      <span class="keywordtype">id</span>      = CAN_HEADER_AEROBRAKES_DATA;</div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>      CAN_TX(1, 8, CANHigh, CANLow, <span class="keywordtype">id</span>);</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>      <span class="comment">// Transition to apogee state on three way vote of altitude, velocity, and tilt</span></div>
@@ -790,7 +790,7 @@ $(function(){initNavTree('main_8c_source.html',''); initResizable(true); });
 <div class="line"><a id="l00778" name="l00778"></a><span class="lineno">  778</span><span class="keywordtype">void</span> vGpsRead(<span class="keywordtype">void</span> *argument) {</div>
 <div class="line"><a id="l00779" name="l00779"></a><span class="lineno">  779</span>    TickType_t xLastWakeTime;</div>
 <div class="line"><a id="l00780" name="l00780"></a><span class="lineno">  780</span>  <span class="keyword">const</span> TickType_t xFrequency = pdMS_TO_TICKS(500); </div>
-<div class="line"><a id="l00781" name="l00781"></a><span class="lineno">  781</span>    <span class="keywordtype">char</span> gpsString[30];</div>
+<div class="line"><a id="l00781" name="l00781"></a><span class="lineno">  781</span>    <span class="keywordtype">char</span> gpsString[100];</div>
 <div class="line"><a id="l00782" name="l00782"></a><span class="lineno">  782</span>    </div>
 <div class="line"><a id="l00783" name="l00783"></a><span class="lineno">  783</span>    <span class="keywordflow">for</span> (;;) {</div>
 <div class="line"><a id="l00784" name="l00784"></a><span class="lineno">  784</span>        <span class="comment">// Block until 500ms interval</span></div>
