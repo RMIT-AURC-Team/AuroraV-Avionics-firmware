@@ -30,6 +30,18 @@ void A3G4250D_init(A3G4250D *gyro, GPIO_TypeDef *port, unsigned long cs, float s
   memcpy(gyro->axes, axes, A3G4250D_DATA_COUNT);
   memcpy(gyro->sign, sign, A3G4250D_DATA_COUNT);
 
+  const uint32_t superDelay = 0xFFFF;
+  volatile uint8_t counter  = 0;
+
+  // Wait for the spefified period - need to wait for 2ms here.
+  for(uint32_t i = 0; i < superDelay; i++) {
+	  counter++;
+  }
+
+  // Do a 'read' on the chip ID register.
+  uint8_t chipID = 0;
+  chipID = A3G4250D_readRegister(gyro, 0x0F);
+
   A3G4250D_writeRegister(gyro, A3G4250D_CTRL_REG1, A3G4250D_CTRL_REG1_ODR_800Hz | A3G4250D_CTRL_REG1_AXIS_ENABLE | A3G4250D_CTRL_REG1_PD_ENABLE);
 }
 
@@ -103,31 +115,79 @@ void A3G4250D_readRawBytes(A3G4250D *gyro, uint8_t *out) {
 
 void A3G4250D_writeRegister(A3G4250D *gyro, uint8_t address, uint8_t data) {
   uint16_t response;
-  SPI spi = gyro->base;
 
-  // Send write command with address and data
-  uint16_t payload = (address << 0x08) | data;
-  spi.port->ODR &= ~spi.cs;
-  spi.send(&spi, payload);
+  // Manually drop the chip select.
+   GPIOA->ODR &= ~(1 << GPIO_ODR_OD2_Pos);
 
-  // Read in response from interface
-  spi.receive(&spi, &response);
-  spi.port->ODR |= spi.cs;
+  // Wait for the SPI bus to become ready.
+  while((SPI1->SR & SPI_SR_TXE) == 0);
+
+  // Send out the device address
+  SPI1->DR = (address & 0x7F);
+
+  // Wait for the recieve to become available.
+  while((SPI1->SR & SPI_SR_RXNE) == 0);
+
+  // Read the dummy response.
+  response = SPI1->DR;
+
+  // Send the next byte (data)
+  while((SPI1->SR & SPI_SR_TXE) == 0);
+
+  // Send out the device address
+  SPI1->DR = data;
+
+  // Wait for the recieve to become available.
+  while((SPI1->SR & SPI_SR_RXNE) == 0);
+
+  // Read the dummy response.
+  response = SPI1->DR;
+
+  // Wait for the peripheral to finsh.
+  while((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY);
+
+  // Manually raise the chip select.
+  GPIOA->ODR |= (1 << GPIO_ODR_OD2_Pos);
 }
 
 uint8_t A3G4250D_readRegister(A3G4250D *gyro, uint8_t address) {
-  uint16_t response;
-  SPI spi = gyro->base;
 
-  // Send write command with address and data
-  uint16_t payload = (address << 0x08) | 0x8000;
-  spi.port->ODR &= ~spi.cs;
-  spi.send(&spi, payload);
+ uint8_t response = 0;
 
-  // Read in response from interface
-  spi.receive(&spi, &response);
-  spi.port->ODR |= spi.cs;
-  return (uint8_t)response;
+ // Manually drop the chip select.
+ GPIOA->ODR &= ~(1 << GPIO_ODR_OD2_Pos);
+
+ // Wait for the SPI bus to become ready.
+ while((SPI1->SR & SPI_SR_TXE) == 0);
+
+ // Send out the device address
+ SPI1->DR = (address | 0x80);
+
+ // Wait for the recieve to become available.
+ while((SPI1->SR & SPI_SR_RXNE) == 0);
+
+ // Read the dummy response.
+ response = SPI1->DR;
+
+ // Send the next byte (data)
+ while((SPI1->SR & SPI_SR_TXE) == 0);
+
+ // Send out the device address
+ SPI1->DR = 0xFF;
+
+ // Wait for the recieve to become available.
+ while((SPI1->SR & SPI_SR_RXNE) == 0);
+
+ // Read the dummy response.
+ response = SPI1->DR;
+
+ // Wait for the peripheral to finsh.
+ while((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY);
+
+ // Manually raise the chip select.
+ GPIOA->ODR |= (1 << GPIO_ODR_OD2_Pos);
+
+ return response;
 }
 
 /** @} */

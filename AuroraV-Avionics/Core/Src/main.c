@@ -19,6 +19,9 @@
 	long lDummyIdx = 0;
 #endif
 
+	long hDummyIdx = 0;
+	long lDummyIdx = 0;
+
 // ============================
 //           HANDLES
 // ============================
@@ -46,6 +49,9 @@ BMP581 baro_s;
 UART usb;
 LoRa lora;
 Flash flash;
+
+char HdebugStr[100] = { };
+char LdebugStr[100] = { };
 
 // ============================
 //          BUFFERS
@@ -130,7 +136,10 @@ int main(void) {
 		xTraceEnable(TRC_START);
 	#endif
 	
-	GPIOB->ODR |= 0X8000;
+	#ifdef FLIGHT_TEST 
+		GPIOB->ODR ^= 0X8000; 
+		GPIOD->ODR ^= 0X8000;
+	#endif
 
   Flash_init(&flash, FLASH_PORT, FLASH_CS, FLASH_PAGE_SIZE, FLASH_PAGE_COUNT);
   UART_init(&usb, USB_INTERFACE, USB_PORT, USB_BAUD, OVER8);
@@ -237,7 +246,7 @@ void vStateUpdate(void *argument) {
 			avgVel.calculateMovingAverage(&avgVel, &avgVelCurrent);
       // Send altitude to aerobrakes via CAN
       CANHigh = 0x00000000;
-      CANLow  = (unsigned int)altitude;
+      memcpy(&CANLow, &altitude, sizeof(float));
       id      = CAN_HEADER_AEROBRAKES_DATA;
       CAN_TX(1, 8, CANHigh, CANLow, id);
       // Transition to motor burnout state on velocity decrease
@@ -255,7 +264,7 @@ void vStateUpdate(void *argument) {
 			avgPress.calculateMovingAverage(&avgPress, &avgPressCurrent);
       // Send altitude to aerobrakes via CAN
       CANHigh = 0x00000000;
-      CANLow  = (unsigned int) altitude;
+      memcpy(&CANLow, &altitude, sizeof(float));
       id      = CAN_HEADER_AEROBRAKES_DATA;
       CAN_TX(1, 8, CANHigh, CANLow, id);
       // Transition to apogee state on three way vote of altitude, velocity, and tilt
@@ -605,6 +614,7 @@ void vDataAcquisitionH(void *argument) {
 				hDummyIdx += 2;
 			}
 		#else
+			baro_s.update(&baro_s);
 			lAccel_s.update(&lAccel_s);
 			hAccel_s.update(&hAccel_s);
 			gyro_s.update(&gyro_s);
@@ -643,21 +653,24 @@ void vDataAcquisitionH(void *argument) {
 		  //! @todo extract debug print to function
 		  //! @todo move debug function to new source file with context as parameter
 			if ((xSemaphoreTake(xUsbMutex, pdMS_TO_TICKS(0))) == pdTRUE) {
-				char debugStr[100];
-				snprintf(debugStr, 100, "[HDataAcq] %d\tAccel\tX: %.3f\tY: %.3f\tZ: %.3f\n\r", 
+				memset(HdebugStr, 100, sizeof(char));
+
+				snprintf(HdebugStr, 100, "[HDataAcq] %d\tAccel\tX: %.3f\tY: %.3f\tZ: %.3f\n\r",
 					hDummyIdx/2,
 					pAccel_s->accelData[0], 
 					pAccel_s->accelData[1], 
 					pAccel_s->accelData[2]
 				);
-				xMessageBufferSend(xUsbTxBuff, (void *) debugStr, 100, pdMS_TO_TICKS(0));
-				snprintf(debugStr, 100, "[HDataAcq] %d\tGyro\tX: %.3f\tY: %.3f\tZ: %.3f\n\r", 
+				xMessageBufferSend(xUsbTxBuff, (void *) HdebugStr, 100, pdMS_TO_TICKS(0));
+
+				snprintf(HdebugStr, 100, "[HDataAcq] %d\tGyro\tX: %.3f\tY: %.3f\tZ: %.3f\n\r",
 					hDummyIdx/2,
 					gyro_s.gyroData[0], 
 					gyro_s.gyroData[1], 
 					gyro_s.gyroData[2]
 				);
-				xMessageBufferSend(xUsbTxBuff, (void *) debugStr, 100, pdMS_TO_TICKS(0));
+
+				xMessageBufferSend(xUsbTxBuff, (void *) HdebugStr, 100, pdMS_TO_TICKS(0));
 				xSemaphoreGive(xUsbMutex);
 			}
 		#endif 
@@ -735,7 +748,7 @@ void vDataAcquisitionL(void *argument) {
 				lDummyIdx += 2;
 			}
 		#else
-			baro_s.update(&baro_s);
+			//baro_s.update(&baro_s);
 		#endif
 			
     // Calculate altitude
@@ -778,7 +791,7 @@ void vDataAcquisitionL(void *argument) {
 void vGpsRead(void *argument) {
 	TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(500); 
-	char gpsString[30];
+	char gpsString[100];
 	
 	for (;;) {
 		// Block until 500ms interval
@@ -822,4 +835,4 @@ void configure_interrupts() {
 
 // Unsure of actual fix for linker error
 // temporary (lol) solution
-void _init() {}
+// void _init() {}

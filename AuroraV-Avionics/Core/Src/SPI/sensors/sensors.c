@@ -13,15 +13,6 @@ void configure_SPI1_Sensor_Suite(void) {
   GPIOA->OTYPER &= (~(GPIO_OTYPER_OT5 | GPIO_OTYPER_OT6 | GPIO_OTYPER_OT7));                                               // configure as push pull
   GPIOA->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED5_Msk | GPIO_OSPEEDR_OSPEED6_Msk | GPIO_OSPEEDR_OSPEED7_Msk));                   // clears OSPEED
   GPIOA->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED5_Pos | 0x2 << GPIO_OSPEEDR_OSPEED6_Pos | 0x2 << GPIO_OSPEEDR_OSPEED7_Pos); // sets as high speed
-
-  SPI1->CR1 |= SPI_CR1_MSTR;
-  //	SPI1->CR1 |= SPI_CR1_LSBFIRST;
-  SPI1->CR1 |= SPI_CR1_DFF;                 // 16 bit transfer
-  SPI1->CR1 |= SPI_CR1_SSM | SPI_CR1_SSI;
-  SPI1->CR1 &= (~(SPI_CR1_BR_Msk));
-  SPI1->CR1 |= (0x3 << SPI_CR1_BR_Pos);     // FOR 5.25 mhz SCK
-  SPI1->CR1 |= SPI_CR1_CPOL | SPI_CR1_CPHA; // high sck idle
-
   // pins PC2, PC3, PC4 need to be set to interrupt pins
   //
   //  pins PA2, PA4, PA1, PB0 need to set as general purpose outputs
@@ -41,7 +32,34 @@ void configure_SPI1_Sensor_Suite(void) {
   GPIOB->OTYPER &= (~(GPIO_OTYPER_OT0));
   GPIOB->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED0_Msk));
   GPIOB->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED0_Pos);
+
   // PB0 Accel 1 Chip Select - set to high for default
   GPIOB->ODR |= (GPIO_ODR_OD0);
-  SPI1->CR1 |= SPI_CR1_SPE;
+
+  // Clear the First Control register of the SPI peripheral.
+  	SPI1->CR1 &= 0xFFFF0000;
+
+  	// Configure the SCLK to be divide by 8,
+  	SPI1->CR1 |= (0x03 << SPI_CR1_BR_Pos) | (1 << SPI_CR1_CPOL_Pos) | (1 << SPI_CR1_CPHA_Pos) | (0 << SPI_CR1_DFF_Pos);
+
+
+  	// Set to full duplex, master mode.
+  	// In full duplex, both the MISO and MOSI pins are required.
+  	SPI1->CR1 &= ~(SPI_CR1_BIDIMODE);
+  	SPI1->CR1 &= ~(SPI_CR1_RXONLY);
+
+  	// Set the slave select - software management.
+  	SPI1->CR1 |= (SPI_CR1_SSM | SPI_CR1_SSI);
+
+  	// Specify master operation.
+  	SPI1->CR1 |= SPI_CR1_MSTR;
+
+  	// Manually raise the chip select.
+  	GPIOA->ODR |= (1 << GPIO_ODR_OD4_Pos) | (1 << GPIO_ODR_OD3_Pos) | (1 << GPIO_ODR_OD2_Pos) | (1 << GPIO_ODR_OD1_Pos);
+
+  	// Enable the SPI peripheral
+  	SPI1->CR1 |= SPI_CR1_SPE;
+
+
+
 }
