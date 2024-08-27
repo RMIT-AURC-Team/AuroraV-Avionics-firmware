@@ -14,13 +14,8 @@
 
 #include "main.h"
 
-#ifdef DUMMY
-	long hDummyIdx = 0;
-	long lDummyIdx = 0;
-#endif
-
-	long hDummyIdx = 0;
-	long lDummyIdx = 0;
+long hDummyIdx = 0;
+long lDummyIdx = 0;
 
 // ============================
 //           HANDLES
@@ -165,7 +160,7 @@ int main(void) {
   unsigned int CANHigh = 0;
   unsigned int CANLow  = 0;
   unsigned int id      = 0x603;
-  CAN_TX(1, 8, CANHigh, CANLow, id);
+  CAN_TX(2, 8, CANHigh, CANLow, id);
 
   MemBuff_init(&mem, buff, MEM_BUFF_SIZE, FLASH_PAGE_SIZE);
   Quaternion_init(&qRot);
@@ -183,6 +178,7 @@ int main(void) {
 	xTaskCreate(vLoRaSample, "LoRaSample", 128, NULL, configMAX_PRIORITIES - 6, &xLoRaSampleHandle);
   xTaskCreate(vUsbReceive, "UsbRx", 256, NULL, configMAX_PRIORITIES - 6, &xUsbReceiveHandle);
 	xTaskCreate(vUsbTransmit, "UsbTx", 256, NULL, configMAX_PRIORITIES - 6, &xUsbTransmitHandle);
+	xTaskCreate(vGpsRead, "GpsRead", 512, NULL, configMAX_PRIORITIES - 6, &xGpsReadHandle);				
 
 	xUsbMutex = xSemaphoreCreateMutex();
 
@@ -221,7 +217,7 @@ void vStateUpdate(void *argument) {
       CANHigh = 0x00000000;
       CANLow  = 0x00000000;
       id      = CAN_HEADER_AEROBRAKES_RETRACT;
-      CAN_TX(1, 8, CANHigh, CANLow, id);
+      CAN_TX(2, 8, CANHigh, CANLow, id);
     }
 		
     switch (currentState) {
@@ -235,6 +231,7 @@ void vStateUpdate(void *argument) {
 					vTaskDelete(xUsbTransmitHandle);
 					vTaskDelete(xUsbReceiveHandle);																	 
 				#endif
+				vTaskDelete(xGpsReadHandle);
         xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_FLASH);   // Enable flash
 				xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_HIGHRES); // Enable high resolution data acquisition
         xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_LOWRES);  // Enable low resolution data acquisition
@@ -248,12 +245,12 @@ void vStateUpdate(void *argument) {
       CANHigh = 0x00000000;
       memcpy(&CANLow, &altitude, sizeof(float));
       id      = CAN_HEADER_AEROBRAKES_DATA;
-      CAN_TX(1, 8, CANHigh, CANLow, id);
+      CAN_TX(2, 8, CANHigh, CANLow, id);
       // Transition to motor burnout state on velocity decrease
       if ((avgVelCurrent - avgVelPrevious) < 0) {
 				#ifdef FLIGHT_TEST 
-					GPIOB->ODR ^= 0X8000; 
-					GPIOD->ODR ^= 0X8000;
+					GPIOB->ODR ^= 0x8000; 
+					GPIOD->ODR ^= 0x8000;
 				#endif
         currentState = COAST;
       }
@@ -266,13 +263,13 @@ void vStateUpdate(void *argument) {
       CANHigh = 0x00000000;
       memcpy(&CANLow, &altitude, sizeof(float));
       id      = CAN_HEADER_AEROBRAKES_DATA;
-      CAN_TX(1, 8, CANHigh, CANLow, id);
+      CAN_TX(2, 8, CANHigh, CANLow, id);
       // Transition to apogee state on three way vote of altitude, velocity, and tilt
       // apogee is determined as two of three conditions evaluating true
       if ((((avgPressCurrent - avgPressPrevious) > 0) + (tilt >= 90) + (velocity < 0.0f)) >= 2) {
 				#ifdef FLIGHT_TEST 
-					GPIOB->ODR ^= 0X8000; 
-					GPIOD->ODR ^= 0X8000; 
+					GPIOB->ODR ^= 0x8000; 
+					GPIOD->ODR ^= 0x8000; 
 				#endif
 				vTaskDelete(xDataAqcquisitionHHandle);
 				vTaskDelete(xDataAqcquisitionLHandle);	
@@ -289,7 +286,9 @@ void vStateUpdate(void *argument) {
 		  CANHigh = 0x00000000;
       CANLow  = 0x00000000;
       id      = CAN_HEADER_AEROBRAKES_RETRACT;
-      CAN_TX(1, 8, CANHigh, CANLow, id);
+      CAN_TX(2, 8, CANHigh, CANLow, id);
+			// Deploy drogue chute
+			GPIOD->ODR |= 0x8000; 
 			// Transition to descent state when below main deployment altitude
       if (altitude <= MAIN_ALTITUDE_METERS) {
 				#ifdef FLIGHT_TEST 
@@ -614,7 +613,6 @@ void vDataAcquisitionH(void *argument) {
 				hDummyIdx += 2;
 			}
 		#else
-			baro_s.update(&baro_s);
 			lAccel_s.update(&lAccel_s);
 			hAccel_s.update(&hAccel_s);
 			gyro_s.update(&gyro_s);
@@ -748,7 +746,7 @@ void vDataAcquisitionL(void *argument) {
 				lDummyIdx += 2;
 			}
 		#else
-			//baro_s.update(&baro_s);
+			baro_s.update(&baro_s);
 		#endif
 			
     // Calculate altitude
@@ -791,6 +789,7 @@ void vDataAcquisitionL(void *argument) {
 void vGpsRead(void *argument) {
 	TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(500); 
+	const TickType_t blockTime  = pdMS_TO_TICKS(0);
 	char gpsString[100];
 	
 	for (;;) {
@@ -813,7 +812,17 @@ void vGpsRead(void *argument) {
 				xMessageBufferSend(xUsbTxBuff, (void *) debugStr, 100, 0);
 				xSemaphoreGive(xUsbMutex);
 			}
-		#endif 
+		#endif
+
+		LoRa_Packet gpsData = LoRa_GPSData(
+			LORA_HEADER_GPS_DATA, 
+			gps.latitude,
+			gps.longitude,
+			(currentState << 4) | gps.lock
+		);
+		// Add packet to queue
+		xMessageBufferSend(xLoRaTxBuff, &gpsData, LORA_MSG_LENGTH, blockTime);
+			
 	}
 }
 

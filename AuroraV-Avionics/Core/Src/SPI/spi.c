@@ -5,8 +5,8 @@
  * @brief       Implements functions for SPI device interface initialization and   *
  *              communication.                                                     *
  *                                                                                 *
- * @todo        Review and refactor SPI functions for better readability and error *
- *              handling.                                                          *
+ * @todo        Rewrite initialisation to implement enum check for 8/16 bit mode   *
+ * 							and assign approprriate function pointers 												 *
  ***********************************************************************************/
 
 #include "spi.h"

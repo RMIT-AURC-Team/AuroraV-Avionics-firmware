@@ -111,6 +111,7 @@ LoRa_Packet LoRa_AVData(
 	float,
 	float
 );
+LoRa_Packet LoRa_GPSData(uint8_t, char *, char *, uint8_t);
 
 void _LoRa_setMode(LoRa *, Mode);
 

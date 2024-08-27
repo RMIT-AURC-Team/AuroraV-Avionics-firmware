@@ -146,6 +146,24 @@ LoRa_Packet LoRa_AVData(
   return msg;
 }
 
+LoRa_Packet LoRa_GPSData(
+	uint8_t id, 
+	char *latitude,
+	char *longitude,
+	uint8_t flags
+) {
+  LoRa_Packet msg;
+
+	int idx = 0;
+  // Append to struct data array
+	msg.id = id;
+	memcpy(&msg.data[idx], latitude, 15); //!< @todo Move magic number to definition/parameter
+	memcpy(&msg.data[idx += 15], longitude, 15);
+	msg.data[idx += 15] = flags;
+
+  return msg;
+}
+
 /********************************** DEVICE METHODS *********************************/
 
 /* =============================================================================== */
