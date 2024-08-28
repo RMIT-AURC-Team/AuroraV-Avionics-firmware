@@ -45,9 +45,8 @@ void BMP581_init(BMP581 *baro, GPIO_TypeDef *port, unsigned long cs, float tempS
 
 /* =============================================================================== */
 /**
- * @brief
- * @param
- * @param
+ * @brief Updates the BMP581 barometer readings. 
+ * @param *baro Pointer to BMP581 struct to be updated.
  * @returns @c NULL.
  **
  * =============================================================================== */
@@ -61,9 +60,9 @@ void BMP581_update(BMP581 *baro) {
 
 /* =============================================================================== */
 /**
- * @brief
- * @param
- * @param
+ * @brief Read the temperature from the BMP581 sensor. 
+ * @param *baro Pointer to BMP581 struct. 
+ * @param *out Pointer to float where the temperature will be stored. 
  * @returns @c NULL.
  **
  * =============================================================================== */
@@ -75,9 +74,10 @@ void BMP581_readTemp(BMP581 *baro, float *out) {
 
 /* =============================================================================== */
 /**
- * @brief
- * @param
- * @param
+ * @brief Processes raw temperature data from BMP581 sensor.
+ * @param *baro  Pointer to BMP581 struct.
+ * @param *bytes Pointer to array containing raw temperature.
+ * @param *out   Pointer to a float where processed temperature value will be stored.
  * @returns @c NULL.
  **
  * =============================================================================== */
