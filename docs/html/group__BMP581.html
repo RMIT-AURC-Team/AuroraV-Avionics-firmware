@@ -114,8 +114,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:gaf0ef88ff81506d372b4e1d514da63f0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialiser for a <a class="el" href="structBMP581.html">BMP581</a> barometer.  <br /></td></tr>
 <tr class="separator:gaf0ef88ff81506d372b4e1d514da63f0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga938d6c33bc75406aa2b8a18d7e722473" id="r_ga938d6c33bc75406aa2b8a18d7e722473"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga938d6c33bc75406aa2b8a18d7e722473">BMP581_update</a> (<a class="el" href="structBMP581.html">BMP581</a> *)</td></tr>
+<tr class="memdesc:ga938d6c33bc75406aa2b8a18d7e722473"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the <a class="el" href="structBMP581.html">BMP581</a> barometer readings.  <br /></td></tr>
 <tr class="separator:ga938d6c33bc75406aa2b8a18d7e722473"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga13a6eced2f99e5f6b059c16eb3fdaf34" id="r_ga13a6eced2f99e5f6b059c16eb3fdaf34"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga13a6eced2f99e5f6b059c16eb3fdaf34">BMP581_readTemp</a> (<a class="el" href="structBMP581.html">BMP581</a> *, float *)</td></tr>
+<tr class="memdesc:ga13a6eced2f99e5f6b059c16eb3fdaf34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the temperature from the <a class="el" href="structBMP581.html">BMP581</a> sensor.  <br /></td></tr>
 <tr class="separator:ga13a6eced2f99e5f6b059c16eb3fdaf34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad4cdc3fdf15ff84bf27f0fbd44a864cb" id="r_gad4cdc3fdf15ff84bf27f0fbd44a864cb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gad4cdc3fdf15ff84bf27f0fbd44a864cb">BMP581_readPress</a> (<a class="el" href="structBMP581.html">BMP581</a> *, float *)</td></tr>
 <tr class="separator:gad4cdc3fdf15ff84bf27f0fbd44a864cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -124,6 +126,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ga079e56e39011d47394cd00238096b832" id="r_ga079e56e39011d47394cd00238096b832"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga079e56e39011d47394cd00238096b832">BMP581_readRawPress</a> (<a class="el" href="structBMP581.html">BMP581</a> *, uint8_t *)</td></tr>
 <tr class="separator:ga079e56e39011d47394cd00238096b832"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga30620996a5c54f9347152c6c1a9ffe3f" id="r_ga30620996a5c54f9347152c6c1a9ffe3f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga30620996a5c54f9347152c6c1a9ffe3f">BMP581_processRawTemp</a> (<a class="el" href="structBMP581.html">BMP581</a> *, uint8_t *, float *)</td></tr>
+<tr class="memdesc:ga30620996a5c54f9347152c6c1a9ffe3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes raw temperature data from <a class="el" href="structBMP581.html">BMP581</a> sensor.  <br /></td></tr>
 <tr class="separator:ga30620996a5c54f9347152c6c1a9ffe3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga79cd0b07111850e9da010a032a9f0c67" id="r_ga79cd0b07111850e9da010a032a9f0c67"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga79cd0b07111850e9da010a032a9f0c67">BMP581_processRawPress</a> (<a class="el" href="structBMP581.html">BMP581</a> *, uint8_t *, float *)</td></tr>
 <tr class="separator:ga79cd0b07111850e9da010a032a9f0c67"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -196,16 +199,18 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Updates the <a class="el" href="structBMP581.html">BMP581</a> barometer readings. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname"></td><td></td></tr>
+    <tr><td class="paramname">*baro</td><td>Pointer to <a class="el" href="structBMP581.html">BMP581</a> struct to be updated. </td></tr>
   </table>
   </dd>
 </dl>
-<p>param </p><dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="BMP581_8c_source.html#l00054">54</a> of file <a class="el" href="BMP581_8c_source.html">BMP581.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BMP581_8c_source.html#l00053">53</a> of file <a class="el" href="BMP581_8c_source.html">BMP581.c</a>.</p>
 
 </div>
 </div>
@@ -227,16 +232,19 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Read the temperature from the <a class="el" href="structBMP581.html">BMP581</a> sensor. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname"></td><td></td></tr>
+    <tr><td class="paramname">*baro</td><td>Pointer to <a class="el" href="structBMP581.html">BMP581</a> struct. </td></tr>
+    <tr><td class="paramname">*out</td><td>Pointer to float where the temperature will be stored. </td></tr>
   </table>
   </dd>
 </dl>
-<p>param </p><dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="BMP581_8c_source.html#l00070">70</a> of file <a class="el" href="BMP581_8c_source.html">BMP581.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="BMP581_8c_source.html#l00069">69</a> of file <a class="el" href="BMP581_8c_source.html">BMP581.c</a>.</p>
 
 </div>
 </div>
@@ -356,13 +364,17 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Processes raw temperature data from <a class="el" href="structBMP581.html">BMP581</a> sensor. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname"></td><td></td></tr>
+    <tr><td class="paramname">*baro</td><td>Pointer to <a class="el" href="structBMP581.html">BMP581</a> struct. </td></tr>
+    <tr><td class="paramname">*bytes</td><td>Pointer to array containing raw temperature. </td></tr>
+    <tr><td class="paramname">*out</td><td>Pointer to a float where processed temperature value will be stored. </td></tr>
   </table>
   </dd>
 </dl>
-<p>param </p><dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
 <p class="definition">Definition at line <a class="el" href="BMP581_8c_source.html#l00084">84</a> of file <a class="el" href="BMP581_8c_source.html">BMP581.c</a>.</p>
