@@ -779,7 +779,7 @@ void vDataAcquisitionL(void *argument) {
 					lDummyIdx/2,
 					baro_s.press
 				);
-				xMessageBufferSend(xUsbTxBuff, (void *) debugStr, 100, 0);
+				xMessageBufferSend(xUsbTxBuff, (void *) debugStr, 100, pdMS_TO_TICKS(10));
 				xSemaphoreGive(xUsbMutex);
 			}
 		#endif 
