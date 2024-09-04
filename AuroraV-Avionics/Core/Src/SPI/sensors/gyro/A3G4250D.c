@@ -21,7 +21,7 @@
  **
  * =============================================================================== */
 void A3G4250D_init(A3G4250D *gyro, GPIO_TypeDef *port, unsigned long cs, float sensitivity, const uint8_t *axes, const int8_t *sign) {
-  SPI_init(&gyro->base, SENSOR_GYRO, SPI1, port, cs);
+  SPI_init(&gyro->base, SENSOR_GYRO, SPI1, MODE8, port, cs);
   gyro->sensitivity     = sensitivity;
   gyro->update          = A3G4250D_update;
   gyro->readGyro        = A3G4250D_readGyro;
@@ -34,13 +34,9 @@ void A3G4250D_init(A3G4250D *gyro, GPIO_TypeDef *port, unsigned long cs, float s
   volatile uint8_t counter  = 0;
 
   // Wait for the spefified period - need to wait for 2ms here.
-  for(uint32_t i = 0; i < superDelay; i++) {
-	  counter++;
+  for (uint32_t i = 0; i < superDelay; i++) {
+    counter++;
   }
-
-  // Do a 'read' on the chip ID register.
-  uint8_t chipID = 0;
-  chipID = A3G4250D_readRegister(gyro, 0x0F);
 
   A3G4250D_writeRegister(gyro, A3G4250D_CTRL_REG1, A3G4250D_CTRL_REG1_ODR_800Hz | A3G4250D_CTRL_REG1_AXIS_ENABLE | A3G4250D_CTRL_REG1_PD_ENABLE);
 }
@@ -114,80 +110,32 @@ void A3G4250D_readRawBytes(A3G4250D *gyro, uint8_t *out) {
 /******************************** INTERFACE METHODS ********************************/
 
 void A3G4250D_writeRegister(A3G4250D *gyro, uint8_t address, uint8_t data) {
-  uint16_t response;
+  SPI spi = gyro->base;
 
-  // Manually drop the chip select.
-   GPIOA->ODR &= ~(1 << GPIO_ODR_OD2_Pos);
+  spi.port->ODR &= ~spi.cs;
 
-  // Wait for the SPI bus to become ready.
-  while((SPI1->SR & SPI_SR_TXE) == 0);
+  // Send read command and address
+  uint8_t payload = address & 0x7F; // Load payload with address and read command
+  spi.transmit(&spi, payload);      // Transmit payload
+  spi.transmit(&spi, data);         // Transmit dummy data and read response data
 
-  // Send out the device address
-  SPI1->DR = (address & 0x7F);
-
-  // Wait for the recieve to become available.
-  while((SPI1->SR & SPI_SR_RXNE) == 0);
-
-  // Read the dummy response.
-  response = SPI1->DR;
-
-  // Send the next byte (data)
-  while((SPI1->SR & SPI_SR_TXE) == 0);
-
-  // Send out the device address
-  SPI1->DR = data;
-
-  // Wait for the recieve to become available.
-  while((SPI1->SR & SPI_SR_RXNE) == 0);
-
-  // Read the dummy response.
-  response = SPI1->DR;
-
-  // Wait for the peripheral to finsh.
-  while((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY);
-
-  // Manually raise the chip select.
-  GPIOA->ODR |= (1 << GPIO_ODR_OD2_Pos);
+  spi.port->ODR |= spi.cs;
 }
 
 uint8_t A3G4250D_readRegister(A3G4250D *gyro, uint8_t address) {
+  uint8_t response = 0;
+  SPI spi          = gyro->base;
 
- uint8_t response = 0;
+  spi.port->ODR &= ~spi.cs;
 
- // Manually drop the chip select.
- GPIOA->ODR &= ~(1 << GPIO_ODR_OD2_Pos);
+  // Send read command and address
+  uint8_t payload = address | 0x80;              // Load payload with address and read command
+  response        = spi.transmit(&spi, payload); // Transmit payload
+  response        = spi.transmit(&spi, 0xFF);    // Transmit dummy data and read response data
 
- // Wait for the SPI bus to become ready.
- while((SPI1->SR & SPI_SR_TXE) == 0);
+  spi.port->ODR |= spi.cs;
 
- // Send out the device address
- SPI1->DR = (address | 0x80);
-
- // Wait for the recieve to become available.
- while((SPI1->SR & SPI_SR_RXNE) == 0);
-
- // Read the dummy response.
- response = SPI1->DR;
-
- // Send the next byte (data)
- while((SPI1->SR & SPI_SR_TXE) == 0);
-
- // Send out the device address
- SPI1->DR = 0xFF;
-
- // Wait for the recieve to become available.
- while((SPI1->SR & SPI_SR_RXNE) == 0);
-
- // Read the dummy response.
- response = SPI1->DR;
-
- // Wait for the peripheral to finsh.
- while((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY);
-
- // Manually raise the chip select.
- GPIOA->ODR |= (1 << GPIO_ODR_OD2_Pos);
-
- return response;
+  return response;
 }
 
 /** @} */

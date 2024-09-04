@@ -844,4 +844,4 @@ void configure_interrupts() {
 
 // Unsure of actual fix for linker error
 // temporary (lol) solution
-// void _init() {}
+void _init() {}

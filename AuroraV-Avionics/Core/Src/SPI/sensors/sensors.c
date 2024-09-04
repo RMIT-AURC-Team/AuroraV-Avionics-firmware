@@ -1,3 +1,11 @@
+/***********************************************************************************
+ * @file        sensors.c                                                          *
+ * @author      Matt Ricci                                                         *
+ *                                                                                 *
+ * @todo Move initialisation of SPI interface to individual devices initialising   *
+ *       relevant registers and peripherals.                                       *
+ ***********************************************************************************/
+
 #include "sensors.h"
 
 //const uint8_t ACCEL_AXES_1[3] = {0, 2, 2};

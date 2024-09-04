@@ -22,28 +22,24 @@
  **
  * =============================================================================== */
 void BMP581_init(BMP581 *baro, GPIO_TypeDef *port, unsigned long cs, float tempSensitivity, float pressSensitivity) {
-  SPI_init(&baro->base, SENSOR_BARO, SPI1, port, cs);
-  baro->tempSensitivity  = tempSensitivity;
-  baro->pressSensitivity = pressSensitivity;
-  baro->update           = BMP581_update;
-  baro->readTemp         = BMP581_readTemp;
-  baro->readRawTemp      = BMP581_readRawTemp;
-  baro->processRawTemp   = BMP581_processRawTemp;
-  baro->readPress        = BMP581_readPress;
-  baro->readRawPress     = BMP581_readRawPress;
-  baro->processRawPress  = BMP581_processRawPress;
-	
+  SPI_init(&baro->base, SENSOR_BARO, SPI1, MODE8, port, cs);
+  baro->tempSensitivity     = tempSensitivity;
+  baro->pressSensitivity    = pressSensitivity;
+  baro->update              = BMP581_update;
+  baro->readTemp            = BMP581_readTemp;
+  baro->readRawTemp         = BMP581_readRawTemp;
+  baro->processRawTemp      = BMP581_processRawTemp;
+  baro->readPress           = BMP581_readPress;
+  baro->readRawPress        = BMP581_readRawPress;
+  baro->processRawPress     = BMP581_processRawPress;
+
   const uint32_t superDelay = 0xFFFF;
-  volatile uint8_t counter = 0;
+  volatile uint8_t counter  = 0;
 
   // Wait for the spefified period - need to wait for 2ms here.
-  for(uint32_t i = 0; i < superDelay; i++) {
-	  counter++;
+  for (uint32_t i = 0; i < superDelay; i++) {
+    counter++;
   }
-
-  uint8_t chipID = 0;
-
-  chipID = BMP581_readRegister(baro, 0x01);
 
   BMP581_writeRegister(baro, BMP581_ODR_CFG, BMP581_ODR_CFG_PWR | BMP581_ODR_CFG_DEEP_DIS);
   uint8_t OSRCFG = BMP581_readRegister(baro, BMP581_OSR_CFG);
@@ -154,81 +150,30 @@ void BMP581_readRawPress(BMP581 *baro, uint8_t *out) {
 /******************************** INTERFACE METHODS ********************************/
 
 void BMP581_writeRegister(BMP581 *baro, uint8_t address, uint8_t data) {
+  SPI spi = baro->base;
 
-   uint8_t response = 0;
-   SPI spi = baro->base;
+  spi.port->ODR &= ~spi.cs;
 
-   // Manually drop the chip select.
-   GPIOA->ODR &= ~(1 << GPIO_ODR_OD3_Pos);
+  // Send read command and address
+  uint8_t payload = address & 0x7F; // Load payload with address and read command
+  spi.transmit(&spi, payload);      // Transmit payload
+  spi.transmit(&spi, data);         // Transmit dummy data and read response data
 
-  // Wait for the SPI bus to become ready.
-  while((SPI1->SR & SPI_SR_TXE) == 0);
-
-  // Send out the device address
-  SPI1->DR = (address & 0x7F);
-
-  // Wait for the recieve to become available.
-  while((SPI1->SR & SPI_SR_RXNE) == 0);
-
-  // Read the dummy response.
-  response = SPI1->DR;
-
-  // Send the next byte (data)
-  while((SPI1->SR & SPI_SR_TXE) == 0);
-
-  // Send out the device address
-  SPI1->DR = data;
-
-  // Wait for the recieve to become available.
-  while((SPI1->SR & SPI_SR_RXNE) == 0);
-
-  // Read the dummy response.
-  response = SPI1->DR;
-
-  // Wait for the peripheral to finsh.
-  while((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY);
-
-  // Manually raise the chip select.
-  GPIOA->ODR |= (1 << GPIO_ODR_OD3_Pos);
-
+  spi.port->ODR |= spi.cs;
 }
 
 uint8_t BMP581_readRegister(BMP581 *baro, uint8_t address) {
-
   uint8_t response = 0;
+  SPI spi          = baro->base;
 
-  // Manually drop the chip select.
-  GPIOA->ODR &= ~(1 << GPIO_ODR_OD3_Pos);
+  spi.port->ODR &= ~spi.cs;
 
- // Wait for the SPI bus to become ready.
- while((SPI1->SR & SPI_SR_TXE) == 0);
+  // Send read command and address
+  uint8_t payload = address | 0x80;              // Load payload with address and read command
+  response        = spi.transmit(&spi, payload); // Transmit payload
+  response        = spi.transmit(&spi, 0xFF);    // Transmit dummy data and read response data
 
- // Send out the device address
- SPI1->DR = (address | 0x80);
-
- // Wait for the recieve to become available.
- while((SPI1->SR & SPI_SR_RXNE) == 0);
-
- // Read the dummy response.
- response = SPI1->DR;
-
- // Send the next byte (data)
- while((SPI1->SR & SPI_SR_TXE) == 0);
-
- // Send out the device address
- SPI1->DR = 0xFF;
-
- // Wait for the recieve to become available.
- while((SPI1->SR & SPI_SR_RXNE) == 0);
-
- // Read the dummy response.
- response = SPI1->DR;
-
- // Wait for the peripheral to finsh.
- while((SPI1->SR & SPI_SR_BSY) == SPI_SR_BSY);
-
- // Manually raise the chip select.
- GPIOA->ODR |= (1 << GPIO_ODR_OD3_Pos);
+  spi.port->ODR |= spi.cs;
 
   return response;
 }

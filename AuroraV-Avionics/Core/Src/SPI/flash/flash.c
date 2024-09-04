@@ -31,7 +31,7 @@
  **
  * =============================================================================== */
 void Flash_init(Flash *flash, GPIO_TypeDef *port, unsigned long cs, int pageSize, long pageCount) {
-  SPI_init(&flash->base, MEMORY_FLASH, SPI4, port, cs);
+  SPI_init(&flash->base, MEMORY_FLASH, SPI4, MODE16, port, cs);
   flash->pageSize  = pageSize;
 	flash->pageCount = pageCount;
 	flash->erase     = Flash_erase;

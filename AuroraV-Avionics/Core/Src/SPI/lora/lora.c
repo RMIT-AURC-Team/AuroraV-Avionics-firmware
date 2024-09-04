@@ -35,7 +35,7 @@
  **
  * =============================================================================== */
 void LoRa_init(LoRa *lora, GPIO_TypeDef *port, unsigned long cs, Bandwidth bw, SpreadingFactor sf, CodingRate cr) {
-  SPI_init(&lora->base, COMM_LORA, SPI3, port, cs);
+  SPI_init(&lora->base, COMM_LORA, SPI3, MODE16, port, cs);
   lora->transmit = LoRa_transmit;
 
   _LoRa_setMode(lora, SLEEP); // Set mode to sleep
