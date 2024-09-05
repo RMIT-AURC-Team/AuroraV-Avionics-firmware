@@ -3,6 +3,8 @@
  * @author      Matt Ricci                                                         *
  * @addtogroup  A3G4250D                                                           *
  *                                                                                 *
+ * @todo Move private interface methods (read/write register) to static functions  *
+ *       with internal prototypes.                                                 *
  * @{                                                                              *
  ***********************************************************************************/
 

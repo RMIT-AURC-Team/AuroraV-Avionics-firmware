@@ -6,13 +6,14 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
+#include "stdint.h"
+#include "stdio.h"
+#include "stm32f4xx.h"
+
 #include "FreeRTOS.h"
 #include "event_groups.h"
 #include "semphr.h"
 #include "message_buffer.h"
-#include "stdint.h"
-#include "stdio.h"
-#include "stm32f4xx.h"
 
 #include "A3G4250D.h"
 #include "BMP581.h"
@@ -32,6 +33,7 @@
 #include "quaternion.h"
 #include "slidingwindow.h"
 
+#ifdef DUMMY
 #include "accelX.h"
 #include "accelY.h"
 #include "accelZ.h"
@@ -39,6 +41,7 @@
 #include "gyroY.h"
 #include "gyroZ.h"
 #include "press.h"
+#endif
 
 void vFlashBuffer(void *pvParameters);
 void vDataAcquisitionH(void *pvParameters);

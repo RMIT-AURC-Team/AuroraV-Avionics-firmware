@@ -3,6 +3,8 @@
  * @author      Matt Ricci                                                         *
  * @addtogroup  KX134_1211                                                         *
  *                                                                                 *
+ * @todo Move private interface methods (read/write register) to static functions  *
+ *       with internal prototypes.                                                 *
  * @{                                                                              *
  ***********************************************************************************/
 
@@ -44,10 +46,10 @@ void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, ui
   KX134_1211_writeRegister(accel, 0x1C, 0x00);
   KX134_1211_writeRegister(accel, 0x1C, 0x80);
 
-	const uint32_t superDelay = 0xFFFF;
+  const uint32_t superDelay = 0xFFFF;
   volatile uint8_t counter  = 0;
-  
-	// Wait for the spefified period - need to wait for 2ms here.
+
+  // Wait for the spefified period - need to wait for 2ms here.
   for (uint32_t i = 0; i < superDelay; i++) {
     counter++;
   }

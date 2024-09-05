@@ -560,7 +560,7 @@ void vDataAcquisitionH(void *argument) {
   for (;;) {
     // Block until 2ms interval
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
-
+		
     // Select which accelerometer to use
     pAccel_s = (pAccel_s->accelData[ZINDEX] < 15) ? &lAccel_s : &hAccel_s;
    

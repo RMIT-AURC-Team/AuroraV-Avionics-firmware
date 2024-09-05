@@ -59,6 +59,15 @@ typedef portSTACK_TYPE   StackType_t;
 typedef long             BaseType_t;
 typedef unsigned long    UBaseType_t;
 
+#define TICK_TYPE_WIDTH_16_BITS 16
+#define TICK_TYPE_WIDTH_32_BITS 32
+
+#if ( configUSE_16_BIT_TICKS == 0)
+	#define configTICK_TYPE_WIDTH_IN_BITS	TICK_TYPE_WIDTH_32_BITS
+#else
+	#define configTICK_TYPE_WIDTH_IN_BITS	TICK_TYPE_WIDTH_16_BITS
+#endif
+
 #if ( configTICK_TYPE_WIDTH_IN_BITS == TICK_TYPE_WIDTH_16_BITS )
     typedef uint16_t     TickType_t;
     #define portMAX_DELAY              ( TickType_t ) 0xffff

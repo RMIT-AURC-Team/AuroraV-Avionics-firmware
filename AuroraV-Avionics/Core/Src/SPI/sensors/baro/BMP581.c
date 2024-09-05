@@ -5,6 +5,8 @@
  *                                                                                 *
  * @todo Add altitude calculation method                                           *
  * @todo Document implementation                                                   *
+ * @todo Move private interface methods (read/write register) to static functions  *
+ *       with internal prototypes.                                                 *
  * @{                                                                              *
  ***********************************************************************************/
 

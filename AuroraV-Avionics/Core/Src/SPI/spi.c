@@ -85,12 +85,12 @@ static void SPI_send16(SPI *spi, uint16_t data) {
  * @return @c NULL.
  **
  * =============================================================================== */
-void SPI_receive8(SPI *spi, volatile uint16_t *data) {
+static void SPI_receive8(SPI *spi, volatile uint16_t *data) {
   while (!(spi->interface->SR & SPI_SR_RXNE));
   *data = (uint8_t) spi->interface->DR;
 }
 
-void SPI_receive16(SPI *spi, volatile uint16_t *data) {
+static void SPI_receive16(SPI *spi, volatile uint16_t *data) {
   while (!(spi->interface->SR & SPI_SR_RXNE));
   *data = spi->interface->DR;
 }
