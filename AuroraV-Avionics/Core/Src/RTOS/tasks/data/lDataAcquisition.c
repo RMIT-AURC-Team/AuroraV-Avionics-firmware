@@ -73,7 +73,7 @@ void vLDataAcquisition(void *argument) {
     const unsigned long press_length = 0x00003A5C;
     if (lDummyIdx < PRESS_LENGTH - 1) {
       uint32_t tempPress = (uint32_t)press[lDummyIdx + 1] << 16 | press[lDummyIdx];
-      memcpy(&ctx->baro->press, &tempPress, sizeof(float));
+      memcpy(&ctx->baro.press, &tempPress, sizeof(float));
       lDummyIdx += 2;
     }
 #else

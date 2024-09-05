@@ -44,7 +44,7 @@ void vStateUpdate(void *argument) {
 
     switch (ctx->state.currentState) {
     case PRELAUNCH:
-      if (ctx->accel->accelData[ZINDEX] >= ACCEL_LAUNCH) {
+      if ((*ctx->accel).accelData[ZINDEX] >= ACCEL_LAUNCH) {
 #ifdef FLIGHT_TEST
         GPIOB->ODR ^= 0x8000;
         GPIOD->ODR ^= 0x8000;

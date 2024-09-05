@@ -72,12 +72,12 @@ void Error_Handler(void);
 #define ACCEL_CS_1   GPIO_ODR_OD1
 
 #ifdef FLIGHT_TEST
-  // FLIGHT AXES
-  #define ACCEL_AXES_1 ((const uint8_t[]){0, 2, 1})
-  #define ACCEL_SIGN_1 ((const int8_t[]){1, 1, -1})
-#else
   // DRONE AXES
   #define ACCEL_AXES_1 ((const uint8_t[]){0, 1, 2})
+  #define ACCEL_SIGN_1 ((const int8_t[]){1, 1, -1})
+#else
+	// FLIGHT AXES
+  #define ACCEL_AXES_1 ((const uint8_t[]){0, 2, 1})
   #define ACCEL_SIGN_1 ((const int8_t[]){1, 1, -1})
 #endif
 

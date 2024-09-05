@@ -90,14 +90,19 @@ int main(void) {
  * initializes RTOS event groups and message buffers to manage inter-task
  * communication.
  *
+ * @todo Refactor context parameters that require write operations to intialise as 
+ *       pointers within their respective structs.
+ *
  * @return void
  * =============================================================================== */
 
 void vSystemInit(void *argument) {
 
   // Allow a second for external devices to finish startup sequences
-  vTaskDelay(pdMS_TO_TICKS(1000));
+  //vTaskDelay(pdMS_TO_TICKS(50));
 
+  vTaskSuspendAll();
+	
   // Create event groups for task synchronization and message signaling
   xTaskEnableGroup = xEventGroupCreate(); // 0: FLASH,  1: HIGHRES, 2: LOWRES, 3: LORA, 7: IDLE
   xMsgReadyGroup   = xEventGroupCreate();
@@ -135,10 +140,11 @@ void vSystemInit(void *argument) {
   /* ---------------------------------- Sensor Initialization ----------------------------------- */
 
   // Initialise accelerometer drivers
-  static KX134_1211 lAccel, hAccel, *accel;
+  static KX134_1211 lAccel;
+  static KX134_1211 hAccel;
+  static KX134_1211 *accel = &lAccel;
   KX134_1211_init(&lAccel, ACCEL_PORT_1, ACCEL_CS_1, ACCEL_SCALE_LOW, ACCEL_AXES_1, ACCEL_SIGN_1);
   KX134_1211_init(&hAccel, ACCEL_PORT_2, ACCEL_CS_2, ACCEL_SCALE_HIGH, ACCEL_AXES_2, ACCEL_SIGN_2);
-  accel = &lAccel;
 
   // Initialise gyroscope driver
   static A3G4250D gyro;
@@ -184,8 +190,8 @@ void vSystemInit(void *argument) {
   hDataAcq.xUsbMutex        = xUsbMutex;
   hDataAcq.xUsbTxBuff       = xUsbTxBuff;
   hDataAcq.gyro             = gyro;
-  hDataAcq.hAccel           = hAccel;
-  hDataAcq.lAccel           = lAccel;
+  hDataAcq.hAccel           = &hAccel;
+  hDataAcq.lAccel           = &lAccel;
   hDataAcq.accel            = accel;
   xTaskCreate(vHDataAcquisition, "HDataAcq", 512, &hDataAcq, configMAX_PRIORITIES - 2, &handles.xHDataAcquisitionHandle);
 
@@ -212,7 +218,7 @@ void vSystemInit(void *argument) {
   flightState.xUsbMutex        = xUsbMutex;
   flightState.xUsbTxBuff       = xUsbTxBuff;
   flightState.accel            = accel;
-  xTaskCreate(vStateUpdate, "StateUpdate", 128, &flightState, configMAX_PRIORITIES - 4, &handles.xStateUpdateHandle);
+  xTaskCreate(vStateUpdate, "StateUpdate", 512, &flightState, configMAX_PRIORITIES - 4, &handles.xStateUpdateHandle);
 
   /* ------------------------------------------------ Flash Write-------------------------------------------------------*/
 
@@ -265,6 +271,8 @@ void vSystemInit(void *argument) {
   static ctxGpsTransmit gpsTransmit;
   gpsTransmit.currentState = &state.currentState;
   xTaskCreate(vGpsTransmit, "GpsRead", 512, &gpsTransmit, configMAX_PRIORITIES - 6, &handles.xGpsTransmitHandle);
+
+  xTaskResumeAll();
 
   // Suspend the system initialization task (it only needs to run once)
   vTaskSuspend(NULL);

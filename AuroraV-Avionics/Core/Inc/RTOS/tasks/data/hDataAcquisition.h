@@ -16,6 +16,15 @@
 #include "sensors.h"
 #include "stateUpdate.h"
 
+#ifdef DUMMY
+  #include "accelX.h"
+  #include "accelY.h"
+  #include "accelZ.h"
+  #include "gyroX.h"
+  #include "gyroY.h"
+  #include "gyroZ.h"
+#endif
+
 void vHDataAcquisition(void *pvParameters);
 
 typedef struct {
@@ -27,8 +36,8 @@ typedef struct {
   MessageBufferHandle_t xUsbTxBuff;
   // Sensor objects
   A3G4250D gyro;
-  KX134_1211 hAccel;
-  KX134_1211 lAccel;
+  KX134_1211 *hAccel;
+  KX134_1211 *lAccel;
   KX134_1211 *accel;
 } ctxHDataAcquisition;
 

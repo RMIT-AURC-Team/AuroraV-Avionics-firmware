@@ -16,6 +16,10 @@
 #include "sensors.h"
 #include "stateUpdate.h"
 
+#ifdef DUMMY
+  #include "press.h"
+#endif
+
 void vLDataAcquisition(void *pvParameters);
 
 typedef struct {
