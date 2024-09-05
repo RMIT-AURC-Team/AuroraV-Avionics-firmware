@@ -9,11 +9,9 @@ var searchData=
   ['sensors_6',['Sensors',['../group__Sensors.html',1,'']]],
   ['sign_7',['sign',['../structKX134__1211.html#abbe171ba2a436082a36e79a5a6dd827f',1,'KX134_1211::sign'],['../structA3G4250D.html#a9137b29648431cf8a64a162582c0594a',1,'A3G4250D::sign']]],
   ['spi_8',['SPI',['../structSPI.html',1,'SPI'],['../group__SPI__API.html',1,'SPI']]],
-  ['spi_5finit_9',['SPI_init',['../group__SPI.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7',1,'SPI_init(SPI *, DeviceType, SPI_TypeDef *, GPIO_TypeDef *, unsigned long):&#160;spi.c'],['../group__SPI.html#ga656f7b06a728e76eb9ac0b10e1bd5bb7',1,'SPI_init(SPI *spi, DeviceType device, SPI_TypeDef *interface, GPIO_TypeDef *port, unsigned long cs):&#160;spi.c']]],
-  ['spi_5freceive_10',['SPI_receive',['../group__SPI.html#ga4fbfc141ea14655d6e93aed8ac67aa67',1,'SPI_receive(SPI *, volatile uint16_t *):&#160;spi.c'],['../group__SPI.html#ga4fbfc141ea14655d6e93aed8ac67aa67',1,'SPI_receive(SPI *spi, volatile uint16_t *data):&#160;spi.c']]],
-  ['spi_5fsend_11',['SPI_send',['../group__SPI.html#ga205c59ab72d018c05d33f91e7c7808e7',1,'SPI_send(SPI *, uint16_t):&#160;spi.c'],['../group__SPI.html#ga205c59ab72d018c05d33f91e7c7808e7',1,'SPI_send(SPI *spi, uint16_t data):&#160;spi.c']]],
-  ['spi_5ftransmit_12',['SPI_transmit',['../group__SPI.html#ga45245db392649677ce4d93b334f6e0fd',1,'SPI_transmit(SPI *, uint16_t):&#160;spi.c'],['../group__SPI.html#ga45245db392649677ce4d93b334f6e0fd',1,'SPI_transmit(SPI *spi, uint16_t data):&#160;spi.c']]],
-  ['standard_13',['Coding Standard',['../index.html#coding-standard',1,'']]],
-  ['started_14',['Getting Started',['../index.html#getting-started',1,'']]],
-  ['struct_20encapsulation_15',['Struct Encapsulation',['../index.html#struct-encapsulation',1,'']]]
+  ['spi_5finit_9',['SPI_init',['../group__SPI.html#ga8164bf372cbaed02670469e59041db34',1,'SPI_init(SPI *, DeviceType, SPI_TypeDef *, DataFormat, GPIO_TypeDef *, unsigned long):&#160;spi.c'],['../group__SPI.html#ga8164bf372cbaed02670469e59041db34',1,'SPI_init(SPI *spi, DeviceType device, SPI_TypeDef *interface, DataFormat df, GPIO_TypeDef *port, unsigned long cs):&#160;spi.c']]],
+  ['spi_5ftransmit_10',['SPI_transmit',['../group__SPI.html#ga45245db392649677ce4d93b334f6e0fd',1,'SPI_transmit(SPI *, uint16_t):&#160;spi.c'],['../group__SPI.html#ga45245db392649677ce4d93b334f6e0fd',1,'SPI_transmit(SPI *spi, uint16_t data):&#160;spi.c']]],
+  ['standard_11',['Coding Standard',['../index.html#coding-standard',1,'']]],
+  ['started_12',['Getting Started',['../index.html#getting-started',1,'']]],
+  ['struct_20encapsulation_13',['Struct Encapsulation',['../index.html#struct-encapsulation',1,'']]]
 ];

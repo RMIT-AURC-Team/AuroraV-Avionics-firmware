@@ -126,25 +126,22 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:gad258d4c51629346fceac4679b3209ad9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Device type enum Describes the type of peripheral implementing an <a class="el" href="structSPI.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> interface.  <a href="#gad258d4c51629346fceac4679b3209ad9">More...</a><br /></td></tr>
 <tr class="separator:gad258d4c51629346fceac4679b3209ad9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8b182988d497b07d1e06a1707b67897f" id="r_ga8b182988d497b07d1e06a1707b67897f"><td class="memItemLeft" align="right" valign="top"><a id="ga8b182988d497b07d1e06a1707b67897f" name="ga8b182988d497b07d1e06a1707b67897f"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8b182988d497b07d1e06a1707b67897f">DataFormat</a> </td></tr>
+<tr class="memdesc:ga8b182988d497b07d1e06a1707b67897f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data format enum Describes the format of dataframes sent on the <a class="el" href="structSPI.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> data bus. <br /></td></tr>
+<tr class="separator:ga8b182988d497b07d1e06a1707b67897f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga656f7b06a728e76eb9ac0b10e1bd5bb7" id="r_ga656f7b06a728e76eb9ac0b10e1bd5bb7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga656f7b06a728e76eb9ac0b10e1bd5bb7">SPI_init</a> (<a class="el" href="structSPI.html">SPI</a> *, <a class="el" href="#gad258d4c51629346fceac4679b3209ad9">DeviceType</a>, SPI_TypeDef *, GPIO_TypeDef *, unsigned long)</td></tr>
-<tr class="memdesc:ga656f7b06a728e76eb9ac0b10e1bd5bb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialiser for an <a class="el" href="structSPI.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> device interface.  <br /></td></tr>
-<tr class="separator:ga656f7b06a728e76eb9ac0b10e1bd5bb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga205c59ab72d018c05d33f91e7c7808e7" id="r_ga205c59ab72d018c05d33f91e7c7808e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga205c59ab72d018c05d33f91e7c7808e7">SPI_send</a> (<a class="el" href="structSPI.html">SPI</a> *, uint16_t)</td></tr>
-<tr class="memdesc:ga205c59ab72d018c05d33f91e7c7808e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send data through the <a class="el" href="structSPI.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> interface.  <br /></td></tr>
-<tr class="separator:ga205c59ab72d018c05d33f91e7c7808e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4fbfc141ea14655d6e93aed8ac67aa67" id="r_ga4fbfc141ea14655d6e93aed8ac67aa67"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4fbfc141ea14655d6e93aed8ac67aa67">SPI_receive</a> (<a class="el" href="structSPI.html">SPI</a> *, volatile uint16_t *)</td></tr>
-<tr class="memdesc:ga4fbfc141ea14655d6e93aed8ac67aa67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive data through the <a class="el" href="structSPI.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> interface.  <br /></td></tr>
-<tr class="separator:ga4fbfc141ea14655d6e93aed8ac67aa67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8164bf372cbaed02670469e59041db34" id="r_ga8164bf372cbaed02670469e59041db34"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga8164bf372cbaed02670469e59041db34">SPI_init</a> (<a class="el" href="structSPI.html">SPI</a> *, <a class="el" href="#gad258d4c51629346fceac4679b3209ad9">DeviceType</a>, SPI_TypeDef *, <a class="el" href="#ga8b182988d497b07d1e06a1707b67897f">DataFormat</a>, GPIO_TypeDef *, unsigned long)</td></tr>
+<tr class="memdesc:ga8164bf372cbaed02670469e59041db34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialiser for an <a class="el" href="structSPI.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> device interface.  <br /></td></tr>
+<tr class="separator:ga8164bf372cbaed02670469e59041db34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga45245db392649677ce4d93b334f6e0fd" id="r_ga45245db392649677ce4d93b334f6e0fd"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga45245db392649677ce4d93b334f6e0fd">SPI_transmit</a> (<a class="el" href="structSPI.html">SPI</a> *, uint16_t)</td></tr>
 <tr class="memdesc:ga45245db392649677ce4d93b334f6e0fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instance method to communicate a <a class="el" href="structSPI.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> transaction with slave device.  <br /></td></tr>
 <tr class="separator:ga45245db392649677ce4d93b334f6e0fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p><a class="el" href="structSPI.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> interface from which slave devices inherit. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo</a></b></dt><dd>Add in code block examples to API documentation.</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo</a></b></dt><dd>Add in code block examples to API documentation.</dd></dl>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="gad258d4c51629346fceac4679b3209ad9" name="gad258d4c51629346fceac4679b3209ad9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gad258d4c51629346fceac4679b3209ad9">&#9670;&#160;</a></span>DeviceType</h2>
@@ -177,8 +174,8 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga656f7b06a728e76eb9ac0b10e1bd5bb7" name="ga656f7b06a728e76eb9ac0b10e1bd5bb7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga656f7b06a728e76eb9ac0b10e1bd5bb7">&#9670;&#160;</a></span>SPI_init()</h2>
+<a id="ga8164bf372cbaed02670469e59041db34" name="ga8164bf372cbaed02670469e59041db34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8164bf372cbaed02670469e59041db34">&#9670;&#160;</a></span>SPI_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -197,6 +194,11 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">SPI_TypeDef *</td>          <td class="paramname"><span class="paramname"><em>interface</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ga8b182988d497b07d1e06a1707b67897f">DataFormat</a></td>          <td class="paramname"><span class="paramname"><em>df</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -225,75 +227,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="spi_8c_source.html#l00026">26</a> of file <a class="el" href="spi_8c_source.html">spi.c</a>.</p>
-
-</div>
-</div>
-<a id="ga205c59ab72d018c05d33f91e7c7808e7" name="ga205c59ab72d018c05d33f91e7c7808e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga205c59ab72d018c05d33f91e7c7808e7">&#9670;&#160;</a></span>SPI_send()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SPI_send </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structSPI.html">SPI</a> *</td>          <td class="paramname"><span class="paramname"><em>spi</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t</td>          <td class="paramname"><span class="paramname"><em>data</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Send data through the <a class="el" href="structSPI.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> interface. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">*spi</td><td>Pointer to <a class="el" href="structSPI.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> struct. </td></tr>
-    <tr><td class="paramname">data</td><td>The data to send. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
-<hr  />
- 
-<p class="definition">Definition at line <a class="el" href="spi_8c_source.html#l00062">62</a> of file <a class="el" href="spi_8c_source.html">spi.c</a>.</p>
-
-</div>
-</div>
-<a id="ga4fbfc141ea14655d6e93aed8ac67aa67" name="ga4fbfc141ea14655d6e93aed8ac67aa67"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4fbfc141ea14655d6e93aed8ac67aa67">&#9670;&#160;</a></span>SPI_receive()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SPI_receive </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structSPI.html">SPI</a> *</td>          <td class="paramname"><span class="paramname"><em>spi</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">volatile uint16_t *</td>          <td class="paramname"><span class="paramname"><em>data</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Receive data through the <a class="el" href="structSPI.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> interface. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">*spi</td><td>Pointer to <a class="el" href="structSPI.html" title="Struct definition for SPI interface. Provides the interface for API consumers to interact with the SP...">SPI</a> struct. </td></tr>
-    <tr><td class="paramname">data</td><td>Pointer to variable to receive data into. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><code>NULL</code>.</dd></dl>
-<hr  />
- 
-<p class="definition">Definition at line <a class="el" href="spi_8c_source.html#l00076">76</a> of file <a class="el" href="spi_8c_source.html">spi.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spi_8c_source.html#l00032">32</a> of file <a class="el" href="spi_8c_source.html">spi.c</a>.</p>
 
 </div>
 </div>
@@ -332,7 +266,7 @@ Functions</h2></td></tr>
 </dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="spi_8c_source.html#l00045">45</a> of file <a class="el" href="spi_8c_source.html">spi.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="spi_8c_source.html#l00052">52</a> of file <a class="el" href="spi_8c_source.html">spi.c</a>.</p>
 
 </div>
 </div>

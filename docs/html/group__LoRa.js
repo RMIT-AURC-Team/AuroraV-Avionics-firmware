@@ -11,5 +11,6 @@ var group__LoRa =
     [ "LoRa_init", "group__LoRa.html#ga56961a46a2904d9f8b9638f656d401f3", null ],
     [ "LoRa_transmit", "group__LoRa.html#gaf5a72437c494fee7c236007f0408c0ab", null ],
     [ "LoRa_AVData", "group__LoRa.html#gacb326fcdf46738a11045fdc6473a3557", null ],
+    [ "LoRa_GPSData", "group__LoRa.html#ga915ca07fbbbe6f0ea70a535970568664", null ],
     [ "_LoRa_setMode", "group__LoRa.html#gac6bd010c730b2fee518dacb8c27d3e03", null ]
 ];

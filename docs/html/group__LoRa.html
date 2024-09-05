@@ -121,6 +121,8 @@ Functions</h2></td></tr>
 <tr class="memitem:gacb326fcdf46738a11045fdc6473a3557" id="r_gacb326fcdf46738a11045fdc6473a3557"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#structLoRa__Packet">LoRa_Packet</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacb326fcdf46738a11045fdc6473a3557">LoRa_AVData</a> (uint8_t, uint8_t, uint8_t *, uint8_t *, uint8_t, uint8_t *, uint8_t, float, float)</td></tr>
 <tr class="memdesc:gacb326fcdf46738a11045fdc6473a3557"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="structLoRa.html">LoRa</a> packet with accelerometer and gyroscope data, altitude, and velocity for transmission.  <br /></td></tr>
 <tr class="separator:gacb326fcdf46738a11045fdc6473a3557"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga915ca07fbbbe6f0ea70a535970568664" id="r_ga915ca07fbbbe6f0ea70a535970568664"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#structLoRa__Packet">LoRa_Packet</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga915ca07fbbbe6f0ea70a535970568664">LoRa_GPSData</a> (uint8_t, char *, char *, uint8_t)</td></tr>
+<tr class="separator:ga915ca07fbbbe6f0ea70a535970568664"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac6bd010c730b2fee518dacb8c27d3e03" id="r_gac6bd010c730b2fee518dacb8c27d3e03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac6bd010c730b2fee518dacb8c27d3e03">_LoRa_setMode</a> (<a class="el" href="structLoRa.html">LoRa</a> *, Mode)</td></tr>
 <tr class="memdesc:gac6bd010c730b2fee518dacb8c27d3e03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the operational mode of the <a class="el" href="structLoRa.html">LoRa</a> module.  <br /></td></tr>
 <tr class="separator:gac6bd010c730b2fee518dacb8c27d3e03"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -249,7 +251,7 @@ Packet payload. </td></tr>
 </dl>
 <hr  />
  
-<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00159">159</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00177">177</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
 
 </div>
 </div>
@@ -326,6 +328,40 @@ Packet payload. </td></tr>
 <hr  />
  
 <p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00109">109</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
+
+</div>
+</div>
+<a id="ga915ca07fbbbe6f0ea70a535970568664" name="ga915ca07fbbbe6f0ea70a535970568664"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga915ca07fbbbe6f0ea70a535970568664">&#9670;&#160;</a></span>LoRa_GPSData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#structLoRa__Packet">LoRa_Packet</a> LoRa_GPSData </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>id</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>latitude</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>longitude</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>flags</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>&lt; </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000010">Todo</a></b></dt><dd>Move magic number to definition/parameter </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="lora_8c_source.html#l00149">149</a> of file <a class="el" href="lora_8c_source.html">lora.c</a>.</p>
 
 </div>
 </div>
