@@ -1,7 +1,7 @@
 /***********************************************************************************
  * @file        main.c                                                             *
  * @author      Matt Ricci                                                         *
- * @brief                                                                          *
+ * @brief       Main application entry point and system initialization.            *
  *                                                                                 *
  * @todo Implement globals as context struct to pass to external functions.        *
  *       e.g. passing context of flash, uart, etc. to control functions.           *
@@ -14,20 +14,34 @@
 long hDummyIdx = 0;
 long lDummyIdx = 0;
 
+// RTOS event groups
 EventGroupHandle_t xTaskEnableGroup; // 0: FLASH,  1: HIGHRES, 2: LOWRES, 3: LORA, 7: IDLE
 EventGroupHandle_t xMsgReadyGroup;   // 0: LORA, 1: USB
 
+// RTOS message buffers
 MessageBufferHandle_t xLoRaTxBuff;
-
 MessageBufferHandle_t xUsbTxBuff;
 StreamBufferHandle_t xUsbRxBuff;
+
 SemaphoreHandle_t xUsbMutex;
 
+/* =============================================================================== */
+/**
+ * @brief Main application entry point.
+ *
+ * Initializes microcontroller peripherals, creates the system initialization task,
+ * and starts the FreeRTOS scheduler.
+ *
+ * @return int  Exit status (should never return)
+ * =============================================================================== */
+
 int main(void) {
-  // Bring up RCC
+  // Initialise clock sources and peripheral busses
   configure_RCC_APB1();
   configure_RCC_APB2();
   configure_RCC_AHB1();
+
+  // Initialize GPIO pins for peripherals
   configure_MISC_GPIO();
   configure_UART3_GPS();
   configure_SPI1_Sensor_Suite();
@@ -39,7 +53,7 @@ int main(void) {
   TIM6init();
   TIM7init();
 
-  // Configure peripherals
+  // Configure CAN
   CANGPIO_config();
   CAN_Peripheral_config();
 
@@ -48,8 +62,8 @@ int main(void) {
 #endif
 
 #ifdef FLIGHT_TEST
-  GPIOB->ODR ^= 0X8000;
-  GPIOD->ODR ^= 0X8000;
+  GPIOB->ODR ^= 0x8000;
+  GPIOD->ODR ^= 0x8000;
 #endif
 
   // Send AB ground test message over CAN
@@ -58,10 +72,13 @@ int main(void) {
   unsigned int id      = 0x603;
   CAN_TX(2, 8, CANHigh, CANLow, id);
 
-  // Run init task
+  // Create and start the system initialization task
   TaskHandle_t xSystemInitHandle;
   xTaskCreate(vSystemInit, "SystemInit", 8192, NULL, configMAX_PRIORITIES - 1, &xSystemInitHandle);
   vTaskStartScheduler();
+
+  // The scheduler should never return
+  return 0;
 }
 
 /* =============================================================================== */
@@ -81,53 +98,59 @@ void vSystemInit(void *argument) {
   // Allow a second for external devices to finish startup sequences
   vTaskDelay(pdMS_TO_TICKS(1000));
 
-  /* ------------------------------------------ RTOS ---------------------------------------------*/
-
+  // Create event groups for task synchronization and message signaling
   xTaskEnableGroup = xEventGroupCreate(); // 0: FLASH,  1: HIGHRES, 2: LOWRES, 3: LORA, 7: IDLE
   xMsgReadyGroup   = xEventGroupCreate();
   xEventGroupSetBits(xMsgReadyGroup, GROUP_MESSAGE_READY_LORA);
 
-  /* ----------------------------------------- FLASH ---------------------------------------------*/
+  /* ----------------------------------- Flash Initialization ------------------------------------ */
 
+  // Initialise circular memory buffer
   MemBuff mem;
   uint8_t buff[MEM_BUFF_SIZE];
   MemBuff_init(&mem, buff, MEM_BUFF_SIZE, FLASH_PAGE_SIZE);
 
+  // Initialise SPI flash driver
   Flash flash;
   Flash_init(&flash, FLASH_PORT, FLASH_CS, FLASH_PAGE_SIZE, FLASH_PAGE_COUNT);
 
-  /* ------------------------------------------ USB ----------------------------------------------*/
+  /* ------------------------------- Communication Initialization -------------------------------- */
 
+  // Initialise USB UART driver
   UART usb;
   xUsbTxBuff = xMessageBufferCreate(USB_TX_SIZE);
   xUsbRxBuff = xStreamBufferCreate(USB_RX_SIZE, 1);
   xUsbMutex  = xSemaphoreCreateMutex();
   UART_init(&usb, USB_INTERFACE, USB_PORT, USB_BAUD, OVER8);
 
+  // Initialise USB shell driver
   Shell shell;
   Shell_init(&shell, usb, flash);
 
-  /* ----------------------------------------- LORA ----------------------------------------------*/
-
+  // Initialise LoRa driver
   LoRa lora;
   xLoRaTxBuff = xMessageBufferCreate(LORA_BUFF_SIZE);
   LoRa_init(&lora, LORA_PORT, LORA_CS, BW500, SF9, CR5);
 
-  /* --------------------------------------- SENSORS ---------------------------------------------*/
+  /* ---------------------------------- Sensor Initialization ----------------------------------- */
 
+  // Initialise accelerometer drivers
   static KX134_1211 lAccel, hAccel, *accel;
   KX134_1211_init(&lAccel, ACCEL_PORT_1, ACCEL_CS_1, ACCEL_SCALE_LOW, ACCEL_AXES_1, ACCEL_SIGN_1);
   KX134_1211_init(&hAccel, ACCEL_PORT_2, ACCEL_CS_2, ACCEL_SCALE_HIGH, ACCEL_AXES_2, ACCEL_SIGN_2);
   accel = &lAccel;
 
+  // Initialise gyroscope driver
   static A3G4250D gyro;
   A3G4250D_init(&gyro, GYRO_PORT, GYRO_CS, A3G4250D_SENSITIVITY, GYRO_AXES, GYRO_SIGN);
 
+  // Initialise barometer driver
   static BMP581 baro;
   BMP581_init(&baro, BARO_PORT, BARO_CS, BMP581_TEMP_SENSITIVITY, BMP581_PRESS_SENSITIVITY);
 
-  /* ---------------------------------------- STATE ----------------------------------------------*/
+  /* ---------------------------------- State Initialization ------------------------------------ */
 
+  // Initialize system state structure
   static ctxState state;
   state.currentState = PRELAUNCH;
   state.cosine       = 0;
@@ -138,6 +161,7 @@ void vSystemInit(void *argument) {
   memcpy(&state.zUnit, (float[3]){0, 0, 1}, 3);
   Quaternion_init(&state.qRot);
 
+  // Initialize sliding window filters for pressure and velocity
   float avgPressBuff[AVG_BUFF_SIZE];
   SlidingWindow_init(&state.avgPress, avgPressBuff, AVG_BUFF_SIZE);
 
@@ -145,13 +169,14 @@ void vSystemInit(void *argument) {
   SlidingWindow_init(&state.avgVel, avgVelBuff, AVG_BUFF_SIZE);
 
   /*********************************************************************************************************************
-   *                                                  TASK INIT                                                        *
+   *                                                 TASK INIT                                                         *
    *********************************************************************************************************************/
 
   static Handles handles;
 
-  /* ------------------------------------- HIGH RESOLUTION DATA ACQUISITION -------------------------------------------*/
+  /* ------------------------------------- High Resolution Data Acquisition -------------------------------------------*/
 
+  // Create high-resolution data acquisition task
   static ctxHDataAcquisition hDataAcq;
   hDataAcq.state            = state;
   hDataAcq.mem              = mem;
@@ -164,8 +189,9 @@ void vSystemInit(void *argument) {
   hDataAcq.accel            = accel;
   xTaskCreate(vHDataAcquisition, "HDataAcq", 512, &hDataAcq, configMAX_PRIORITIES - 2, &handles.xHDataAcquisitionHandle);
 
-  /* ------------------------------------- LOW RESOLUTION DATA ACQUISITION ---------------------------------------------*/
+  /* ------------------------------------- Low Resolution Data Acquisition ---------------------------------------------*/
 
+  // Create low-resolution data acquisition task
   static ctxLDataAcquisition lDataAcq;
   lDataAcq.state            = state;
   lDataAcq.mem              = mem;
@@ -176,8 +202,9 @@ void vSystemInit(void *argument) {
   lDataAcq.accel            = accel;
   xTaskCreate(vLDataAcquisition, "LDataAcq", 512, &lDataAcq, configMAX_PRIORITIES - 3, &handles.xLDataAcquisitionHandle);
 
-  /* ----------------------------------------------- STATE UPDATE ------------------------------------------------------*/
+  /* ----------------------------------------------- State Update ------------------------------------------------------*/
 
+  // Create state update task
   static ctxFlightState flightState;
   flightState.state            = state;
   flightState.handles          = handles;
@@ -187,14 +214,16 @@ void vSystemInit(void *argument) {
   flightState.accel            = accel;
   xTaskCreate(vStateUpdate, "StateUpdate", 128, &flightState, configMAX_PRIORITIES - 4, &handles.xStateUpdateHandle);
 
-  /* --------------------------------------------------- FLASH ----------------------------------------------------------*/
+  /* ------------------------------------------------ Flash Write-------------------------------------------------------*/
 
+  // Create idle task (responsible for enabling flash operations)
   static ctxIdle idle;
   idle.currentState     = &state.currentState;
   idle.mem              = mem;
   idle.xTaskEnableGroup = xTaskEnableGroup;
   xTaskCreate(vIdle, "Idle", 128, &idle, tskIDLE_PRIORITY, &handles.xIdleHandle);
 
+  // Create flash write task
   static ctxFlashBuffer flashBuffer;
   flashBuffer.currentState     = &state.currentState;
   flashBuffer.mem              = mem;
@@ -202,8 +231,9 @@ void vSystemInit(void *argument) {
   flashBuffer.xTaskEnableGroup = xTaskEnableGroup;
   xTaskCreate(vFlashBuffer, "FlashData", 128, &flashBuffer, configMAX_PRIORITIES - 1, &handles.xFlashBufferHandle);
 
-  /* --------------------------------------------------- LORA ----------------------------------------------------------*/
+  /* --------------------------------------------  LoRa Communication ---------------------------------------------------*/
 
+  // Create LoRa sample collection task
   static ctxLoRaSample loraSample;
   loraSample.state  = state;
   loraSample.hAccel = hAccel;
@@ -211,27 +241,32 @@ void vSystemInit(void *argument) {
   loraSample.gyro   = gyro;
   xTaskCreate(vLoRaSample, "LoRaSample", 128, &loraSample, configMAX_PRIORITIES - 6, &handles.xLoRaSampleHandle);
 
+  // Create LoRa Tx task
   static ctxLoRaTransmit loraTransmit;
   loraTransmit.lora = lora;
   xTaskCreate(vLoRaTransmit, "LoRaTx", 128, &loraTransmit, configMAX_PRIORITIES - 5, &handles.xLoRaTransmitHandle);
 
-  /* ---------------------------------------------------- USB ----------------------------------------------------------*/
+  /* ---------------------------------------------- USB Communication ---------------------------------------------------*/
 
+  // Create USB Tx task
   static ctxUsbTransmit usbTransmit;
   usbTransmit.usb = usb;
   xTaskCreate(vUsbTransmit, "UsbTx", 256, &usbTransmit, configMAX_PRIORITIES - 6, &handles.xUsbTransmitHandle);
 
+  // Create USB Rx task
   static ctxUsbReceive usbReceive;
   usbReceive.usb   = usb;
   usbReceive.shell = shell;
   xTaskCreate(vUsbReceive, "UsbRx", 256, &usbReceive, configMAX_PRIORITIES - 6, &handles.xUsbReceiveHandle);
 
-  /* ---------------------------------------------------- GPS ----------------------------------------------------------*/
+  /* ----------------------------------------------- GPS Acquisition ----------------------------------------------------*/
 
+  // Create GPS data reading and processing task
   static ctxGpsTransmit gpsTransmit;
   gpsTransmit.currentState = &state.currentState;
   xTaskCreate(vGpsTransmit, "GpsRead", 512, &gpsTransmit, configMAX_PRIORITIES - 6, &handles.xGpsTransmitHandle);
 
+  // Suspend the system initialization task (it only needs to run once)
   vTaskSuspend(NULL);
 }
 
