@@ -244,9 +244,9 @@
             <uThumb>1</uThumb>
             <VariousControls>
               <MiscControls>-mfloat-abi=hard -ffast-math -mfpu=fpv4-sp-d16</MiscControls>
-              <Define>__TARGET_FPU_VFP, FLIGHT_TEST</Define>
+              <Define>__TARGET_FPU_VFP, DEBUG</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core\Inc;..\Core\Inc\SPI;..\Core\Inc\SPI\flash;..\Core\Inc\SPI\lora;..\Core\Inc\SPI\sensors;..\Core\Inc\SPI\sensors\accel;..\Core\Inc\SPI\sensors\baro;..\Core\Inc\SPI\sensors\gyro;..\Lib\inc;..\Lib\inc\CORE;..\Lib\inc\CORE\Include;..\Lib\inc\DSP;..\Lib\inc\DSP\Include;..\Lib\inc\DSP\Include\dsp;..\Lib\inc\DSP\PrivateInclude;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Middlewares\Third_Party\TraceRecorder\include;..\Middlewares\Third_Party\TraceRecorder\config;..\Data;.\System</IncludePath>
+              <IncludePath>..\Core\Inc;..\Core\Inc\CAN;..\Core\Inc\RTOS;..\Core\Inc\SPI;..\Core\Inc\SPI\flash;..\Core\Inc\SPI\lora;..\Core\Inc\SPI\sensors;..\Core\Inc\SPI\sensors\accel;..\Core\Inc\SPI\sensors\baro;..\Core\Inc\SPI\sensors\gyro;..\Core\Inc\UART;..\Core\Inc\UART\GPS;..\Core\Inc\UART\USB;..\Lib\inc;..\Lib\inc\CORE;..\Lib\inc\CORE\Include;..\Lib\inc\DSP;..\Lib\inc\DSP\Include;..\Lib\inc\DSP\Include\dsp;..\Lib\inc\DSP\PrivateInclude;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Data</IncludePath>
             </VariousControls>
           </Carm>
           <Aarm>
@@ -322,7 +322,7 @@
             <File>
               <FileName>system_stm32f4xx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Core/Src/system_stm32f4xx.c</FilePath>
+              <FilePath>../MDK-ARM/System/system_stm32f4xx.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_hal_conf.h</FileName>
@@ -347,7 +347,7 @@
             <File>
               <FileName>freertos.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../Core/Src/freertos.c</FilePath>
+              <FilePath>../Core/Src/RTOS/freertos.c</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
@@ -360,19 +360,29 @@
               <FilePath>..\Core\Src\drivers.c</FilePath>
             </File>
             <File>
+              <FileName>libavionics.a</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\Lib\bin\libavionics.a</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Source/CAN</GroupName>
+          <Files>
+            <File>
               <FileName>can.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Src\can.c</FilePath>
+              <FilePath>..\Core\Src\CAN\can.c</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Source/SPI</GroupName>
+          <Files>
             <File>
               <FileName>spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\SPI\spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>lora.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\SPI\lora\lora.c</FilePath>
             </File>
             <File>
               <FileName>flash.c</FileName>
@@ -380,24 +390,9 @@
               <FilePath>..\Core\Src\SPI\flash\flash.c</FilePath>
             </File>
             <File>
-              <FileName>uart.c</FileName>
+              <FileName>lora.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Core\Src\uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>control.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\control.c</FilePath>
-            </File>
-            <File>
-              <FileName>libavionics.a</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\Lib\bin\libavionics.a</FilePath>
-            </File>
-            <File>
-              <FileName>gps.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\Src\gps.c</FilePath>
+              <FilePath>..\Core\Src\SPI\lora\lora.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -423,6 +418,26 @@
               <FileName>BMP581.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\SPI\sensors\baro\BMP581.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Source/UART</GroupName>
+          <Files>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\UART\uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>gps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\UART\GPS\gps.c</FilePath>
+            </File>
+            <File>
+              <FileName>control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\UART\USB\control.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -675,6 +690,53 @@
         </Group>
         <Group>
           <GroupName>Data</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>0</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArm>
+              <Carm>
+                <arpcs>2</arpcs>
+                <stkchk>2</stkchk>
+                <reentr>2</reentr>
+                <interw>2</interw>
+                <bigend>2</bigend>
+                <Strict>0</Strict>
+                <Optim>0</Optim>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Carm>
+              <Aarm>
+                <bBE>2</bBE>
+                <interw>2</interw>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aarm>
+            </GroupArm>
+          </GroupOption>
           <Files>
             <File>
               <FileName>accelX.c</FileName>

@@ -3,6 +3,8 @@
  * @author      Matt Ricci                                                         *
  * @addtogroup  A3G4250D                                                           *
  *                                                                                 *
+ * @todo Move private interface methods (read/write register) to static functions  *
+ *       with internal prototypes.                                                 *
  * @{                                                                              *
  ***********************************************************************************/
 
@@ -21,7 +23,7 @@
  **
  * =============================================================================== */
 void A3G4250D_init(A3G4250D *gyro, GPIO_TypeDef *port, unsigned long cs, float sensitivity, const uint8_t *axes, const int8_t *sign) {
-  SPI_init(&gyro->base, SENSOR_GYRO, SPI1, port, cs);
+  SPI_init(&gyro->base, SENSOR_GYRO, SPI1, MODE8, port, cs);
   gyro->sensitivity     = sensitivity;
   gyro->update          = A3G4250D_update;
   gyro->readGyro        = A3G4250D_readGyro;
@@ -29,6 +31,14 @@ void A3G4250D_init(A3G4250D *gyro, GPIO_TypeDef *port, unsigned long cs, float s
   gyro->processRawBytes = A3G4250D_processRawBytes;
   memcpy(gyro->axes, axes, A3G4250D_DATA_COUNT);
   memcpy(gyro->sign, sign, A3G4250D_DATA_COUNT);
+
+  const uint32_t superDelay = 0xFFFF;
+  volatile uint8_t counter  = 0;
+
+  // Wait for the spefified period - need to wait for 2ms here.
+  for (uint32_t i = 0; i < superDelay; i++) {
+    counter++;
+  }
 
   A3G4250D_writeRegister(gyro, A3G4250D_CTRL_REG1, A3G4250D_CTRL_REG1_ODR_800Hz | A3G4250D_CTRL_REG1_AXIS_ENABLE | A3G4250D_CTRL_REG1_PD_ENABLE);
 }
@@ -102,32 +112,32 @@ void A3G4250D_readRawBytes(A3G4250D *gyro, uint8_t *out) {
 /******************************** INTERFACE METHODS ********************************/
 
 void A3G4250D_writeRegister(A3G4250D *gyro, uint8_t address, uint8_t data) {
-  uint16_t response;
   SPI spi = gyro->base;
 
-  // Send write command with address and data
-  uint16_t payload = (address << 0x08) | data;
   spi.port->ODR &= ~spi.cs;
-  spi.send(&spi, payload);
 
-  // Read in response from interface
-  spi.receive(&spi, &response);
+  // Send read command and address
+  uint8_t payload = address & 0x7F; // Load payload with address and read command
+  spi.transmit(&spi, payload);      // Transmit payload
+  spi.transmit(&spi, data);         // Transmit dummy data and read response data
+
   spi.port->ODR |= spi.cs;
 }
 
 uint8_t A3G4250D_readRegister(A3G4250D *gyro, uint8_t address) {
-  uint16_t response;
-  SPI spi = gyro->base;
+  uint8_t response = 0;
+  SPI spi          = gyro->base;
 
-  // Send write command with address and data
-  uint16_t payload = (address << 0x08) | 0x8000;
   spi.port->ODR &= ~spi.cs;
-  spi.send(&spi, payload);
 
-  // Read in response from interface
-  spi.receive(&spi, &response);
+  // Send read command and address
+  uint8_t payload = address | 0x80;              // Load payload with address and read command
+  response        = spi.transmit(&spi, payload); // Transmit payload
+  response        = spi.transmit(&spi, 0xFF);    // Transmit dummy data and read response data
+
   spi.port->ODR |= spi.cs;
-  return (uint8_t)response;
+
+  return response;
 }
 
 /** @} */

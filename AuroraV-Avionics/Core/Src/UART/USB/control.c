@@ -56,8 +56,8 @@ bool usbFlashCommandExecute(char *flags) {
 	// flash read all
 	else if (!strcmp(flags, CMD_FLASH_READ_ALL)) {
 		volatile uint8_t pageData[256];
-		for (long i = 0; i < flash.pageCount; i += 0x100) {
-			flash.readPage(&flash, i, pageData);
+		for (long i = 0; i < flash.pageCount; i++) {
+			flash.readPage(&flash, i * 0x100, pageData);
 			for (int j = 0; j < flash.pageSize; j++)
 				usb.send(&usb, pageData[j]);
 		}		

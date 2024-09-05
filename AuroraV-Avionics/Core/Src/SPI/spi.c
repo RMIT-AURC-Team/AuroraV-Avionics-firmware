@@ -5,11 +5,17 @@
  * @brief       Implements functions for SPI device interface initialization and   *
  *              communication.                                                     *
  *                                                                                 *
- * @todo        Review and refactor SPI functions for better readability and error *
- *              handling.                                                          *
+ * @todo        Rewrite initialisation to implement enum check for 8/16 bit mode   *
+ * 							and assign approprriate function pointers 												 *
  ***********************************************************************************/
 
 #include "spi.h"
+
+static void SPI_send8(SPI *, uint16_t);
+static void SPI_send16(SPI *, uint16_t);
+
+static void SPI_receive8(SPI *, volatile uint16_t *);
+static void SPI_receive16(SPI *, volatile uint16_t *);
 
 /* =============================================================================== */
 /**
@@ -23,13 +29,14 @@
  * @return @c NULL.
  **
  * =============================================================================== */
-void SPI_init(SPI *spi, DeviceType device, SPI_TypeDef *interface, GPIO_TypeDef *port, unsigned long cs) {
+void SPI_init(SPI *spi, DeviceType device, SPI_TypeDef *interface, DataFormat df, GPIO_TypeDef *port, unsigned long cs) {
   spi->device    = device;
   spi->interface = interface;
   spi->port      = port;
   spi->cs        = cs;
-  spi->send      = SPI_send;
-  spi->receive   = SPI_receive;
+
+  spi->send      = (df == MODE8) ? SPI_send8 : SPI_send16;
+  spi->receive   = (df == MODE8) ? SPI_receive8 : SPI_receive16;
   spi->transmit  = SPI_transmit;
 }
 
@@ -44,8 +51,8 @@ void SPI_init(SPI *spi, DeviceType device, SPI_TypeDef *interface, GPIO_TypeDef 
  * =============================================================================== */
 uint16_t SPI_transmit(SPI *spi, uint16_t data) {
   volatile uint16_t response;
-  SPI_send(spi, data);
-  SPI_receive(spi, &response);
+  spi->send(spi, data);
+  spi->receive(spi, &response);
   while (spi->interface->SR & SPI_SR_BSY);
   return response;
 }
@@ -59,7 +66,12 @@ uint16_t SPI_transmit(SPI *spi, uint16_t data) {
  * @return @c NULL.
  **
  * =============================================================================== */
-void SPI_send(SPI *spi, uint16_t data) {
+static void SPI_send8(SPI *spi, uint16_t data) {
+  while (!(spi->interface->SR & SPI_SR_TXE));
+  spi->interface->DR = (uint8_t)data;
+}
+
+static void SPI_send16(SPI *spi, uint16_t data) {
   while (!(spi->interface->SR & SPI_SR_TXE));
   spi->interface->DR = data;
 }
@@ -73,7 +85,12 @@ void SPI_send(SPI *spi, uint16_t data) {
  * @return @c NULL.
  **
  * =============================================================================== */
-void SPI_receive(SPI *spi, volatile uint16_t *data) {
+static void SPI_receive8(SPI *spi, volatile uint16_t *data) {
+  while (!(spi->interface->SR & SPI_SR_RXNE));
+  *data = (uint8_t) spi->interface->DR;
+}
+
+static void SPI_receive16(SPI *spi, volatile uint16_t *data) {
   while (!(spi->interface->SR & SPI_SR_RXNE));
   *data = spi->interface->DR;
 }

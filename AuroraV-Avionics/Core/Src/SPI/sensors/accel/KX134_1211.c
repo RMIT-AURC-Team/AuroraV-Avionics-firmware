@@ -3,6 +3,8 @@
  * @author      Matt Ricci                                                         *
  * @addtogroup  KX134_1211                                                         *
  *                                                                                 *
+ * @todo Move private interface methods (read/write register) to static functions  *
+ *       with internal prototypes.                                                 *
  * @{                                                                              *
  ***********************************************************************************/
 
@@ -21,7 +23,7 @@
  **
  * =============================================================================== */
 void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, uint8_t scale, const uint8_t *axes, const int8_t *sign) {
-  SPI_init(&accel->base, SENSOR_ACCEL, SPI1, port, cs);
+  SPI_init(&accel->base, SENSOR_ACCEL, SPI1, MODE8, port, cs);
   accel->update          = KX134_1211_update;
   accel->readAccel       = KX134_1211_readAccel;
   accel->readRawBytes    = KX134_1211_readRawBytes;
@@ -37,6 +39,19 @@ void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, ui
   } else if (scale == 16) {
     GSEL               = KX134_1211_CNTL1_GSEL(16);
     accel->sensitivity = KX134_1211_SENSITIVITY(16);
+  }
+
+  // Perform powerup procedure as per datasheet
+  KX134_1211_writeRegister(accel, 0x7F, 0x00);
+  KX134_1211_writeRegister(accel, 0x1C, 0x00);
+  KX134_1211_writeRegister(accel, 0x1C, 0x80);
+
+  const uint32_t superDelay = 0xFFFF;
+  volatile uint8_t counter  = 0;
+
+  // Wait for the spefified period - need to wait for 2ms here.
+  for (uint32_t i = 0; i < superDelay; i++) {
+    counter++;
   }
 
   // Configure accelerometer registers
@@ -115,32 +130,32 @@ void KX134_1211_readRawBytes(KX134_1211 *accel, uint8_t *out) {
 /******************************** INTERFACE METHODS ********************************/
 
 void KX134_1211_writeRegister(KX134_1211 *accel, uint8_t address, uint8_t data) {
-  uint16_t response;
   SPI spi = accel->base;
 
-  // Send write command with address and data
-  uint16_t payload = (address << 0x08) | data; // Load payload with address and data
-  spi.port->ODR &= ~spi.cs;                    // Lower chip select
-  spi.send(&spi, payload);                     // Send payload
+  spi.port->ODR &= ~spi.cs;
 
-  // Read in response from interface
-  spi.receive(&spi, &response); // Read in response from receive buffer
-  spi.port->ODR |= spi.cs;      // Raise chip select
+  // Send read command and address
+  uint8_t payload = address & 0x7F; // Load payload with address and read command
+  spi.transmit(&spi, payload);      // Transmit payload
+  spi.transmit(&spi, data);         // Transmit dummy data and read response data
+
+  spi.port->ODR |= spi.cs;
 }
 
 uint8_t KX134_1211_readRegister(KX134_1211 *accel, uint8_t address) {
-  uint16_t response;
-  SPI spi = accel->base;
+  uint8_t response = 0;
+  SPI spi          = accel->base;
+
+  spi.port->ODR &= ~spi.cs;
 
   // Send read command and address
-  uint16_t payload = (address << 0x08) | 0x8000; // Load payload with address and read command
-  spi.port->ODR &= ~spi.cs;                      // Lower chip select
-  spi.send(&spi, payload);                       // Send payload
+  uint8_t payload = address | 0x80;              // Load payload with address and read command
+  response        = spi.transmit(&spi, payload); // Transmit payload
+  response        = spi.transmit(&spi, 0xFF);    // Transmit dummy data and read response data
 
-  // Read in response from interface
-  spi.receive(&spi, &response); // Read in response from receive buffer
-  spi.port->ODR |= spi.cs;      // Raise chip select
-  return (uint8_t)response;
+  spi.port->ODR |= spi.cs;
+
+  return response;
 }
 
 /** @} */

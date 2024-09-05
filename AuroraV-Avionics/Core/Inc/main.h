@@ -6,32 +6,36 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
-#include "FreeRTOS.h"
-#include "event_groups.h"
-#include "semphr.h"
-#include "message_buffer.h"
 #include "stdint.h"
 #include "stdio.h"
 #include "stm32f4xx.h"
 
+#include "FreeRTOS.h"
+#include "event_groups.h"
+#include "message_buffer.h"
+#include "semphr.h"
+
+
 #include "A3G4250D.h"
 #include "BMP581.h"
 #include "KX134_1211.h"
-#include "gps.h"
 #include "can.h"
 #include "control.h"
 #include "drivers.h"
 #include "flash.h"
+#include "gps.h"
 #include "lora.h"
 #include "sensors.h"
 #include "state.h"
 #include "uart.h"
+
 
 #include "kalmanfilter.h"
 #include "membuff.h"
 #include "quaternion.h"
 #include "slidingwindow.h"
 
+#ifdef DUMMY
 #include "accelX.h"
 #include "accelY.h"
 #include "accelZ.h"
@@ -39,6 +43,7 @@
 #include "gyroY.h"
 #include "gyroZ.h"
 #include "press.h"
+#endif
 
 void vFlashBuffer(void *pvParameters);
 void vDataAcquisitionH(void *pvParameters);
@@ -58,11 +63,12 @@ void Error_Handler(void);
  * ===================================================================== */
 
 // GROUNDSTATION LORA
-#define LORA_HEADER_AV_DATA 0x04
+#define LORA_HEADER_AV_DATA  0x04
+#define LORA_HEADER_GPS_DATA 0x05
 
 // AEROBRAKES CAN
 #define CAN_HEADER_AEROBRAKES_RETRACT 0x602
-#define CAN_HEADER_AEROBRAKES_DATA 		0x601
+#define CAN_HEADER_AEROBRAKES_DATA    0x601
 
 // FLASH
 #define HEADER_ID_Pos           0x06
@@ -93,39 +99,39 @@ void Error_Handler(void);
  * ===================================================================== */
 
 // ACCELEROMETER
-#define ACCEL_PORT_1  GPIOA
-#define ACCEL_CS_1    GPIO_ODR_OD1
+#define ACCEL_PORT_1 GPIOA
+#define ACCEL_CS_1   GPIO_ODR_OD1
 // FLIGHT AXES
-#define ACCEL_AXES_1  ((const uint8_t[]){0, 2, 1})
-#define ACCEL_SIGN_1  ((const int8_t[]){1, 1, -1})
+#define ACCEL_AXES_1 ((const uint8_t[]){0, 2, 1})
+#define ACCEL_SIGN_1 ((const int8_t[]){1, 1, -1})
 // DRONE AXES
-//#define ACCEL_AXES_1  ((const uint8_t[]){0, 1, 2})
-//#define ACCEL_SIGN_1  ((const int8_t[]){1, 1, -1})
+// #define ACCEL_AXES_1  ((const uint8_t[]){0, 1, 2})
+// #define ACCEL_SIGN_1  ((const int8_t[]){1, 1, -1})
 
-#define ACCEL_PORT_2  GPIOB
-#define ACCEL_CS_2    GPIO_ODR_OD0
-#define ACCEL_AXES_2  ((const uint8_t[]){0, 2, 1})
-#define ACCEL_SIGN_2  ((const int8_t[]){1, -1, 1})
+#define ACCEL_PORT_2 GPIOB
+#define ACCEL_CS_2   GPIO_ODR_OD0
+#define ACCEL_AXES_2 ((const uint8_t[]){0, 2, 1})
+#define ACCEL_SIGN_2 ((const int8_t[]){1, -1, 1})
 
 // GYROSCOPE
-#define GYRO_PORT     GPIOA
-#define GYRO_CS       GPIO_ODR_OD2
-#define GYRO_AXES     ((const uint8_t[]){0, 2, 1})
-#define GYRO_SIGN     ((const int8_t[]){1, 1, 1})
+#define GYRO_PORT GPIOA
+#define GYRO_CS   GPIO_ODR_OD2
+#define GYRO_AXES ((const uint8_t[]){0, 2, 1})
+#define GYRO_SIGN ((const int8_t[]){1, 1, 1})
 
 // BAROMETER
-#define BARO_PORT     GPIOA
-#define BARO_CS       GPIO_ODR_OD3
+#define BARO_PORT GPIOA
+#define BARO_CS   GPIO_ODR_OD3
 
 // FLASH
-#define FLASH_PORT    	 GPIOE
-#define FLASH_CS      	 GPIO_ODR_OD11
+#define FLASH_PORT       GPIOE
+#define FLASH_CS         GPIO_ODR_OD11
 #define FLASH_PAGE_SIZE  256
 #define FLASH_PAGE_COUNT 65536
 
 // LORA
-#define LORA_PORT     GPIOD
-#define LORA_CS       GPIO_ODR_OD0
+#define LORA_PORT GPIOD
+#define LORA_CS   GPIO_ODR_OD0
 
 // USB UART
 #define USB_PORT      GPIOC
@@ -149,12 +155,16 @@ void Error_Handler(void);
  *                            MISC DEFINITIONS                           *
  * ===================================================================== */
 
-#define ACCEL_LAUNCH         1.25f
+// Drone launch threshold
+// #define ACCEL_LAUNCH         3.0f
+// Flight launch threshold
+#define ACCEL_LAUNCH         5.0f
+
 #define MAIN_ALTITUDE_METERS 396.0f
 
-#define SIGINT 					 	   0x03
-#define BACKSPACE 					 0x08
-#define LINE_FEED 					 0x0A
+#define SIGINT               0x03
+#define BACKSPACE            0x08
+#define LINE_FEED            0x0A
 #define CARRIAGE_RETURN      0x0D
 
 #endif
