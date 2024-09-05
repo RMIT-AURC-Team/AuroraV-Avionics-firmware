@@ -1,6 +1,11 @@
 CompileFlags:
   Add: [
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/CAN",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/RTOS",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/RTOS/tasks",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/RTOS/tasks/comms",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/RTOS/tasks/data",
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI",
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI/flash",
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI/LoRa",
@@ -8,6 +13,9 @@ CompileFlags:
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI/sensors/accel",
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI/sensors/gyro",
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/SPI/sensors/baro",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/UART",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/UART/GPS",
+    "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Core/Inc/UART/USB",
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/include",
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F",
     "-I/home/matt/desktop/AURC2024/AuroraV-Avionics-firmware/AuroraV-Avionics/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS",

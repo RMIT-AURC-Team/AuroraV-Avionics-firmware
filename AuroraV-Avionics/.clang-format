@@ -19,4 +19,5 @@ BraceWrapping:
 BreakBeforeBraces: Custom
 BreakBeforeBinaryOperators: NonAssignment
 ColumnLimit: 0
+IndentPPDirectives: BeforeHash
 ReflowComments: true
