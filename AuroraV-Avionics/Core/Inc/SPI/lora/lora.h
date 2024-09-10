@@ -8,8 +8,10 @@
 #define _LORA_H
 
 #include "stm32f439xx.h"
-#include "spi.h"
 #include "string.h"
+
+#include "devices.h"
+#include "spi.h"
 
 #define LORA_REG_FIFO                   0x00
 #define LORA_REG_FIFO_ADDR_PTR          0x0D
@@ -85,8 +87,8 @@ typedef enum {
 } Mode;
 
 typedef struct {
-  uint8_t id;															//!< Packet header ID
-  uint8_t data[LORA_MSG_PAYLOAD_LENGTH];	//!< Packet payload
+  uint8_t id;                            //!< Packet header ID
+  uint8_t data[LORA_MSG_PAYLOAD_LENGTH]; //!< Packet payload
 } LoRa_Packet;
 
 /** @extends SPI */
@@ -95,21 +97,21 @@ typedef struct LoRa {
   void (*transmit)(struct LoRa *, uint8_t *); //!< LoRa transmit method. @see LoRa_transmit
 } LoRa;
 
-void LoRa_init(LoRa *, GPIO_TypeDef *, unsigned long, Bandwidth, SpreadingFactor, CodingRate);
+DeviceHandle_t LoRa_init(LoRa *, char[DEVICE_NAME_LENGTH], GPIO_TypeDef *, unsigned long, Bandwidth, SpreadingFactor, CodingRate);
 void LoRa_transmit(LoRa *, uint8_t *);
 void LoRa_writeRegister(LoRa *, uint8_t, uint8_t);
 uint8_t LoRa_readRegister(LoRa *, uint8_t);
 
 LoRa_Packet LoRa_AVData(
-	uint8_t,
-	uint8_t, 
-	uint8_t *, 
-	uint8_t *, 
-	uint8_t, 
-  uint8_t *,
-	uint8_t,
-	float,
-	float
+    uint8_t,
+    uint8_t,
+    uint8_t *,
+    uint8_t *,
+    uint8_t,
+    uint8_t *,
+    uint8_t,
+    float,
+    float
 );
 LoRa_Packet LoRa_GPSData(uint8_t, char *, char *, uint8_t);
 

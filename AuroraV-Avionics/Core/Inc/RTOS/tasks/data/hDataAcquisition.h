@@ -12,6 +12,7 @@
 #include "A3G4250D.h"
 #include "KX134_1211.h"
 #include "dataframe.h"
+#include "devices.h"
 #include "membuff.h"
 #include "sensors.h"
 #include "stateUpdate.h"
@@ -28,17 +29,8 @@
 void vHDataAcquisition(void *pvParameters);
 
 typedef struct {
-  ctxState state;
-  MemBuff mem;
-  // FreeRTOS objects
-  EventGroupHandle_t xTaskEnableGroup;
-  SemaphoreHandle_t xUsbMutex;
-  MessageBufferHandle_t xUsbTxBuff;
-  // Sensor objects
-  A3G4250D gyro;
-  KX134_1211 *hAccel;
-  KX134_1211 *lAccel;
-  KX134_1211 *accel;
+  ctxState *state;
+  MemBuff *mem;
 } ctxHDataAcquisition;
 
 #endif

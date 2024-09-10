@@ -42,14 +42,8 @@ typedef struct {
 } ctxState;
 
 typedef struct {
-  ctxState state;
-  Handles handles;
-  // FreeRTOS objects
-  EventGroupHandle_t xTaskEnableGroup;
-  SemaphoreHandle_t xUsbMutex;
-  MessageBufferHandle_t xUsbTxBuff;
-  // Sensor objects
-  KX134_1211 *accel;
-} ctxFlightState;
+  ctxState *state;
+  Handles *handles;
+} ctxStateUpdate;
 
 #endif

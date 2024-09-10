@@ -22,7 +22,15 @@
  * @return @c NULL.
  **
  * =============================================================================== */
-void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, uint8_t scale, const uint8_t *axes, const int8_t *sign) {
+DeviceHandle_t KX134_1211_init(
+    KX134_1211 *accel,
+    char name[DEVICE_NAME_LENGTH],
+    GPIO_TypeDef *port,
+    unsigned long cs,
+    uint8_t scale,
+    const uint8_t *axes,
+    const int8_t *sign
+) {
   SPI_init(&accel->base, SENSOR_ACCEL, SPI1, MODE8, port, cs);
   accel->update          = KX134_1211_update;
   accel->readAccel       = KX134_1211_readAccel;
@@ -59,6 +67,11 @@ void KX134_1211_init(KX134_1211 *accel, GPIO_TypeDef *port, unsigned long cs, ui
   uint8_t ODCNTL = KX134_1211_readRegister(accel, KX134_1211_ODCNTL);                                    // Read from register for reserve mask
   KX134_1211_writeRegister(accel, KX134_1211_ODCNTL, (KX134_1211_ODCNTL_RESERVED & ODCNTL) | 0x2A);      // No filter, fast startup, 800Hz
   KX134_1211_writeRegister(accel, KX134_1211_CNTL1, KX134_1211_CNTL1_PC1 | KX134_1211_CNTL1_RES | GSEL); // Enable PC1
+
+  DeviceHandle_t handle;
+  strcpy(handle.name, name);
+  handle.device = accel;
+  return handle;
 }
 
 /********************************** DEVICE METHODS *********************************/

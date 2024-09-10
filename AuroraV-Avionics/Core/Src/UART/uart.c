@@ -2,7 +2,7 @@
  * @file        uart.c                                                             *
  * @author      Matt Ricci                                                         *
  * @addtogroup  UART                                                               *
- * @brief       Brief description of the file’s purpose.                           *
+ * @brief       Brief description of the file's purpose.                           *
  *                                                                                 *
  * @todo Tidy up `_UART_setup`                                                     *
  * @todo Implement printf                                                          *
@@ -22,10 +22,17 @@
  * @return @c NULL.
  **
  * =============================================================================== */
-void UART_init(UART *uart, USART_TypeDef *interface, GPIO_TypeDef *port, uint32_t baud, OversampleMode over8) {
+DeviceHandle_t UART_init(
+    UART *uart,
+    char name[DEVICE_NAME_LENGTH],
+    USART_TypeDef *interface,
+    GPIO_TypeDef *port,
+    uint32_t baud,
+    OversampleMode over8
+) {
   uart->send      = UART_send;
   uart->sendBytes = UART_sendBytes;
-	uart->print 		= UART_print;
+  uart->print     = UART_print;
   uart->receive   = UART_receive;
   uart->interface = interface;
   uart->port      = port;
@@ -33,6 +40,11 @@ void UART_init(UART *uart, USART_TypeDef *interface, GPIO_TypeDef *port, uint32_
   uart->over8     = over8;
 
   _UART_setup(uart);
+  DeviceHandle_t handle;
+  strcpy(handle.name, name);
+  handle.device = uart;
+
+  return handle;
 }
 
 /********************************** PRIVATE METHODS *********************************/
@@ -77,7 +89,7 @@ void _UART_setup(UART *uart) {
 /* =============================================================================== */
 /**
  * @brief Sends a single byte of data over the UART interface.
- * 
+ *
  * @param *uart  Pointer to UART struct.
  * @param data   Byte of data to be sent.
  * @return @c NULL.
@@ -93,7 +105,7 @@ void UART_send(UART *uart, uint8_t data) {
 /* =============================================================================== */
 /**
  * @brief Sends an array of bytes over the UART interface.
- * 
+ *
  * @param *uart   Pointer to UART struct.
  * @param *data   Pointer to the array of bytes to be sent.
  * @param length  Number of bytes to send.
@@ -108,7 +120,7 @@ void UART_sendBytes(UART *uart, uint8_t *data, int length) {
 /* =============================================================================== */
 /**
  * @brief Sends a string of characters over the UART interface.
- * 
+ *
  * @param *uart  Pointer to UART struct.
  * @param *data  Pointer to the string of characters to be sent.
  * @return @c NULL.
@@ -116,15 +128,15 @@ void UART_sendBytes(UART *uart, uint8_t *data, int length) {
  * =============================================================================== */
 
 void UART_print(UART *uart, char *data) {
-	int i = 0;
-  while(data[i] != '\0')
+  int i = 0;
+  while (data[i] != '\0')
     UART_send(uart, data[i++]);
 }
 
 /* =============================================================================== */
 /**
  * @brief Receives a single byte of data from the UART interface.
- * 
+ *
  * @param *uart  Pointer to UART struct.
  * @return       The received byte of data.
  **

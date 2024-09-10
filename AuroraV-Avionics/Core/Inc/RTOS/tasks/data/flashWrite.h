@@ -3,28 +3,24 @@
 
 #include "FreeRTOS.h"
 #include "event_groups.h"
+#include "stdbool.h"
 
+#include "devices.h"
 #include "flash.h"
 #include "membuff.h"
 #include "stateUpdate.h"
-#include "stdbool.h"
-
-void vIdle(void *pvParameters);
-void vFlashBuffer(void *pvParameters);
 
 typedef struct {
   enum State *currentState;
   MemBuff mem;
-  // FreeRTOS objects
-  EventGroupHandle_t xTaskEnableGroup;
 } ctxIdle;
 
 typedef struct {
   enum State *currentState;
   MemBuff mem;
-  Flash flash;
-  // FreeRTOS objects
-  EventGroupHandle_t xTaskEnableGroup;
 } ctxFlashBuffer;
+
+void vIdle(void *pvParameters);
+void vFlashBuffer(void *pvParameters);
 
 #endif

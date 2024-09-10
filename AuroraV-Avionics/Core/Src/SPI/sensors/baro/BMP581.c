@@ -23,7 +23,14 @@
  * @return @c NULL.
  **
  * =============================================================================== */
-void BMP581_init(BMP581 *baro, GPIO_TypeDef *port, unsigned long cs, float tempSensitivity, float pressSensitivity) {
+DeviceHandle_t BMP581_init(
+    BMP581 *baro,
+    char name[DEVICE_NAME_LENGTH],
+    GPIO_TypeDef *port,
+    unsigned long cs,
+    float tempSensitivity,
+    float pressSensitivity
+) {
   SPI_init(&baro->base, SENSOR_BARO, SPI1, MODE8, port, cs);
   baro->tempSensitivity     = tempSensitivity;
   baro->pressSensitivity    = pressSensitivity;
@@ -49,13 +56,18 @@ void BMP581_init(BMP581 *baro, GPIO_TypeDef *port, unsigned long cs, float tempS
 
   // Set ground pressure reading on init
   baro->readPress(baro, &baro->groundPress);
+
+  DeviceHandle_t handle;
+  strcpy(handle.name, name);
+  handle.device = baro;
+  return handle;
 }
 
 /******************************** DEVICE METHODS ********************************/
 
 /* =============================================================================== */
 /**
- * @brief Updates the BMP581 barometer readings. 
+ * @brief Updates the BMP581 barometer readings.
  * @param *baro Pointer to BMP581 struct to be updated.
  * @returns @c NULL.
  **
@@ -70,9 +82,9 @@ void BMP581_update(BMP581 *baro) {
 
 /* =============================================================================== */
 /**
- * @brief Read the temperature from the BMP581 sensor. 
- * @param *baro Pointer to BMP581 struct. 
- * @param *out Pointer to float where the temperature will be stored. 
+ * @brief Read the temperature from the BMP581 sensor.
+ * @param *baro Pointer to BMP581 struct.
+ * @param *out Pointer to float where the temperature will be stored.
  * @returns @c NULL.
  **
  * =============================================================================== */

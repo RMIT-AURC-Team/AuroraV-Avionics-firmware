@@ -4,6 +4,10 @@
 
 #include "stateUpdate.h"
 
+extern EventGroupHandle_t xTaskEnableGroup;
+extern MessageBufferHandle_t xUsbTxBuff;
+extern SemaphoreHandle_t xUsbMutex;
+
 /**
  * @brief State update task.
  *
@@ -27,14 +31,21 @@ void vStateUpdate(void *argument) {
   float avgVelCurrent         = 0;
   float avgVelPrevious        = 0;
 
-  ctxFlightState *ctx         = (ctxFlightState *)argument;
+  ctxStateUpdate *ctxPtr 		 = (ctxStateUpdate *)argument;
+	
+	DeviceHandle_t accelHandle = DeviceHandle_getHandle("Accel");
+	KX134_1211 *accel           = accelHandle.device;
 
   for (;;) {
     // Block until 20ms interval
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
+		
+		// Retrieve objects from context
+		ctxStateUpdate ctx = *ctxPtr;
+		ctxState *state    = ctx.state;
 
     // Emergency aerobrakes for excessive tilt
-    if (ctx->state.tilt >= 30.0f) {
+    if (state->tilt >= 30.0f) {
       // CAN payload for aerobrakes retract
       CANHigh = 0x00000000;
       CANLow  = 0x00000000;
@@ -42,62 +53,62 @@ void vStateUpdate(void *argument) {
       CAN_TX(2, 8, CANHigh, CANLow, id);
     }
 
-    switch (ctx->state.currentState) {
+    switch (state->currentState) {
     case PRELAUNCH:
-      if ((*ctx->accel).accelData[ZINDEX] >= ACCEL_LAUNCH) {
-#ifdef FLIGHT_TEST
-        GPIOB->ODR ^= 0x8000;
-        GPIOD->ODR ^= 0x8000;
-#endif
-#ifndef DEBUG
-        vTaskDelete(ctx->handles.xUsbTransmitHandle);
-        vTaskDelete(ctx->handles.xUsbReceiveHandle);
-#endif
-        vTaskDelete(ctx->handles.xGpsTransmitHandle);
-        xEventGroupSetBits(ctx->xTaskEnableGroup, GROUP_TASK_ENABLE_FLASH);   // Enable flash
-        xEventGroupSetBits(ctx->xTaskEnableGroup, GROUP_TASK_ENABLE_HIGHRES); // Enable high resolution data acquisition
-        xEventGroupSetBits(ctx->xTaskEnableGroup, GROUP_TASK_ENABLE_LOWRES);  // Enable low resolution data acquisition
-        ctx->state.currentState = LAUNCH;
+      if (accel->accelData[ZINDEX] >= ACCEL_LAUNCH) {
+        #ifdef FLIGHT_TEST
+          GPIOB->ODR ^= 0x8000;
+          GPIOD->ODR ^= 0x8000;
+        #endif
+        #ifndef DEBUG
+          vTaskDelete(ctx.handles->xUsbTransmitHandle);
+          vTaskDelete(ctx.handles->xUsbReceiveHandle);
+        #endif
+        vTaskDelete(ctx.handles->xGpsTransmitHandle);
+        xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_FLASH);   // Enable flash
+        xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_HIGHRES); // Enable high resolution data acquisition
+        xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_LOWRES);  // Enable low resolution data acquisition
+        state->currentState = LAUNCH;
       }
       break;
 
     case LAUNCH:
-      ctx->state.avgVel.calculateMovingAverage(&ctx->state.avgVel, &avgVelCurrent);
+      state->avgVel.calculateMovingAverage(&state->avgVel, &avgVelCurrent);
       // Send altitude to aerobrakes via CAN
       CANHigh = 0x00000000;
-      memcpy(&CANLow, &ctx->state.altitude, sizeof(float));
+      memcpy(&CANLow, &state->altitude, sizeof(float));
       id = CAN_HEADER_AEROBRAKES_DATA;
       CAN_TX(2, 8, CANHigh, CANLow, id);
       // Transition to motor burnout state on velocity decrease
       if ((avgVelCurrent - avgVelPrevious) < 0) {
-#ifdef FLIGHT_TEST
-        GPIOB->ODR ^= 0x8000;
-        GPIOD->ODR ^= 0x8000;
-#endif
-        ctx->state.currentState = COAST;
+        #ifdef FLIGHT_TEST
+          GPIOB->ODR ^= 0x8000;
+          GPIOD->ODR ^= 0x8000;
+        #endif
+        state->currentState = COAST;
       }
       avgVelPrevious = avgVelCurrent;
       break;
 
     case COAST:
-      ctx->state.avgPress.calculateMovingAverage(&ctx->state.avgPress, &avgPressCurrent);
+      state->avgPress.calculateMovingAverage(&state->avgPress, &avgPressCurrent);
       // Send altitude to aerobrakes via CAN
       CANHigh = 0x00000000;
-      memcpy(&CANLow, &ctx->state.altitude, sizeof(float));
+      memcpy(&CANLow, &state->altitude, sizeof(float));
       id = CAN_HEADER_AEROBRAKES_DATA;
       CAN_TX(2, 8, CANHigh, CANLow, id);
       // Transition to apogee state on three way vote of altitude, velocity, and tilt
       // apogee is determined as two of three conditions evaluating true
-      if ((((avgPressCurrent - avgPressPrevious) > 0) + (ctx->state.tilt >= 90) + (ctx->state.velocity < 0.0f)) >= 2) {
-#ifdef FLIGHT_TEST
-        GPIOB->ODR ^= 0x8000;
-        GPIOD->ODR ^= 0x8000;
-#endif
-        vTaskDelete(ctx->handles.xHDataAcquisitionHandle);
-        vTaskDelete(ctx->handles.xLDataAcquisitionHandle);
-        vTaskDelete(ctx->handles.xLoRaSampleHandle);
-        // xTaskCreate(ctx->handles.vGpsRead, "GpsRead", 512, NULL, configMAX_PRIORITIES - 6, &ctx->handles.xGpsReadHandle);
-        ctx->state.currentState = APOGEE;
+      if ((((avgPressCurrent - avgPressPrevious) > 0) + (state->tilt >= 90) + (state->velocity < 0.0f)) >= 2) {
+        #ifdef FLIGHT_TEST
+          GPIOB->ODR ^= 0x8000;
+          GPIOD->ODR ^= 0x8000;
+        #endif
+        vTaskDelete(ctx.handles->xHDataAcquisitionHandle);
+        vTaskDelete(ctx.handles->xLDataAcquisitionHandle);
+        vTaskDelete(ctx.handles->xLoRaSampleHandle);
+        //xTaskCreate(ctx.handles->vGpsRead, "GpsRead", 512, NULL, configMAX_PRIORITIES - 6, &ctx.handles->xGpsReadHandle);
+        state->currentState = APOGEE;
         // Send transmission to trigger apogee E-matches
       }
       avgPressPrevious = avgPressCurrent;
@@ -112,12 +123,12 @@ void vStateUpdate(void *argument) {
       // Deploy drogue chute
       GPIOD->ODR |= 0x8000;
       // Transition to descent state when below main deployment altitude
-      if (ctx->state.altitude <= MAIN_ALTITUDE_METERS) {
-#ifdef FLIGHT_TEST
-        GPIOB->ODR ^= 0x8000;
-        GPIOD->ODR ^= 0x8000;
-#endif
-        ctx->state.currentState = DESCENT;
+      if (state->altitude <= MAIN_ALTITUDE_METERS) {
+        #ifdef FLIGHT_TEST
+          GPIOB->ODR ^= 0x8000;
+          GPIOD->ODR ^= 0x8000;
+        #endif
+        state->currentState = DESCENT;
         // Add descent event dataframe to buffer
       }
       break;

@@ -2,7 +2,7 @@
  * @file        flash.c                                                            *
  * @author      Matt Ricci                                                         *
  * @addtogroup  Flash                                                              *
- * @brief       Brief description of the file’s purpose.                           *
+ * @brief       Brief description of the file's purpose.                           *
  *                                                                                 *
  * @{                                                                              *
  ***********************************************************************************/
@@ -30,13 +30,25 @@
  * @return @c NULL.
  **
  * =============================================================================== */
-void Flash_init(Flash *flash, GPIO_TypeDef *port, unsigned long cs, int pageSize, long pageCount) {
+DeviceHandle_t Flash_init(
+    Flash *flash,
+    char name[DEVICE_NAME_LENGTH],
+    GPIO_TypeDef *port,
+    unsigned long cs,
+    int pageSize,
+    long pageCount
+) {
   SPI_init(&flash->base, MEMORY_FLASH, SPI4, MODE16, port, cs);
   flash->pageSize  = pageSize;
-	flash->pageCount = pageCount;
-	flash->erase     = Flash_erase;
+  flash->pageCount = pageCount;
+  flash->erase     = Flash_erase;
   flash->readPage  = Flash_readPage;
   flash->writePage = Flash_writePage;
+
+  DeviceHandle_t handle;
+  strcpy(handle.name, name);
+  handle.device = flash;
+  return handle;
 }
 
 /********************************* PRIVATE METHODS *********************************/
@@ -188,11 +200,11 @@ void Flash_writePage(Flash *flash, uint32_t address, uint8_t *data) {
  **
  * =============================================================================== */
 void Flash_readPage(Flash *flash, uint32_t address, volatile uint8_t *data) {
-  SPI spi        = flash->base;
+  SPI spi = flash->base;
 
   spi.port->ODR &= ~spi.cs;
-  
-	// Send Read Data instruction and 24-bit address
+
+  // Send Read Data instruction and 24-bit address
   spi.transmit(&spi, FLASH_READ_DATA);
   spi.transmit(&spi, (address & 0xFF0000) >> 16);
   spi.transmit(&spi, (address & 0xFF00) >> 8);
@@ -201,7 +213,7 @@ void Flash_readPage(Flash *flash, uint32_t address, volatile uint8_t *data) {
   for (int i = 0; i < 256; i++) {
     data[i] = spi.transmit(&spi, 0x0F);
   }
-	
+
   spi.port->ODR |= spi.cs;
 }
 

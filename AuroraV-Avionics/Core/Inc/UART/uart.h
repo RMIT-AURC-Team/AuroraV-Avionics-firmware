@@ -6,9 +6,11 @@
 #ifndef _UART_H
 #define _UART_H
 
-#include "string.h"
 #include "stdbool.h"
 #include "stm32f439xx.h"
+#include "string.h"
+
+#include "devices.h"
 
 /**
  * @ingroup UART_API
@@ -32,11 +34,11 @@ typedef struct UART {
   OversampleMode over8;
   void (*send)(struct UART *, uint8_t);             //!< UART send method.   	             @see UART_send
   void (*sendBytes)(struct UART *, uint8_t *, int); //!< UART send multiple bytes method.  @see UART_sendBytes
-  void (*print)(struct UART *, char * ); 						//!< UART print string method.  			 @see UART_print
+  void (*print)(struct UART *, char *);             //!< UART print string method.  			 @see UART_print
   uint8_t (*receive)(struct UART *);                //!< UART receive method.              @see UART_receive
 } UART;
 
-void UART_init(UART *, USART_TypeDef *, GPIO_TypeDef *, uint32_t, OversampleMode);
+DeviceHandle_t UART_init(UART *, char[DEVICE_NAME_LENGTH], USART_TypeDef *, GPIO_TypeDef *, uint32_t, OversampleMode);
 void _UART_setup(UART *);
 
 void UART_send(UART *, uint8_t data);

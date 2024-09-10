@@ -12,6 +12,7 @@
 #include "string.h"
 #include "task.h"
 
+#include "devices.h"
 #include "flash.h"
 #include "uart.h"
 
@@ -32,14 +33,10 @@ typedef struct Shell {
   bool (*runFlash)(struct Shell *, char *);
 } Shell;
 
-void Shell_init(Shell *, UART, Flash);
+void Shell_init(Shell *);
 bool Shell_parse(Shell *, uint8_t *);
 
 bool Shell_runClear(Shell *);
 bool Shell_runFlash(Shell *, char *);
-
-bool usbCommandParse(Flash *, uint8_t *);
-bool usbClearCommandExecute();
-bool usbFlashCommandExecute(Flash *, char *);
 
 #endif

@@ -1,4 +1,5 @@
 /***********************************************************************************
+ *
  * @file        A3G4250D.c                                                         *
  * @author      Matt Ricci                                                         *
  * @addtogroup  A3G4250D                                                           *
@@ -9,6 +10,7 @@
  ***********************************************************************************/
 
 #include "A3G4250D.h"
+#include "devices.h"
 
 /* =============================================================================== */
 /**
@@ -22,7 +24,15 @@
  * @return @c NULL.
  **
  * =============================================================================== */
-void A3G4250D_init(A3G4250D *gyro, GPIO_TypeDef *port, unsigned long cs, float sensitivity, const uint8_t *axes, const int8_t *sign) {
+DeviceHandle_t A3G4250D_init(
+    A3G4250D *gyro,
+    char name[DEVICE_NAME_LENGTH],
+    GPIO_TypeDef *port,
+    unsigned long cs,
+    float sensitivity,
+    const uint8_t *axes,
+    const int8_t *sign
+) {
   SPI_init(&gyro->base, SENSOR_GYRO, SPI1, MODE8, port, cs);
   gyro->sensitivity     = sensitivity;
   gyro->update          = A3G4250D_update;
@@ -41,6 +51,11 @@ void A3G4250D_init(A3G4250D *gyro, GPIO_TypeDef *port, unsigned long cs, float s
   }
 
   A3G4250D_writeRegister(gyro, A3G4250D_CTRL_REG1, A3G4250D_CTRL_REG1_ODR_800Hz | A3G4250D_CTRL_REG1_AXIS_ENABLE | A3G4250D_CTRL_REG1_PD_ENABLE);
+
+  static DeviceHandle_t handle;
+  strcpy(handle.name, name);
+  handle.device = gyro;
+  return handle;
 }
 
 /******************************** DEVICE METHODS ********************************/

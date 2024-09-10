@@ -1,13 +1,15 @@
 /***********************************************************************************
  * @file        control.c                                                          *
  * @author      Matt Ricci                                                         *
+ *                                                                                 *
+ * @todo                                                                                 *
  ***********************************************************************************/
 
 #include "shell.h"
 
-void Shell_init(Shell *shell, UART usb, Flash flash) {
-  shell->usb      = usb;
-  shell->flash    = flash;
+void Shell_init(Shell *shell) {
+  shell->usb      = *(UART *)DeviceHandle_getHandle("USB").device;
+  shell->flash    = *(Flash *)DeviceHandle_getHandle("Flash").device;
   shell->parse    = Shell_parse;
   shell->runClear = Shell_runClear;
   shell->runFlash = Shell_runFlash;

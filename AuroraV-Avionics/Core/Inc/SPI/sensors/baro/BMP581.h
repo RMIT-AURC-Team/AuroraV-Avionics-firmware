@@ -9,8 +9,11 @@
 #ifndef _BMP581_H
 #define _BMP581_H
 
-#include "SPI/spi.h"
 #include "stm32f439xx.h"
+#include "string.h"
+
+#include "devices.h"
+#include "spi.h"
 
 #define BMP581_TEMP_SENSITIVITY  (1.0f / 65535)
 #define BMP581_PRESS_SENSITIVITY (1.0f / 64)
@@ -27,9 +30,9 @@
 #define BMP581_PRESSURE_LSB      0x21
 #define BMP581_PRESSURE_MSB      0x22
 
-#define BMP581_DATA_SIZE  3 // Three bytes per reading
-#define BMP581_DATA_COUNT 2 // Two readings - temperature, pressure
-#define BMP581_DATA_TOTAL (BMP581_DATA_COUNT * BMP581_DATA_SIZE)
+#define BMP581_DATA_SIZE         3 // Three bytes per reading
+#define BMP581_DATA_COUNT        2 // Two readings - temperature, pressure
+#define BMP581_DATA_TOTAL        (BMP581_DATA_COUNT * BMP581_DATA_SIZE)
 
 /**
  * @ingroup Barometer
@@ -56,7 +59,7 @@ typedef struct BMP581 {
   float groundPress;
 } BMP581;
 
-void BMP581_init(BMP581 *, GPIO_TypeDef *, unsigned long, const float, const float);
+DeviceHandle_t BMP581_init(BMP581 *, char[DEVICE_NAME_LENGTH], GPIO_TypeDef *, unsigned long, const float, const float);
 void BMP581_update(BMP581 *);
 void BMP581_readTemp(BMP581 *, float *);
 void BMP581_readPress(BMP581 *, float *);

@@ -2,7 +2,7 @@
  * @file        lora.c                                                             *
  * @author      Matt Ricci                                                         *
  * @addtogroup  LoRa                                                               *
- * @brief       Brief description of the file’s purpose.                           *
+ * @brief       Brief description of the file's purpose.                           *
  *                                                                                 *
  * @todo Implement adjustable packet size                                          *
  * @{                                                                              *
@@ -31,10 +31,18 @@
  * @param bw           Bandwidth setting for the LoRa module.
  * @param sf           Spreading factor for the LoRa module.
  * @param cr           Coding rate for the LoRa module.
- * @return @c NULL.    
+ * @return @c NULL.
  **
  * =============================================================================== */
-void LoRa_init(LoRa *lora, GPIO_TypeDef *port, unsigned long cs, Bandwidth bw, SpreadingFactor sf, CodingRate cr) {
+DeviceHandle_t LoRa_init(
+    LoRa *lora,
+    char name[DEVICE_NAME_LENGTH],
+    GPIO_TypeDef *port,
+    unsigned long cs,
+    Bandwidth bw,
+    SpreadingFactor sf,
+    CodingRate cr
+) {
   SPI_init(&lora->base, COMM_LORA, SPI3, MODE16, port, cs);
   lora->transmit = LoRa_transmit;
 
@@ -55,7 +63,7 @@ void LoRa_init(LoRa *lora, GPIO_TypeDef *port, unsigned long cs, Bandwidth bw, S
   );
   /* clang-format on */
 
-	/** @todo set spreading factor */	
+  /** @todo set spreading factor */
   LoRa_writeRegister(lora, LORA_REG_MODEM_CONFIG2, 0x94);
 
   // Set payload length
@@ -63,6 +71,11 @@ void LoRa_init(LoRa *lora, GPIO_TypeDef *port, unsigned long cs, Bandwidth bw, S
   LoRa_writeRegister(lora, LORA_REG_MAX_PAYLOAD_LENGTH, LORA_MSG_LENGTH);
 
   _LoRa_setMode(lora, STDBY); // Set mode to standby
+
+  DeviceHandle_t handle;
+  strcpy(handle.name, name);
+  handle.device = lora;
+  return handle;
 }
 
 /********************************** PRIVATE METHODS ********************************/
@@ -75,7 +88,7 @@ void LoRa_init(LoRa *lora, GPIO_TypeDef *port, unsigned long cs, Bandwidth bw, S
  *
  * @param *lora        Pointer to LoRa struct.
  * @param mode         Desired operational mode to be set.
- * @return @c NULL.    
+ * @return @c NULL.
  **
  * =============================================================================== */
 void _LoRa_setMode(LoRa *lora, Mode mode) {
@@ -91,7 +104,7 @@ void _LoRa_setMode(LoRa *lora, Mode mode) {
 
 /* =============================================================================== */
 /**
- * @brief Constructs a LoRa packet with accelerometer and gyroscope data, altitude, 
+ * @brief Constructs a LoRa packet with accelerometer and gyroscope data, altitude,
  *        and velocity for transmission.
  *
  * @param id           Identifier for the packet.
@@ -107,59 +120,59 @@ void _LoRa_setMode(LoRa *lora, Mode mode) {
  **
  * =============================================================================== */
 LoRa_Packet LoRa_AVData(
-	uint8_t id, 
-	uint8_t currentState,
-	uint8_t *lAccelData, 
-	uint8_t *hAccelData, 
-	uint8_t lenAccel, 
-  uint8_t *gyroData,
-	uint8_t lenGyro,
-	float altitude,
-	float velocity
+    uint8_t id,
+    uint8_t currentState,
+    uint8_t *lAccelData,
+    uint8_t *hAccelData,
+    uint8_t lenAccel,
+    uint8_t *gyroData,
+    uint8_t lenGyro,
+    float altitude,
+    float velocity
 ) {
   LoRa_Packet msg;
 
-	// Convert altitude float to byte array
-	union {
-		float f;
-		uint8_t b[4];
-	} a;
-	a.f = altitude;
-	
-	// Convert velocity float to byte array
-	union {
-		float f;
-		uint8_t b[4];
-	} v;
-	v.f = velocity;
+  // Convert altitude float to byte array
+  union {
+    float f;
+    uint8_t b[4];
+  } a;
+  a.f = altitude;
 
-	int idx = 0;
+  // Convert velocity float to byte array
+  union {
+    float f;
+    uint8_t b[4];
+  } v;
+  v.f     = velocity;
+
+  int idx = 0;
   // Append to struct data array
-	msg.id = id;
-	msg.data[idx++] = currentState;
-	memcpy(&msg.data[idx], lAccelData, lenAccel);
-	memcpy(&msg.data[idx += lenAccel], hAccelData, lenAccel);
-	memcpy(&msg.data[idx += lenAccel], gyroData, lenGyro);
-	memcpy(&msg.data[idx += lenGyro], a.b, sizeof(float));
-	memcpy(&msg.data[idx += sizeof(float)], v.b, sizeof(float));
+  msg.id          = id;
+  msg.data[idx++] = currentState;
+  memcpy(&msg.data[idx], lAccelData, lenAccel);
+  memcpy(&msg.data[idx += lenAccel], hAccelData, lenAccel);
+  memcpy(&msg.data[idx += lenAccel], gyroData, lenGyro);
+  memcpy(&msg.data[idx += lenGyro], a.b, sizeof(float));
+  memcpy(&msg.data[idx += sizeof(float)], v.b, sizeof(float));
 
   return msg;
 }
 
 LoRa_Packet LoRa_GPSData(
-	uint8_t id, 
-	char *latitude,
-	char *longitude,
-	uint8_t flags
+    uint8_t id,
+    char *latitude,
+    char *longitude,
+    uint8_t flags
 ) {
   LoRa_Packet msg;
 
-	int idx = 0;
+  int idx = 0;
   // Append to struct data array
-	msg.id = id;
-	memcpy(&msg.data[idx], latitude, 15); //!< @todo Move magic number to definition/parameter
-	memcpy(&msg.data[idx += 15], longitude, 15);
-	msg.data[idx += 15] = flags;
+  msg.id = id;
+  memcpy(&msg.data[idx], latitude, 15); //!< @todo Move magic number to definition/parameter
+  memcpy(&msg.data[idx += 15], longitude, 15);
+  msg.data[idx += 15] = flags;
 
   return msg;
 }
@@ -169,7 +182,7 @@ LoRa_Packet LoRa_GPSData(
 /* =============================================================================== */
 /**
  * @brief Transmits data using the LoRa module.
- * 
+ *
  * @param lora         Pointer to LoRa struct.
  * @param pointerdata  Pointer to the data to be transmitted.
  **
@@ -183,11 +196,11 @@ void LoRa_transmit(LoRa *lora, uint8_t *pointerdata) {
     LoRa_writeRegister(lora, LORA_REG_FIFO, pointerdata[i]);
   }
 
-	// Set device to transmit
+  // Set device to transmit
   _LoRa_setMode(lora, TX);
 
-	// Clear the status flags
-  LoRa_writeRegister(lora, LORA_REG_IRQ_FLAGS, 0x08); 
+  // Clear the status flags
+  LoRa_writeRegister(lora, LORA_REG_IRQ_FLAGS, 0x08);
 }
 
 /******************************** INTERFACE METHODS ********************************/
@@ -213,4 +226,4 @@ uint8_t LoRa_readRegister(LoRa *lora, uint8_t address) {
   return (uint8_t)response;
 }
 
-/** @} */
+                                          /** @} */

@@ -8,9 +8,11 @@
 #ifndef _KX134_1211_H
 #define _KX134_1211_H
 
-#include "spi.h"
 #include "stm32f439xx.h"
 #include "string.h"
+
+#include "devices.h"
+#include "spi.h"
 
 #define KX134_1211_SENSITIVITY_32G    (1.0f / 1024.0f)
 #define KX134_1211_SENSITIVITY_16G    (1.0f / 2048.0f)
@@ -31,9 +33,9 @@
 #define KX134_1211_ZOUT_L             0x0C
 #define KX134_1211_ZOUT_H             0x0D
 
-#define KX134_1211_DATA_SIZE  2 // Two bytes per axis
-#define KX134_1211_DATA_COUNT 3 // Three axes - X Y Z
-#define KX134_1211_DATA_TOTAL (KX134_1211_DATA_COUNT * KX134_1211_DATA_SIZE)
+#define KX134_1211_DATA_SIZE          2 // Two bytes per axis
+#define KX134_1211_DATA_COUNT         3 // Three axes - X Y Z
+#define KX134_1211_DATA_TOTAL         (KX134_1211_DATA_COUNT * KX134_1211_DATA_SIZE)
 
 /**
  * @ingroup Accelerometer
@@ -56,7 +58,7 @@ typedef struct KX134_1211 {
   float accelData[KX134_1211_DATA_COUNT];                           //!< Processed accelerations array
 } KX134_1211;
 
-void KX134_1211_init(KX134_1211 *, GPIO_TypeDef *, unsigned long, const uint8_t, const uint8_t *, const int8_t *);
+DeviceHandle_t KX134_1211_init(KX134_1211 *, char[DEVICE_NAME_LENGTH], GPIO_TypeDef *, unsigned long, const uint8_t, const uint8_t *, const int8_t *);
 void KX134_1211_update(KX134_1211 *);
 void KX134_1211_readAccel(KX134_1211 *, float *);
 void KX134_1211_readRawBytes(KX134_1211 *, uint8_t *);

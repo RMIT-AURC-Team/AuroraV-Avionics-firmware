@@ -5,6 +5,9 @@
 
 #include "lDataAcquisition.h"
 
+extern EventGroupHandle_t xTaskEnableGroup;
+extern SemaphoreHandle_t xUsbMutex;
+extern MessageBufferHandle_t xUsbTxBuff;
 extern long lDummyIdx;
 char LdebugStr[100] = {};
 
@@ -62,54 +65,63 @@ void vLDataAcquisition(void *argument) {
   const TickType_t xFrequency = pdMS_TO_TICKS(20); // 50Hz
   const TickType_t blockTime  = pdMS_TO_TICKS(0);
 
-  ctxLDataAcquisition *ctx    = (ctxLDataAcquisition *)argument;
+  ctxLDataAcquisition *ctxPtr = (ctxLDataAcquisition *)argument;
+  BMP581 *baro              	= DeviceHandle_getHandle("Baro").device;
+	
+	DeviceHandle_t accelHandle = DeviceHandle_getHandle("Accel");
+	KX134_1211 *accel           = accelHandle.device;
 
   for (;;) {
     // Block until 20ms interval
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
-
+		
+		// Retrieve objects from context
+		ctxLDataAcquisition ctx = *ctxPtr;
+		ctxState *state 				= ctx.state;
+		MemBuff *mem						= ctx.mem;
+		
     // Update baro data
-#ifdef DUMMY
-    const unsigned long press_length = 0x00003A5C;
-    if (lDummyIdx < PRESS_LENGTH - 1) {
-      uint32_t tempPress = (uint32_t)press[lDummyIdx + 1] << 16 | press[lDummyIdx];
-      memcpy(&ctx->baro.press, &tempPress, sizeof(float));
-      lDummyIdx += 2;
-    }
-#else
-    ctx->baro.update(&ctx->baro);
-#endif
+		#ifdef DUMMY
+			const unsigned long press_length = 0x00003A5C;
+			if (lDummyIdx < PRESS_LENGTH - 1) {
+				uint32_t tempPress = (uint32_t)press[lDummyIdx + 1] << 16 | press[lDummyIdx];
+				memcpy(&baro->press, &tempPress, sizeof(float));
+				lDummyIdx += 2;
+			}
+		#else
+			baro->update(baro);
+		#endif
 
     // Calculate altitude
-    ctx->state.altitude = 44330 * (1.0 - pow(ctx->baro.press / ctx->baro.groundPress, 0.1903));
+    state->altitude = 44330 * (1.0 - pow(baro->press / baro->groundPress, 0.1903));
 
     // Add sensor data and barometer data to dataframe
-    ctx->mem.append(&ctx->mem, HEADER_LOWRES);
-    ctx->mem.appendBytes(&ctx->mem, ctx->baro.rawTemp, BMP581_DATA_SIZE);
-    ctx->mem.appendBytes(&ctx->mem, ctx->baro.rawPress, BMP581_DATA_SIZE);
+    mem->append(mem, HEADER_LOWRES);
+    mem->appendBytes(mem, baro->rawTemp, BMP581_DATA_SIZE);
+    mem->appendBytes(mem, baro->rawPress, BMP581_DATA_SIZE);
 
     // Only run calculations when enabled
-    EventBits_t uxBits = xEventGroupWaitBits(ctx->xTaskEnableGroup, GROUP_TASK_ENABLE_LOWRES, pdFALSE, pdFALSE, blockTime);
+    EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, GROUP_TASK_ENABLE_LOWRES, pdFALSE, pdFALSE, blockTime);
     if (uxBits & GROUP_TASK_ENABLE_LOWRES) {
       // Calculate state
-      z.pData[0] = ctx->state.altitude;
-      z.pData[1] = (ctx->state.cosine * 9.81 * ctx->accel->accelData[ZINDEX] - 9.81); // Acceleration measured in m/s^2
+      z.pData[0] = state->altitude;
+      z.pData[1] = (state->cosine * 9.81 * accel->accelData[ZINDEX] - 9.81); // Acceleration measured in m/s^2
       kf.update(&kf, &z);
 
-      ctx->state.velocity = kf.x.pData[1];
-      ctx->state.avgPress.append(&ctx->state.avgPress, ctx->baro.press);
-      ctx->state.avgVel.append(&ctx->state.avgVel, ctx->state.velocity);
+      state->velocity = kf.x.pData[1];
+      state->avgPress.append(&state->avgPress, baro->press);
+      state->avgVel.append(&state->avgVel, state->velocity);
     }
 
-#ifdef DEBUG
-    //! @todo extract debug print to function
-    //! @todo move debug function to new source file with context as parameter
-    if ((xSemaphoreTake(ctx->xUsbMutex, pdMS_TO_TICKS(0))) == pdTRUE) {
-      char debugStr[100];
-      snprintf(debugStr, 100, "[LDataAcq] %d\tBaro\tPressure: %.0f\n\r", lDummyIdx / 2, ctx->baro.press);
-      xMessageBufferSend(ctx->xUsbTxBuff, (void *)debugStr, 100, pdMS_TO_TICKS(10));
-      xSemaphoreGive(ctx->xUsbMutex);
-    }
-#endif
+		#ifdef DEBUG
+			//! @todo extract debug print to function
+			//! @todo move debug function to new source file with context as parameter
+			if ((xSemaphoreTake(xUsbMutex, pdMS_TO_TICKS(0))) == pdTRUE) {
+				char debugStr[100];
+				snprintf(debugStr, 100, "[LDataAcq] %d\tBaro\tPressure: %.0f\n\r", lDummyIdx / 2, baro->press);
+				xMessageBufferSend(xUsbTxBuff, (void *)debugStr, 100, pdMS_TO_TICKS(10));
+				xSemaphoreGive(xUsbMutex);
+			}
+		#endif
   }
 }

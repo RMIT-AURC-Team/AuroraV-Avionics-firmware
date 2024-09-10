@@ -23,15 +23,8 @@
 void vLDataAcquisition(void *pvParameters);
 
 typedef struct {
-  ctxState state;
-  MemBuff mem;
-  // FreeRTOS objects
-  EventGroupHandle_t xTaskEnableGroup;
-  SemaphoreHandle_t xUsbMutex;
-  MessageBufferHandle_t xUsbTxBuff;
-  // Sensor objects
-  BMP581 baro;
-  KX134_1211 *accel;
+  ctxState *state;
+  MemBuff *mem;
 } ctxLDataAcquisition;
 
 #endif
