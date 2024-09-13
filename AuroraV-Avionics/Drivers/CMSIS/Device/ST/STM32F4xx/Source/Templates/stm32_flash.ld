@@ -183,7 +183,14 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(4);
   } >RAM
-
+  
+  .device_vector : 
+  {
+	__device_vector_start = .;
+	*(.device_*);
+	__device_vector_end = .;
+  } >RAM
+  
   /* Remove information from the standard libraries */
   /DISCARD/ :
   {
