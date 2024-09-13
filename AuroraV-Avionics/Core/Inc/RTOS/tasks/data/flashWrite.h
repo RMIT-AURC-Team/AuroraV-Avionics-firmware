@@ -12,12 +12,12 @@
 
 typedef struct {
   enum State *currentState;
-  MemBuff mem;
+  MemBuff *mem;
 } ctxIdle;
 
 typedef struct {
   enum State *currentState;
-  MemBuff mem;
+  MemBuff *mem;
 } ctxFlashBuffer;
 
 void vIdle(void *pvParameters);
