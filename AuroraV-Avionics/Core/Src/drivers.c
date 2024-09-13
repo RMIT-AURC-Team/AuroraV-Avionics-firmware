@@ -176,9 +176,9 @@ void TIM6init(void) {
   __asm("NOP");
   __asm("NOP");
   TIM6->CR1 |= TIM_CR1_OPM;
-  TIM6->PSC |= 20;
-  TIM6->ARR &= (~(TIM_ARR_ARR_Msk));
-  TIM6->ARR |= 0X20; // 0.0005S delay
+//  TIM6->PSC |= 20;
+//  TIM6->ARR &= (~(TIM_ARR_ARR_Msk));
+//  TIM6->ARR |= 0X20; // 0.0005S delay
 }
 
 void TIM7init(void) {
@@ -202,16 +202,16 @@ void TIM7init(void) {
 void buzzer(void) {
   TIM6->ARR &= (~(TIM_ARR_ARR_Msk));
   TIM6->PSC &= (~(TIM_PSC_PSC_Msk));
-  TIM6->ARR |= 80;
-  TIM6->PSC |= 128;
-  TIM7->CR1 |= TIM_CR1_CEN;
+  TIM6->ARR |= 23855;
+  TIM6->PSC |= 0;
   TIM6->CR1 |= TIM_CR1_CEN;    // ensures timer is enabled
-  while ((TIM7->SR & TIM_SR_UIF) == 0) {
-    GPIOB->ODR ^= 0X8000;
+	GPIOB->ODR |= 0x8000;
+
+  while (1) {
+    GPIOB->ODR ^= 0x8000;
     while ((TIM6->SR & TIM_SR_UIF) == 0);
     TIM6->SR &= ~(TIM_SR_UIF); // clears UIF
-    TIM6->ARR |= 80;
+    TIM6->ARR |= 23855;
     TIM6->CR1 |= TIM_CR1_CEN;  // Enables counter
   }
-  TIM7->SR &= ~(TIM_SR_UIF);
 }

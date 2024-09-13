@@ -9,7 +9,6 @@ extern MessageBufferHandle_t xUsbTxBuff;
 extern SemaphoreHandle_t xUsbMutex;
 
 void vGpsTransmit(void *argument) {
-  TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(500);
   const TickType_t blockTime  = pdMS_TO_TICKS(0);
   char gpsString[100];
@@ -19,6 +18,7 @@ void vGpsTransmit(void *argument) {
 
   for (;;) {
     // Block until 500ms interval
+		TickType_t xLastWakeTime = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
     GPS_message(gpsString);

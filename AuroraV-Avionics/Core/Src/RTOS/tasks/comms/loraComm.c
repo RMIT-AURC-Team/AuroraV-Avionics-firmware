@@ -51,7 +51,6 @@ void vLoRaTransmit(void *argument) {
  * queue.
  */
 void vLoRaSample(void *argument) {
-  TickType_t xLastWakeTime;
   const TickType_t blockTime  = pdMS_TO_TICKS(0);
   const TickType_t xFrequency = pdMS_TO_TICKS(250);
 
@@ -59,6 +58,7 @@ void vLoRaSample(void *argument) {
 
   for (;;) {
     // Block until 250ms interval
+		TickType_t xLastWakeTime = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
     // Create AVData packet with current data

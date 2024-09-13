@@ -73,6 +73,7 @@ void vLDataAcquisition(void *argument) {
 
   for (;;) {
     // Block until 20ms interval
+		TickType_t xLastWakeTime = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 		
 		// Retrieve objects from context

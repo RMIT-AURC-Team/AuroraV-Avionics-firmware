@@ -18,8 +18,9 @@ void vIdle(void *argument) {
   ctxIdle *ctx = (ctxIdle *)argument;
 
   for (;;) {
+		MemBuff *mem = ctx->mem;
     // Write if a page is available in the buffer
-    if (*ctx->currentState >= LAUNCH && ctx->mem.pageReady)
+    if (*ctx->currentState >= LAUNCH && mem->pageReady)
       xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_FLASH);
   }
 }
@@ -43,10 +44,11 @@ void vFlashBuffer(void *argument) {
   uint8_t outBuff[flash->pageSize];
 
   for (;;) {
+		MemBuff *mem = ctx->mem;
     // Wait for write flag to be ready, clear flag on exit
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, GROUP_TASK_ENABLE_FLASH, pdTRUE, pdFALSE, timeout);
     if (uxBits & GROUP_TASK_ENABLE_FLASH) {
-      bool success = ctx->mem.readPage(&ctx->mem, outBuff); // Flush data to output buffer
+      bool success = mem->readPage(mem, outBuff); // Flush data to output buffer
       if (success) {
         // Write data to flash memory
         flash->writePage(flash, pageAddr, outBuff);

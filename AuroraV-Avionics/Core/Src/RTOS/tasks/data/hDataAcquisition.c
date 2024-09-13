@@ -29,7 +29,6 @@ extern SemaphoreHandle_t xUsbMutex;
 void vHDataAcquisition(void *argument) {
   float dt = 0.002;
 
-  TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(2); // 500Hz
   const TickType_t blockTime  = pdMS_TO_TICKS(0);
 
@@ -43,6 +42,7 @@ void vHDataAcquisition(void *argument) {
 	
   for (;;) {
     // Block until 2ms interval
+		TickType_t xLastWakeTime = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
 		// Retrieve objects from context

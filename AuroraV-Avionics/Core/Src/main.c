@@ -37,6 +37,11 @@ SemaphoreHandle_t xUsbMutex;
  * =============================================================================== */
 
 int main(void) {
+	
+	#ifdef TRACE
+		xTraceInitialize();
+	#endif
+
   // Initialise clock sources and peripheral busses
   configure_RCC_APB1();
   configure_RCC_APB2();
@@ -58,10 +63,6 @@ int main(void) {
   CANGPIO_config();
   CAN_Peripheral_config();
 
-	#ifdef TRACE
-		xTraceEnable(TRC_START);
-	#endif
-
 	#ifdef FLIGHT_TEST
 		GPIOB->ODR ^= 0x8000;
 		GPIOD->ODR ^= 0x8000;
@@ -75,7 +76,7 @@ int main(void) {
 
   // Create and start the system initialization task
   TaskHandle_t xSystemInitHandle;
-  xTaskCreate(vSystemInit, "SystemInit", 8192, NULL, configMAX_PRIORITIES - 1, &xSystemInitHandle);
+  xTaskCreate(vSystemInit, "SystemInit", 8192, NULL, configMAX_PRIORITIES, &xSystemInitHandle);
   vTaskStartScheduler();
 
   // The scheduler should never return
@@ -86,7 +87,9 @@ int main(void) {
 /**
  * @brief Initialisation task for device drivers
  *
- * @return void
+ * Performs the initialization of system device drivers and adds their handles to the
+ * device vector.
+ **
  * =============================================================================== */
 
 void vDeviceInit() {
@@ -175,7 +178,7 @@ void vDeviceInit() {
 void vSystemInit(void *argument) {
 
   // Allow time for external devices to finish startup sequences
-  //vTaskDelay(pdMS_TO_TICKS(50));
+  vTaskDelay(pdMS_TO_TICKS(10));
 
   vTaskSuspendAll();
 
@@ -265,13 +268,13 @@ void vSystemInit(void *argument) {
   // Create idle task (responsible for enabling flash operations)
   static ctxIdle idle;
   idle.currentState = &state.currentState;
-  idle.mem          = mem;
+  idle.mem          = &mem;
   xTaskCreate(vIdle, "Idle", 128, &idle, tskIDLE_PRIORITY, &handles.xIdleHandle);
 
   // Create flash write task
   static ctxFlashBuffer flashBuffer;
   flashBuffer.currentState = &state.currentState;
-  flashBuffer.mem          = mem;
+  flashBuffer.mem          = &mem;
   xTaskCreate(vFlashBuffer, "FlashData", 128, &flashBuffer, configMAX_PRIORITIES - 1, &handles.xFlashBufferHandle);
 
   /* --------------------------------------------  LoRa Communication ---------------------------------------------------*/
@@ -310,6 +313,10 @@ void vSystemInit(void *argument) {
   xTaskCreate(vGpsTransmit, "GpsRead", 512, &gpsTransmit, configMAX_PRIORITIES - 6, &handles.xGpsTransmitHandle);
 
   xTaskResumeAll();
+	
+	#ifdef TRACE
+	xTraceEnable(TRC_START);
+	#endif
 
   // Suspend the system initialization task (only needs to run once)
   vTaskSuspend(NULL);

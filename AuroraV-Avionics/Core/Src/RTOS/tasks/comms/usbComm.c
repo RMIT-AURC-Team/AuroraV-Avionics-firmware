@@ -15,7 +15,7 @@ uint8_t usbRxBuffIdx = 0;
  *
  */
 void vUsbTransmit(void *argument) {
-  const TickType_t timeout = pdMS_TO_TICKS(0);
+  const TickType_t timeout = pdMS_TO_TICKS(portMAX_DELAY );
   uint8_t rxData[100];
 
   ctxUsbTransmit *ctx = (ctxUsbTransmit *)argument;
@@ -41,9 +41,10 @@ void vUsbTransmit(void *argument) {
  * This task additionally handles specific control characters:
  * 	 - `<Ctrl-C>` clears the terminal.
  * 	 - `<Backspace>` erases the last character.
+ * @todo Move calls to shell scripts to new thread
  */
 void vUsbReceive(void *argument) {
-  const TickType_t timeout = pdMS_TO_TICKS(20);
+  const TickType_t timeout = pdMS_TO_TICKS(portMAX_DELAY );
   uint8_t rxData;
 
   ctxUsbReceive *ctx = (ctxUsbReceive *)argument;

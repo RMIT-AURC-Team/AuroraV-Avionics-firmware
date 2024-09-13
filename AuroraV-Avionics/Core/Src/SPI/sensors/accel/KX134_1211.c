@@ -53,7 +53,7 @@ DeviceHandle_t KX134_1211_init(
   KX134_1211_writeRegister(accel, 0x7F, 0x00);
   KX134_1211_writeRegister(accel, 0x1C, 0x00);
   KX134_1211_writeRegister(accel, 0x1C, 0x80);
-
+	
   const uint32_t superDelay = 0xFFFF;
   volatile uint8_t counter  = 0;
 

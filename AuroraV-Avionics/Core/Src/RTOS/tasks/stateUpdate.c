@@ -19,7 +19,6 @@ extern SemaphoreHandle_t xUsbMutex;
  *       (e.g. xFrequency = pdMS_TO_TICKS(STATE_UPDATE_PERIOD);).
  */
 void vStateUpdate(void *argument) {
-  TickType_t xLastWakeTime;
   const TickType_t xFrequency = pdMS_TO_TICKS(20); // 50Hz
 
   unsigned int CANHigh        = 0;
@@ -38,6 +37,7 @@ void vStateUpdate(void *argument) {
 
   for (;;) {
     // Block until 20ms interval
+		TickType_t xLastWakeTime = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 		
 		// Retrieve objects from context
@@ -104,10 +104,10 @@ void vStateUpdate(void *argument) {
           GPIOB->ODR ^= 0x8000;
           GPIOD->ODR ^= 0x8000;
         #endif
-        vTaskDelete(ctx.handles->xHDataAcquisitionHandle);
-        vTaskDelete(ctx.handles->xLDataAcquisitionHandle);
-        vTaskDelete(ctx.handles->xLoRaSampleHandle);
-        //xTaskCreate(ctx.handles->vGpsRead, "GpsRead", 512, NULL, configMAX_PRIORITIES - 6, &ctx.handles->xGpsReadHandle);
+//        vTaskDelete(ctx.handles->xHDataAcquisitionHandle);
+//        vTaskDelete(ctx.handles->xLDataAcquisitionHandle);
+//        vTaskDelete(ctx.handles->xLoRaSampleHandle);
+        //xTaskCreate(vGpsRead, "GpsRead", 512, NULL, configMAX_PRIORITIES - 6, &ctx.handles->xGpsReadHandle);
         state->currentState = APOGEE;
         // Send transmission to trigger apogee E-matches
       }
