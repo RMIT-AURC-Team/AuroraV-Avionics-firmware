@@ -1,6 +1,10 @@
-/* ===================================================================== *
- *                  HIGH RESOLUTION DATA ACQUISITION                     *
- * ===================================================================== */
+/***********************************************************************************
+ * @file        hDataAcquisition.c                                                 *
+ * @author      Matt Ricci                                                         *
+ * @addtogroup  RTOS			                                                         *
+ *                                                                                 *
+ * @{                                                                              *
+ ***********************************************************************************/
 
 #include "HDataAcquisition.h"
 
@@ -11,6 +15,7 @@ extern EventGroupHandle_t xTaskEnableGroup;
 extern MessageBufferHandle_t xUsbTxBuff;
 extern SemaphoreHandle_t xUsbMutex;
 
+/* =============================================================================== */
 /**
  * @brief High-frequency data acquisition task.
  *
@@ -25,7 +30,8 @@ extern SemaphoreHandle_t xUsbMutex;
  *       frequency (e.g. dt = 1/SAMPLE_PERIOD_HIGH;).
  * @todo Refactor *ctx definition to *ctxPtr, add dereferenced context after
  *       task unblock to improve readability of context access.
- */
+ **
+ * =============================================================================== */
 void vHDataAcquisition(void *argument) {
   float dt = 0.002;
 
@@ -154,3 +160,5 @@ void vHDataAcquisition(void *argument) {
 		#endif
   }
 }
+
+/** @} */

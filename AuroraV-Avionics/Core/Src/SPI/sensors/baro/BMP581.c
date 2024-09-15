@@ -50,6 +50,9 @@ DeviceHandle_t BMP581_init(
     counter++;
   }
 
+	uint8_t chipID = 0;
+  chipID = BMP581_readRegister(baro, 0x01);
+	
   BMP581_writeRegister(baro, BMP581_ODR_CFG, BMP581_ODR_CFG_PWR | BMP581_ODR_CFG_DEEP_DIS);
   uint8_t OSRCFG = BMP581_readRegister(baro, BMP581_OSR_CFG);
   BMP581_writeRegister(baro, BMP581_OSR_CFG, (BMP581_OSR_CFG_RESERVED & OSRCFG) | BMP581_OSR_CFG_PRESS_EN);

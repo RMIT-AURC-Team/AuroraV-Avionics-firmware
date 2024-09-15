@@ -1,6 +1,10 @@
-/* ===================================================================== *
- *                            STATE MANAGEMENT                           *
- * ===================================================================== */
+/***********************************************************************************
+ * @file        stateUpdate.c                                                      *
+ * @author      Matt Ricci                                                         *
+ * @addtogroup  RTOS			                                                         *
+ *                                                                                 *
+ * @{                                                                              *
+ ***********************************************************************************/
 
 #include "stateUpdate.h"
 
@@ -8,6 +12,7 @@ extern EventGroupHandle_t xTaskEnableGroup;
 extern MessageBufferHandle_t xUsbTxBuff;
 extern SemaphoreHandle_t xUsbMutex;
 
+/* =============================================================================== */
 /**
  * @brief State update task.
  *
@@ -17,7 +22,8 @@ extern SemaphoreHandle_t xUsbMutex;
  *
  * @todo Add definition for update period and replace assignments for frequency
  *       (e.g. xFrequency = pdMS_TO_TICKS(STATE_UPDATE_PERIOD);).
- */
+ **
+ * =============================================================================== */
 void vStateUpdate(void *argument) {
   const TickType_t xFrequency = pdMS_TO_TICKS(20); // 50Hz
 
@@ -33,7 +39,7 @@ void vStateUpdate(void *argument) {
   ctxStateUpdate *ctxPtr 		 = (ctxStateUpdate *)argument;
 	
 	DeviceHandle_t accelHandle = DeviceHandle_getHandle("Accel");
-	KX134_1211 *accel           = accelHandle.device;
+	KX134_1211 *accel          = accelHandle.device;
 
   for (;;) {
     // Block until 20ms interval
@@ -139,3 +145,5 @@ void vStateUpdate(void *argument) {
     }
   }
 }
+
+/** @} */

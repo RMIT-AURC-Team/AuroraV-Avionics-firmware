@@ -15,7 +15,7 @@ extern MessageBufferHandle_t xLoRaTxBuff;
  * sends it via the SX1272. The ready flag is cleared after transmission.
  */
 void vLoRaTransmit(void *argument) {
-  const TickType_t blockTime = pdMS_TO_TICKS(250);
+  const TickType_t blockTime = portMAX_DELAY;
   uint8_t rxData[LORA_MSG_LENGTH];
 
   ctxLoRaTransmit *ctx = (ctxLoRaTransmit *)argument;
@@ -24,7 +24,6 @@ void vLoRaTransmit(void *argument) {
     // Wait for SX1272 to be ready for transmission
     EventBits_t uxBits = xEventGroupWaitBits(xMsgReadyGroup, GROUP_MESSAGE_READY_LORA, pdFALSE, pdFALSE, blockTime);
     if ((uxBits & GROUP_MESSAGE_READY_LORA)) {
-
       // Wait to receive message in buffer
       size_t xReceivedBytes = xMessageBufferReceive(
           xLoRaTxBuff,
@@ -32,7 +31,6 @@ void vLoRaTransmit(void *argument) {
           sizeof(rxData),
           blockTime
       );
-
       // Transmit if message is available
       if (xReceivedBytes) {
         ctx->lora.transmit(&ctx->lora, rxData);

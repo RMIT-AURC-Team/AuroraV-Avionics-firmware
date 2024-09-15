@@ -1,7 +1,10 @@
-
-/* ===================================================================== *
- *                    LOW RESOLUTION DATA ACQUISITION                    *
- * ===================================================================== */
+/***********************************************************************************
+ * @file        lDataAcquisition.c                                                 *
+ * @author      Matt Ricci                                                         *
+ * @addtogroup  RTOS			                                                         *
+ *                                                                                 *
+ * @{                                                                              *
+ ***********************************************************************************/
 
 #include "lDataAcquisition.h"
 
@@ -11,6 +14,7 @@ extern MessageBufferHandle_t xUsbTxBuff;
 extern long lDummyIdx;
 char LdebugStr[100] = {};
 
+/* =============================================================================== */
 /**
  * @brief Low-frequency data acquisition and altitude estimation function.
  *
@@ -24,7 +28,8 @@ char LdebugStr[100] = {};
  *
  * @todo Add definition for sample period and replace assignments for dt and
  *       frequency (e.g. dt = 1/SAMPLE_PERIOD_LOW;).
- */
+ **
+ * =============================================================================== */
 void vLDataAcquisition(void *argument) {
   float dt = 0.020;
   KalmanFilter kf;
@@ -126,3 +131,5 @@ void vLDataAcquisition(void *argument) {
 		#endif
   }
 }
+
+/** @} */

@@ -246,7 +246,7 @@
               <MiscControls>-mfloat-abi=hard -ffast-math -mfpu=fpv4-sp-d16</MiscControls>
               <Define>__TARGET_FPU_VFP</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Core\Inc;..\Core\Inc\CAN;..\Core\Inc\RTOS;..\Core\Inc\RTOS\tasks;..\Core\Inc\RTOS\tasks\comms;..\Core\Inc\RTOS\tasks\data;..\Core\Inc\SPI;..\Core\Inc\SPI\flash;..\Core\Inc\SPI\lora;..\Core\Inc\SPI\sensors;..\Core\Inc\SPI\sensors\accel;..\Core\Inc\SPI\sensors\baro;..\Core\Inc\SPI\sensors\gyro;..\Core\Inc\UART;..\Core\Inc\UART\GPS;..\Core\Inc\UART\USB;..\Lib\inc;..\Lib\inc\CORE;..\Lib\inc\CORE\Include;..\Lib\inc\DSP;..\Lib\inc\DSP\Include;..\Lib\inc\DSP\Include\dsp;..\Lib\inc\DSP\PrivateInclude;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Data</IncludePath>
+              <IncludePath>..\Core\Inc;..\Core\Inc\CAN;..\Core\Inc\RTOS;..\Core\Inc\RTOS\tasks;..\Core\Inc\RTOS\tasks\comms;..\Core\Inc\RTOS\tasks\data;..\Core\Inc\SPI;..\Core\Inc\SPI\flash;..\Core\Inc\SPI\lora;..\Core\Inc\SPI\sensors;..\Core\Inc\SPI\sensors\accel;..\Core\Inc\SPI\sensors\baro;..\Core\Inc\SPI\sensors\gyro;..\Core\Inc\UART;..\Core\Inc\UART\GPS;..\Core\Inc\UART\USB;..\Lib\inc;..\Lib\inc\CORE;..\Lib\inc\CORE\Include;..\Lib\inc\DSP;..\Lib\inc\DSP\Include;..\Lib\inc\DSP\Include\dsp;..\Lib\inc\DSP\PrivateInclude;..\Middlewares\Third_Party\FreeRTOS\Source\include;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM4F;..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS;..\Drivers\CMSIS\Device\ST\STM32F4xx\Include;..\Drivers\CMSIS\Include;..\Drivers\STM32F4xx_HAL_Driver\Inc;..\Data;..\Middlewares\Third_Party\TraceRecorder\config;..\Middlewares\Third_Party\TraceRecorder\include</IncludePath>
             </VariousControls>
           </Carm>
           <Aarm>
@@ -358,6 +358,11 @@
               <FileName>drivers.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\drivers.c</FilePath>
+            </File>
+            <File>
+              <FileName>devices.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\devices.c</FilePath>
             </File>
             <File>
               <FileName>libavionics.a</FileName>

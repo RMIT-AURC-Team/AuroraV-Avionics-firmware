@@ -178,7 +178,7 @@ void vDeviceInit() {
 void vSystemInit(void *argument) {
 
   // Allow time for external devices to finish startup sequences
-  vTaskDelay(pdMS_TO_TICKS(10));
+  vTaskDelay(pdMS_TO_TICKS(100));
 
   vTaskSuspendAll();
 
@@ -275,7 +275,7 @@ void vSystemInit(void *argument) {
   static ctxFlashBuffer flashBuffer;
   flashBuffer.currentState = &state.currentState;
   flashBuffer.mem          = &mem;
-  xTaskCreate(vFlashBuffer, "FlashData", 128, &flashBuffer, configMAX_PRIORITIES - 1, &handles.xFlashBufferHandle);
+  xTaskCreate(vFlashBuffer, "FlashData", 512, &flashBuffer, configMAX_PRIORITIES - 1, &handles.xFlashBufferHandle);
 
   /* --------------------------------------------  LoRa Communication ---------------------------------------------------*/
 

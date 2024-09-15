@@ -15,7 +15,7 @@ uint8_t usbRxBuffIdx = 0;
  *
  */
 void vUsbTransmit(void *argument) {
-  const TickType_t timeout = pdMS_TO_TICKS(portMAX_DELAY );
+  const TickType_t timeout = portMAX_DELAY;
   uint8_t rxData[100];
 
   ctxUsbTransmit *ctx = (ctxUsbTransmit *)argument;
@@ -44,7 +44,7 @@ void vUsbTransmit(void *argument) {
  * @todo Move calls to shell scripts to new thread
  */
 void vUsbReceive(void *argument) {
-  const TickType_t timeout = pdMS_TO_TICKS(portMAX_DELAY );
+  const TickType_t timeout = portMAX_DELAY;
   uint8_t rxData;
 
   ctxUsbReceive *ctx = (ctxUsbReceive *)argument;
