@@ -42,12 +42,14 @@ static void Flash_exec(Shell *shell, uint8_t *flags) {
   }
   // flash read all
   else if (!strcmp(flags, CMD_FLASH_READ_ALL)) {
+		vTaskSuspendAll();
     volatile uint8_t pageData[256];
     for (long i = 0; i < flash->pageCount; i++) {
       flash->readPage(flash, i * 0x100, pageData);
       for (int j = 0; j < flash->pageSize; j++)
         usb->send(usb, pageData[j]);
-    }
+		}
+		xTaskResumeAll();
   }
 }
 

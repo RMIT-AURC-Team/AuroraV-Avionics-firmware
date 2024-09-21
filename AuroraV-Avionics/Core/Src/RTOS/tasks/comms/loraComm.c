@@ -18,7 +18,7 @@ void vLoRaTransmit(void *argument) {
   const TickType_t blockTime = portMAX_DELAY;
   uint8_t rxData[LORA_MSG_LENGTH];
 
-  ctxLoRaTransmit *ctx = (ctxLoRaTransmit *)argument;
+	LoRa *lora = DeviceHandle_getHandle("LoRa").device;
 
   for (;;) {
     // Wait for SX1272 to be ready for transmission
@@ -33,7 +33,7 @@ void vLoRaTransmit(void *argument) {
       );
       // Transmit if message is available
       if (xReceivedBytes) {
-        ctx->lora.transmit(&ctx->lora, rxData);
+        lora->transmit(lora, rxData);
         xEventGroupClearBits(xMsgReadyGroup, GROUP_MESSAGE_READY_LORA);
       }
     }
@@ -51,14 +51,14 @@ void vLoRaTransmit(void *argument) {
 void vLoRaSample(void *argument) {
   const TickType_t blockTime  = pdMS_TO_TICKS(0);
   const TickType_t xFrequency = pdMS_TO_TICKS(250);
-
-  ctxLoRaSample *ctx          = (ctxLoRaSample *)argument;
 		
   A3G4250D *gyro      = DeviceHandle_getHandle("Gyro").device;
 	KX134_1211 *lAccel	= DeviceHandle_getHandle("LAccel").device;	
 	KX134_1211 *hAccel	= DeviceHandle_getHandle("HAccel").device;
 	
-	float *altitude = StateHandle_getHandle("Altitude").state;
+	enum State *flightState = StateHandle_getHandle("FlightState").state;
+	float *altitude 				= StateHandle_getHandle("Altitude").state;
+	float *velocity 				= StateHandle_getHandle("Velocity").state;
 
   for (;;) {
     // Block until 250ms interval
@@ -68,14 +68,14 @@ void vLoRaSample(void *argument) {
     // Create AVData packet with current data
     LoRa_Packet avData = LoRa_AVData(
         LORA_HEADER_AV_DATA,
-        ctx->state.currentState,
+        *flightState,
         lAccel->rawAccelData,
         hAccel->rawAccelData,
         KX134_1211_DATA_TOTAL,
         gyro->rawGyroData,
         A3G4250D_DATA_TOTAL,
         *altitude,
-        ctx->state.velocity
+        *velocity
     );
 
     // Add packet to queue

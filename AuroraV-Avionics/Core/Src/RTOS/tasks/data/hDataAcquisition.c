@@ -36,23 +36,27 @@ void vHDataAcquisition(void *argument) {
   const TickType_t xFrequency = pdMS_TO_TICKS(2); // 500Hz
   const TickType_t blockTime  = pdMS_TO_TICKS(0);
 
-  ctxHDataAcquisition *ctxPtr = (ctxHDataAcquisition *)argument;
+	// Devices
+  MemBuff *mem                = (MemBuff *)argument;
   KX134_1211 *hAccel          = DeviceHandle_getHandle("HAccel").device;
   KX134_1211 *lAccel          = DeviceHandle_getHandle("LAccel").device;
   A3G4250D *gyro              = DeviceHandle_getHandle("Gyro").device;
 
+	// Selected accelerometer (high/low)
 	DeviceHandle_t accelHandle = DeviceHandle_getHandle("Accel");
 	KX134_1211 *accel          = accelHandle.device;
+	
+	// State variables
+	float *tilt 		 = StateHandle_getHandle("Tilt").state;
+	float *cosine		 = StateHandle_getHandle("Cosine").state;
+	float *vLaunch 	 = StateHandle_getHandle("LaunchVector").state;
+	float *vAttitude = StateHandle_getHandle("AttitudeVector").state;
+	Quaternion *qRot = StateHandle_getHandle("RotationQuaternion").state;
 	
   for (;;) {
     // Block until 2ms interval
 		TickType_t xLastWakeTime = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
-
-		// Retrieve objects from context
-    ctxHDataAcquisition ctx = *ctxPtr;
-		ctxState *state 				= ctx.state;
-		MemBuff *mem						= ctx.mem;
 		
     // Select which accelerometer to use
     accelHandle.ref->device = (accel->accelData[ZINDEX] < 15) ? lAccel : hAccel;
@@ -107,10 +111,17 @@ void vHDataAcquisition(void *argument) {
 				hDummyIdx += 2;
 			}
 		#else
+		taskENTER_CRITICAL();
 			lAccel->update(lAccel);
 			hAccel->update(hAccel);
 			gyro->update(gyro);
+		taskEXIT_CRITICAL();
 		#endif
+		
+		if (lAccel->accelData[0] > 2 || lAccel->accelData[1] > 2 || lAccel->accelData[2] > 2
+		||	hAccel->accelData[0] > 2 || hAccel->accelData[1] > 2 || hAccel->accelData[2] > 2) {
+			GPIOD->ODR ^= 0x4000;
+		}
 
     // Add sensor data to dataframe
     mem->append(mem, HEADER_HIGHRES);
@@ -129,16 +140,16 @@ void vHDataAcquisition(void *argument) {
           (float)(dt * gyro->gyroData[PITCH_INDEX]),
           (float)(dt * gyro->gyroData[YAW_INDEX])
       );
-      state->qRot = Quaternion_mul(&state->qRot, &qDot);
-      state->qRot.normalise(&state->qRot); // New attitude quaternion
+      *qRot = Quaternion_mul(qRot, &qDot);
+      qRot->normalise(qRot); // New attitude quaternion
 
       // Apply rotation to z-axis unit vector
-      state->qRot.fRotateVector3D(&state->qRot, state->zUnit, state->vAttitude);
+      qRot->fRotateVector3D(qRot, vLaunch, vAttitude);
 
       // Calculate tilt angle
       // tilt = cos^-1(attitude · initial)
-      state->cosine = state->zUnit[0] * state->vAttitude[0] + state->zUnit[1] * state->vAttitude[1] + state->zUnit[2] * state->vAttitude[2];
-      state->tilt   = acos(state->cosine) * 180 / M_PI;
+      *cosine = vLaunch[0] * vAttitude[0] + vLaunch[1] * vAttitude[1] + vLaunch[2] * vAttitude[2];
+      *tilt   = acos(*cosine) * 180 / M_PI;
     }
 
 		#ifdef DEBUG

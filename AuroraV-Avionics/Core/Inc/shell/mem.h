@@ -7,6 +7,8 @@
 #ifndef _MEM_H
 #define _MEM_H
 
+#include "FreeRTOS.h"
+
 #include "devices.h"
 #include "shell.h"
 #include "flash.h"

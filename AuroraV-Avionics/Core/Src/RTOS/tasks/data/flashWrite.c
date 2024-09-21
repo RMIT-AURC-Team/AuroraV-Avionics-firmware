@@ -21,12 +21,12 @@ extern EventGroupHandle_t xTaskEnableGroup;
  * =============================================================================== */
 void vIdle(void *argument) {
 
-  ctxIdle *ctx = (ctxIdle *)argument;
+	enum State *flightState = StateHandle_getHandle("FlightState").state;
+  MemBuff *mem            = (MemBuff *)argument;
 
   for (;;) {
-		MemBuff *mem = ctx->mem;
     // Write if a page is available in the buffer
-    if (*ctx->currentState >= LAUNCH && mem->pageReady)
+    if (*flightState >= LAUNCH && mem->pageReady)
       xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_FLASH);
   }
 }
@@ -44,12 +44,11 @@ void vFlashBuffer(void *argument) {
   const TickType_t timeout = portMAX_DELAY;
   uint32_t pageAddr        = 0;
 
-  Flash *flash             = DeviceHandle_getHandle("Flash").device;
-  ctxFlashBuffer *ctx      = (ctxFlashBuffer *)argument;
+  Flash *flash = DeviceHandle_getHandle("Flash").device;
+  MemBuff *mem = (MemBuff *)argument;
   uint8_t outBuff[flash->pageSize];
 
   for (;;) {
-		MemBuff *mem = ctx->mem;
     // Wait for write flag to be ready, clear flag on exit
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, GROUP_TASK_ENABLE_FLASH, pdTRUE, pdFALSE, timeout);
     if (uxBits & GROUP_TASK_ENABLE_FLASH) {

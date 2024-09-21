@@ -71,7 +71,7 @@ int main(void) {
 
   // Create and start the system initialization task
   TaskHandle_t xSystemInitHandle;
-  xTaskCreate(vSystemInit, "SystemInit", 8192, NULL, configMAX_PRIORITIES, &xSystemInitHandle);
+  xTaskCreate(vSystemInit, "SystemInit", 16192, NULL, configMAX_PRIORITIES, &xSystemInitHandle);
   vTaskStartScheduler();
 
   // The scheduler should never return
@@ -88,7 +88,7 @@ int main(void) {
  * =============================================================================== */
 
 void vDeviceInit() {
-  /* ----------------------------------- Flash Initialization ------------------------------------ */
+  /* ----------------------------- Flash Initialization -------------------------- */
 
   // Initialise SPI flash driver
   static Flash flash;
@@ -97,7 +97,7 @@ void vDeviceInit() {
     &flash, "Flash", FLASH_PORT, FLASH_CS, FLASH_PAGE_SIZE, FLASH_PAGE_COUNT
   );
 
-  /* ------------------------------- Communication Initialization -------------------------------- */
+  /* -------------------------- Communication Initialization ---------------------- */
 
   // Initialise USB UART driver
   static UART usb;
@@ -113,9 +113,9 @@ void vDeviceInit() {
     &lora, "LoRa", LORA_PORT, LORA_CS, BW500, SF9, CR5
   );
 
-  /* ---------------------------------- Sensor Initialization ----------------------------------- */
+  /* ------------------------------ Sensor Initialization ------------------------- */
 
-	/*                                        ACCELEROMETER                                         */
+	/* ACCELEROMETER */
 	
   // Initialise low g accelerometer driver and device handle
   static KX134_1211 lAccel;
@@ -136,7 +136,7 @@ void vDeviceInit() {
   memcpy(accelHandle.name, "Accel", DEVICE_NAME_LENGTH);
 	accelHandle.device = &lAccel;
 
-	/*                                          GYROSCOPE                                           */
+	/*  GYROSCOPE */
 
   // Initialise gyroscope driver and device handle
   static A3G4250D gyro;
@@ -145,7 +145,7 @@ void vDeviceInit() {
       &gyro, "Gyro", GYRO_PORT, GYRO_CS, A3G4250D_SENSITIVITY, GYRO_AXES, GYRO_SIGN
   );
 
-	/*                                          BAROMETER                                           */
+	/* BAROMETER */
 	
   // Initialise barometer driver and device handle
   static BMP581 baro;
@@ -153,6 +153,7 @@ void vDeviceInit() {
   baroHandle = BMP581_init(
       &baro, "Baro", BARO_PORT, BARO_CS, BMP581_TEMP_SENSITIVITY, BMP581_PRESS_SENSITIVITY
   );
+	
 }
 
 /* =============================================================================== */
@@ -190,10 +191,9 @@ void vSystemInit(void *argument) {
   // Initialise LoRa buffer
   xLoRaTxBuff = xMessageBufferCreate(LORA_BUFF_SIZE);
 
-  /* ------------------------------------------ Device Initialization -------------------------------------------------*/
+  /* -------------------------- Device Initialization ---------------------------- */
 
   vDeviceInit();
-  LoRa *lora         = DeviceHandle_getHandle("LoRa").device;
 
   // Initialise circular memory buffer
   MemBuff mem;
@@ -204,116 +204,96 @@ void vSystemInit(void *argument) {
   static Shell shell;
   Shell_init(&shell);
 
-  /* ------------------------------------------- State Initialization -------------------------------------------------*/
-
+  /* --------------------------- State Initialization -----------------------------*/
+	
   // Initialize system state structure
   static ctxState state;
   state.currentState = PRELAUNCH;
-  state.cosine       = 0;
-  state.tilt         = 0;
-  state.altitude     = 0;
-  state.velocity     = 0;
+		
+	// Tilt state variable
+	static StateHandle_t __attribute__((section(".state_tilt"), unused)) tilt;
+	static float _tilt = 0.0f;
+	tilt.state = &_tilt;
+	memcpy(tilt.name, "Tilt", STATE_NAME_LENGTH);
+
+	// Cosine state variable
+	static StateHandle_t __attribute__((section(".state_cosine"), unused)) cosine;
+	static float _cosine = 0.0f;
+	cosine.state = &_cosine;
+	memcpy(cosine.name, "Cosine", STATE_NAME_LENGTH);
 	
-	#define STATE_CONCAT(prefix, str) prefix str
-	#define State_init(var, str, type, value)    																							 \
-    static StateHandle_t __attribute__((section(STATE_CONCAT(".state_", str)), unused)) var; \
-    type var##_p = value; 																																	 \
-    var.state = &var##_p;																																		 \
-    memcpy(var.name, str, STATE_NAME_LENGTH);
+	// Altitude state variable
+	static StateHandle_t __attribute__((section(".state_altitude"), unused)) altitude;
+	static float _altitude = 0.0f;
+	altitude.state = &_altitude;
+	memcpy(altitude.name, "Altitude", STATE_NAME_LENGTH);
+
+	// Velocity state variable
+	static StateHandle_t __attribute__((section(".state_velocity"), unused)) velocity;
+	static float _velocity = 0.0f;
+	velocity.state = &_velocity;
+	memcpy(velocity.name, "Velocity", STATE_NAME_LENGTH);
 		
-	State_init(tilt, "Tilt", float, 0.0f);
-	State_init(cosine, "Cosine", float, 0.0f);
-	State_init(altitude, "Altitude", float, 0.0f);
-	State_init(velocity, "Velocity", float, 0.0f);
-	State_init(qRot, "RotationQuaternion", Quaternion, {});
-	State_init(flightState, "FlightState", enum State, PRELAUNCH);
+	// Flight state variable
+	static StateHandle_t __attribute__((section(".state_flightState"), unused)) flightState;
+	static enum State _flightState = PRELAUNCH;
+	flightState.state = &_flightState;
+	memcpy(flightState.name, "FlightState", STATE_NAME_LENGTH);
+	
+	// Rotation quaternion state variable
+	static StateHandle_t __attribute__((section(".state_qRot"), unused)) qRot;
+	static Quaternion _qRot;
+	Quaternion_init(&_qRot);
+	qRot.state = &_qRot;
+	memcpy(qRot.name, "RotationQuaternion", STATE_NAME_LENGTH);
+
+	// Attitude vector state variable
+	static StateHandle_t __attribute__((section(".state_vAttitude"), unused)) vAttitude;
+	static float _vAttitude[3] = {0, 0, 1};
+	vAttitude.state = _vAttitude;
+	memcpy(vAttitude.name, "AttitudeVector", STATE_NAME_LENGTH);
+	
+	// Attitude vector state variable
+	static StateHandle_t __attribute__((section(".state_vLaunch"), unused)) vLaunch;
+	static float _vLaunch[3] = {0, 0, 1};
+	vLaunch.state = _vLaunch;
+	memcpy(vLaunch.name, "LaunchVector", STATE_NAME_LENGTH);
 		
-	// Vectors 
-	State_init(vAttitude, "AttitudeVector", float *, ((float[3]){0, 0, 1}));
-	State_init(vLaunch, "LaunchVector", float *, ((float[3]){0, 0, 1}));
-		
-	// Sliding window buffers
-	State_init(avgVel, "AvgVelBuffer", SlidingWindow, {});
-	State_init(avgPress, "AvgPressBuffer", SlidingWindow, {});
-  float zUnit[3];     // Z unit vector
-  
-	Quaternion_init(qRot.state);
-  memcpy(state.vAttitude, (float[3]){0, 0, 1}, 3 * sizeof(float));
-  memcpy(state.zUnit, (float[3]){0, 0, 1}, 3 * sizeof(float));
+	// Sliding window average velocity
+	static StateHandle_t __attribute__((section(".state_avgVel"), unused)) avgVel;
+	static SlidingWindow _avgVel = {};
+	avgVel.state = &_avgVel;
+	memcpy(avgVel.name, "AvgVelBuffer", STATE_NAME_LENGTH);
+	
+	// Sliding window average velocity
+	static StateHandle_t __attribute__((section(".state_avgPress"), unused))avgPress;
+	static SlidingWindow _avgPress = {};
+	avgPress.state = &_avgPress;
+	memcpy(avgPress.name, "AvgPressBuffer", STATE_NAME_LENGTH);
 
   // Initialize pressure sliding window average
   float avgPressBuff[AVG_BUFF_SIZE];
-  SlidingWindow_init(&state.avgPress, avgPressBuff, AVG_BUFF_SIZE);
+  SlidingWindow_init(avgPress.state, avgPressBuff, AVG_BUFF_SIZE);
 
   // Initialize velocity sliding window average
   float avgVelBuff[AVG_BUFF_SIZE];
-  SlidingWindow_init(&state.avgVel, avgVelBuff, AVG_BUFF_SIZE);
+  SlidingWindow_init(avgVel.state, avgVelBuff, AVG_BUFF_SIZE);
 
-  /*********************************************************************************************************************
-   *                                                 TASK INIT                                                         *
-   *********************************************************************************************************************/
+  /**********************************************************************************
+   *                                    TASK INIT                                   *
+   **********************************************************************************/
 
   static Handles handles;
 
-  /* ------------------------------------- High Resolution Data Acquisition -------------------------------------------*/
-
-  // Create high-resolution data acquisition task
-  static ctxHDataAcquisition hDataAcq;
-  hDataAcq.state = &state;
-  hDataAcq.mem   = &mem;
-  xTaskCreate(vHDataAcquisition, "HDataAcq", 512, &hDataAcq, configMAX_PRIORITIES - 2, &handles.xHDataAcquisitionHandle);
-
-  /* ------------------------------------- Low Resolution Data Acquisition --------------------------------------------*/
-
-  // Create low-resolution data acquisition task
-  static ctxLDataAcquisition lDataAcq;
-  lDataAcq.state = &state;
-  lDataAcq.mem   = &mem;
-  xTaskCreate(vLDataAcquisition, "LDataAcq", 512, &lDataAcq, configMAX_PRIORITIES - 3, &handles.xLDataAcquisitionHandle);
-
-  /* ----------------------------------------------- State Update ------------------------------------------------------*/
-
-  // Create state update task
-  static ctxStateUpdate stateUpdate;
-  stateUpdate.state   = &state;
-  stateUpdate.handles = &handles;
-  xTaskCreate(vStateUpdate, "StateUpdate", 512, &stateUpdate, configMAX_PRIORITIES - 4, &handles.xStateUpdateHandle);
-
-  /* ------------------------------------------------ Flash Write-------------------------------------------------------*/
-
-  // Create idle task (responsible for enabling flash operations)
-  static ctxIdle idle;
-  idle.currentState = &state.currentState;
-  idle.mem          = &mem;
-  xTaskCreate(vIdle, "Idle", 128, &idle, tskIDLE_PRIORITY, &handles.xIdleHandle);
-
-  // Create flash write task
-  static ctxFlashBuffer flashBuffer;
-  flashBuffer.currentState = &state.currentState;
-  flashBuffer.mem          = &mem;
-  xTaskCreate(vFlashBuffer, "FlashData", 512, &flashBuffer, configMAX_PRIORITIES - 1, &handles.xFlashBufferHandle);
-
-  /* --------------------------------------------  LoRa Communication ---------------------------------------------------*/
-
-  // Create LoRa sample collection task
-  static ctxLoRaSample loraSample;
-  loraSample.state  = state;
-  xTaskCreate(vLoRaSample, "LoRaSample", 128, &loraSample, configMAX_PRIORITIES - 6, &handles.xLoRaSampleHandle);
-
-  // Create LoRa Tx task
-  static ctxLoRaTransmit loraTransmit;
-  loraTransmit.lora = *lora;
-  xTaskCreate(vLoRaTransmit, "LoRaTx", 128, &loraTransmit, configMAX_PRIORITIES - 5, &handles.xLoRaTransmitHandle);
-
-  /* ---------------------------------------------- USB Communication ---------------------------------------------------*/
-
-  // Create USB Tx task
+  xTaskCreate(vHDataAcquisition, "HDataAcq", 512, &mem, configMAX_PRIORITIES - 2, &handles.xHDataAcquisitionHandle);
+  xTaskCreate(vLDataAcquisition, "LDataAcq", 512, &mem, configMAX_PRIORITIES - 3, &handles.xLDataAcquisitionHandle);
+  xTaskCreate(vStateUpdate, "StateUpdate", 512, &handles, configMAX_PRIORITIES - 4, &handles.xStateUpdateHandle);
+  xTaskCreate(vFlashBuffer, "FlashData", 512, &mem, configMAX_PRIORITIES - 1, &handles.xFlashBufferHandle);
+  xTaskCreate(vLoRaSample, "LoRaSample", 256, NULL, configMAX_PRIORITIES - 6, &handles.xLoRaSampleHandle);
+  xTaskCreate(vLoRaTransmit, "LoRaTx", 256, NULL, configMAX_PRIORITIES - 5, &handles.xLoRaTransmitHandle);
   xTaskCreate(vUsbTransmit, "UsbTx", 256, NULL, configMAX_PRIORITIES - 6, &handles.xUsbTransmitHandle);
-
-  // Create USB Rx task
   xTaskCreate(vUsbReceive, "UsbRx", 256, &shell, configMAX_PRIORITIES - 6, &handles.xUsbReceiveHandle);
-
-  /* ----------------------------------------------- GPS Acquisition ----------------------------------------------------*/
+	xTaskCreate(vIdle, "Idle", 256, &mem, tskIDLE_PRIORITY, &handles.xIdleHandle);
 
   // Create GPS data reading and processing task
   static ctxGpsTransmit gpsTransmit;

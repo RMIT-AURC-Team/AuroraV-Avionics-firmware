@@ -72,33 +72,12 @@ void Error_Handler(void);
 // ACCELEROMETER
 #define ACCEL_PORT_1 GPIOA
 #define ACCEL_CS_1   GPIO_ODR_OD1
-#ifdef FLIGHT_TEST
-  // DRONE AXES
-  #define ACCEL_AXES_1 ((const uint8_t[]){0, 1, 2})
-  #define ACCEL_SIGN_1 ((const int8_t[]){1, 1, -1})
-#else
-  // FLIGHT AXES
-  #define ACCEL_AXES_1 ((const uint8_t[]){0, 2, 1})
-  #define ACCEL_SIGN_1 ((const int8_t[]){1, 1, -1})
-#endif
-
 #define ACCEL_PORT_2 GPIOB
 #define ACCEL_CS_2   GPIO_ODR_OD0
-#ifdef FLIGHT_TEST
-  // DRONE AXES
-  #define ACCEL_AXES_2 ((const uint8_t[]){0, 1, 2})
-  #define ACCEL_SIGN_2 ((const int8_t[]){1, 1, -1})
-#else
-  // FLIGHT AXES
-  #define ACCEL_AXES_2 ((const uint8_t[]){2, 0, 1})
-  #define ACCEL_SIGN_2 ((const int8_t[]){1, -1, 1})
-#endif
 
 // GYROSCOPE
 #define GYRO_PORT GPIOA
 #define GYRO_CS   GPIO_ODR_OD2
-#define GYRO_AXES ((const uint8_t[]){0, 2, 1})
-#define GYRO_SIGN ((const int8_t[]){1, 1, 1})
 
 // BAROMETER
 #define BARO_PORT GPIOA

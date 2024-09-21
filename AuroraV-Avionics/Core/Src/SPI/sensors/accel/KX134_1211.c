@@ -61,6 +61,9 @@ DeviceHandle_t KX134_1211_init(
   for (uint32_t i = 0; i < superDelay; i++) {
     counter++;
   }
+	
+	uint8_t chipID = KX134_1211_readRegister(accel, 0x13);
+  uint8_t cotr = KX134_1211_readRegister(accel, 0x12);
 
   // Configure accelerometer registers
   KX134_1211_writeRegister(accel, KX134_1211_CNTL1, KX134_1211_CNTL1_RES | GSEL);                        // Accel select, selected sensitivity
@@ -149,10 +152,15 @@ void KX134_1211_writeRegister(KX134_1211 *accel, uint8_t address, uint8_t data) 
 
   spi.port->ODR &= ~spi.cs;
 
-  // Send read command and address
-  uint8_t payload = address & 0x7F; // Load payload with address and read command
-  spi.transmit(&spi, payload);      // Transmit payload
-  spi.transmit(&spi, data);         // Transmit dummy data and read response data
+  while((spi.interface->SR & SPI_SR_TXE) == 0); 
+  spi.interface->DR = (address & 0x7F);   								// Send out the device address
+  while((spi.interface->SR & SPI_SR_RXNE) == 0);   				// Wait for the recieve to become available.
+  uint8_t response = spi.interface->DR;   								// Read the dummy response.
+  while((spi.interface->SR & SPI_SR_TXE) == 0); 					// Wait for the SPI bus to become ready.
+  spi.interface->DR = data;   														// Send out the device address
+  while((spi.interface->SR & SPI_SR_RXNE) == 0);   				// Wait for the recieve to become available.
+  response = spi.interface->DR; 													// Read the dummy response.
+  while((spi.interface->SR & SPI_SR_BSY) == SPI_SR_BSY);  // Wait for the peripheral to finsh.
 
   spi.port->ODR |= spi.cs;
 }
@@ -176,18 +184,22 @@ uint8_t KX134_1211_readRegister(KX134_1211 *accel, uint8_t address) {
 void KX134_1211_readRegisters(KX134_1211 *accel, uint8_t address, uint8_t count, uint8_t *out) {
   SPI spi = accel->base;
 
-  spi.port->ODR &= ~spi.cs;
+  spi.port->ODR &= ~spi.cs;   														// Manually drop the chip select.
 
-  // Send read command and address
-  uint8_t payload = address | 0x80; // Load payload with address and read command
-  spi.transmit(&spi, payload); 		  // Transmit payload
-	
-	// Auto increment read through registers
-	for (uint8_t i = 0; i < count; i++) {
-		out[i] = spi.transmit(&spi, 0xFF);    
+  while((spi.interface->SR & SPI_SR_TXE) == 0);   				// Wait for the SPI bus to become ready.
+  spi.interface->DR = (address | 0x80);   								// Send out the device address
+  while((spi.interface->SR & SPI_SR_RXNE) == 0);  				// Wait for the recieve to become available.
+  uint8_t response = spi.interface->DR;  									// Read the dummy response.
+
+  for (int i = 0; i < count; i++) {
+		while((spi.interface->SR & SPI_SR_TXE) == 0); 				// Wait for the SPI bus to become ready.
+		spi.interface->DR = 0xFF;  														// Send out the dummy data
+		while((spi.interface->SR & SPI_SR_RXNE) == 0);				// Wait for the recieve to become available.
+		out[i] = spi.interface->DR; 													// Read the dummy response.
 	}
-
-  spi.port->ODR |= spi.cs;
+	
+	while((spi.interface->SR & SPI_SR_BSY) == SPI_SR_BSY);  // Wait for the peripheral to finsh.
+  spi.port->ODR |= spi.cs;      													// Raise chip select
 }
 
 /** @} */

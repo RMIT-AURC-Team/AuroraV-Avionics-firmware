@@ -7,6 +7,7 @@
  ***********************************************************************************/
 
 #include "lDataAcquisition.h"
+#include "math.h"
 
 extern EventGroupHandle_t xTaskEnableGroup;
 extern SemaphoreHandle_t xUsbMutex;
@@ -70,23 +71,24 @@ void vLDataAcquisition(void *argument) {
   const TickType_t xFrequency = pdMS_TO_TICKS(20); // 50Hz
   const TickType_t blockTime  = pdMS_TO_TICKS(0);
 
-  ctxLDataAcquisition *ctxPtr = (ctxLDataAcquisition *)argument;
+  MemBuff *mem                = (MemBuff *)argument;
   BMP581 *baro              	= DeviceHandle_getHandle("Baro").device;
-		
-	DeviceHandle_t accelHandle = DeviceHandle_getHandle("Accel");
-	KX134_1211 *accel           = accelHandle.device;
-	
-	float *altitude = StateHandle_getHandle("Altitude").state;
 
+	DeviceHandle_t accelHandle = DeviceHandle_getHandle("Accel");
+	KX134_1211 *accel          = accelHandle.device;
+	
+	float *altitude 				= StateHandle_getHandle("Altitude").state;
+	float *cosine						= StateHandle_getHandle("Cosine").state;
+	float *velocity					= StateHandle_getHandle("Velocity").state;
+	SlidingWindow *avgVel		= StateHandle_getHandle("AvgVelBuffer").state;
+	SlidingWindow *avgPress	= StateHandle_getHandle("AvgPressBuffer").state;
+		
   for (;;) {
     // Block until 20ms interval
 		TickType_t xLastWakeTime = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 		
-		// Retrieve objects from context
-		ctxLDataAcquisition ctx = *ctxPtr;
-		ctxState *state 				= ctx.state;
-		MemBuff *mem						= ctx.mem;
+		GPIOD->ODR ^= 0x8000;
 		
     // Update baro data
 		#ifdef DUMMY
@@ -97,12 +99,18 @@ void vLDataAcquisition(void *argument) {
 				lDummyIdx += 2;
 			}
 		#else
+		taskENTER_CRITICAL();
 			baro->update(baro);
+		taskEXIT_CRITICAL();
 		#endif
 
     // Calculate altitude
     *altitude = 44330 * (1.0 - pow(baro->press / baro->groundPress, 0.1903));
 
+		if (fabs(baro->press - baro->groundPress) > 800) {
+      GPIOD->ODR ^= 0x8000;
+		}
+		
     // Add sensor data and barometer data to dataframe
     mem->append(mem, HEADER_LOWRES);
     mem->appendBytes(mem, baro->rawTemp, BMP581_DATA_SIZE);
@@ -112,13 +120,13 @@ void vLDataAcquisition(void *argument) {
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, GROUP_TASK_ENABLE_LOWRES, pdFALSE, pdFALSE, blockTime);
     if (uxBits & GROUP_TASK_ENABLE_LOWRES) {
       // Calculate state
-      z.pData[0] = state->altitude;
-      z.pData[1] = (state->cosine * 9.81 * accel->accelData[ZINDEX] - 9.81); // Acceleration measured in m/s^2
+      z.pData[0] = *altitude;
+      z.pData[1] = (*cosine * 9.81 * accel->accelData[ZINDEX] - 9.81); // Acceleration measured in m/s^2
       kf.update(&kf, &z);
 
-      state->velocity = kf.x.pData[1];
-      state->avgPress.append(&state->avgPress, baro->press);
-      state->avgVel.append(&state->avgVel, state->velocity);
+      *velocity = kf.x.pData[1];
+      avgPress->append(avgPress, baro->press);
+      avgVel->append(avgVel, *velocity);
     }
 
 		#ifdef DEBUG
