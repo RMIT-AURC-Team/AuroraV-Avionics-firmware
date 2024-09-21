@@ -72,9 +72,11 @@ void vLDataAcquisition(void *argument) {
 
   ctxLDataAcquisition *ctxPtr = (ctxLDataAcquisition *)argument;
   BMP581 *baro              	= DeviceHandle_getHandle("Baro").device;
-	
+		
 	DeviceHandle_t accelHandle = DeviceHandle_getHandle("Accel");
 	KX134_1211 *accel           = accelHandle.device;
+	
+	float *altitude = StateHandle_getHandle("Altitude").state;
 
   for (;;) {
     // Block until 20ms interval
@@ -99,7 +101,7 @@ void vLDataAcquisition(void *argument) {
 		#endif
 
     // Calculate altitude
-    state->altitude = 44330 * (1.0 - pow(baro->press / baro->groundPress, 0.1903));
+    *altitude = 44330 * (1.0 - pow(baro->press / baro->groundPress, 0.1903));
 
     // Add sensor data and barometer data to dataframe
     mem->append(mem, HEADER_LOWRES);

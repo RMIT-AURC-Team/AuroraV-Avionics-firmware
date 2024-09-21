@@ -47,8 +47,8 @@ void configure_SPI1_Sensor_Suite(void) {
   // Clear the First Control register of the SPI peripheral.
   	SPI1->CR1 &= 0xFFFF0000;
 
-  	// Configure the SCLK to be divide by 8,
-  	SPI1->CR1 |= (0x03 << SPI_CR1_BR_Pos) | (1 << SPI_CR1_CPOL_Pos) | (1 << SPI_CR1_CPHA_Pos) | (0 << SPI_CR1_DFF_Pos);
+  	// Configure the SCLK to be divide by 16,
+  	SPI1->CR1 |= (0x04 << SPI_CR1_BR_Pos) | (1 << SPI_CR1_CPOL_Pos) | (1 << SPI_CR1_CPHA_Pos) | (0 << SPI_CR1_DFF_Pos);
 
 
   	// Set to full duplex, master mode.

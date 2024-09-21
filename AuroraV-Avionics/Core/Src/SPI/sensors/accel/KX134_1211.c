@@ -130,13 +130,15 @@ void KX134_1211_processRawBytes(KX134_1211 *accel, uint8_t *bytes, float *out) {
  * =============================================================================== */
 void KX134_1211_readRawBytes(KX134_1211 *accel, uint8_t *out) {
 // Map raw indices to mounting axis
-#define INDEX_AXES(index, byte) 2 * accel->axes[index] + byte
-  out[INDEX_AXES(0, 0)] = KX134_1211_readRegister(accel, KX134_1211_XOUT_H); // Accel X high
-  out[INDEX_AXES(0, 1)] = KX134_1211_readRegister(accel, KX134_1211_XOUT_L); // Accel X low
-  out[INDEX_AXES(1, 0)] = KX134_1211_readRegister(accel, KX134_1211_YOUT_H); // Accel Y high
-  out[INDEX_AXES(1, 1)] = KX134_1211_readRegister(accel, KX134_1211_YOUT_L); // Accel Y low
-  out[INDEX_AXES(2, 0)] = KX134_1211_readRegister(accel, KX134_1211_ZOUT_H); // Accel Z high
-  out[INDEX_AXES(2, 1)] = KX134_1211_readRegister(accel, KX134_1211_ZOUT_L); // Accel Z low
+#define INDEX_AXES(index, byte) 2 * accel->axes[index] + byte	
+	uint8_t tmp[KX134_1211_DATA_TOTAL];
+	KX134_1211_readRegisters(accel, KX134_1211_XOUT_L, KX134_1211_DATA_TOTAL, tmp);
+	out[INDEX_AXES(0, 1)] = tmp[0]; // Accel X high
+  out[INDEX_AXES(0, 0)] = tmp[1]; // Accel X low
+  out[INDEX_AXES(1, 1)] = tmp[2]; // Accel Y high
+  out[INDEX_AXES(1, 0)] = tmp[3]; // Accel Y low
+  out[INDEX_AXES(2, 1)] = tmp[4]; // Accel Z high
+  out[INDEX_AXES(2, 0)] = tmp[5]; // Accel Z low
 #undef INDEX_AXES
 }
 
@@ -169,6 +171,23 @@ uint8_t KX134_1211_readRegister(KX134_1211 *accel, uint8_t address) {
   spi.port->ODR |= spi.cs;
 
   return response;
+}
+
+void KX134_1211_readRegisters(KX134_1211 *accel, uint8_t address, uint8_t count, uint8_t *out) {
+  SPI spi = accel->base;
+
+  spi.port->ODR &= ~spi.cs;
+
+  // Send read command and address
+  uint8_t payload = address | 0x80; // Load payload with address and read command
+  spi.transmit(&spi, payload); 		  // Transmit payload
+	
+	// Auto increment read through registers
+	for (uint8_t i = 0; i < count; i++) {
+		out[i] = spi.transmit(&spi, 0xFF);    
+	}
+
+  spi.port->ODR |= spi.cs;
 }
 
 /** @} */

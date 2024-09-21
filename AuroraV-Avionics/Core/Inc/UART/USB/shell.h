@@ -16,27 +16,41 @@
 #include "flash.h"
 #include "uart.h"
 
-#define CMD_CLEAR           "clear"
-#define CMD_FLASH           "flash"
-#define CMD_FLASH_ERASE     "erase"
-#define CMD_FLASH_READ_PAGE "read page"
-#define CMD_FLASH_READ_ALL  "read all"
+#define SHELL_MAX_PROGRAMS 				10
+#define SHELL_PROGRAM_NAME_LENGTH 20
 
+#define CMD_CLEAR           "clear"
+
+extern uint32_t __shell_vector_start;
+extern uint32_t __shell_vector_end;
 extern Flash flash;
 extern UART usb;
+
+typedef struct ShellProgramHandle_t {
+	char name[SHELL_PROGRAM_NAME_LENGTH];
+	void (*exec)();
+} ShellProgramHandle_t;
 
 typedef struct Shell {
   UART usb;
   Flash flash;
-  bool (*parse)(struct Shell *, uint8_t *);
-  bool (*runClear)(struct Shell *);
-  bool (*runFlash)(struct Shell *, char *);
+	void (*help)(struct Shell *);
+	void (*run)(struct Shell *, uint8_t *);
+	void (*runTask)(struct Shell *, uint8_t *);
+  bool (*clear)(struct Shell *);
+	TaskHandle_t taskHandle;
+	ShellProgramHandle_t programHandles[SHELL_MAX_PROGRAMS];
 } Shell;
 
-void Shell_init(Shell *);
-bool Shell_parse(Shell *, uint8_t *);
+typedef struct ShellTaskParams {
+  Shell *shell;
+  uint8_t *str;
+} ShellTaskParams;
 
-bool Shell_runClear(Shell *);
-bool Shell_runFlash(Shell *, char *);
+int Shell_init(Shell *);
+void Shell_help(Shell *);
+void Shell_runTask(Shell *, uint8_t *);
+void Shell_run(Shell *, uint8_t *);
+bool Shell_clear(Shell *);
 
 #endif

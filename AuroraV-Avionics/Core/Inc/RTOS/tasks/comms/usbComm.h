@@ -19,6 +19,7 @@
 
 void vUsbReceive(void *);
 void vUsbTransmit(void *);
+void vShellExec(void *);
 
 typedef struct {
   UART usb;

@@ -7,6 +7,8 @@
  ***********************************************************************************/
 
 #include "stateUpdate.h"
+#include "stdio.h"
+#include "drivers.h"
 
 extern EventGroupHandle_t xTaskEnableGroup;
 extern MessageBufferHandle_t xUsbTxBuff;
@@ -40,6 +42,9 @@ void vStateUpdate(void *argument) {
 	
 	DeviceHandle_t accelHandle = DeviceHandle_getHandle("Accel");
 	KX134_1211 *accel          = accelHandle.device;
+	
+	StateHandle_t flightStateHandle = StateHandle_getHandle("FlightState");
+	enum State *flightState = (enum State *)flightStateHandle.state;
 
   for (;;) {
     // Block until 20ms interval
@@ -59,7 +64,7 @@ void vStateUpdate(void *argument) {
       CAN_TX(2, 8, CANHigh, CANLow, id);
     }
 
-    switch (state->currentState) {
+    switch (*flightState) {
     case PRELAUNCH:
       if (accel->accelData[ZINDEX] >= ACCEL_LAUNCH) {
         #ifdef FLIGHT_TEST
@@ -74,7 +79,7 @@ void vStateUpdate(void *argument) {
         xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_FLASH);   // Enable flash
         xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_HIGHRES); // Enable high resolution data acquisition
         xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_LOWRES);  // Enable low resolution data acquisition
-        state->currentState = LAUNCH;
+        *flightState = LAUNCH;
       }
       break;
 

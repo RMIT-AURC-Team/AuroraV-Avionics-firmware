@@ -53,6 +53,12 @@ void vLoRaSample(void *argument) {
   const TickType_t xFrequency = pdMS_TO_TICKS(250);
 
   ctxLoRaSample *ctx          = (ctxLoRaSample *)argument;
+		
+  A3G4250D *gyro      = DeviceHandle_getHandle("Gyro").device;
+	KX134_1211 *lAccel	= DeviceHandle_getHandle("LAccel").device;	
+	KX134_1211 *hAccel	= DeviceHandle_getHandle("HAccel").device;
+	
+	float *altitude = StateHandle_getHandle("Altitude").state;
 
   for (;;) {
     // Block until 250ms interval
@@ -63,12 +69,12 @@ void vLoRaSample(void *argument) {
     LoRa_Packet avData = LoRa_AVData(
         LORA_HEADER_AV_DATA,
         ctx->state.currentState,
-        ctx->lAccel.rawAccelData,
-        ctx->hAccel.rawAccelData,
+        lAccel->rawAccelData,
+        hAccel->rawAccelData,
         KX134_1211_DATA_TOTAL,
-        ctx->gyro.rawGyroData,
+        gyro->rawGyroData,
         A3G4250D_DATA_TOTAL,
-        ctx->state.altitude,
+        *altitude,
         ctx->state.velocity
     );
 

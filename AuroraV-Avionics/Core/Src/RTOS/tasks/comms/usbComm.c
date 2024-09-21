@@ -10,25 +10,27 @@ extern MessageBufferHandle_t xUsbRxBuff;
 uint8_t usbRxBuff[USB_RX_SIZE];
 uint8_t usbRxBuffIdx = 0;
 
+/* =============================================================================== */
 /**
  * @brief USB transmit task for handling UART output.
- *
- */
+ **
+ * =============================================================================== */
 void vUsbTransmit(void *argument) {
   const TickType_t timeout = portMAX_DELAY;
   uint8_t rxData[100];
 
-  ctxUsbTransmit *ctx = (ctxUsbTransmit *)argument;
+  UART *usb = DeviceHandle_getHandle("USB").device;
 
   for (;;) {
     // Read byte from UART Tx buffer, skip loop if empty
     if (!xMessageBufferReceive(xUsbTxBuff, (void *)rxData, 100, timeout))
       continue;
 
-    ctx->usb.print(&ctx->usb, (char *)rxData);
+    usb->print(usb, (char *)rxData);
   }
 }
 
+/* =============================================================================== */
 /**
  * @brief USB receive task for handling UART input.
  *
@@ -42,12 +44,14 @@ void vUsbTransmit(void *argument) {
  * 	 - `<Ctrl-C>` clears the terminal.
  * 	 - `<Backspace>` erases the last character.
  * @todo Move calls to shell scripts to new thread
- */
+ **
+ * =============================================================================== */
 void vUsbReceive(void *argument) {
   const TickType_t timeout = portMAX_DELAY;
   uint8_t rxData;
 
-  ctxUsbReceive *ctx = (ctxUsbReceive *)argument;
+  UART *usb 	 = DeviceHandle_getHandle("USB").device;
+	Shell *shell = argument;
 
   for (;;) {
     // Read byte from UART Rx buffer, skip loop if empty
@@ -55,38 +59,40 @@ void vUsbReceive(void *argument) {
       continue;
 
     // Send byte back for display
-    ctx->usb.send(&ctx->usb, rxData);
+    usb->send(usb, rxData);
 
     // Process command and reset buffer on <Enter> input
     if (rxData == CARRIAGE_RETURN) {
-      ctx->usb.print(&ctx->usb, "\n");          // Send newline back for display
-      usbRxBuff[usbRxBuffIdx - 1] = '\0';       // Replace carriage return with null terminator
-      ctx->shell.parse(&ctx->shell, usbRxBuff); // Parse and execute command
-      usbRxBuffIdx = 0;                         // Reset buffer
+      usb->print(usb, "\n");       			  // Send newline back for display   		
+      usbRxBuff[usbRxBuffIdx - 1] = '\0'; // Replace carriage return with null terminator		
+			shell->runTask(shell, usbRxBuff);   // Run shell program as task
+			usbRxBuffIdx = 0;                   // Reset buffer
     }
 
     // Clear terminal on <Ctrl-c> input
     else if (rxData == SIGINT) {
-      ctx->shell.runClear(&ctx->shell);
+      shell->clear(shell);
       usbRxBuffIdx = 0;
     }
 
     // Erase character and move cursor backwards on <BS> input
     else if (rxData == BACKSPACE) {
-      ctx->usb.print(&ctx->usb, " \b");
+      usb->print(usb, " \b");
       if (usbRxBuffIdx)
         usbRxBuffIdx -= 2;
     }
   }
 }
 
+/* =============================================================================== */
 /**
  * @brief Interrupt handler for USB UART receive.
  *
  * This handler is triggered when data is received via USB UART. It appends the
  * received byte to a circular buffer and sends it to a stream buffer for
  * processing by the USB receive task.
- */
+ **
+ * =============================================================================== */
 void USART6_IRQHandler() {
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 

@@ -6,6 +6,7 @@
  *                                                                                 *
  * @todo Tidy up `_UART_setup`                                                     *
  * @todo Implement printf                                                          *
+ * @todo Add println function                                                      *
  ***********************************************************************************/
 
 #include "uart.h"

@@ -120,6 +120,13 @@ SECTIONS
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
   } >FLASH
+  
+  .shell_vector ALIGN(4) : 
+  {
+	__shell_vector_start = .;
+	*(.shell_*);
+	__shell_vector_end = .;
+  } >FLASH
 
   /* used by the startup to initialize data */
   _sidata = LOADADDR(.data);
@@ -189,6 +196,13 @@ SECTIONS
 	__device_vector_start = .;
 	*(.device_*);
 	__device_vector_end = .;
+  } >RAM
+  
+  .state_vector :
+  {
+	__state_vector_start = .;
+	*(.state_*);
+	__state_vector_end = .;
   } >RAM
   
   /* Remove information from the standard libraries */

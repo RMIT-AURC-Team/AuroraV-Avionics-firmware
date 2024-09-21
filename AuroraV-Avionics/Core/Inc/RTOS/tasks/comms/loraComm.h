@@ -7,6 +7,8 @@
 #include "message_buffer.h"
 #include "stm32f439xx.h"
 
+#include "devices.h"
+#include "BMP581.h"
 #include "A3G4250D.h"
 #include "KX134_1211.h"
 #include "lora.h"

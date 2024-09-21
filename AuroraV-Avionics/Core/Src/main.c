@@ -2,11 +2,6 @@
  * @file        main.c                                                             *
  * @author      Matt Ricci                                                         *
  * @brief       Main application entry point and system initialization.            *
- *                                                                                 *
- * @todo Implement globals as context struct to pass to external functions.        *
- *       e.g. passing context of flash, uart, etc. to control functions.           *
- *                                                                                 *
- * @todo Implement startup task to isolate initialisations from main.              *
  ***********************************************************************************/
 
 #include "main.h"
@@ -99,8 +94,8 @@ void vDeviceInit() {
   static Flash flash;
   static DeviceHandle_t flashHandle __attribute__((section(".device_flash"), unused));
   flashHandle = Flash_init(
-		&flash, "Flash", FLASH_PORT, FLASH_CS, FLASH_PAGE_SIZE, FLASH_PAGE_COUNT
-	);
+    &flash, "Flash", FLASH_PORT, FLASH_CS, FLASH_PAGE_SIZE, FLASH_PAGE_COUNT
+  );
 
   /* ------------------------------- Communication Initialization -------------------------------- */
 
@@ -108,15 +103,15 @@ void vDeviceInit() {
   static UART usb;
   static DeviceHandle_t usbHandle __attribute__((section(".device_usb"), unused));
   usbHandle = UART_init(
-		&usb, "USB", USB_INTERFACE, USB_PORT, USB_BAUD, OVER8
-	);
+    &usb, "USB", USB_INTERFACE, USB_PORT, USB_BAUD, OVER8
+  );
 
   // Initialise LoRa driver
   static LoRa lora;
   static DeviceHandle_t loraHandle __attribute__((section(".device_lora"), unused));
   loraHandle = LoRa_init(
-		&lora, "LoRa", LORA_PORT, LORA_CS, BW500, SF9, CR5
-	);
+    &lora, "LoRa", LORA_PORT, LORA_CS, BW500, SF9, CR5
+  );
 
   /* ---------------------------------- Sensor Initialization ----------------------------------- */
 
@@ -198,10 +193,7 @@ void vSystemInit(void *argument) {
   /* ------------------------------------------ Device Initialization -------------------------------------------------*/
 
   vDeviceInit();
-  KX134_1211 *hAccel = DeviceHandle_getHandle("HAccel").device;
-	A3G4250D *gyro     = DeviceHandle_getHandle("Gyro").device;
   LoRa *lora         = DeviceHandle_getHandle("LoRa").device;
-	UART *usb          = DeviceHandle_getHandle("USB").device;
 
   // Initialise circular memory buffer
   MemBuff mem;
@@ -209,7 +201,7 @@ void vSystemInit(void *argument) {
   MemBuff_init(&mem, buff, MEM_BUFF_SIZE, FLASH_PAGE_SIZE);
 
   // Initialise shell
-  Shell shell;
+  static Shell shell;
   Shell_init(&shell);
 
   /* ------------------------------------------- State Initialization -------------------------------------------------*/
@@ -221,7 +213,31 @@ void vSystemInit(void *argument) {
   state.tilt         = 0;
   state.altitude     = 0;
   state.velocity     = 0;
-  Quaternion_init(&state.qRot);
+	
+	#define STATE_CONCAT(prefix, str) prefix str
+	#define State_init(var, str, type, value)    																							 \
+    static StateHandle_t __attribute__((section(STATE_CONCAT(".state_", str)), unused)) var; \
+    type var##_p = value; 																																	 \
+    var.state = &var##_p;																																		 \
+    memcpy(var.name, str, STATE_NAME_LENGTH);
+		
+	State_init(tilt, "Tilt", float, 0.0f);
+	State_init(cosine, "Cosine", float, 0.0f);
+	State_init(altitude, "Altitude", float, 0.0f);
+	State_init(velocity, "Velocity", float, 0.0f);
+	State_init(qRot, "RotationQuaternion", Quaternion, {});
+	State_init(flightState, "FlightState", enum State, PRELAUNCH);
+		
+	// Vectors 
+	State_init(vAttitude, "AttitudeVector", float *, ((float[3]){0, 0, 1}));
+	State_init(vLaunch, "LaunchVector", float *, ((float[3]){0, 0, 1}));
+		
+	// Sliding window buffers
+	State_init(avgVel, "AvgVelBuffer", SlidingWindow, {});
+	State_init(avgPress, "AvgPressBuffer", SlidingWindow, {});
+  float zUnit[3];     // Z unit vector
+  
+	Quaternion_init(qRot.state);
   memcpy(state.vAttitude, (float[3]){0, 0, 1}, 3 * sizeof(float));
   memcpy(state.zUnit, (float[3]){0, 0, 1}, 3 * sizeof(float));
 
@@ -282,9 +298,6 @@ void vSystemInit(void *argument) {
   // Create LoRa sample collection task
   static ctxLoRaSample loraSample;
   loraSample.state  = state;
-  loraSample.hAccel = *hAccel;
-  loraSample.lAccel = *hAccel;
-  loraSample.gyro   = *gyro;
   xTaskCreate(vLoRaSample, "LoRaSample", 128, &loraSample, configMAX_PRIORITIES - 6, &handles.xLoRaSampleHandle);
 
   // Create LoRa Tx task
@@ -295,15 +308,10 @@ void vSystemInit(void *argument) {
   /* ---------------------------------------------- USB Communication ---------------------------------------------------*/
 
   // Create USB Tx task
-  static ctxUsbTransmit usbTransmit;
-  usbTransmit.usb = *usb;
-  xTaskCreate(vUsbTransmit, "UsbTx", 256, &usbTransmit, configMAX_PRIORITIES - 6, &handles.xUsbTransmitHandle);
+  xTaskCreate(vUsbTransmit, "UsbTx", 256, NULL, configMAX_PRIORITIES - 6, &handles.xUsbTransmitHandle);
 
   // Create USB Rx task
-  static ctxUsbReceive usbReceive;
-  usbReceive.usb   = *usb;
-  usbReceive.shell = shell;
-  xTaskCreate(vUsbReceive, "UsbRx", 256, &usbReceive, configMAX_PRIORITIES - 6, &handles.xUsbReceiveHandle);
+  xTaskCreate(vUsbReceive, "UsbRx", 256, &shell, configMAX_PRIORITIES - 6, &handles.xUsbReceiveHandle);
 
   /* ----------------------------------------------- GPS Acquisition ----------------------------------------------------*/
 

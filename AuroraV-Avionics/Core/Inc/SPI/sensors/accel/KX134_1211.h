@@ -19,6 +19,7 @@
 #define KX134_1211_SENSITIVITY(scale) KX134_1211_SENSITIVITY_##scale##G
 #define KX134_1211_CNTL1              0x1B
 #define KX134_1211_CNTL1_PC1          0x80
+#define KX134_1211_CNTL1_DRDYE				0x20
 #define KX134_1211_CNTL1_RES          0x40
 #define KX134_1211_CNTL1_GSEL_32G     0x10
 #define KX134_1211_CNTL1_GSEL_16G     0x08
@@ -32,6 +33,10 @@
 #define KX134_1211_YOUT_H             0x0B
 #define KX134_1211_ZOUT_L             0x0C
 #define KX134_1211_ZOUT_H             0x0D
+#define KX134_1211_INS2            	  0x17
+
+#define KX134_1211_INS2_DRDY          0x10
+
 
 #define KX134_1211_DATA_SIZE          2 // Two bytes per axis
 #define KX134_1211_DATA_COUNT         3 // Three axes - X Y Z
@@ -64,6 +69,7 @@ void KX134_1211_readAccel(KX134_1211 *, float *);
 void KX134_1211_readRawBytes(KX134_1211 *, uint8_t *);
 void KX134_1211_processRawBytes(KX134_1211 *, uint8_t *, float *);
 
+void KX134_1211_readRegisters(KX134_1211 *, uint8_t, uint8_t, uint8_t *);
 uint8_t KX134_1211_readRegister(KX134_1211 *, uint8_t);
 void KX134_1211_writeRegister(KX134_1211 *, uint8_t, uint8_t);
 

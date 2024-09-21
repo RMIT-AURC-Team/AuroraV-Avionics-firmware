@@ -28,8 +28,6 @@ extern SemaphoreHandle_t xUsbMutex;
  *
  * @todo Add definition for sample period and replace assignments for dt and
  *       frequency (e.g. dt = 1/SAMPLE_PERIOD_HIGH;).
- * @todo Refactor *ctx definition to *ctxPtr, add dereferenced context after
- *       task unblock to improve readability of context access.
  **
  * =============================================================================== */
 void vHDataAcquisition(void *argument) {

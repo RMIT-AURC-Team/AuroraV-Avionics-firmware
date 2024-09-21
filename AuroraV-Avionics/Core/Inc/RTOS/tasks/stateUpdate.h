@@ -15,6 +15,7 @@
 #include "quaternion.h"
 #include "sensors.h"
 #include "slidingwindow.h"
+#include "devices.h"
 
 void vStateUpdate(void *pvParameters);
 
