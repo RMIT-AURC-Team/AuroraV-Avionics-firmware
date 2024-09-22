@@ -56,7 +56,7 @@ int main(void) {
 
   // Configure CAN
   CANGPIO_config();
-  CAN_Peripheral_config();
+  //CAN_Peripheral_config();
 
 	#ifdef FLIGHT_TEST
 		GPIOB->ODR ^= 0x8000;
@@ -174,7 +174,7 @@ void vDeviceInit() {
 void vSystemInit(void *argument) {
 
   // Allow time for external devices to finish startup sequences
-  vTaskDelay(pdMS_TO_TICKS(100));
+  vTaskDelay(pdMS_TO_TICKS(500));
 
   vTaskSuspendAll();
 
@@ -313,6 +313,15 @@ void configure_interrupts() {
   NVIC_EnableIRQ(EXTI1_IRQn);
   NVIC_SetPriority(USART6_IRQn, 10);
   NVIC_EnableIRQ(USART6_IRQn);
+	
+	#if CAN_PAYLOAD_AV == 1
+	NVIC_SetPriority(CAN1_RX1_IRQn, 10);
+  NVIC_EnableIRQ(CAN1_RX1_IRQn);
+	#else
+	NVIC_SetPriority(CAN2_RX1_IRQn, 10);
+  NVIC_EnableIRQ(CAN2_RX1_IRQn);
+	#endif
+
   EXTI->RTSR |= 0X2;
   EXTI->IMR |= 0x2;
   SYSCFG->EXTICR[0] &= (~(0XF0));

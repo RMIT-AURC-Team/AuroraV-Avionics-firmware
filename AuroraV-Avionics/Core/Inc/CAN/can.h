@@ -10,6 +10,8 @@
 #include "stdint.h"
 #include "stm32f439xx.h"
 
+#include "params.h"
+
 struct CAN_RX_data {
   unsigned int dataL;   // data high register
   unsigned int dataH;   // data low register

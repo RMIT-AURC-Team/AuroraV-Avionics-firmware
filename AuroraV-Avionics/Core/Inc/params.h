@@ -2,11 +2,17 @@
 #define _PARAMS_H
 
 /* ===================================================================== *
- *                                 CAN PORTS                             *
+ *                                   CAN                                 *
  * ===================================================================== */
  
- #define CAN_PAYLOAD_AV 2
- #define CAN_AB					1
+#define CAT_CAN_INTF(x)             CAN##x
+#define CAN_INTF(INTF)              CAT_CAN_INTF(INTF)
+
+#define CAN_AB                      1
+#define CAN_AB_INTF                 CAN_INTF(CAN_AB)
+#define CAN_PAYLOAD_AV              2
+#define CAN_PAYLOAD_AV_INTF         CAN_INTF(CAN_PAYLOAD_AV)
+
 
 /* ===================================================================== *
  *                             FLIGHT THRESHOLDS                         *

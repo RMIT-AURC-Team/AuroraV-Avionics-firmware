@@ -2,6 +2,7 @@
 #define _STATE_H
 
 #include "FreeRTOS.h"
+#include "task.h"
 #include "event_groups.h"
 #include "groups.h"
 #include "handles.h"

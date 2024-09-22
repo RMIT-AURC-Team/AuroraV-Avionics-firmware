@@ -7,6 +7,7 @@
  ***********************************************************************************/
 
 #include "lDataAcquisition.h"
+#include "uart.h"
 #include "math.h"
 
 extern EventGroupHandle_t xTaskEnableGroup;
@@ -73,7 +74,8 @@ void vLDataAcquisition(void *argument) {
 
   MemBuff *mem                = (MemBuff *)argument;
   BMP581 *baro              	= DeviceHandle_getHandle("Baro").device;
-
+	
+	UART *usb									 = DeviceHandle_getHandle("USB").device;
 	DeviceHandle_t accelHandle = DeviceHandle_getHandle("Accel");
 	KX134_1211 *accel          = accelHandle.device;
 	
@@ -107,8 +109,8 @@ void vLDataAcquisition(void *argument) {
     // Calculate altitude
     *altitude = 44330 * (1.0 - pow(baro->press / baro->groundPress, 0.1903));
 
-		if (fabs(baro->press - baro->groundPress) > 800) {
-      GPIOD->ODR ^= 0x8000;
+		if (fabs(baro->press - baro->groundPress) > 500) {
+      usb->print(usb, "spike\n\r");
 		}
 		
     // Add sensor data and barometer data to dataframe
@@ -134,7 +136,7 @@ void vLDataAcquisition(void *argument) {
 			//! @todo move debug function to new source file with context as parameter
 			if ((xSemaphoreTake(xUsbMutex, pdMS_TO_TICKS(0))) == pdTRUE) {
 				char debugStr[100];
-				snprintf(debugStr, 100, "[LDataAcq] %d\tBaro\tPressure: %.0f\n\r", lDummyIdx / 2, baro->press);
+		snprintf(debugStr, 100, "[LDataAcq] %d\tBaro\tPressure: %.0f\tTemperature: %.1f\n\r", lDummyIdx / 2, baro->press, baro->temp);
 				xMessageBufferSend(xUsbTxBuff, (void *)debugStr, 100, pdMS_TO_TICKS(10));
 				xSemaphoreGive(xUsbMutex);
 			}

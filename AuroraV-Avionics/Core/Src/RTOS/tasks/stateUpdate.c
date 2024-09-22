@@ -72,6 +72,7 @@ void vStateUpdate(void *argument) {
           GPIOD->ODR ^= 0x8000;
         #endif
         #ifndef DEBUG
+					vTaskSuspend(handles->xUsbReceiveHandle);
           vTaskDelete(handles->xUsbTransmitHandle);
           vTaskDelete(handles->xUsbReceiveHandle);
         #endif

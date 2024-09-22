@@ -55,9 +55,11 @@ void vFlashBuffer(void *argument) {
 			// Flush data to output buffer
       bool success = mem->readPage(mem, outBuff); 
       if (success) {
+				taskENTER_CRITICAL();
         // Write data to flash memory
         flash->writePage(flash, pageAddr, outBuff);
         pageAddr += 0x100;
+				taskEXIT_CRITICAL();
       }
     }
   }

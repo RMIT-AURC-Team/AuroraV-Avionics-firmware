@@ -169,17 +169,18 @@ void CAN_Peripheral_config() {
   CAN1->FMR  &= (uint32_t) ~(0x1);   // take out of initialisation mode
 
   // this makes that all CAN messages will go to FIFO1
-  CAN2->MCR |= 0x8000;                     // reset CAN
-  while (((CAN1->MCR & (CAN_MCR_RESET)))); // wait until reset
+  CAN_PAYLOAD_AV_INTF->MCR |= 0x8000;                     // reset CAN
+  while (((CAN_PAYLOAD_AV_INTF->MCR & (CAN_MCR_RESET)))); // wait until reset
 
-  CAN2->MCR |= 0x1;
-  while (!(CAN2->MSR & 1));                // change
-  CAN2->BTR &= (uint32_t) ~(0xC37F03FF);   // clears all bit timing bits and disables loop back and silent mode
-  CAN2->BTR |= 0x22B0014;                  // enters the Bitrate
-  CAN2->MCR &= ~(CAN_MCR_SLEEP);           // Clear sleep bit
-  CAN2->MCR &= (uint32_t) ~(1 << 0);       // places CAN into normal mode
-  while ((CAN2->MSR & (1 << 0)));          // change for MSR
-  CAN2->FMR &= (uint32_t) ~(0x1);          // take out of initialisation mode
+  CAN_PAYLOAD_AV_INTF->MCR |= 0x1;
+  while (!(CAN_PAYLOAD_AV_INTF->MSR & 1));                // change
+  CAN_PAYLOAD_AV_INTF->BTR &= (uint32_t) ~(0xC37F03FF);   // clears all bit timing bits and disables loop back and silent mode
+  CAN_PAYLOAD_AV_INTF->BTR |= 0x22B0014;                  // enters the Bitrate
+  CAN_PAYLOAD_AV_INTF->MCR &= ~(CAN_MCR_SLEEP);           // Clear sleep bit
+  CAN_PAYLOAD_AV_INTF->MCR &= (uint32_t) ~(1 << 0);       // places CAN into normal mode
+  while ((CAN_PAYLOAD_AV_INTF->MSR & (1 << 0)));          // change for MSR
+  CAN_PAYLOAD_AV_INTF->FMR &= (uint32_t) ~(0x1);          // take out of initialisation mode
+	CAN2->IER |= CAN_IER_FMPIE1;
 
   // CAN2->FMR |= 0x1; // sets the filter initialisation to 'on'
   // CAN2->FM1R &= (uint32_t)~(0x1); // sets to mask mode filter
