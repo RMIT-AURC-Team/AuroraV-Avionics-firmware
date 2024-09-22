@@ -23,6 +23,7 @@
 #include "lDataAcquisition.h"
 
 #include "loraComm.h"
+#include "payloadComm.h"
 #include "usbComm.h"
 
 #include "stateUpdate.h"

@@ -13,6 +13,7 @@ typedef struct {
   TaskHandle_t xLoRaSampleHandle;
   TaskHandle_t xUsbReceiveHandle;
   TaskHandle_t xUsbTransmitHandle;
+	TaskHandle_t xPayloadTransmitHandle;
   TaskHandle_t xGpsTransmitHandle;
   TaskHandle_t xIdleHandle;
 } Handles;

@@ -2,13 +2,13 @@
 #define _GPSTRANSMIT_H
 
 #include "FreeRTOS.h"
-#include "dataframe.h"
 #include "event_groups.h"
 #include "message_buffer.h"
-#include "stateUpdate.h"
-
 #include "stdio.h"
 
+#include "stateUpdate.h"
+#include "dataframe.h"
+#include "devices.h"
 #include "gps.h"
 #include "lora.h"
 

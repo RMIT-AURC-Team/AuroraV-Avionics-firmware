@@ -205,11 +205,7 @@ void vSystemInit(void *argument) {
   Shell_init(&shell);
 
   /* --------------------------- State Initialization -----------------------------*/
-	
-  // Initialize system state structure
-  static ctxState state;
-  state.currentState = PRELAUNCH;
-		
+
 	// Tilt state variable
 	static StateHandle_t __attribute__((section(".state_tilt"), unused)) tilt;
 	static float _tilt = 0.0f;
@@ -285,6 +281,7 @@ void vSystemInit(void *argument) {
 
   static Handles handles;
 
+	/** @todo refactor task names and associated file names */
   xTaskCreate(vHDataAcquisition, "HDataAcq", 512, &mem, configMAX_PRIORITIES - 2, &handles.xHDataAcquisitionHandle);
   xTaskCreate(vLDataAcquisition, "LDataAcq", 512, &mem, configMAX_PRIORITIES - 3, &handles.xLDataAcquisitionHandle);
   xTaskCreate(vStateUpdate, "StateUpdate", 512, &handles, configMAX_PRIORITIES - 4, &handles.xStateUpdateHandle);
@@ -292,13 +289,10 @@ void vSystemInit(void *argument) {
   xTaskCreate(vLoRaSample, "LoRaSample", 256, NULL, configMAX_PRIORITIES - 6, &handles.xLoRaSampleHandle);
   xTaskCreate(vLoRaTransmit, "LoRaTx", 256, NULL, configMAX_PRIORITIES - 5, &handles.xLoRaTransmitHandle);
   xTaskCreate(vUsbTransmit, "UsbTx", 256, NULL, configMAX_PRIORITIES - 6, &handles.xUsbTransmitHandle);
-  xTaskCreate(vUsbReceive, "UsbRx", 256, &shell, configMAX_PRIORITIES - 6, &handles.xUsbReceiveHandle);
+	xTaskCreate(vUsbReceive, "UsbRx", 256, &shell, configMAX_PRIORITIES - 6, &handles.xUsbReceiveHandle);
 	xTaskCreate(vIdle, "Idle", 256, &mem, tskIDLE_PRIORITY, &handles.xIdleHandle);
-
-  // Create GPS data reading and processing task
-  static ctxGpsTransmit gpsTransmit;
-  gpsTransmit.currentState = &state.currentState;
-  xTaskCreate(vGpsTransmit, "GpsRead", 512, &gpsTransmit, configMAX_PRIORITIES - 6, &handles.xGpsTransmitHandle);
+	xTaskCreate(vPayloadTransmit, "PayloadTx", 512, NULL, configMAX_PRIORITIES - 6, &handles.xPayloadTransmitHandle);
+  xTaskCreate(vGpsTransmit, "GpsRead", 512, NULL, configMAX_PRIORITIES - 6, &handles.xGpsTransmitHandle);
 
   xTaskResumeAll();
 	

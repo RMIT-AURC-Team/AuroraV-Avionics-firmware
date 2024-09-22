@@ -439,6 +439,11 @@
               <FileType>1</FileType>
               <FilePath>..\Core\Src\RTOS\tasks\data\lDataAcquisition.c</FilePath>
             </File>
+            <File>
+              <FileName>payloadComm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\RTOS\tasks\comms\payloadComm.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

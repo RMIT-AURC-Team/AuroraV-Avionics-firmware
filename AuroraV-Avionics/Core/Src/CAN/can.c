@@ -22,7 +22,7 @@ uint8_t CAN_RX(struct CAN_RX_data *CAN) {
       CAN->address  = (CAN1->sFIFOMailBox[1].RIR & 0xFFE00040) >> 21; // extracts the address from the CAN message and stores it into the CAN
       CAN->dataL    = CAN1->sFIFOMailBox[1].RDLR;                     // extracts the LSB 4 bytes
       CAN->dataH    = CAN1->sFIFOMailBox[1].RDHR;                     // extracts the MSB 4 bytes
-      CAN1->RF0R   |= 1 << 5;
+      CAN1->RF0R   |= 1 << 5;																					// release FIFO
       // clear bits 3 and 4 (indicating the mailboxes are full)
       CAN1->RF0R &= (unsigned int)~(1 << 3);
       CAN1->RF0R &= (unsigned int)~(1 << 4);
@@ -34,10 +34,10 @@ uint8_t CAN_RX(struct CAN_RX_data *CAN) {
       CAN->address  = (CAN2->sFIFOMailBox[1].RIR & 0xFFE00040) >> 21;
       CAN->dataL    = CAN2->sFIFOMailBox[1].RDLR;
       CAN->dataH    = CAN2->sFIFOMailBox[1].RDHR;
-      CAN2->RF0R   |= 1 << 5;
+      CAN2->RF1R   |= 1 << 5;
       // clear bits 3 and 4 (indicating the mailboxes are full)
-      CAN2->RF0R &= (unsigned int)~(1 << 3);
-      CAN2->RF0R &= (unsigned int)~(1 << 4);
+      CAN2->RF1R &= (unsigned int)~(1 << 3);
+      CAN2->RF1R &= (unsigned int)~(1 << 4);
       return 1;
     } else
       return 0; // returns 0 if nothing recieved

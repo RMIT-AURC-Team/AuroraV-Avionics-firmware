@@ -6,12 +6,19 @@
  * ===================================================================== */
 
 // GROUNDSTATION LORA
-#define LORA_HEADER_AV_DATA  0x04
-#define LORA_HEADER_GPS_DATA 0x05
+#define LORA_HEADER_AV_DATA  		 0x04
+#define LORA_HEADER_GPS_DATA 		 0x05
+#define LORA_HEADER_PAYLOAD_DATA 0x06
 
 // AEROBRAKES CAN
 #define CAN_HEADER_AEROBRAKES_RETRACT 0x602
 #define CAN_HEADER_AEROBRAKES_DATA    0x601
+
+// PAYLOAD CAN
+#define CAN_HEADER_PAYLOAD_BARO1  0x501
+#define CAN_HEADER_PAYLOAD_BARO2  0x502
+#define CAN_HEADER_PAYLOAD_ACCEL  0x503
+#define CAN_HEADER_PAYLOAD_STATUS 0x504
 
 // FLASH
 #define HEADER_ID_Pos           0x06
