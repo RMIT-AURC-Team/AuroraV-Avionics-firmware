@@ -40,19 +40,30 @@ void configure_RCC_AHB1(void) {
 // ===============================================================
 
 void configure_SPI4_Flash(void) {
+	// SDI,SDO,SCL PE14/13/12 respectively
   GPIOE->MODER &= (~(GPIO_MODER_MODE12_Msk | GPIO_MODER_MODE13_Msk | GPIO_MODER_MODE14_Msk));
   GPIOE->MODER |= ((0x2 << GPIO_MODER_MODE12_Pos) | (0x2 << GPIO_MODER_MODE13_Pos) | (0x2 << GPIO_MODER_MODE14_Pos));
   GPIOE->AFR[1] &= (uint32_t)(~(0x0FFFF000)); // clears AFRH 11, 12, 13 and 14
   GPIOE->AFR[1] |= (0x05555000);              // sets AFRH 10, 11 and 12 to AF6 for lora SPI
-  GPIOE->MODER &= (~(GPIO_MODER_MODE9_Msk | GPIO_MODER_MODE10_Msk | GPIO_MODER_MODE11_Msk));
-  GPIOE->MODER |= ((0x1 << GPIO_MODER_MODE9_Pos) | (0x1 << GPIO_MODER_MODE10_Pos) | (0x1 << GPIO_MODER_MODE11_Pos));
-  GPIOE->OTYPER &= (uint16_t)(~(GPIO_OTYPER_OT9 | GPIO_OTYPER_OT10 | GPIO_OTYPER_OT11));
-  GPIOE->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED9_Msk | GPIO_OSPEEDR_OSPEED10_Msk | GPIO_OSPEEDR_OSPEED11_Msk));
-  GPIOE->OSPEEDR |= ((0x2 << GPIO_OSPEEDR_OSPEED9_Pos) | (0x2 << GPIO_OSPEEDR_OSPEED10_Pos) | (0x2 << GPIO_OSPEEDR_OSPEED11_Pos));
-  GPIOE->OTYPER &= (~(GPIO_OTYPER_OT12 | GPIO_OTYPER_OT13 | GPIO_OTYPER_OT14));
+	GPIOE->OTYPER &= (~(GPIO_OTYPER_OT12 | GPIO_OTYPER_OT13 | GPIO_OTYPER_OT14));
   GPIOE->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED12_Msk | GPIO_OSPEEDR_OSPEED13_Msk | GPIO_OSPEEDR_OSPEED14_Msk));
   GPIOE->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED12_Pos | 0x2 << GPIO_OSPEEDR_OSPEED13_Pos | 0x2 << GPIO_OSPEEDR_OSPEED14_Pos);
-  GPIOE->ODR |= (GPIO_ODR_OD10) | (GPIO_ODR_OD11) | (GPIO_ODR_OD9);
+	// Mem CS, Hold and WP PE11/10/9 
+	/// change to Mem CS, Hold and WP PE11/10 PB11 respectively 
+  GPIOE->MODER &= (~( GPIO_MODER_MODE10_Msk | GPIO_MODER_MODE11_Msk));
+  GPIOE->MODER |= ((0x1 << GPIO_MODER_MODE10_Pos) | (0x1 << GPIO_MODER_MODE11_Pos));
+  GPIOE->OTYPER &= (uint16_t)(~( GPIO_OTYPER_OT10 | GPIO_OTYPER_OT11));
+  GPIOE->OSPEEDR &= (~( GPIO_OSPEEDR_OSPEED10_Msk | GPIO_OSPEEDR_OSPEED11_Msk));
+  GPIOE->OSPEEDR |= ( (0x2 << GPIO_OSPEEDR_OSPEED10_Pos) | (0x2 << GPIO_OSPEEDR_OSPEED11_Pos));
+  GPIOE->ODR |= ((GPIO_ODR_OD10) | (GPIO_ODR_OD11));
+	// Write protect PB11
+	GPIOB->MODER &= (~( GPIO_MODER_MODE11_Msk));
+  GPIOB->MODER |= ((0x1 << GPIO_MODER_MODE11_Pos));
+  GPIOB->OTYPER &= (uint16_t)(~(  GPIO_OTYPER_OT11));
+  GPIOB->OSPEEDR &= (~( GPIO_OSPEEDR_OSPEED11_Msk));
+  GPIOB->OSPEEDR |= ( (0x2 << GPIO_OSPEEDR_OSPEED11_Pos));
+  GPIOB->ODR |= ((GPIO_ODR_OD11));
+	// Flash SPI Peripheral Configurations
   SPI4->CR1 &= (~(SPI_CR1_BR_Msk));
   SPI4->CR1 &= (~(SPI_CR1_CPHA_Msk) | (SPI_CR1_CPOL_Msk));
   SPI4->CR1 |= SPI_CR1_MSTR;              // micro is master
@@ -69,11 +80,13 @@ void configure_SPI4_Flash(void) {
 // ===============================================================
 
 void configure_SPI3_LoRa() {
+	//SPI 3 SDI SDO SCL on PC12/11/10 respectively
   GPIOC->MODER &= (~(GPIO_MODER_MODE10_Msk | GPIO_MODER_MODE11_Msk | GPIO_MODER_MODE12_Msk));
   GPIOC->MODER |= ((0x2 << GPIO_MODER_MODE10_Pos) | (0x2 << GPIO_MODER_MODE11_Pos) | (0x2 << GPIO_MODER_MODE12_Pos));
   GPIOC->PUPDR &= (~(GPIO_PUPDR_PUPD10_Msk | GPIO_PUPDR_PUPD11_Msk | GPIO_PUPDR_PUPD12_Msk));
   GPIOC->PUPDR |= ((0X1 << GPIO_PUPDR_PUPD10_Pos) | (0X1 << GPIO_PUPDR_PUPD11_Pos) | (0X1 << GPIO_PUPDR_PUPD12_Pos));
   GPIOD->PUPDR |= (0X1 << GPIO_PUPDR_PUPD1_Pos);
+	//chip select PD0 SX_DIO0 PD1 SX reset PD7
   GPIOD->MODER &= (~(GPIO_MODER_MODE0_Msk) | (GPIO_MODER_MODE7_Msk) | (GPIO_MODER_MODE1_Msk));
   GPIOD->MODER |= (0X01 << GPIO_MODER_MODE0_Pos) | (0X01 << GPIO_MODER_MODE7_Pos); // chip select stuff
   TIM6->ARR &= (~(TIM_ARR_ARR_Msk));
@@ -86,11 +99,13 @@ void configure_SPI3_LoRa() {
   while ((TIM6->SR & TIM_SR_UIF) == 0);                    // 60 ms delay
   GPIOD->ODR &= (~(GPIO_ODR_OD7));
   TIM6->SR &= ~(TIM_SR_UIF);                               // clears UIF
-
+//SPI 3 SDI SDO SCL on PC12/11/10 respectively
   GPIOC->OTYPER &= (~(GPIO_OTYPER_OT10 | GPIO_OTYPER_OT11 | GPIO_OTYPER_OT12));
   GPIOC->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED10_Msk | GPIO_OSPEEDR_OSPEED11_Msk | GPIO_OSPEEDR_OSPEED12_Msk));
   GPIOC->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED10_Pos | 0x2 << GPIO_OSPEEDR_OSPEED11_Pos | 0x2 << GPIO_OSPEEDR_OSPEED12_Pos);
+	
   GPIOD->ODR |= GPIO_ODR_OD0;                              // raise chip select
+	//change
   GPIOC->AFR[1] &= (uint32_t)(~(0x000FFF00));              // clears AFRH 10, 11 and 12
   GPIOC->AFR[1] |= (0x00066600);                           // sets AFRH 10, 11 and 12 to AF6 for lora SPI
 
@@ -135,32 +150,23 @@ void configure_UART3_GPS(void) {
   GPIOD->ODR |= GPIO_ODR_OD13;
 }
 
-// General GPIO Configure for MISC: LED1, LED2, Piezo Buzzer (PD14, PD15, PB15 respectivley)
+// General GPIO Configure for MISC: Heart Beat, LED2 (PC0,PA1 respectively)
 void configure_MISC_GPIO(void) {
-  GPIOD->MODER &= (~(GPIO_MODER_MODE14_Msk | GPIO_MODER_MODE15_Msk));
-  GPIOD->MODER |= ((0x1 << GPIO_MODER_MODE14_Pos) | (0x1 << GPIO_MODER_MODE15_Pos));
-  GPIOD->OTYPER &= (uint16_t)(~(GPIO_OTYPER_OT14 | GPIO_OTYPER_OT15));                         // sets 0xboth as push-pull
-  GPIOD->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED14_Msk | GPIO_OSPEEDR_OSPEED15_Msk));                // clears Port 14 and 15 section
-  GPIOD->OSPEEDR |= ((0x2 << GPIO_OSPEEDR_OSPEED14_Pos) | (0x2 << GPIO_OSPEEDR_OSPEED15_Pos)); // sets slew rate as high speed
+  GPIOC->MODER &= (~(GPIO_MODER_MODE0_Msk ));
+  GPIOC->MODER |= ((0x1 << GPIO_MODER_MODE0_Pos) ));
+  GPIOC->OTYPER &= (uint16_t)(~(GPIO_OTYPER_OT0 ));                // sets  as push-pull
+  GPIOC->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED0_Msk ));                // clears section
+  GPIOC->OSPEEDR |= ((0x2 << GPIO_OSPEEDR_OSPEED0_Pos))); // sets slew rate as high speed
+  GPIOC->ODR &= (~(GPIO_ODR_OD0));     // turns LED off
 
-  //	GPIOD->PUPDR &= (~(GPIO_PUPDR_PUPD14 | GPIO_PUPDR_PUPD15)); // clears register for port 14 and 15
-  //	GPIOD->PUPDR |= (0x00<<GPIO_PUPDR_PUPD14_Pos | 0x00<<GPIO_PUPDR_PUPD15_Pos ); // shifts 00 into and pos for 14 and 15
-  GPIOD->ODR &= (~(GPIO_ODR_OD14 | GPIO_ODR_OD15));     // turns LEDs off
+  GPIOA->MODER &= (~(GPIO_MODER_MODE1_Pos));           // clears pos 1 of port B moder R reg
+  GPIOA->MODER |= (0x1 << GPIO_MODER_MODE1_Pos);       // sets pos 1 to general purpose output
+  GPIOA->OTYPER &= (~(GPIO_OTYPER_OT1_Msk));           // sets port B 1 to push-pull
+  GPIOA->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED1_Msk));     // clears pos 1 in Ospeed R reg
+  GPIOA->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED1_Pos); // sets slew rate to highspeed
+  GPIOA->ODR &= (~(GPIO_ODR_OD1));                     // turns LED off
 
-  GPIOB->MODER &= (~(GPIO_MODER_MODE15_Pos));           // clears pos 15 of port B moder R reg
-  GPIOB->MODER |= (0x1 << GPIO_MODER_MODE15_Pos);       // sets pos 15 to general purpose output
-  GPIOB->OTYPER &= (~(GPIO_OTYPER_OT15_Msk));           // sets port B 15 to push-pull
-  GPIOB->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED15_Msk));     // clears pos 15 in Ospeed R reg
-  GPIOB->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED15_Pos); // sets slew rate to highspeed
-  GPIOB->ODR &= (~(GPIO_ODR_OD15));                     // turns peizer buzzer IO to low
 
-  // configure PB1 as input for B switch
-  GPIOB->MODER &= (~(GPIO_MODER_MODE1_Pos));
-  GPIOB->OTYPER &= (~(GPIO_OTYPER_OT1_Msk));           // sets port B 15 to push-pull
-  GPIOB->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED1_Msk));     // clears pos 15 in Ospeed R reg
-  GPIOB->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED1_Pos); // sets slew rate to highspeed
-  GPIOB->PUPDR &= (~(GPIO_PUPDR_PUPD1));               // clears PUPDR for PB1
-  GPIOB->PUPDR |= (0x01 << GPIO_PUPDR_PUPD1_Pos);      // set pull up resistor for PB1
 }
 
 // ===============================================================
@@ -198,7 +204,7 @@ void TIM7init(void) {
 // ===============================================================
 //                           MISC
 // ===============================================================
-
+/*
 void buzzer(void) {
   TIM6->ARR &= (~(TIM_ARR_ARR_Msk));
   TIM6->PSC &= (~(TIM_PSC_PSC_Msk));
@@ -215,3 +221,4 @@ void buzzer(void) {
     TIM6->CR1 |= TIM_CR1_CEN;  // Enables counter
   }
 }
+*/
