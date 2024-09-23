@@ -65,6 +65,8 @@ void vLoRaSample(void *argument) {
 		TickType_t xLastWakeTime = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
+		GPIOC->ODR ^= 0x01;
+		
     // Create AVData packet with current data
     LoRa_Packet avData = LoRa_AVData(
         LORA_HEADER_AV_DATA,
