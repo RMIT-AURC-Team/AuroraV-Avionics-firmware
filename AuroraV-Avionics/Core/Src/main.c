@@ -103,7 +103,7 @@ void vDeviceInit() {
   static UART usb;
   static DeviceHandle_t usbHandle __attribute__((section(".device_usb"), unused));
   usbHandle = UART_init(
-    &usb, "USB", USB_INTERFACE, USB_PORT, USB_BAUD, OVER8
+    &usb, "USB", USB_INTERFACE, USB_PORT, USB_PINS, USB_BAUD, OVER8
   );
 
   // Initialise LoRa driver
@@ -152,6 +152,15 @@ void vDeviceInit() {
   static DeviceHandle_t baroHandle __attribute__((section(".device_baro"), unused));
   baroHandle = BMP581_init(
       &baro, "Baro", BARO_PORT, BARO_CS, BMP581_TEMP_SENSITIVITY, BMP581_PRESS_SENSITIVITY
+  );
+	
+	/* GPS */
+	
+  // Initialise GPS driver and device handle
+  static GPS gps;
+  static DeviceHandle_t gpsHandle __attribute__((section(".device_gps"), unused));
+  gpsHandle = GPS_init(
+      &gps, "GPS", GPS_INTERFACE, GPS_PORT, GPS_PINS, GPS_BAUD
   );
 	
 }

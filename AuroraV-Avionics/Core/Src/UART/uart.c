@@ -28,6 +28,7 @@ DeviceHandle_t UART_init(
     char name[DEVICE_NAME_LENGTH],
     USART_TypeDef *interface,
     GPIO_TypeDef *port,
+		UART_Pins pins,
     uint32_t baud,
     OversampleMode over8
 ) {
@@ -37,10 +38,11 @@ DeviceHandle_t UART_init(
   uart->receive   = UART_receive;
   uart->interface = interface;
   uart->port      = port;
+  uart->pins      = pins;
   uart->baud      = baud;
   uart->over8     = over8;
 
-  _UART_setup(uart);
+  _UART_setup(uart, pins);
   DeviceHandle_t handle;
   strcpy(handle.name, name);
   handle.device = uart;
@@ -60,27 +62,38 @@ DeviceHandle_t UART_init(
  * @return @c NULL.
  **
  * =============================================================================== */
-void _UART_setup(UART *uart) {
+void _UART_setup(UART *uart, UART_Pins pins) {
   GPIO_TypeDef *port       = uart->port;
   USART_TypeDef *interface = uart->interface;
 
-  port->MODER &= ~(GPIO_MODER_MODE6_Msk | GPIO_MODER_MODE7_Msk | GPIO_MODER_MODE8_Msk);
-  port->MODER |= (0x02 << GPIO_MODER_MODE6_Pos) | (0x02 << GPIO_MODER_MODE7_Pos) | (0x2 << GPIO_MODER_MODE8_Pos);
-  port->AFR[0] &= ~0xFF000000; // clears AFRL 6 and 7 and
-  port->AFR[0] |= 0x88000000;  // sets PC 6 and 7 to AF8
-  port->PUPDR |= (0x01 << GPIO_PUPDR_PUPD7_Pos);
+	// Clear MODER bits for the TX and RX pins
+  port->MODER &= ~((0x03 << GPIO_MODER(pins.TX)) | (0x03 << GPIO_MODER(pins.RX))); 							// Clear mode bits
+  port->MODER |= (GPIO_MODE_AF << GPIO_MODER(pins.TX)) | (GPIO_MODE_AF << GPIO_MODER(pins.RX)); // Set mode to AF
 
-  port->OSPEEDR &= ~GPIO_OSPEEDR_OSPEED6;
-  port->OSPEEDR |= (0x03 << GPIO_OSPEEDR_OSPEED6_Pos);
+  // Clear AFR for the TX and RX pins and set AF8
+  port->AFR[pins.TX / 8] &= ~(0x0F << ((pins.TX % 8) * 4)); 	 // Clear AF bits for TX
+  port->AFR[pins.RX / 8] &= ~(0x0F << ((pins.RX % 8) * 4)); 	 // Clear AF bits for RX
+  port->AFR[pins.TX / 8] |= (UART_AF8 << ((pins.TX % 8) * 4)); // Set AF8 for TX
+  port->AFR[pins.RX / 8] |= (UART_AF8 << ((pins.RX % 8) * 4)); // Set AF8 for RX
 
+  // Set pull-up for RX pin
+  port->PUPDR &= ~(0x03 << GPIO_PUPDR(pins.RX)); 							 // Clear pull-up/pull-down bits for RX
+  port->PUPDR |= (GPIO_PULL_UP << GPIO_PUPDR(pins.TX));				 // Set pull-up for RX
+
+  // Set speed for TX and RX pins
+  port->OSPEEDR &= ~((0x03 << GPIO_OSPEEDR(pins.TX)) | (0x03 << GPIO_OSPEEDR(pins.RX))); // Clear speed bits
+  port->OSPEEDR |= (GPIO_SPEED_HIGH << GPIO_OSPEEDR(pins.TX)); 						 			 				 // Set high speed for TX
+  port->OSPEEDR |= (GPIO_SPEED_HIGH << GPIO_OSPEEDR(pins.RX)); 						 			 				 // Set high speed for RX
+
+  // Calculate USARTDIV
   uint16_t usartDiv = 168000000 / ((2 - (uart->over8)) * uart->baud);
-  interface->BRR &= 0xFFFF0000; // clear mantissa and div in baud rate reg
-  interface->BRR |= (usartDiv); // set mantissa and div in baud rate reg to 9600
+  interface->BRR &= 0xFFFF0000; // Clear mantissa and div in baud rate reg
+  interface->BRR |= usartDiv; 	// Set baud rate
 
-  interface->CR1 &= ~0x400;     // disable parity
-  interface->CR2 &= ~0xE00;     // disable synchrnous mode
-  interface->CR3 &= ~0x300;     // disable flow control
-  interface->CR1 |= 0x202C;     // enable usart, enable receive and transmitt
+  interface->CR1 &= ~USART_CR1_PCE;     													// disable parity
+  interface->CR2 &= ~USART_CR2_CLKEN;   													// disable synchrnous mode
+  interface->CR3 &= ~(USART_CR3_CTSE | USART_CR3_RTSE);   				// disable flow control
+  interface->CR1 |= (USART_CR1_UE | USART_CR1_RE | USART_CR1_TE); // enable usart, enable receive and transmitt
 }
 
 #endif

@@ -9,72 +9,110 @@
 
 #include "gps.h"
 
-uint8_t GPS_byte() {
-  while((USART3->SR & USART_SR_RXNE) == 0);
-  uint8_t a =(uint8_t)((0X000000FF)&(USART3->DR));
-	return a;
+DeviceHandle_t GPS_init(
+	GPS *gps, 
+	char *name,
+	USART_TypeDef *interface, 
+	GPIO_TypeDef *port, 
+	UART_Pins pins, 
+	uint32_t baud
+) {
+	UART_init(&gps->base, "", interface, port, pins, baud, OVER8);
+	gps->message = GPS_message;
+	gps->decode  = GPS_decode;
+	
+	//gps->base.print(&gps->base, GPS_PUBX_SILENCE);
+	
+	DeviceHandle_t handle;
+  strcpy(handle.name, name);
+  handle.device = gps;
+
+  return handle;
 }
- 
- void GPS_message(char * message){
-  //$GPGGA
+
+void GPS_message(GPS *gps, char *message) {
+	UART uart = gps->base;
+	
+	//uart.print(&uart, GPS_PUBX_POLL);
+	
+  //Reads GPS message
   uint8_t flag = 0;
   message[0] = '$';
-  message[1] = 'G';  
-  message[2] = 'N'; 
-  message[3] = 'G'; 
-  message[4] = 'G'; 
-  message[5] = 'A'; 
-	 
-	while(1){
-		for (int x =0; x<6;x++){
-			uint8_t byte = GPS_byte();
-			if (message[x] != byte){
-				flag = 0;
-				break;
-			}	 
-			if(x == 5)
-				flag = 1;
-		}
+  message[1] = 'G';
+  message[2] = 'N';
+  message[3] = 'G';
+  message[4] = 'G';
+  message[5] = 'A';
 
-		if (flag){
-			uint8_t byte =0;
-			for(int x = 6; byte != '\n'; x++){
-				byte = GPS_byte();
-				message[x] = byte;
-			}
-			return;
-		}
-	}
-	
+  while (1) {
+    for (int x = 0; x < 6; x++) {
+      uint8_t byte = uart.receive(&uart);
+      if (message[x] != byte) {
+        flag = 0;
+        break;
+      }
+
+      if (x == 5)
+        flag = 1;
+    }
+    if (flag) {
+      uint8_t byte = 0;
+      for (int x = 6; byte != '\n'; x++) {
+        byte = uart.receive(&uart);
+        message[x] = byte;
+      }
+      return;
+    }
+  }
 }
- 
-void DecodeGPS(char* GPS, struct GPSData* data) {
-	int GPSpointer = 7;
-	int pointer = 0;
-	int tempPointer = 0;
-	char* temp[] = { &data->time[0],&data->latitude[0],&data->N_S[0], &data->longitude[0],&data->E_W[0], &data->fix[0], &data->satellites[0], &data->hdop[0], &data->altitude[0]};
-	while (tempPointer <= 8) {
-		if (GPS[GPSpointer] == ',') {
-			if ((pointer == 0) && ((tempPointer ==1)||(tempPointer == 3)))
-				data->lock = 0;
-			else if ((pointer >= 8) && ((tempPointer == 1) || (tempPointer == 3)))
-				data->lock = 1;
-			pointer = 0;
-			tempPointer++;
-		}
-		else {
-			if (pointer <= 15) {
-				temp[tempPointer][pointer] = GPS[GPSpointer];
-				temp[tempPointer][pointer + 1] = '\0';
-				pointer++;
-			}
-		}
-		GPSpointer++;
-	}
 
-	data->hour = (data->time[0] - '0') * 10 + (data->time[1] - '0');
-	data->minute = (data->time[2] - '0') * 10 + (data->time[3] - '0');
-	data->second = (data->time[4] - '0') * 10 + (data->time[5] - '0');
+void GPS_decode(GPS *gps, char *message, struct GPS_Data *data) {
+  {
+    int GPSpointer = 9;
+    int pointer = 0;
+    int tempPointer = 0;
+    char *temp[] = {data->time, data->latitude, data->N_S, data->longitude, data->E_W, data->altref, data->navstat, data->hacc, data->vacc, data->sog, data->cog, data->vvel, data->diffage, data->hdop, data->vdop, data->tdop, data->satellites};
+    while (tempPointer <= 16) {
+      if (message[GPSpointer] == ',') {
+        if ((pointer == 0) && ((tempPointer == 1) || (tempPointer == 3)))
+          data->lock = 0;
+        else if ((pointer >= 8) && ((tempPointer == 1) || (tempPointer == 3)))
+          data->lock = 1;
+
+        pointer = 0;
+        tempPointer++;
+
+      } else {
+        if (pointer <= 15) {
+          temp[tempPointer][pointer] = message[GPSpointer];
+          temp[tempPointer][pointer + 1] = '\0';
+          pointer++;
+        }
+      }
+      GPSpointer++;
+    }
+  }
+  data->hour = (data->time[0] - '0') * 10 + (data->time[1] - '0');
+  data->minute = (data->time[2] - '0') * 10 + (data->time[3] - '0');
+  data->second = (data->time[4] - '0') * 10 + (data->time[5] - '0');
+  data->latitude_degrees = (data->latitude[0] - '0') * 10 + (data->latitude[1] - '0');
+  int j = 1;
+  data->latitude_minutes = 0;
+  for (int i = 0; i < 9; i++) {
+    if (data->latitude[i + 2] == '.')
+      i++;
+    data->latitude_minutes = data->latitude_minutes + (data->latitude[i + 2] - '0') * (float)pow(10, j);
+    j--;
+  }
+  data->longitude_degrees = (data->longitude[0] - '0') * 100 + (data->longitude[1] - '0') * 10 + (data->longitude[2] - '0');
+  j = 1;
+  data->longitude_minutes = 0;
+  for (int i = 0; i < 9; i++) {
+    if (data->longitude[i + 3] == '.')
+      i++;
+    data->longitude_minutes = data->longitude_minutes + (data->longitude[i + 3] - '0') * (float)pow(10, j);
+    j--;
+  }
 }
 
 /** @} */
