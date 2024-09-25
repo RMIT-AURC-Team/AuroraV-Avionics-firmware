@@ -10,7 +10,7 @@ extern SemaphoreHandle_t xUsbMutex;
 
 void vGpsTransmit(void *argument) {
   const TickType_t xFrequency = pdMS_TO_TICKS(500);
-  const TickType_t blockTime  = pdMS_TO_TICKS(0);
+  const TickType_t blockTime  = pdMS_TO_TICKS(250);
   char gpsString[100];
 	
 	GPS *gps 								= DeviceHandle_getHandle("GPS").device;
@@ -21,10 +21,8 @@ void vGpsTransmit(void *argument) {
 		TickType_t xLastWakeTime = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
-		struct GPS_Data gpsData;
-		taskENTER_CRITICAL();
+  	struct GPS_Data gpsData;
     gps->message(gps, gpsString);
-		taskEXIT_CRITICAL();
     gps->decode(gps, gpsString, &gpsData);
 
 		#ifdef DEBUG

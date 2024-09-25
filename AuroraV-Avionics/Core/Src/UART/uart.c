@@ -32,6 +32,7 @@ DeviceHandle_t UART_init(
     uint32_t baud,
     OversampleMode over8
 ) {
+	uart->setBaud   = UART_setBaud;
   uart->send      = UART_send;
   uart->sendBytes = UART_sendBytes;
   uart->print     = UART_print;
@@ -73,8 +74,8 @@ void _UART_setup(UART *uart, UART_Pins pins) {
   // Clear AFR for the TX and RX pins and set AF8
   port->AFR[pins.TX / 8] &= ~(0x0F << ((pins.TX % 8) * 4)); 	 // Clear AF bits for TX
   port->AFR[pins.RX / 8] &= ~(0x0F << ((pins.RX % 8) * 4)); 	 // Clear AF bits for RX
-  port->AFR[pins.TX / 8] |= (UART_AF8 << ((pins.TX % 8) * 4)); // Set AF8 for TX
-  port->AFR[pins.RX / 8] |= (UART_AF8 << ((pins.RX % 8) * 4)); // Set AF8 for RX
+  port->AFR[pins.TX / 8] |= ((interface <= USART3 ? UART_AF7 : UART_AF8) << ((pins.TX % 8) * 4)); // Set AF8 for TX
+  port->AFR[pins.RX / 8] |= ((interface <= USART3 ? UART_AF7 : UART_AF8) << ((pins.RX % 8) * 4)); // Set AF8 for RX
 
   // Set pull-up for RX pin
   port->PUPDR &= ~(0x03 << GPIO_PUPDR(pins.RX)); 							 // Clear pull-up/pull-down bits for RX
@@ -100,6 +101,20 @@ void _UART_setup(UART *uart, UART_Pins pins) {
 
 /********************************** INTERFACE METHODS ********************************/
 
+void UART_setBaud(UART *uart, uint32_t baud) {
+  GPIO_TypeDef *port       = uart->port;
+  USART_TypeDef *interface = uart->interface;	
+	
+	USART1->CR1 &= ~USART_CR1_UE;
+
+	// Calculate USARTDIV
+  uint16_t usartDiv = 168000000 / ((2 - (uart->over8)) * baud);
+  interface->BRR &= 0xFFFF0000; // Clear mantissa and div in baud rate reg
+  interface->BRR |= usartDiv; 	// Set baud rate
+	
+	USART1->CR1 |= USART_CR1_UE;
+}
+
 /* =============================================================================== */
 /**
  * @brief Sends a single byte of data over the UART interface.
@@ -111,7 +126,7 @@ void _UART_setup(UART *uart, UART_Pins pins) {
  * =============================================================================== */
 void UART_send(UART *uart, uint8_t data) {
   USART_TypeDef *interface = uart->interface;
-  while ((interface->SR & USART_SR_TXE) == 0);
+  while ((interface->SR & USART_SR_TXE) == 0);  
   interface->DR = data;
   while ((interface->SR & USART_SR_TC) == 0);
 }

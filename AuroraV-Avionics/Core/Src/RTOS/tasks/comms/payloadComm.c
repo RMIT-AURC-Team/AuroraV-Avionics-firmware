@@ -30,7 +30,7 @@ void payloadCANRequest(unsigned int can, uint16_t id, unsigned int *out) {
 
 void vPayloadTransmit(void *argument) {
   const TickType_t xFrequency = pdMS_TO_TICKS(500);
-  const TickType_t blockTime  = pdMS_TO_TICKS(0);
+  const TickType_t blockTime  = pdMS_TO_TICKS(250);
 	
 	xCANPayloadGroup = xEventGroupCreate();
 
@@ -40,10 +40,10 @@ void vPayloadTransmit(void *argument) {
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 
 		unsigned int payloadState[2];
-	  payloadCANRequest(CAN_PAYLOAD_AV, CAN_HEADER_PAYLOAD_STATUS, payloadState);
+	  //payloadCANRequest(CAN_PAYLOAD_AV, CAN_HEADER_PAYLOAD_STATUS, payloadState);
 		
 		unsigned int payloadAccel[2];
-		payloadCANRequest(CAN_PAYLOAD_AV, CAN_HEADER_PAYLOAD_ACCEL, payloadAccel);
+		//payloadCANRequest(CAN_PAYLOAD_AV, CAN_HEADER_PAYLOAD_ACCEL, payloadAccel);
     		
 		LoRa_Packet payloadData = LoRa_PayloadData(
         LORA_HEADER_PAYLOAD_DATA,

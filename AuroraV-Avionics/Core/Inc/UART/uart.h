@@ -19,6 +19,7 @@
 #define UART_ENABLE       	0x2000
 #define UART_RX_ENABLE    	0x0004
 #define UART_TX_ENABLE    	0x0008
+#define UART_AF7          	0x07
 #define UART_AF8          	0x08
 
 /**
@@ -47,6 +48,7 @@ typedef struct UART {
 	UART_Pins pins;
   uint32_t baud;
   OversampleMode over8;
+	void (*setBaud)(struct UART *, uint32_t);
   void (*send)(struct UART *, uint8_t);             //!< UART send method.   	             @see UART_send
   void (*sendBytes)(struct UART *, uint8_t *, int); //!< UART send multiple bytes method.  @see UART_sendBytes
   void (*print)(struct UART *, char *);             //!< UART print string method.  			 @see UART_print
@@ -55,6 +57,7 @@ typedef struct UART {
 
 DeviceHandle_t UART_init(UART *, char[DEVICE_NAME_LENGTH], USART_TypeDef *, GPIO_TypeDef *, UART_Pins, uint32_t, OversampleMode);
 void _UART_setup(UART *, UART_Pins);
+void UART_setBaud(UART *, uint32_t);
 
 void UART_send(UART *, uint8_t data);
 void UART_sendBytes(UART *, uint8_t *data, int length);

@@ -49,8 +49,8 @@ void vLoRaTransmit(void *argument) {
  * queue.
  */
 void vLoRaSample(void *argument) {
-  const TickType_t blockTime  = pdMS_TO_TICKS(0);
   const TickType_t xFrequency = pdMS_TO_TICKS(250);
+	const TickType_t blockTime  = pdMS_TO_TICKS(125);
 		
   A3G4250D *gyro      = DeviceHandle_getHandle("Gyro").device;
 	KX134_1211 *lAccel	= DeviceHandle_getHandle("LAccel").device;	

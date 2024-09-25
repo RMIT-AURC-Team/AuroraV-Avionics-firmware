@@ -8,6 +8,7 @@
  ***********************************************************************************/
 
 #include "gps.h"
+#include "devices.h"
 
 DeviceHandle_t GPS_init(
 	GPS *gps, 
@@ -21,7 +22,9 @@ DeviceHandle_t GPS_init(
 	gps->message = GPS_message;
 	gps->decode  = GPS_decode;
 	
-	//gps->base.print(&gps->base, GPS_PUBX_SILENCE);
+	gps->base.print(&gps->base, GPS_PUBX_SILENCE);
+	gps->base.print(&gps->base,  "$PUBX,41,1,0003,0003,19200,0*1C\r\n");
+	gps->base.setBaud(&gps->base, 19200);
 	
 	DeviceHandle_t handle;
   strcpy(handle.name, name);
@@ -33,16 +36,16 @@ DeviceHandle_t GPS_init(
 void GPS_message(GPS *gps, char *message) {
 	UART uart = gps->base;
 	
-	//uart.print(&uart, GPS_PUBX_POLL);
+	uart.print(&uart, GPS_PUBX_POLL);
 	
   //Reads GPS message
   uint8_t flag = 0;
   message[0] = '$';
-  message[1] = 'G';
-  message[2] = 'N';
-  message[3] = 'G';
-  message[4] = 'G';
-  message[5] = 'A';
+  message[1] = 'P';
+  message[2] = 'U';
+  message[3] = 'B';
+  message[4] = 'X';
+  message[5] = ',';
 
   while (1) {
     for (int x = 0; x < 6; x++) {

@@ -90,8 +90,6 @@ void vLDataAcquisition(void *argument) {
 		TickType_t xLastWakeTime = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
 		
-		GPIOD->ODR ^= 0x8000;
-		
     // Update baro data
 		#ifdef DUMMY
 			const unsigned long press_length = 0x00003A5C;
@@ -110,13 +108,15 @@ void vLDataAcquisition(void *argument) {
     *altitude = 44330 * (1.0 - pow(baro->press / baro->groundPress, 0.1903));
 
 		if (fabs(baro->press - baro->groundPress) > 500) {
-      usb->print(usb, "spike\n\r");
+      buzzer();
 		}
 		
     // Add sensor data and barometer data to dataframe
     mem->append(mem, HEADER_LOWRES);
     mem->appendBytes(mem, baro->rawTemp, BMP581_DATA_SIZE);
     mem->appendBytes(mem, baro->rawPress, BMP581_DATA_SIZE);
+		if(memcmp(mem->cell - BMP581_DATA_SIZE, &baro->rawPress, BMP581_DATA_SIZE))
+			buzzer();
 
     // Only run calculations when enabled
     EventBits_t uxBits = xEventGroupWaitBits(xTaskEnableGroup, GROUP_TASK_ENABLE_LOWRES, pdFALSE, pdFALSE, blockTime);
