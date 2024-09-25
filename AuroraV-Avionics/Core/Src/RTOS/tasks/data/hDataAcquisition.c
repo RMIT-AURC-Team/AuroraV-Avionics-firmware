@@ -117,11 +117,6 @@ void vHDataAcquisition(void *argument) {
 			gyro->update(gyro);
 		taskEXIT_CRITICAL();
 		#endif
-		
-		if (lAccel->accelData[0] > 2 || lAccel->accelData[1] > 2 || lAccel->accelData[2] > 2
-		||	hAccel->accelData[0] > 2 || hAccel->accelData[1] > 2 || hAccel->accelData[2] > 2) {
-			GPIOD->ODR ^= 0x4000;
-		}
 
     // Add sensor data to dataframe
     mem->append(mem, HEADER_HIGHRES);

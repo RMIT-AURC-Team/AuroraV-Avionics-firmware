@@ -88,9 +88,6 @@ void vLDataAcquisition(void *argument) {
   for (;;) {
     // Block until 20ms interval
 		TickType_t xLastWakeTime = xTaskGetTickCount();
-    vTaskDelayUntil(&xLastWakeTime, xFrequency);
-		
-		GPIOD->ODR ^= 0x8000;
 		
     // Update baro data
 		#ifdef DUMMY
@@ -108,10 +105,6 @@ void vLDataAcquisition(void *argument) {
 
     // Calculate altitude
     *altitude = 44330 * (1.0 - pow(baro->press / baro->groundPress, 0.1903));
-
-		if (fabs(baro->press - baro->groundPress) > 500) {
-      usb->print(usb, "spike\n\r");
-		}
 		
     // Add sensor data and barometer data to dataframe
     mem->append(mem, HEADER_LOWRES);
@@ -131,12 +124,22 @@ void vLDataAcquisition(void *argument) {
       avgVel->append(avgVel, *velocity);
     }
 
+		#ifdef PLOT
+			//! @todo extract debug print to function
+			//! @todo move debug function to new source file with context as parameter
+			if ((xSemaphoreTake(xUsbMutex, pdMS_TO_TICKS(0))) == pdTRUE) {
+				char debugStr[100];
+				snprintf(debugStr, 100, "Pressure:%f\n\r", baro->press);
+				xMessageBufferSend(xUsbTxBuff, (void *)debugStr, 100, pdMS_TO_TICKS(10));
+				xSemaphoreGive(xUsbMutex);
+			}
+		#endif
 		#ifdef DEBUG
 			//! @todo extract debug print to function
 			//! @todo move debug function to new source file with context as parameter
 			if ((xSemaphoreTake(xUsbMutex, pdMS_TO_TICKS(0))) == pdTRUE) {
 				char debugStr[100];
-		snprintf(debugStr, 100, "[LDataAcq] %d\tBaro\tPressure: %.0f\tTemperature: %.1f\n\r", lDummyIdx / 2, baro->press, baro->temp);
+				snprintf(debugStr, 100, "[LDataAcq] %d\tBaro\tPressure: %.0f\tTemperature: %.1f\n\r", lDummyIdx / 2, baro->press, baro->temp);
 				xMessageBufferSend(xUsbTxBuff, (void *)debugStr, 100, pdMS_TO_TICKS(10));
 				xSemaphoreGive(xUsbMutex);
 			}
