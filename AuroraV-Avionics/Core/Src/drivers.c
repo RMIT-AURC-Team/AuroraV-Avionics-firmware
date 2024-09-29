@@ -202,8 +202,8 @@ void TIM7init(void) {
 void buzzer(void) {
   TIM6->ARR &= (~(TIM_ARR_ARR_Msk));
   TIM6->PSC &= (~(TIM_PSC_PSC_Msk));
-  TIM6->ARR |= 23855;
-  TIM6->PSC |= 0;
+  TIM6->ARR |= 49999;
+  TIM6->PSC |= 167;
   TIM6->CR1 |= TIM_CR1_CEN;    // ensures timer is enabled
 	GPIOB->ODR |= 0x8000;
 
@@ -211,7 +211,7 @@ void buzzer(void) {
     GPIOB->ODR ^= 0x8000;
     while ((TIM6->SR & TIM_SR_UIF) == 0);
     TIM6->SR &= ~(TIM_SR_UIF); // clears UIF
-    TIM6->ARR |= 23855;
+    TIM6->ARR |= 49999;
     TIM6->CR1 |= TIM_CR1_CEN;  // Enables counter
   }
 }

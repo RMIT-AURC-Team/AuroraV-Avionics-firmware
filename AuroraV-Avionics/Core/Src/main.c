@@ -10,8 +10,9 @@ long hDummyIdx = 0;
 long lDummyIdx = 0;
 
 // RTOS event groups
-EventGroupHandle_t xTaskEnableGroup; // 0: FLASH,  1: HIGHRES, 2: LOWRES, 3: LORA, 7: IDLE
-EventGroupHandle_t xMsgReadyGroup;   // 0: LORA, 1: USB
+EventGroupHandle_t xTaskEnableGroup; 		// 0: FLASH,  1: HIGHRES, 2: LOWRES, 3: LORA, 7: IDLE
+EventGroupHandle_t xSystemStatusGroup;  // 0-2: Flight state, 3: Payload, 4: Aerobrakes
+EventGroupHandle_t xMsgReadyGroup;   		// 0: LORA, 1: USB
 
 // RTOS message buffers
 MessageBufferHandle_t xLoRaTxBuff;
@@ -56,7 +57,7 @@ int main(void) {
 
   // Configure CAN
   CANGPIO_config();
-  //CAN_Peripheral_config();
+  CAN_Peripheral_config();
 
 	#ifdef FLIGHT_TEST
 		GPIOB->ODR ^= 0x8000;
@@ -103,7 +104,7 @@ void vDeviceInit() {
   static UART usb;
   static DeviceHandle_t usbHandle __attribute__((section(".device_usb"), unused));
   usbHandle = UART_init(
-    &usb, "USB", USB_INTERFACE, USB_PORT, USB_BAUD, OVER8
+    &usb, "USB", USB_INTERFACE, USB_PORT, USB_PINS, USB_BAUD, OVER8
   );
 
   // Initialise LoRa driver
@@ -154,6 +155,15 @@ void vDeviceInit() {
       &baro, "Baro", BARO_PORT, BARO_CS, BMP581_TEMP_SENSITIVITY, BMP581_PRESS_SENSITIVITY
   );
 	
+	/* GPS */
+	
+  // Initialise GPS driver and device handle
+  static GPS gps;
+  static DeviceHandle_t gpsHandle __attribute__((section(".device_gps"), unused));
+  gpsHandle = GPS_init(
+      &gps, "GPS", GPS_INTERFACE, GPS_PORT, GPS_PINS, GPS_BAUD
+  );
+	
 }
 
 /* =============================================================================== */
@@ -179,8 +189,11 @@ void vSystemInit(void *argument) {
   vTaskSuspendAll();
 
   // Initialise event groups for task synchronization and message signaling
-  xTaskEnableGroup = xEventGroupCreate(); // 0: FLASH,  1: HIGHRES, 2: LOWRES, 3: LORA, 7: IDLE
-  xMsgReadyGroup   = xEventGroupCreate();
+  xTaskEnableGroup 	 = xEventGroupCreate(); // 0: FLASH,  1: HIGHRES, 2: LOWRES, 3: LORA, 7: IDLE
+  xMsgReadyGroup   	 = xEventGroupCreate();
+	xSystemStatusGroup = xEventGroupCreate();
+	xEventGroupSetBits(xSystemStatusGroup, GROUP_SYSTEM_STATUS_PAYLOAD | GROUP_SYSTEM_STATUS_AEROBRAKES);
+	
   xEventGroupSetBits(xMsgReadyGroup, GROUP_MESSAGE_READY_LORA);
 
   // Initialise USB buffers and mutex
@@ -313,15 +326,6 @@ void configure_interrupts() {
   NVIC_EnableIRQ(EXTI1_IRQn);
   NVIC_SetPriority(USART6_IRQn, 10);
   NVIC_EnableIRQ(USART6_IRQn);
-	
-	#if CAN_PAYLOAD_AV == 1
-	NVIC_SetPriority(CAN1_RX1_IRQn, 10);
-  NVIC_EnableIRQ(CAN1_RX1_IRQn);
-	#else
-	NVIC_SetPriority(CAN2_RX1_IRQn, 10);
-  NVIC_EnableIRQ(CAN2_RX1_IRQn);
-	#endif
-
   EXTI->RTSR |= 0X2;
   EXTI->IMR |= 0x2;
   SYSCFG->EXTICR[0] &= (~(0XF0));

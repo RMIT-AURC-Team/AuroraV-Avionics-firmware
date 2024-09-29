@@ -6,6 +6,7 @@
 
 extern EventGroupHandle_t xMsgReadyGroup;
 extern MessageBufferHandle_t xLoRaTxBuff;
+extern EventGroupHandle_t xSystemStatusGroup;
 
 /**
  * @brief LoRa transmit task.
@@ -49,8 +50,8 @@ void vLoRaTransmit(void *argument) {
  * queue.
  */
 void vLoRaSample(void *argument) {
-  const TickType_t blockTime  = pdMS_TO_TICKS(0);
   const TickType_t xFrequency = pdMS_TO_TICKS(250);
+	const TickType_t blockTime  = pdMS_TO_TICKS(125);
 		
   A3G4250D *gyro      = DeviceHandle_getHandle("Gyro").device;
 	KX134_1211 *lAccel	= DeviceHandle_getHandle("LAccel").device;	
@@ -64,11 +65,13 @@ void vLoRaSample(void *argument) {
     // Block until 250ms interval
 		TickType_t xLastWakeTime = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
+		
+		uint8_t systemStatus = xEventGroupGetBits(xSystemStatusGroup);
 
     // Create AVData packet with current data
     LoRa_Packet avData = LoRa_AVData(
         LORA_HEADER_AV_DATA,
-        *flightState,
+        *flightState | systemStatus,
         lAccel->rawAccelData,
         hAccel->rawAccelData,
         KX134_1211_DATA_TOTAL,

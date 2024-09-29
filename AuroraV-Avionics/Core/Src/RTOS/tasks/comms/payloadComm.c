@@ -7,6 +7,7 @@
 extern MessageBufferHandle_t xLoRaTxBuff;
 extern MessageBufferHandle_t xUsbTxBuff;
 extern SemaphoreHandle_t xUsbMutex;
+extern EventGroupHandle_t xSystemStatusGroup;
 
 bool payloadCANRequest(unsigned int can, uint16_t id, unsigned int *out) {
 	
@@ -37,18 +38,26 @@ bool payloadCANRequest(unsigned int can, uint16_t id, unsigned int *out) {
 
 void vPayloadTransmit(void *argument) {
   const TickType_t xFrequency = pdMS_TO_TICKS(500);
-  const TickType_t blockTime  = pdMS_TO_TICKS(0);
+  const TickType_t blockTime  = pdMS_TO_TICKS(250);
 
   for (;;) {
     // Block until 250ms interval
 		TickType_t xLastWakeTime = xTaskGetTickCount();
     vTaskDelayUntil(&xLastWakeTime, xFrequency);
+		
+		uint8_t errCount = 0;
 
 		unsigned int payloadState[2];
-	  payloadCANRequest(CAN_PAYLOAD_AV, CAN_HEADER_PAYLOAD_STATUS, payloadState);
+	  errCount += !payloadCANRequest(CAN_PAYLOAD_AV, CAN_HEADER_PAYLOAD_STATUS, payloadState);
 		
 		unsigned int payloadAccel[2];
-		payloadCANRequest(CAN_PAYLOAD_AV, CAN_HEADER_PAYLOAD_ACCEL, payloadAccel);
+		errCount += !payloadCANRequest(CAN_PAYLOAD_AV, CAN_HEADER_PAYLOAD_ACCEL, payloadAccel);
+		
+		if(errCount > 1)
+			xEventGroupSetBits(xSystemStatusGroup, GROUP_SYSTEM_STATUS_PAYLOAD);
+		else
+			xEventGroupClearBits(xSystemStatusGroup, GROUP_SYSTEM_STATUS_PAYLOAD);
+
     		
 		LoRa_Packet payloadData = LoRa_PayloadData(
         LORA_HEADER_PAYLOAD_DATA,
@@ -56,6 +65,7 @@ void vPayloadTransmit(void *argument) {
         (uint8_t *) payloadAccel,
         PAYLOAD_ACCEL_TOTAL
     );
+		
     // Add packet to queue
     xMessageBufferSend(xLoRaTxBuff, &payloadData, LORA_MSG_LENGTH, blockTime);
   }

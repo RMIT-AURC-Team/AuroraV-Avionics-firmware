@@ -95,8 +95,15 @@ void Error_Handler(void);
 #define LORA_CS   GPIO_ODR_OD0
 
 // USB UART
-#define USB_PORT      GPIOC
 #define USB_INTERFACE USART6
+#define USB_PORT      GPIOC
+#define USB_PINS 			(UART_Pins){.TX = 6, .RX = 7}
 #define USB_BAUD      921600
+
+// GPS UART
+#define GPS_INTERFACE USART3
+#define GPS_PORT      GPIOD
+#define GPS_PINS 			(UART_Pins){.TX = 8, .RX = 9}
+#define GPS_BAUD      9600
 
 #endif
