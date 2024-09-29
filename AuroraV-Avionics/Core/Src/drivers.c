@@ -48,8 +48,8 @@ void configure_SPI4_Flash(void) {
 	GPIOE->OTYPER &= (~(GPIO_OTYPER_OT12 | GPIO_OTYPER_OT13 | GPIO_OTYPER_OT14));
   GPIOE->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED12_Msk | GPIO_OSPEEDR_OSPEED13_Msk | GPIO_OSPEEDR_OSPEED14_Msk));
   GPIOE->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED12_Pos | 0x2 << GPIO_OSPEEDR_OSPEED13_Pos | 0x2 << GPIO_OSPEEDR_OSPEED14_Pos);
-	// Mem CS, Hold and WP PE11/10/9 
-	/// change to Mem CS, Hold and WP PE11/10 PB11 respectively 
+	
+	// Mem CS, Hold and WP PE11/10 PB11 respectively 
   GPIOE->MODER &= (~( GPIO_MODER_MODE10_Msk | GPIO_MODER_MODE11_Msk));
   GPIOE->MODER |= ((0x1 << GPIO_MODER_MODE10_Pos) | (0x1 << GPIO_MODER_MODE11_Pos));
   GPIOE->OTYPER &= (uint16_t)(~( GPIO_OTYPER_OT10 | GPIO_OTYPER_OT11));
@@ -83,32 +83,36 @@ void configure_SPI3_LoRa() {
 	//SPI 3 SDI SDO SCL on PC12/11/10 respectively
   GPIOC->MODER &= (~(GPIO_MODER_MODE10_Msk | GPIO_MODER_MODE11_Msk | GPIO_MODER_MODE12_Msk));
   GPIOC->MODER |= ((0x2 << GPIO_MODER_MODE10_Pos) | (0x2 << GPIO_MODER_MODE11_Pos) | (0x2 << GPIO_MODER_MODE12_Pos));
+	GPIOC->AFR[1] &= (uint32_t)(~(0x000FFF00));              // clears AFRH 10, 11 and 12
+  GPIOC->AFR[1] |= (0x00066600);                           // sets AFRH 10, 11 and 12 to AF6 for lora SPI	
   GPIOC->PUPDR &= (~(GPIO_PUPDR_PUPD10_Msk | GPIO_PUPDR_PUPD11_Msk | GPIO_PUPDR_PUPD12_Msk));
   GPIOC->PUPDR |= ((0X1 << GPIO_PUPDR_PUPD10_Pos) | (0X1 << GPIO_PUPDR_PUPD11_Pos) | (0X1 << GPIO_PUPDR_PUPD12_Pos));
-  GPIOD->PUPDR |= (0X1 << GPIO_PUPDR_PUPD1_Pos);
-	//chip select PD0 SX_DIO0 PD1 SX reset PD7
+	GPIOC->OTYPER &= (~(GPIO_OTYPER_OT10 | GPIO_OTYPER_OT11 | GPIO_OTYPER_OT12));
+  GPIOC->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED10_Msk | GPIO_OSPEEDR_OSPEED11_Msk | GPIO_OSPEEDR_OSPEED12_Msk));
+  GPIOC->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED10_Pos | 0x2 << GPIO_OSPEEDR_OSPEED11_Pos | 0x2 << GPIO_OSPEEDR_OSPEED12_Pos);
+	
+	//chip select PD0; SX_DIO0 PD1 (input); SX reset PD7
   GPIOD->MODER &= (~(GPIO_MODER_MODE0_Msk) | (GPIO_MODER_MODE7_Msk) | (GPIO_MODER_MODE1_Msk));
-  GPIOD->MODER |= (0X01 << GPIO_MODER_MODE0_Pos) | (0X01 << GPIO_MODER_MODE7_Pos); // chip select stuff
+  GPIOD->MODER |= ((0X01 << GPIO_MODER_MODE0_Pos) | (0X01 << GPIO_MODER_MODE7_Pos)); // chip select stuff
+	GPIOD->OTYPER &= (uint16_t)(~( GPIO_OTYPER_OT0 | GPIO_OTYPER_OT71));
+  GPIOD->OSPEEDR &= (~( GPIO_OSPEEDR_OSPEED0_Msk | GPIO_OSPEEDR_OSPEED7_Msk));
+  GPIOD->OSPEEDR |= ( (0x2 << GPIO_OSPEEDR_OSPEED0_Pos) | (0x2 << GPIO_OSPEEDR_OSPEED7_Pos));
+	GPIOD->PUPDR |= (0X1 << GPIO_PUPDR_PUPD1_Pos);
+	GPIOD->ODR |= GPIO_ODR_OD0;                              // raise chip select
+	GPIOD->ODR |= (GPIO_ODR_OD7);														 // soft Reset of LoRa
+	// setup a 60ms delay
   TIM6->ARR &= (~(TIM_ARR_ARR_Msk));
   TIM6->PSC &= (~(TIM_PSC_PSC_Msk));
   TIM6->ARR |= 20000;
   TIM6->PSC |= 251;
 
-  GPIOD->ODR |= (GPIO_ODR_OD7);
+
   TIM6->CR1 |= TIM_CR1_CEN;
   while ((TIM6->SR & TIM_SR_UIF) == 0);                    // 60 ms delay
-  GPIOD->ODR &= (~(GPIO_ODR_OD7));
+  
   TIM6->SR &= ~(TIM_SR_UIF);                               // clears UIF
+	GPIOD->ODR &= (~(GPIO_ODR_OD7)); 												 // removes the soft reset on LoRa
 //SPI 3 SDI SDO SCL on PC12/11/10 respectively
-  GPIOC->OTYPER &= (~(GPIO_OTYPER_OT10 | GPIO_OTYPER_OT11 | GPIO_OTYPER_OT12));
-  GPIOC->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED10_Msk | GPIO_OSPEEDR_OSPEED11_Msk | GPIO_OSPEEDR_OSPEED12_Msk));
-  GPIOC->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED10_Pos | 0x2 << GPIO_OSPEEDR_OSPEED11_Pos | 0x2 << GPIO_OSPEEDR_OSPEED12_Pos);
-	
-  GPIOD->ODR |= GPIO_ODR_OD0;                              // raise chip select
-	//change
-  GPIOC->AFR[1] &= (uint32_t)(~(0x000FFF00));              // clears AFRH 10, 11 and 12
-  GPIOC->AFR[1] |= (0x00066600);                           // sets AFRH 10, 11 and 12 to AF6 for lora SPI
-
   SPI3->CR1 &= (~(SPI_CR1_BR_Msk));
   SPI3->CR1 |= (0x2 << SPI_CR1_BR_Pos);                    // set board rate too fclck / 16 = 42/8 = 5.25 (10 MHz max for LoRa)
   SPI3->CR1 &= (~(SPI_CR1_CPHA_Msk) | (SPI_CR1_CPOL_Msk)); // sets CPOL and CPHA to zero as specified in LoRa datasheet
@@ -126,6 +130,7 @@ void configure_SPI3_LoRa() {
 // ===============================================================
 
 void configure_UART3_GPS(void) {
+// GPS RX PD8; GPS TX PD9 (as seen by the GPS); GPS Reset PD13
   GPIOD->MODER &= (~(GPIO_MODER_MODE8_Msk | GPIO_MODER_MODE9_Msk | GPIO_MODER_MODE13_Msk));
   GPIOD->MODER |= ((0x2 << GPIO_MODER_MODE8_Pos) | (0x2 << GPIO_MODER_MODE9_Pos) | (0x1 << GPIO_MODER_MODE13_Pos));
   GPIOD->AFR[1] &= (uint32_t)(~(0x000000FF)); // clears AFRL 6 and 7
@@ -153,10 +158,10 @@ void configure_UART3_GPS(void) {
 // General GPIO Configure for MISC: Heart Beat, LED2 (PC0,PA1 respectively)
 void configure_MISC_GPIO(void) {
   GPIOC->MODER &= (~(GPIO_MODER_MODE0_Msk ));
-  GPIOC->MODER |= ((0x1 << GPIO_MODER_MODE0_Pos) ));
+  GPIOC->MODER |= ((0x1 << GPIO_MODER_MODE0_Pos) );
   GPIOC->OTYPER &= (uint16_t)(~(GPIO_OTYPER_OT0 ));                // sets  as push-pull
   GPIOC->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED0_Msk ));                // clears section
-  GPIOC->OSPEEDR |= ((0x2 << GPIO_OSPEEDR_OSPEED0_Pos))); // sets slew rate as high speed
+  GPIOC->OSPEEDR |= ((0x2 << GPIO_OSPEEDR_OSPEED0_Pos)); // sets slew rate as high speed
   GPIOC->ODR &= (~(GPIO_ODR_OD0));     // turns LED off
 
   GPIOA->MODER &= (~(GPIO_MODER_MODE1_Pos));           // clears pos 1 of port B moder R reg

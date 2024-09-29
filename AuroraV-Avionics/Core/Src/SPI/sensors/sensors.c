@@ -18,7 +18,7 @@ void configure_SPI1_Sensor_Suite(void) { // change
   GPIOA->OTYPER &= (~(GPIO_OTYPER_OT5 | GPIO_OTYPER_OT6 | GPIO_OTYPER_OT7));                                               // configure as push pull
   GPIOA->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED5_Msk | GPIO_OSPEEDR_OSPEED6_Msk | GPIO_OSPEEDR_OSPEED7_Msk));                   // clears OSPEED
   GPIOA->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED5_Pos | 0x2 << GPIO_OSPEEDR_OSPEED6_Pos | 0x2 << GPIO_OSPEEDR_OSPEED7_Pos); // sets as high speed
-  // pins PC2, PC3, PC4 need to be set to interrupt pins
+
   //
   //PA3, PA2 for ACC 1 CS and BAR CS add GYRO chip select as PF14
   GPIOA->MODER &= (~( GPIO_MODER_MODE2_Msk | GPIO_MODER_MODE3_Msk ));
@@ -26,10 +26,6 @@ void configure_SPI1_Sensor_Suite(void) { // change
   GPIOA->OTYPER &= (uint32_t)(~(GPIO_OTYPER_OT2 | GPIO_OTYPER_OT3));                                                             // sets 0xboth as push-pull
   GPIOA->OSPEEDR &= (~( GPIO_OSPEEDR_OSPEED2_Msk | GPIO_OSPEEDR_OSPEED3_Msk ));                                  // clears Port 14 and 15 section
   GPIOA->OSPEEDR |= ((0x2 << GPIO_OSPEEDR_OSPEED2_Pos) | (0x2 << GPIO_OSPEEDR_OSPEED3_Pos) ); // sets slew rate as high speed
-  // PA2 Gryo Chip Select - set to high for default
-  //  PA1 Accel 1 Chip Select - set to high for default
-  // PA4 Mag - chip select - set to high for dafault
-
   GPIOA->ODR |= (GPIO_ODR_OD2 | GPIO_ODR_OD3); // sets to high to disable chip select
 	
 // CHANGE to PB1 for ACC 2 CS
@@ -41,13 +37,13 @@ void configure_SPI1_Sensor_Suite(void) { // change
  //Chip Select - set to high for default
   GPIOB->ODR |= (GPIO_ODR_OD1);
 	// GRYO Chip Select PF14 configuration
-  GPIOF->MODER &= (~(GPIO_MODER_MODE15_Msk));
-  GPIOF->MODER |= (0x1 << GPIO_MODER_MODE15_Pos);
-  GPIOF->OTYPER &= (~(GPIO_OTYPER_OT15));
-  GPIOF->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED15_Msk));
-  GPIOF->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED15_Pos);
+  GPIOF->MODER &= (~(GPIO_MODER_MODE14_Msk));
+  GPIOF->MODER |= (0x1 << GPIO_MODER_MODE14_Pos);
+  GPIOF->OTYPER &= (~(GPIO_OTYPER_OT14));
+  GPIOF->OSPEEDR &= (~(GPIO_OSPEEDR_OSPEED14_Msk));
+  GPIOF->OSPEEDR |= (0x2 << GPIO_OSPEEDR_OSPEED14_Pos);
   // Chip Select - set to high for default
-  GPIOF->ODR |= (GPIO_ODR_OD15);
+  GPIOF->ODR |= (GPIO_ODR_OD14);
 	//
 	// SPI peripheral Configurations
   // Clear the First Control register of the SPI peripheral.
@@ -69,7 +65,7 @@ void configure_SPI1_Sensor_Suite(void) { // change
   	SPI1->CR1 |= SPI_CR1_MSTR;
 
   	// Manually raise the chip select.
-  	GPIOA->ODR |= (1 << GPIO_ODR_OD4_Pos) | (1 << GPIO_ODR_OD3_Pos) | (1 << GPIO_ODR_OD2_Pos) | (1 << GPIO_ODR_OD1_Pos);
+  	//GPIOA->ODR |= (1 << GPIO_ODR_OD4_Pos) | (1 << GPIO_ODR_OD3_Pos) | (1 << GPIO_ODR_OD2_Pos) | (1 << GPIO_ODR_OD1_Pos);
 
   	// Enable the SPI peripheral
   	SPI1->CR1 |= SPI_CR1_SPE;

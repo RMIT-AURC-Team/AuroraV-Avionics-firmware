@@ -72,17 +72,17 @@ void Error_Handler(void);
 
 // ACCELEROMETER
 #define ACCEL_PORT_1 GPIOA
-#define ACCEL_CS_1   GPIO_ODR_OD1
+#define ACCEL_CS_1   GPIO_ODR_OD3
 #define ACCEL_PORT_2 GPIOB
-#define ACCEL_CS_2   GPIO_ODR_OD0
+#define ACCEL_CS_2   GPIO_ODR_OD1
 
 // GYROSCOPE
-#define GYRO_PORT GPIOA
-#define GYRO_CS   GPIO_ODR_OD2
+#define GYRO_PORT GPIOF
+#define GYRO_CS   GPIO_ODR_OD14
 
 // BAROMETER
 #define BARO_PORT GPIOA
-#define BARO_CS   GPIO_ODR_OD3
+#define BARO_CS   GPIO_ODR_OD2
 
 // FLASH
 #define FLASH_PORT       GPIOE
