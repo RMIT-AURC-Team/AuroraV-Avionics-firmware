@@ -15,5 +15,5 @@ void EXTI1_IRQHandler(void);
 
 void TIM6init(void);
 void TIM7init(void);
-void buzzer(void);
+void buzzer(int count);
 #endif

@@ -12,10 +12,8 @@
 #include "gps.h"
 #include "lora.h"
 
-void vGpsTransmit(void *);
+#define GPS_RX_SIZE     128
 
-typedef struct {
-  enum State *currentState;
-} ctxGpsTransmit;
+void vGpsTransmit(void *);
 
 #endif

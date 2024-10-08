@@ -14,8 +14,8 @@ bool payloadCANRequest(unsigned int can, uint16_t id, unsigned int *out) {
 	TIM6->ARR &= (~(TIM_ARR_ARR_Msk));
   TIM6->PSC &= (~(TIM_PSC_PSC_Msk));
 	TIM6->SR  &= ~(TIM_SR_UIF);
-  TIM6->ARR |= 49999;
-  TIM6->PSC |= 167;
+  TIM6->ARR = 49999;
+  TIM6->PSC = 167;
   TIM6->CR1 |= TIM_CR1_CEN;
  
 	// Request data from payload
@@ -53,7 +53,13 @@ void vPayloadTransmit(void *argument) {
 		unsigned int payloadAccel[2];
 		errCount += !payloadCANRequest(CAN_PAYLOAD_AV, CAN_HEADER_PAYLOAD_ACCEL, payloadAccel);
 		
-		if(errCount > 1)
+		unsigned int payloadBaro1[2];
+		errCount += !payloadCANRequest(CAN_PAYLOAD_AV, CAN_HEADER_PAYLOAD_BARO1, payloadBaro1);
+		
+		unsigned int payloadBaro2[2];
+		errCount += !payloadCANRequest(CAN_PAYLOAD_AV, CAN_HEADER_PAYLOAD_BARO2, payloadBaro2);
+		
+		if(errCount > 2)
 			xEventGroupSetBits(xSystemStatusGroup, GROUP_SYSTEM_STATUS_PAYLOAD);
 		else
 			xEventGroupClearBits(xSystemStatusGroup, GROUP_SYSTEM_STATUS_PAYLOAD);

@@ -10,5 +10,6 @@
 #include "devices.h"
 #include "shell.h"
 #include "stateUpdate.h"
+#include "params.h"
 
 #endif

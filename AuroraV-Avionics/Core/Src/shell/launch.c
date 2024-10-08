@@ -30,7 +30,7 @@ static ShellProgramHandle_t (*registerShellProgram_ptr)() = registerShellProgram
 static void Launch_exec(Shell *shell, uint8_t *flags) {
 	DeviceHandle_t accelHandle = DeviceHandle_getHandle("Accel");
 	KX134_1211 *accel          = accelHandle.device;
-	accel->accelData[ZINDEX] = 15.0f;
+	accel->accelData[ZINDEX] = ACCEL_LAUNCH;
 	TaskHandle_t handle = xTaskGetHandle("StateUpdate");
 	xTaskAbortDelay(handle);
 }

@@ -9,6 +9,7 @@
 #include "stateUpdate.h"
 #include "stdio.h"
 #include "drivers.h"
+#include "membuff.h"
 
 extern EventGroupHandle_t xTaskEnableGroup;
 extern MessageBufferHandle_t xUsbTxBuff;
@@ -42,7 +43,8 @@ void vStateUpdate(void *argument) {
 	
 	DeviceHandle_t accelHandle = DeviceHandle_getHandle("Accel");
 	KX134_1211 *accel          = accelHandle.device;
-	
+
+	MemBuff *mem            = StateHandle_getHandle("Memory").state;
 	enum State *flightState = StateHandle_getHandle("FlightState").state;
 	float *tilt 		 				= StateHandle_getHandle("Tilt").state;
 	float *altitude 				= StateHandle_getHandle("Altitude").state;
@@ -61,7 +63,7 @@ void vStateUpdate(void *argument) {
       CANHigh = 0x00000000;
       CANLow  = 0x00000000;
       id      = CAN_HEADER_AEROBRAKES_RETRACT;
-      CAN_TX(2, 8, CANHigh, CANLow, id);
+      CAN_TX(CAN_AB, 8, CANHigh, CANLow, id);
     }
 
     switch (*flightState) {
@@ -72,11 +74,10 @@ void vStateUpdate(void *argument) {
           GPIOD->ODR ^= 0x8000;
         #endif
         #ifndef DEBUG
-					vTaskSuspend(handles->xUsbReceiveHandle);
-          vTaskDelete(handles->xUsbTransmitHandle);
-          vTaskDelete(handles->xUsbReceiveHandle);
+//					vTaskSuspend(handles->xUsbReceiveHandle);
+//          vTaskDelete(handles->xUsbTransmitHandle);
+//          vTaskDelete(handles->xUsbReceiveHandle);
         #endif
-        vTaskDelete(handles->xGpsTransmitHandle);
         xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_FLASH);   // Enable flash
         xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_HIGHRES); // Enable high resolution data acquisition
         xEventGroupSetBits(xTaskEnableGroup, GROUP_TASK_ENABLE_LOWRES);  // Enable low resolution data acquisition
@@ -90,7 +91,7 @@ void vStateUpdate(void *argument) {
       CANHigh = 0x00000000;
       memcpy(&CANLow, altitude, sizeof(float));
       id = CAN_HEADER_AEROBRAKES_DATA;
-      CAN_TX(2, 8, CANHigh, CANLow, id);
+      CAN_TX(CAN_AB, 8, CANHigh, CANLow, id);
       // Transition to motor burnout state on velocity decrease
       if ((avgVelCurrent - avgVelPrevious) < 0) {
         #ifdef FLIGHT_TEST
@@ -108,7 +109,7 @@ void vStateUpdate(void *argument) {
       CANHigh = 0x00000000;
       memcpy(&CANLow, altitude, sizeof(float));
       id = CAN_HEADER_AEROBRAKES_DATA;
-      CAN_TX(2, 8, CANHigh, CANLow, id);
+      CAN_TX(CAN_AB, 8, CANHigh, CANLow, id);
       // Transition to apogee state on three way vote of altitude, velocity, and tilt
       // apogee is determined as two of three conditions evaluating true
       if ((((avgPressCurrent - avgPressPrevious) > 0) + (*tilt >= 90) + (*velocity < 0.0f)) >= 2) {
@@ -116,11 +117,22 @@ void vStateUpdate(void *argument) {
           GPIOB->ODR ^= 0x8000;
           GPIOD->ODR ^= 0x8000;
         #endif
-//        vTaskDelete(ctx.handles->xHDataAcquisitionHandle);
-//        vTaskDelete(ctx.handles->xLDataAcquisitionHandle);
-//        vTaskDelete(ctx.handles->xLoRaSampleHandle);
-        //xTaskCreate(vGpsRead, "GpsRead", 512, NULL, configMAX_PRIORITIES - 6, &ctx.handles->xGpsReadHandle);
         *flightState = APOGEE;
+				
+				taskENTER_CRITICAL();
+				buzzer(3215 * 5);
+				taskEXIT_CRITICAL();
+				
+				union U {
+					TickType_t ticks;
+					uint8_t* bytes;
+				};
+				union U u;
+				u.ticks = xTaskGetTickCount();
+				
+				// Log apogee event to flash
+				mem->append(mem, HEADER_EVENT_APOGEE);
+				mem->appendBytes(mem, u.bytes, sizeof(TickType_t));
         // Send transmission to trigger apogee E-matches
       }
       avgPressPrevious = avgPressCurrent;
@@ -131,7 +143,7 @@ void vStateUpdate(void *argument) {
       CANHigh = 0x00000000;
       CANLow  = 0x00000000;
       id      = CAN_HEADER_AEROBRAKES_RETRACT;
-      CAN_TX(2, 8, CANHigh, CANLow, id);
+      CAN_TX(CAN_AB, 8, CANHigh, CANLow, id);
       // Deploy drogue chute
       GPIOD->ODR |= 0x8000;
       // Transition to descent state when below main deployment altitude

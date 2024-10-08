@@ -84,10 +84,11 @@ uint8_t CAN_TX(uint8_t CAN, uint8_t data_length, unsigned int dataH, unsigned in
     {
       if ((CAN2->TSR & (1 << (1))))
         return 0;                               // successful
-      else if ((CAN2->TSR & (1 << 3)))
+      else if ((CAN2->TSR & (1 << 3))) {
         CAN2->TSR |= (unsigned int)((1 << 7));
       CAN2->TSR |= (unsigned int)((1 << 7));
       return 1;                                 // TX error
+			}
     }
     return 255;                                 // timeout error
   } else

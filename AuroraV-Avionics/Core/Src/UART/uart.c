@@ -94,7 +94,8 @@ void _UART_setup(UART *uart, UART_Pins pins) {
   interface->CR1 &= ~USART_CR1_PCE;     													// disable parity
   interface->CR2 &= ~USART_CR2_CLKEN;   													// disable synchrnous mode
   interface->CR3 &= ~(USART_CR3_CTSE | USART_CR3_RTSE);   				// disable flow control
-  interface->CR1 |= (USART_CR1_UE | USART_CR1_RE | USART_CR1_TE); // enable usart, enable receive and transmitt
+	interface->CR1 |= (USART_CR1_RXNEIE); 													// enable RXNE interrupt
+  interface->CR1 |= (USART_CR1_UE | USART_CR1_RE | USART_CR1_TE); // enable usart, enable receive and transmit
 }
 
 #endif

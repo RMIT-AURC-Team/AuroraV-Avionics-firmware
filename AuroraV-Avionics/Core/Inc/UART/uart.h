@@ -22,6 +22,11 @@
 #define UART_AF7          	0x07
 #define UART_AF8          	0x08
 
+#define SIGINT          0x03
+#define BACKSPACE       0x08
+#define LINE_FEED       0x0A
+#define CARRIAGE_RETURN 0x0D
+
 /**
  * @ingroup UART_API
  * @addtogroup UART Interface

@@ -17,7 +17,9 @@ EventGroupHandle_t xMsgReadyGroup;   		// 0: LORA, 1: USB
 // RTOS message buffers
 MessageBufferHandle_t xLoRaTxBuff;
 MessageBufferHandle_t xUsbTxBuff;
+
 StreamBufferHandle_t xUsbRxBuff;
+StreamBufferHandle_t xGpsRxBuff;
 
 // RTOS mutexes
 SemaphoreHandle_t xUsbMutex;
@@ -68,7 +70,7 @@ int main(void) {
   unsigned int CANHigh = 0;
   unsigned int CANLow  = 0;
   unsigned int id      = 0x603;
-  CAN_TX(2, 8, CANHigh, CANLow, id);
+  CAN_TX(CAN_AB, 8, CANHigh, CANLow, id);
 
   // Create and start the system initialization task
   TaskHandle_t xSystemInitHandle;
@@ -199,6 +201,8 @@ void vSystemInit(void *argument) {
   // Initialise USB buffers and mutex
   xUsbTxBuff = xMessageBufferCreate(USB_TX_SIZE);
   xUsbRxBuff = xStreamBufferCreate(USB_RX_SIZE, 1);
+	xGpsRxBuff = xStreamBufferCreate(GPS_RX_SIZE, 1);
+
   xUsbMutex  = xSemaphoreCreateMutex();
 
   // Initialise LoRa buffer
@@ -209,9 +213,13 @@ void vSystemInit(void *argument) {
   vDeviceInit();
 
   // Initialise circular memory buffer
-  MemBuff mem;
-  uint8_t buff[MEM_BUFF_SIZE];
-  MemBuff_init(&mem, buff, MEM_BUFF_SIZE, FLASH_PAGE_SIZE);
+  MemBuff _mem;
+	static StateHandle_t __attribute__((section(".state_mem"), unused)) mem;
+	mem.state = &_mem;
+	memcpy(mem.name, "Memory", STATE_NAME_LENGTH);
+	
+	uint8_t buff[MEM_BUFF_SIZE];
+  MemBuff_init(&_mem, buff, MEM_BUFF_SIZE, FLASH_PAGE_SIZE);
 
   // Initialise shell
   static Shell shell;
@@ -295,18 +303,19 @@ void vSystemInit(void *argument) {
   static Handles handles;
 
 	/** @todo refactor task names and associated file names */
-  xTaskCreate(vHDataAcquisition, "HDataAcq", 512, &mem, configMAX_PRIORITIES - 2, &handles.xHDataAcquisitionHandle);
-  xTaskCreate(vLDataAcquisition, "LDataAcq", 512, &mem, configMAX_PRIORITIES - 3, &handles.xLDataAcquisitionHandle);
+  xTaskCreate(vHDataAcquisition, "HDataAcq", 512, &_mem, configMAX_PRIORITIES - 2, &handles.xHDataAcquisitionHandle);
+  xTaskCreate(vLDataAcquisition, "LDataAcq", 512, &_mem, configMAX_PRIORITIES - 3, &handles.xLDataAcquisitionHandle);
   xTaskCreate(vStateUpdate, "StateUpdate", 512, &handles, configMAX_PRIORITIES - 4, &handles.xStateUpdateHandle);
-  xTaskCreate(vFlashBuffer, "FlashData", 512, &mem, configMAX_PRIORITIES - 1, &handles.xFlashBufferHandle);
+  xTaskCreate(vFlashBuffer, "FlashData", 512, &_mem, configMAX_PRIORITIES - 1, &handles.xFlashBufferHandle);
   xTaskCreate(vLoRaSample, "LoRaSample", 256, NULL, configMAX_PRIORITIES - 6, &handles.xLoRaSampleHandle);
   xTaskCreate(vLoRaTransmit, "LoRaTx", 256, NULL, configMAX_PRIORITIES - 5, &handles.xLoRaTransmitHandle);
   xTaskCreate(vUsbTransmit, "UsbTx", 256, NULL, configMAX_PRIORITIES - 6, &handles.xUsbTransmitHandle);
 	xTaskCreate(vUsbReceive, "UsbRx", 256, &shell, configMAX_PRIORITIES - 6, &handles.xUsbReceiveHandle);
-	xTaskCreate(vIdle, "Idle", 256, &mem, tskIDLE_PRIORITY, &handles.xIdleHandle);
+	xTaskCreate(vIdle, "Idle", 256, &_mem, tskIDLE_PRIORITY, &handles.xIdleHandle);
 	xTaskCreate(vPayloadTransmit, "PayloadTx", 512, NULL, configMAX_PRIORITIES - 6, &handles.xPayloadTransmitHandle);
   xTaskCreate(vGpsTransmit, "GpsRead", 512, NULL, configMAX_PRIORITIES - 6, &handles.xGpsTransmitHandle);
 
+	buzzer(3215);
   xTaskResumeAll();
 	
 	#ifdef TRACE
@@ -326,10 +335,12 @@ void configure_interrupts() {
   NVIC_EnableIRQ(EXTI1_IRQn);
   NVIC_SetPriority(USART6_IRQn, 10);
   NVIC_EnableIRQ(USART6_IRQn);
-  EXTI->RTSR |= 0X2;
-  EXTI->IMR |= 0x2;
+	NVIC_SetPriority(USART3_IRQn, 10);
+  NVIC_EnableIRQ(USART3_IRQn);
+  EXTI->RTSR |= (0x02 | 0x04);
+  EXTI->IMR |= (0x02 | 0x04);
   SYSCFG->EXTICR[0] &= (~(0XF0));
-  SYSCFG->EXTICR[0] = 0x30;
+  SYSCFG->EXTICR[0] = 0x230;
   __enable_irq();
 }
 
